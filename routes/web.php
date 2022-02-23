@@ -1,0 +1,71 @@
+<?php
+
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\Admins\RoleController;
+use App\Http\Controllers\Admins\UserController;
+use App\Http\Controllers\Admins\AdminController;
+use App\Http\Controllers\Admins\PermissionController;
+use App\Http\Controllers\Admins\AdminDashboardController;
+use App\Http\Controllers\Admins\AuthController;
+use App\Http\Controllers\Admins\CustomerController;
+use App\Http\Controllers\Admins\SupplierController;
+use App\Http\Controllers\Admins\ProductTypeController;
+use App\Http\Controllers\Admins\DailySetupController;
+use App\Http\Controllers\Admins\ProductController;
+
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+//login
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'postLogin'])->name('post.login');
+## register
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'postRegister'])->name('post.register');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
+
+
+//dashboard
+Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier'])->group(function () {
+    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.index');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier'])->group(function () {
+    //user management
+    Route::resource('admins', AdminController::class)->parameters(['admins' => 'user'])->only(['index', 'update']);
+    Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
+    Route::resource('permissions', PermissionController::class)->except(['create', 'show', 'edit']);
+    Route::resource('roles', RoleController::class)->except(['create', 'show', 'edit']);
+
+    //contact management
+    Route::resource('customers', CustomerController::class)->except(['create', 'show', 'edit']);
+    Route::resource('suppliers', SupplierController::class)->except(['create', 'show', 'edit']);
+
+    //product management
+    Route::resource('products', ProductController::class)->except(['create', 'show', 'edit']);
+    Route::resource('product_types', ProductTypeController::class)->except(['create', 'show', 'edit']);
+    Route::resource('daily_setups', DailySetupController::class)->except(['create', 'show', 'edit']);
+    Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');
+});

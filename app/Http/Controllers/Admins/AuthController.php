@@ -60,13 +60,13 @@ class AuthController extends Controller
 
         $credential = $request->only('email', 'password');
         if (Auth::attempt($credential)) {
-            return Redirect::route('home');
+            return redirect()->route('home');
         }
     }
 
     public function logout()
     {
         Auth::logout();
-        return Redirect::route('login');
+        return redirect()->route('login');
     }
 }

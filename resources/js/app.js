@@ -17,11 +17,13 @@ import { InertiaProgress } from '@inertiajs/progress'
 // import VueToastr from "vue-toastr";
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
+import Multiselect from 'vue-multiselect'
 
 Vue.mixin({methods:{route:window.route}});
 // Vue.use(VueToastr);
 Vue.use(Vuetify);
-InertiaProgress.init()
+Vue.component('multiselect', Multiselect)
+InertiaProgress.init();
 
 createInertiaApp({
     resolve: name => require(`./Pages/${name}`),

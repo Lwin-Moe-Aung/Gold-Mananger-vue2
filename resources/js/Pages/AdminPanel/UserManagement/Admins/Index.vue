@@ -24,9 +24,9 @@
                                             <tr v-for="(admin, index) in admins" :key="index">
                                                 <td class="text-capitalize">{{ admin.name }}</td>
                                                 <td>
-                                                    <!-- <template v-for="role in admin.roles" :key="role.id">
+                                                    <template v-for="role in admin.roles">
                                                         {{ role.name }}
-                                                    </template> -->
+                                                    </template>
                                                 </td>
                                                 <td>{{ admin.email }}</td>
                                                 <td>{{ admin.created_at }}</td>
@@ -73,6 +73,7 @@
                                                 label="name"
                                                 track-by="id"
                                             ></multiselect>
+                                           
                                         </div>
                                         <div class="invalid-feedback" :class="{ 'd-block' : form.errors.roles}">
                                             {{ form.errors.roles }}
@@ -123,6 +124,7 @@
                 this.form.roles.push(tag)
             },
             editModal(admin) {
+                
                 $('#modal-lg').modal('show')
                 this.editedIndex = this.admins.indexOf(admin)
                 this.form.name = admin.name
@@ -132,6 +134,7 @@
             },
             openModal() {
                 this.editedIndex = -1
+                alert("open modal");
                 $('#modal-lg').modal('show')
             },
             closeModal() {
@@ -155,3 +158,4 @@
         }
     }
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

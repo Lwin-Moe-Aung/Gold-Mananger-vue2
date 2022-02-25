@@ -170,7 +170,7 @@
         },
         methods: {
             logout() {
-                this.$inertia.post(route('logout'));
+                this.$inertia.post(route('post.logout'));
             },
         }
     }

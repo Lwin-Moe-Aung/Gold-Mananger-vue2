@@ -16,7 +16,8 @@ class RolesAndPermissionsSeeder extends Seeder
      *
      * @return void
      */
-    public function run() {
+    public function run()
+    {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // USER MODEL
@@ -47,7 +48,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $superAdminRole = Role::create(['name' => 'super-admin']);
         $adminRole = Role::create(['name' => 'admin']);
         $cashierRole = Role::create(['name' => 'cashier']);
-      
+
 
         $superAdminRole->syncPermissions([
             $userPermission1,
@@ -67,7 +68,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $userPermission1,
         ]);
 
-         $adminRole->syncPermissions([
+        $adminRole->syncPermissions([
             $userPermission1,
             $userPermission2,
             $userPermission3,
@@ -116,14 +117,12 @@ class RolesAndPermissionsSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
-       
+
 
         $superAdmin->syncRoles([$superAdminRole]);
 
         $admin->syncRoles([$adminRole]);
 
         $cashier->syncRoles($cashierRole);
-
-      
     }
 }

@@ -11,7 +11,8 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware(['role:super-admin|admin|cashier']);
     }
 
@@ -20,8 +21,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        return Inertia::render('Admins/UserManagement/Users/Index', [
+    public function index()
+    {
+        return Inertia::render('AdminPanel/UserManagement/Users/Index', [
             'users' => User::latest()->paginate(5),
             'roles' => Role::all()
         ]);
@@ -43,7 +45,8 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
                 'name' => ['required', 'max:50'],
@@ -92,11 +95,12 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
                 'name' => ['required', 'max:50'],
-                'email' => 'required|unique:users,email,'.$id,
+                'email' => 'required|unique:users,email,' . $id,
             ]);
             if (count($request->roles) == 0) {
                 return back()->withErrors(['roles' => 'The role field is required']);
@@ -132,7 +136,8 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user) {
+    public function destroy(User $user)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $user->delete();
             return back();

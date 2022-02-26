@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Business;
 use App\Models\Contact;
 use App\Models\ProductType;
+use App\Models\Type;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,17 +28,17 @@ class ProductTypeController extends Controller
             'field' => ['in:name,city']
         ]);
 
-        $product_type = ProductType::query();
+        $product_type = Type::query();
 
         if (request('search')) {
-            $product_type->where('name', 'LIKE', '%'.request('search').'%');
+            $product_type->where('name', 'LIKE', '%' . request('search') . '%');
         }
 
         if (request()->has(['field', 'direction'])) {
             $product_type->orderBy(request('field'), request('direction'));
         }
 
-        return Inertia::render('Admins/ProductManagement/ProductType/Index',[
+        return Inertia::render('AdminPanel/ProductManagement/ProductType/Index', [
             'product_types' => $product_type->paginate(5)->withQueryString(),
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
@@ -59,15 +60,16 @@ class ProductTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
 
             $this->validate($request, [
                 'name' => ['required', 'max:50'],
-                'key' => ['required', 'max:1'],
+                'key' => ['required', 'max:2'],
             ]);
             try {
-                ProductType::create([
+                Type::create([
                     'name' => $request->name,
                     'key' => $request->key,
                     'business_id' => auth()->user()->business_id,
@@ -75,7 +77,7 @@ class ProductTypeController extends Controller
                 ]);
                 return back();
             } catch (\Exception $e) {
-                return back()->with('fail','Fail to Create New Product Type');
+                return back()->with('fail', 'Fail to Create New Product Type');
             }
         }
         return back();
@@ -110,7 +112,8 @@ class ProductTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         // return $contact;
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
@@ -118,7 +121,7 @@ class ProductTypeController extends Controller
                 'key' => ['required', 'max:1'],
             ]);
             try {
-                $product_type = ProductType::find($id);
+                $product_type = Type::find($id);
                 $product_type->name = $request->name;
                 $product_type->key = $request->key;
                 $product_type->save();
@@ -136,9 +139,10 @@ class ProductTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-            $product_type = ProductType::find($id);
+            $product_type = Type::find($id);
             $product_type->delete();
             return back();
         }

@@ -23,13 +23,12 @@ class CustomerController extends Controller
     {
         $business_id = Auth::user()->business_id;
         $customers = Contact::where('business_id', $business_id)
-                ->where('type', 'customer')
-                ->latest()
-                ->paginate(5);
-        return Inertia::render('Admins/ContactManagement/Customer/Index',[
+            ->where('type', 'customer')
+            ->latest()
+            ->paginate(5);
+        return Inertia::render('AdminPanel/ContactManagement/Customer/Index', [
             'customers' => $customers
         ]);
-       
     }
 
     /**
@@ -48,7 +47,8 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
 
             $this->validate($request, [
@@ -58,7 +58,7 @@ class CustomerController extends Controller
             ]);
             try {
 
-                // dd("asdasfsd");
+                // dd(auth()->user()->business_location_id);
                 Contact::create([
                     'name' => $request->name,
                     'email' => $request->email,
@@ -74,7 +74,8 @@ class CustomerController extends Controller
                 // // Session::put('message', 'hello bar tone');
                 return back();
             } catch (\Exception $e) {
-                return back()->with('fail','Fail to Create Customer');
+                dd("hlelo");
+                return back()->with('fail', 'Fail to Create Customer');
             }
         }
         return back();
@@ -109,12 +110,13 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         // return $contact;
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
                 'name' => ['required', 'max:50'],
-                'email' => 'required|unique:contacts,email,'.$id,
+                'email' => 'required|unique:contacts,email,' . $id,
                 'mobile1' => ['required'],
             ]);
             try {
@@ -141,7 +143,8 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $contact = Contact::find($id);
             $contact->delete();

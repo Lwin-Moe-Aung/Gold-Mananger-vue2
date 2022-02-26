@@ -141,69 +141,99 @@
                                         <div class="form-group">
                                             <div class="row">
                                                 <div class="col sm-3 md-3">
-                                                    <label for="permissions">Product type</label>
+                                                    <label for="permissions">Quality</label>
                                                     <multiselect
-                                                        v-model="form.p_type"
-                                                        :options="product_types"
+                                                        v-model="form.quality"
+                                                        :options="gold_qualities"
                                                         :multiple="false"
                                                         :taggable="true"
-                                                        placeholder="Choose Type(s)"
+                                                        placeholder="Quality"
+                                                        label="quality"
+                                                        track-by="id"
+                                                    ></multiselect>
+                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.quality}">
+                                                        {{ form.errors.quality }}
+                                                    </div>
+                                                </div>
+                                                 <div class="col sm-3 md-3">
+                                                    <label for="permissions">Type</label>
+                                                    <multiselect
+                                                        v-model="form.type"
+                                                        :options="types"
+                                                        :multiple="false"
+                                                        :taggable="true"
+                                                        placeholder="Type"
                                                         label="name"
                                                         track-by="key"
                                                     ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.p_type}">
-                                                        {{ form.errors.p_type }}
+                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.type}">
+                                                        {{ form.errors.type }}
                                                     </div>
                                                 </div>
-                                                <div class="col sm-3 md-3">
-                                                    <label for="q_kyat">Kyats</label>
+                                                 <div class="col sm-3 md-3">
+                                                    <label for="permissions">Name</label>
                                                     <multiselect
-                                                        v-model="form.q_kyat"
-                                                        :options="gold_quality_kyats"
+                                                        v-model="form.item_name"
+                                                        :options="item_names"
                                                         :multiple="false"
                                                         :taggable="true"
-                                                        placeholder="Choose Kyats"
+                                                        placeholder="Name"
                                                         label="name"
                                                         track-by="id"
                                                     ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.q_kyat}">
-                                                        {{ form.errors.q_kyat }}
+                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.item_name}">
+                                                        {{ form.errors.item_name }}
                                                     </div>
                                                 </div>
                                                 <div class="col sm-3 md-3">
-                                                    <label for="q_pal">Pals</label>
+                                                    <label for="w_kyat">Kyats</label>
                                                     <multiselect
-                                                        v-model="form.q_pal"
-                                                        :options="gold_quality_pals"
+                                                        v-model="form.w_kyat"
+                                                        :options="weight_kyats"
                                                         :multiple="false"
                                                         :taggable="true"
-                                                        placeholder="Choose Pal(s)"
+                                                        placeholder="Kyats"
                                                         label="name"
                                                         track-by="id"
                                                     ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.q_pal}">
-                                                        {{ form.errors.q_pal }}
+                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.w_kyat}">
+                                                        {{ form.errors.w_kyat }}
                                                     </div>
                                                 </div>
                                                 <div class="col sm-3 md-3">
-                                                    <label for="q_yway">Yways</label>
+                                                    <label for="w_pal">Pals</label>
                                                     <multiselect
-                                                        v-model="form.q_yway"
-                                                        :options="gold_quality_yways"
+                                                        v-model="form.w_pal"
+                                                        :options="weight_pals"
                                                         :multiple="false"
                                                         :taggable="true"
-                                                        placeholder="Choose Yway(s)"
+                                                        placeholder="Pal"
                                                         label="name"
                                                         track-by="id"
                                                     ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.q_yway}">
-                                                        {{ form.errors.q_yway }}
+                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.w_pal}">
+                                                        {{ form.errors.w_pal }}
+                                                    </div>
+                                                </div>
+                                                <div class="col sm-3 md-3">
+                                                    <label for="w_yway">Yways</label>
+                                                    <multiselect
+                                                        v-model="form.w_yway"
+                                                        :options="weight_yways"
+                                                        :multiple="false"
+                                                        :taggable="true"
+                                                        placeholder="Yway"
+                                                        label="name"
+                                                        track-by="id"
+                                                    ></multiselect>
+                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.w_yway}">
+                                                        {{ form.errors.w_yway }}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="name">Product Sku : {{form.p_type.key}}{{ form.q_kyat.name }}{{ form.q_pal.name }}{{ form.q_yway.name }}</label>
+                                            <label for="name">Product Sku : {{form.quality.quality}}{{form.type.key}}{{form.item_name.key}}{{ form.w_kyat.name }}{{ form.w_pal.name }}{{ form.w_yway.name }}</label>
                                         </div>
                                         <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.product_sku}">
                                             {{ form.errors.product_sku }}
@@ -267,10 +297,12 @@
         props: [
             'products',
             'filters',
-            'product_types',
-            'gold_quality_kyats', 
-            'gold_quality_pals',
-            'gold_quality_yways'
+            'gold_qualities',
+            'types',
+            'item_names',
+            'weight_kyats', 
+            'weight_pals',
+            'weight_yways'
             ],
         components: {
             AdminLayout,
@@ -282,10 +314,12 @@
                 editMode: false,
                 form: this.$inertia.form({
                     name: '',
-                    p_type: '',
-                    q_kyat: '',
-                    q_pal: '',
-                    q_yway: '',
+                    quality: '',
+                    type: '',
+                    item_name: '',
+                    w_kyat: '',
+                    w_pal: '',
+                    w_yway: '',
                     description: '',
                     tax: '',
                     alert_quantity: '',
@@ -314,7 +348,7 @@
             params: {
                 handler: throttle(function () {
                     let params = pickBy(this.params);
-                    this.$inertia.get(this.route('admin.product_types.index'), params, { replace: true, preserveState: true });
+                    this.$inertia.get(this.route('admin.types.index'), params, { replace: true, preserveState: true });
                 }, 150),
                 deep: true,
             },
@@ -332,10 +366,11 @@
                 return moment(value).format('YYYY-MM-DD');
             },
            
-            editModal(product_type) {
+            editModal(product) {
+                // console.log(product_type);
                 this.editMode = true
                 $('#modal-lg').modal('show')
-                this.editedIndex = this.product_types.data.indexOf(product_type)
+                this.editedIndex = this.products.data.indexOf(product_type)
                 this.form.id = product_type.id
                 this.form.name = product_type.name
             },
@@ -362,7 +397,7 @@
                 })
             },
             editProductType() {
-                this.form.patch(this.route('admin.product_types.update', this.form.id, this.form), {
+                this.form.patch(this.route('admin.types.update', this.form.id, this.form), {
                     preserveScroll: true,
                     onSuccess:() => {
                         Toast.fire({
@@ -384,7 +419,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.form.delete(this.route('admin.product_types.destroy', id), {
+                        this.form.delete(this.route('admin.types.destroy', id), {
                             preserveScroll: true,
                             onSuccess: ()=> {
                                 Swal.fire(

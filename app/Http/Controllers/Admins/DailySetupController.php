@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\Contact;
 use App\Models\DailySetup;
 use App\Models\ProductType;
+use App\Models\Type;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ use Carbon\Carbon;
 
 class DailySetupController extends Controller
 {
-   /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -29,13 +30,13 @@ class DailySetupController extends Controller
         $daily_setups->where('business_id', '=', $business_id);
         if (request('date')) {
             $daily_setups->whereDate('created_at', '=', request('date'));
-        }else{
+        } else {
             $daily_setups->whereDate('created_at', '=', date('Y-m-d'));
         }
-        $product_types = ProductType::where('business_id',$business_id)
-                        ->get();
+        $product_types = Type::where('business_id', $business_id)
+            ->get();
 
-        return Inertia::render('Admins/ProductManagement/DailySetup/Index',[
+        return Inertia::render('AdminPanel/ProductManagement/DailySetup/Index', [
             'daily_setups' => $daily_setups->with('productType')->paginate()->withQueryString(),
             'product_types' => $product_types
         ]);
@@ -57,10 +58,11 @@ class DailySetupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             try {
-                foreach ($request->daily_setups as $value){ 
+                foreach ($request->daily_setups as $value) {
                     DailySetup::create([
                         'type_of_daily_setup' => $value["type_of_daily_setup"],
                         'business_id' => $value["business_id"],
@@ -69,7 +71,7 @@ class DailySetupController extends Controller
                 }
                 return back();
             } catch (\Exception $e) {
-                return back()->with('fail','Fail to Create New Product Type');
+                return back()->with('fail', 'Fail to Create New Product Type');
             }
         }
         return back();
@@ -104,24 +106,26 @@ class DailySetupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         // return $contact;
         return back()->withErrors(['fail' => 'No permission']);
     }
-     /**
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function editDailySetup(Request $request) {
+    public function editDailySetup(Request $request)
+    {
         // return $request->daily_setups;
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-            
+
             try {
-                foreach ($request->daily_setups as $daily_setup){
-                    $daily = DailySetup::find($daily_setup["id"]); 
+                foreach ($request->daily_setups as $daily_setup) {
+                    $daily = DailySetup::find($daily_setup["id"]);
                     $daily->daily_price = $daily_setup["daily_price"];
                     $daily->save();
                 }
@@ -138,9 +142,10 @@ class DailySetupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-            $product_type = ProductType::find($id);
+            $product_type = Type::find($id);
             $product_type->delete();
             return back();
         }

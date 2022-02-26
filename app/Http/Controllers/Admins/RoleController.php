@@ -10,7 +10,8 @@ use Inertia\Inertia;
 
 class RoleController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware(['role:super-admin|admin|cashier']);
     }
 
@@ -19,8 +20,9 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        return Inertia::render('Admins/UserManagement/Roles/Index', [
+    public function index()
+    {
+        return Inertia::render('AdminPanel/UserManagement/Roles/Index', [
             'roles' => Role::with('permissions')->paginate(5),
             'permissions' => Permission::all(),
         ]);
@@ -42,7 +44,8 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
                 'name' => ['required', 'max:25', 'unique:roles'],
@@ -89,7 +92,8 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role) {
+    public function update(Request $request, Role $role)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
                 'name' => ['required', 'max:25'],
@@ -111,7 +115,8 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role) {
+    public function destroy(Role $role)
+    {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $role->delete();
             return back();

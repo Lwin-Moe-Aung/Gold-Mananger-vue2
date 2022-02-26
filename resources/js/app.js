@@ -18,6 +18,7 @@ import { InertiaProgress } from '@inertiajs/progress'
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 import Multiselect from 'vue-multiselect'
+import "vue-multiselect/dist/vue-multiselect.min.css";
 
 Vue.mixin({methods:{route:window.route}});
 // Vue.use(VueToastr);

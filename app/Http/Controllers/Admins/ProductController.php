@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
-use App\Models\GoldQualityKyat;
-use App\Models\GoldQualityPal;
-use App\Models\GoldQualityYway;
+use App\Models\GoldQuality;
+use App\Models\ItemName;
 use App\Models\Product;
-use App\Models\ProductType;
+use App\Models\Type;
+use App\Models\WeightKyat;
+use App\Models\WeightPal;
+use App\Models\WeightYway;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -21,18 +23,22 @@ class ProductController extends Controller
     public function index()
     {
         $business_id = auth()->user()->business_id;
-        $products = Product::where('business_id',$business_id)->with('user')->paginate(10);
-        $product_types = ProductType::where('business_id',$business_id)->get();
-        $gold_quality_kyats = GoldQualityKyat::where('business_id',$business_id)->get();
-        $gold_quality_pals = GoldQualityPal::where('business_id',$business_id)->get();
-        $gold_quality_yways = GoldQualityYway::where('business_id',$business_id)->get();
+        $products = Product::where('business_id', $business_id)->with('user')->paginate(10);
+        $gold_qualities = GoldQuality::where('business_id', $business_id)->get();
+        $types = Type::where('business_id', $business_id)->get();
+        $item_names = ItemName::where('business_id', $business_id)->get();
+        $weight_kyats = WeightKyat::where('business_id', $business_id)->get();
+        $weight_pals = WeightPal::where('business_id', $business_id)->get();
+        $weight_yways = WeightYway::where('business_id', $business_id)->get();
 
-        return Inertia::render('Admins/ProductManagement/Products/Index',[
+        return Inertia::render('AdminPanel/ProductManagement/Products/Index', [
             'products' => $products,
-            'product_types' => $product_types,
-            'gold_quality_kyats' => $gold_quality_kyats,
-            'gold_quality_pals' => $gold_quality_pals,
-            'gold_quality_yways' => $gold_quality_yways,
+            'gold_qualities' => $gold_qualities,
+            'types' => $types,
+            'item_names' => $item_names,
+            'weight_kyats' => $weight_kyats,
+            'weight_pals' => $weight_pals,
+            'weight_yways' => $weight_yways,
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }
@@ -58,21 +64,24 @@ class ProductController extends Controller
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
                 'name' => ['required', 'max:50'],
-                'p_type' => ['required'],
-                'q_kyat' => ['required'],
-                'q_pal' => ['required'],
-                'q_yway' => ['required'],
+                'quality' => ['required'],
+                'type' => ['required'],
+                'item_name' => ['required'],
+                'w_kyat' => ['required'],
+                'w_pal' => ['required'],
+                'w_yway' => ['required'],
             ]);
+            // return $request;
             try {
-                if($file = $request->file('image')){
-                    $image_name = uniqid().str_replace(' ','',$file->getClientOriginalName());
+                if ($file = $request->file('image')) {
+                    $image_name = uniqid() . str_replace(' ', '', $file->getClientOriginalName());
                     $path = '/images/products/';
-                    $file->move(public_path($path),$image_name);
-                    $image_name_path = $path.$image_name;
-                }else{
+                    $file->move(public_path($path), $image_name);
+                    $image_name_path = $path . $image_name;
+                } else {
                     $image_name_path = null;
                 }
-                $product_sku = $request->p_type["key"].$request->q_kyat["name"].$request->q_pal["name"].$request->q_yway["name"];
+                $product_sku = $request->quality["quality"] . $request->type["key"] . $request->item_name["key"] . $request->w_kyat["name"] . $request->w_pal["name"] . $request->w_yway["name"];
                 Product::create([
                     'name' => $request->name,
                     'product_sku' => $product_sku,
@@ -85,11 +94,10 @@ class ProductController extends Controller
                 ]);
                 return back();
             } catch (\Exception $e) {
-                return back()->with('fail','Fail to Create New Product Type');
+                return back()->with('fail', 'Fail to Create New Product Type');
             }
-           
         }
-        return back()->with('fail','No permission');
+        return back()->with('fail', 'No permission');
     }
 
     /**

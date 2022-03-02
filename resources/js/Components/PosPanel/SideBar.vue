@@ -40,14 +40,19 @@ data: () => ({
 .border {
     margin-left: 8px;
     margin-right: 8px;
-    background: #704232;
+    /* background: #704232; */
+    background: #ECBD00;
     border-radius: 20px;
     text-decoration: none;
 }
 .v-list-item-group .v-list-item--active {
     color: white !important;
+    /* color: rgb(12, 199, 6) !important; */
+
 }
 .theme--light.v-list-item--active .v-list-item__subtitle, .theme--light.v-list-item .v-list-item__action-text {
     color: white !important;
+    /* color: rgb(12, 199, 6) !important; */
+
 }
 </style>

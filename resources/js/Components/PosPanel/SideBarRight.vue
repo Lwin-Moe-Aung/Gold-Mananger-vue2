@@ -91,7 +91,7 @@
                                   <v-list-item three-line class="text-center mt-1">
                                       <v-list-item-content>
                                           <div>
-                                              <v-icon :color="active ? '#704232' : 'black'">fas fa-money-bill-wave</v-icon>
+                                              <v-icon :color="active ? '#ECBD00' : 'black'">fas fa-money-bill-wave</v-icon>
                                           </div>
                                           <v-list-item-subtitle
                                           :class="active ? 'brown--text' : 'black--text'" class="mt-n2 caption">Cach</v-list-item-subtitle>
@@ -111,7 +111,7 @@
                                   <v-list-item three-line class="text-center mt-1">
                                       <v-list-item-content>
                                           <div>
-                                              <v-icon :color="active ? '#704232' : 'black'">fas fa-credit-card</v-icon>
+                                              <v-icon :color="active ? '#ECBD00' : 'black'">fas fa-credit-card</v-icon>
                                           </div>
                                           <v-list-item-subtitle
                                           :class="active ? 'brown--text' : 'black--text'" class="mt-n2 caption">debit Card</v-list-item-subtitle>
@@ -131,7 +131,7 @@
                                 <v-list-item three-line class="text-center mt-1">
                                     <v-list-item-content>
                                         <div>
-                                            <v-icon :color="active ? '#704232' : 'black'">fas fa-qrcode</v-icon>
+                                            <v-icon :color="active ? '#ECBD00' : 'black'">fas fa-qrcode</v-icon>
                                         </div>
                                         <v-list-item-subtitle
                                         :class="active ? 'brown--text' : 'black--text'" class="mt-n2 caption">E-Wallet</v-list-item-subtitle>
@@ -146,7 +146,7 @@
           </v-container>
       </v-item-group>
       <div class="mx-3 mt-2">
-          <v-btn color="#704232" block dark class="widthoutupercase">Print Bills</v-btn>
+          <v-btn color="#ECBD00" block dark class="widthoutupercase black--text">Print Bills</v-btn>
       </div>
   </v-navigation-drawer>
 </template>
@@ -159,7 +159,8 @@ export default {
 
 <style>
     .v-card.borderme{
-        border:2px solid #704232 !important;
+        /* border:2px solid #704232 !important; */
+        border:2px solid #ECBD00 !important;
     }
     .col-12 {
         padding: 5px !important;

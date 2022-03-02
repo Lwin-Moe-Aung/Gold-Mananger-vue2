@@ -39,7 +39,7 @@
                                           <v-col
                                               cols="12"
                                               sm="6"
-                                              md="3"
+                                              md="2"
                                             >
                                               <v-text-field
                                                 label="ကျပ်"
@@ -52,7 +52,7 @@
                                           <v-col
                                               cols="12"
                                               sm="6"
-                                              md="3"
+                                              md="2"
                                             >
                                               <v-text-field
                                                 label="ပဲ"
@@ -65,11 +65,23 @@
                                           <v-col
                                                 cols="12"
                                                 sm="6"
-                                                md="3"
+                                                md="2"
                                               >
                                                 <v-text-field
                                                   label="ရွေး"
                                                   placeholder="ရွေး"
+                                                  outlined
+                                                  dense
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col
+                                                cols="12"
+                                                sm="6"
+                                                md="2"
+                                              >
+                                                <v-text-field
+                                                  label="ကျသင့်ငွေ"
+                                                  placeholder="ကျသင့်ငွေ"
                                                   outlined
                                                   dense
                                                 ></v-text-field>
@@ -83,10 +95,10 @@
                                             </strong>
                                           
                                           </v-list-item-content>
-                                          <v-col
+                                           <v-col
                                               cols="12"
                                               sm="6"
-                                              md="3"
+                                              md="2"
                                             >
                                               <v-text-field
                                                 label="ကျပ်"
@@ -99,7 +111,7 @@
                                           <v-col
                                               cols="12"
                                               sm="6"
-                                              md="3"
+                                              md="2"
                                             >
                                               <v-text-field
                                                 label="ပဲ"
@@ -112,11 +124,23 @@
                                           <v-col
                                                 cols="12"
                                                 sm="6"
-                                                md="3"
+                                                md="2"
                                               >
                                                 <v-text-field
                                                   label="ရွေး"
                                                   placeholder="ရွေး"
+                                                  outlined
+                                                  dense
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col
+                                                cols="12"
+                                                sm="6"
+                                                md="2"
+                                              >
+                                                <v-text-field
+                                                  label="ကျသင့်ငွေ"
+                                                  placeholder="ကျသင့်ငွေ"
                                                   outlined
                                                   dense
                                                 ></v-text-field>
@@ -130,30 +154,52 @@
                                             </strong>
                                           
                                           </v-list-item-content>
-                                          <v-col
+                                           <v-col
                                               cols="12"
                                               sm="6"
-                                              md="3"
+                                              md="2"
                                             >
-                                              
+                                              <v-text-field
+                                                label="ကျပ်"
+                                                placeholder="ကျပ်"
+                                                outlined
+                                                dense
+                                              ></v-text-field>
                                           </v-col>
                                       
                                           <v-col
                                               cols="12"
                                               sm="6"
-                                              md="3"
+                                              md="2"
                                             >
-                                            
+                                              <v-text-field
+                                                label="ပဲ"
+                                                placeholder="ပဲ"
+                                                outlined
+                                                dense
+                                              ></v-text-field>
                                           </v-col>
 
                                           <v-col
                                                 cols="12"
                                                 sm="6"
-                                                md="3"
+                                                md="2"
                                               >
                                                 <v-text-field
                                                   label="ရွေး"
                                                   placeholder="ရွေး"
+                                                  outlined
+                                                  dense
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col
+                                                cols="12"
+                                                sm="6"
+                                                md="2"
+                                              >
+                                                <v-text-field
+                                                  label="ကျသင့်ငွေ"
+                                                  placeholder="ကျသင့်ငွေ"
                                                   outlined
                                                   dense
                                                 ></v-text-field>
@@ -169,7 +215,7 @@
                                           <v-col
                                               cols="12"
                                               sm="6"
-                                              md="3"
+                                              md="2"
                                             >
                                             
                                           </v-col>
@@ -177,7 +223,14 @@
                                           <v-col
                                               cols="12"
                                               sm="6"
-                                              md="3"
+                                              md="2"
+                                            >
+                                            
+                                          </v-col>
+                                          <v-col
+                                              cols="12"
+                                              sm="6"
+                                              md="2"
                                             >
                                             
                                           </v-col>
@@ -185,7 +238,7 @@
                                           <v-col
                                                 cols="12"
                                                 sm="6"
-                                                md="3"
+                                                md="2"
                                               >
                                                 <v-text-field
                                                   label="kyats"

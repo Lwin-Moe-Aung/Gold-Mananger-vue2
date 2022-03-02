@@ -348,7 +348,7 @@
             params: {
                 handler: throttle(function () {
                     let params = pickBy(this.params);
-                    this.$inertia.get(this.route('admin.types.index'), params, { replace: true, preserveState: true });
+                    this.$inertia.get(this.route('admin.product_types.index'), params, { replace: true, preserveState: true });
                 }, 150),
                 deep: true,
             },

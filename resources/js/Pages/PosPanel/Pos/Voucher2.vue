@@ -109,7 +109,7 @@
                         </v-form>
                     </v-card-actions>
                       <v-card-actions>
-                          <v-btn color="#704232" block dark class="withoutupercase mb-2">Print Bill</v-btn>
+                          <v-btn color="#ECBD00" block dark class="withoutupercase mb-2 black--text">Print Bill</v-btn>
                       </v-card-actions>
                     
                 </v-card>

@@ -1,7 +1,53 @@
 <template>
     <v-item-group mandatory class="mt-n1">
                   <v-container>
-                    <v-row justify="center" class="space mt-2">
+                    <v-sheet
+                      class="mx-auto"
+                      elevation="8"
+                      max-width="1090"
+                    >
+                        <v-slide-group
+                          v-model="model"
+                          
+                          active-class="success"
+                          show-arrows
+                        >
+                          <v-slide-item
+                            v-for="n in 15"
+                            :key="n"
+                            v-slot="{ active, toggle }"
+                          >
+                            <v-card
+                              :color="active ? '#F6EFEF' : 'white'"
+                            :class="active ? 'borderme' : 'borderout'"
+                            class="d-flex align-center rounded-lg mx-2 mt-1 mb-1"
+                            dark
+                            height="130"
+                            @click="toggle"
+                            flat
+                            >
+                             <v-row>
+                              <v-col cols="12" sm="12">
+                                <v-list-item two-line  class="text-center ">
+                                  <v-list-item-content>
+                                    <div align="center" justify="center">
+                                    
+                                        <v-img  src="images/pos/block.jpg" max-height="90" max-width="90" contain></v-img>
+                                    
+                                    </div>
+                                    <v-list-item-subtitle
+                                :class="active ? 'brown--text' : 'black--text'" class=" caption mt-1">Gold necklace</v-list-item-subtitle>
+                                    
+                                  </v-list-item-content>
+                                </v-list-item>
+                              </v-col>
+                            </v-row>
+                             
+                            </v-card>
+                          </v-slide-item>
+                        </v-slide-group>
+                    </v-sheet>
+                    <!-- <v-row justify="center" class="space mt-2">
                       <v-col
                         cols="12"
                         md="2"
@@ -207,7 +253,7 @@
                           </v-card>
                         </v-item>
                       </v-col>
-                    </v-row>
+                    </v-row> -->
         
                 </v-container>
             </v-item-group>

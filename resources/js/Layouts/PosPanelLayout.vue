@@ -2,7 +2,7 @@
     <v-app :style="{background: $vuetify.theme.themes.dark.background}">
         <SideBar />
         <SideBarRight />
-        <v-container>
+        <v-container style="margin-left: 80px;padding:38px;">
           <!-- Main content -->
                   <slot></slot>
           <!-- /.content -->

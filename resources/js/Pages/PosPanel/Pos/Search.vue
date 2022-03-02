@@ -1,120 +1,36 @@
 <template>
-     <v-toolbar color="rgba(0,0,0,0)" flat>
+    <v-toolbar color="rgba(0,0,0,0)" flat>
               <v-row>
                   <v-col cols="12" sm="12">
                       <v-card    
                           flat class="rounded-lg mx-2" 
                         >
-                        <v-row color="orange accent-1">
+                        <v-row>
 
                         
-                              <v-toolbar color="orange accent-1">
+                              <v-toolbar color="#E1E2E1">
+                               
                                 <v-col
                                     cols="12"
-                                    sm="2"
+                                    sm="5"
+                                    class="mt-7 text-white"
+                                    
                                   >
-                                  <v-toolbar-title class="text-h6 mr-6 hidden-sm-and-down">
-                                    Product SKU
-                                  </v-toolbar-title>
+                                     <v-text-field
+                                    
+                                      v-model="message3"
+                                      label="Search Item By Product SKu"
+                                      clearable
+                                    ></v-text-field>
                                 </v-col>
-                                <v-col
-                                    cols="12"
-                                    sm="3"
-                                  >
-                                    <v-autocomplete
-                                    v-model="model"
-                                    :items="items"
-                                    :loading="isLoading"
-                                    :search-input.sync="search"
-                                    chips
-                                    clearable
-                                    hide-details
-                                    hide-selected
-                                    item-text="name"
-                                    item-value="symbol"
-                                    label="Search for a product type..."
-                                    solo
-                                                          >
-                                      <template v-slot:no-data>
-                                        <v-list-item>
-                                          <v-list-item-title>
-                                            Search for your favorite
-                                            <strong>Products</strong>
-                                          </v-list-item-title>
-                                        </v-list-item>
-                                      </template>
-                                      <template v-slot:selection="{ attr, on, item, selected }">
-                                        <v-chip
-                                          v-bind="attr"
-                                          :input-value="selected"
-                                          color="blue-grey"
-                                          class="white--text"
-                                          v-on="on"
-                                        >
-                                          <v-icon left>
-                                            mdi-bitcoin
-                                          </v-icon>
-                                          <span v-text="item.name"></span>
-                                        </v-chip>
-                                      </template>
-                                        <template v-slot:item="{ item }">
-                                          <v-list-item-avatar
-                                            color="indigo"
-                                            class="text-h5 font-weight-light white--text"
-                                          >
-                                            {{ item.name.charAt(0) }}
-                                          </v-list-item-avatar>
-                                          <v-list-item-content>
-                                            <v-list-item-title v-text="item.name"></v-list-item-title>
-                                            <v-list-item-subtitle v-text="item.symbol"></v-list-item-subtitle>
-                                          </v-list-item-content>
-                                          <v-list-item-action>
-                                            <v-icon>mdi-bitcoin</v-icon>
-                                          </v-list-item-action>
-                                        </template>
-                                  </v-autocomplete>
-                                </v-col>
-                                <v-col
-                                    cols="12"
-                                    sm="2"
-                                    class="mt-7"
-                                  >
-                                      <v-select
-                                            :items="select_item"
-                                            label="ကျပ်သား"
-                                            solo
-                                          ></v-select>
-                                </v-col>
-                                <v-col
-                                    cols="12"
-                                    sm="2"
-                                    class="mt-7"
-                                  >
-                                    <v-select
-                                            :items="select_item"
-                                            label="ပဲ"
-                                            solo
-                                          ></v-select>
-                                </v-col>
-                                  
-                                  <v-col
-                                    cols="12"
-                                    sm="2"
-                                    class="mt-7"
-                                  >
-                                    <v-select
-                                            :items="select_item"
-                                            label="ရွေး"
-                                            solo
-                                          ></v-select>
-                                </v-col>
+                               
                                 
                           </v-toolbar>
                           </v-row>
                       </v-card>
                   </v-col>
               </v-row>
-            </v-toolbar>
+    </v-toolbar>
 </template>
 
 <script>
@@ -193,4 +109,5 @@
 .v-timeline{
   padding-top: 0 !important;
 }
+
 </style>

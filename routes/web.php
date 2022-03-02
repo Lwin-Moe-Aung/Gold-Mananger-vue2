@@ -14,7 +14,7 @@ use App\Http\Controllers\Admins\SupplierController;
 use App\Http\Controllers\Admins\ProductTypeController;
 use App\Http\Controllers\Admins\DailySetupController;
 use App\Http\Controllers\Admins\ProductController;
-
+use App\Http\Controllers\Pos\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +35,15 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+//pos
+Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier'])->group(function () {
+    Route::get('/pos', [HomeController::class, 'index'])->name('pos.index');
+    Route::get('/pos/poduct-list', [HomeController::class, 'productList'])->name('pos.product.lists');
+    Route::get('/pos/search/{id}', [HomeController::class, 'search'])->name('pos.search');
+});
+
+
+
 //login
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'postLogin'])->name('post.login');

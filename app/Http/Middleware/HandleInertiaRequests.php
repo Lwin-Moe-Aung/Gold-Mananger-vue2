@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\DailySetup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -53,6 +54,51 @@ class HandleInertiaRequests extends Middleware
                 'message' => $request->session()->has('message') ? $request->session()->get('message', 'default') : "",
             ],
             'user' => Auth::user(),
+            'daily_setup' => function () {
+                $daily_price =  DailySetup::select('daily_price')
+                    ->where('type', 1)
+                    ->where('business_id', 1)
+                    ->first();
+                $q_16pal = $daily_price->daily_price;
+                $pal = $q_16pal / 16;
+                $q_15pal = $q_16pal - $pal;
+                $q_14pal = $q_16pal - ($pal * 2);
+                $q_13pal = $q_16pal - ($pal * 3);
+                $q_12pal = $q_16pal - ($pal * 4);
+                $q_11pal = $q_16pal - ($pal * 5);
+                return [
+                    '16' => [
+                        'kyat' => $q_16pal,
+                        'pal' => $q_16pal / 16,
+                        'yway' => $q_16pal / 128,
+                    ],
+                    '15' => [
+                        'kyat' => $q_15pal,
+                        'pal' => $q_15pal / 16,
+                        'yway' => $q_15pal / 128,
+                    ],
+                    '14' => [
+                        'kyat' => $q_14pal,
+                        'pal' => $q_14pal / 16,
+                        'yway' => $q_14pal / 128,
+                    ],
+                    '13' => [
+                        'kyat' => $q_13pal,
+                        'pal' => $q_13pal / 16,
+                        'yway' => $q_13pal / 128,
+                    ],
+                    '12' => [
+                        'kyat' => $q_12pal,
+                        'pal' => $q_12pal / 16,
+                        'yway' => $q_12pal / 128,
+                    ],
+                    '11' => [
+                        'kyat' => $q_11pal,
+                        'pal' => $q_11pal / 16,
+                        'yway' => $q_11pal / 128,
+                    ],
+                ];
+            },
             // 'success' => session()->has('success') ? session()->get('success') : "",
             // 'fail' => session()->has('fail') ? session()->get('fail') : "",
         ]);

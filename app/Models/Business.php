@@ -5,26 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
-use Laravel\Jetstream\HasProfilePhoto;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class Business extends Model
 {
     use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto;
     use Notifiable;
     use HasRoles;
-    use TwoFactorAuthenticatable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-   
+
     protected $table = 'business';
     protected $fillable = [
         'name',
@@ -49,11 +45,10 @@ class Business extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        
-    ];
+    protected $hidden = [];
 
-    public function Contact(){
+    public function Contact()
+    {
         return $this->hasMany(Contact::class, 'business_id');
     }
 }

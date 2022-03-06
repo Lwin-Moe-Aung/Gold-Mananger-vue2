@@ -17,20 +17,28 @@ class HomeController extends Controller
     {
         return Inertia::render('PosPanel/Pos/Home');
     }
-    public function search($id)
-    {
-        $items = Item::where('product_id', $id)
-            ->get()
-            ->toArray();
-        return response()->json($items, 200);
-    }
+
     public function productList()
     {
         $business_id = Auth::user()->business_id;
-        $products = Product::select('id', 'name', 'product_sku', 'image')
+        $products = Product::select('id', 'name', 'product_sku', 'image', 'quality')
             ->where('business_id', $business_id)
             ->get()
             ->toArray();
         return response()->json($products, 200);
+    }
+
+    public function search($id)
+    {
+        $items = Item::where('product_id', $id)
+            ->with('product')
+            ->get()
+            ->toArray();
+        foreach ($items as $key => $item) {
+            $items[$key]['gold_weight'] = json_decode($item['gold_weight']);
+            $items[$key]['gem_weight'] = json_decode($item['gem_weight']);
+            $items[$key]['fee'] = json_decode($item['fee']);
+        }
+        return response()->json($items, 200);
     }
 }

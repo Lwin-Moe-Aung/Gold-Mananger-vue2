@@ -19,6 +19,7 @@ import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
 import Multiselect from 'vue-multiselect'
 import "vue-multiselect/dist/vue-multiselect.min.css";
+import { store } from './store/store';
 
 Vue.mixin({methods:{route:window.route}});
 // Vue.use(VueToastr);
@@ -42,6 +43,7 @@ createInertiaApp({
                     }
                 }
             }),
+            store: store,
             render: h => h(App, props),
         }).$mount(el)
     },

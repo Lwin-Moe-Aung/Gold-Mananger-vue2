@@ -23,7 +23,7 @@ class DailySetup extends Model
     protected $table = 'daily_setups';
 
     protected $fillable = [
-        'type_of_daily_setup',
+        'type',
         'daily_price',
         'business_id',
     ];

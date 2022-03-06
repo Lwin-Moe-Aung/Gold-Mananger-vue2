@@ -15,7 +15,7 @@ class CreateDailySetupsTable extends Migration
     {
         Schema::create('daily_setups', function (Blueprint $table) {
             $table->id();
-            $table->integer('type_of_daily_setup');
+            $table->integer('type');
             $table->decimal('daily_price', 8, 2);
             $table->unsignedBigInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');

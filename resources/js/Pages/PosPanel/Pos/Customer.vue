@@ -1,8 +1,15 @@
 <template>
      <v-col cols="12" sm="3">
-                      <v-card    
-                          flat class="rounded-lg mx-3"
-                        >
+        <v-hover
+          v-slot="{ hover }"
+          close-delay="200"
+          >
+              <v-card
+                :elevation="hover ? 16 : 2"
+                :class="{ 'on-hover': hover }"
+                flat class="mx-auto rounded-lg mx-3"
+                
+                >
                             <v-list-item three-line>
                                   <v-list-item-avatar
                                       rounded
@@ -63,7 +70,8 @@
                             </v-btn>
                         </v-card-actions>
                   </v-card>
-              </v-col>
+              </v-hover>
+            </v-col>
 
 </template>
 

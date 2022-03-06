@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('product_sku', 100);
+            $table->string('quality', 100);
             $table->text('description')->nullable();
             $table->string('tax', 100)->nullable();
             $table->integer('item_count')->default(0);

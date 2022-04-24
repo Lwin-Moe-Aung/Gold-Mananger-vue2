@@ -2,29 +2,29 @@
     <v-toolbar color="rgba(0,0,0,0)" flat>
               <v-row>
                   <v-col cols="12" sm="12">
-                      <v-card    
-                          flat class="rounded-lg mx-2" 
+                      <v-card
+                          flat class="rounded-lg mx-2"
                         >
                         <v-row>
 
-                        
+
                               <v-toolbar color="#E1E2E1">
-                               
+
                                 <v-col
                                     cols="12"
                                     sm="5"
                                     class="mt-7 text-white"
-                                    
+
                                   >
                                      <v-text-field
-                                    
+
                                       v-model="message3"
                                       label="Search Item By Product SKu"
                                       clearable
                                     ></v-text-field>
                                 </v-col>
-                               
-                                
+
+
                           </v-toolbar>
                           </v-row>
                       </v-card>
@@ -38,52 +38,52 @@
   export default {
     name: 'Search',
 
-    
+
      data: () => ({
-      isLoading: false,
-      items: [],
-      model: null,
-      search: null,
-      tab: null,
-      select_item: ['1', '2', '3', '4','5', '6', '7', '8'],
-      messages: [
-        {
-          from: 'လက်ကျန်',
-          message: `50,000`,
-          time: '10:42am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'ဆပ်ငွေ',
-          message: '30,000',
-          time: '10:37am',
-          color: 'green',
-        },
-      ],
+        isLoading: false,
+        items: [],
+        model: null,
+        search: null,
+        tab: null,
+        select_item: ['1', '2', '3', '4','5', '6', '7', '8'],
+        messages: [
+            {
+            from: 'လက်ကျန်',
+            message: `50,000`,
+            time: '10:42am',
+            color: 'deep-purple lighten-1',
+            },
+            {
+            from: 'ဆပ်ငွေ',
+            message: '30,000',
+            time: '10:37am',
+            color: 'green',
+            },
+        ],
     }),
 
     watch: {
-      model (val) {
-        if (val != null) this.tab = 0
-        else this.tab = null
-      },
-      search () {
-        // Items have already been loaded
-        if (this.items.length > 0) return
+        model (val) {
+            if (val != null) this.tab = 0
+            else this.tab = null
+        },
+        search () {
+            // Items have already been loaded
+            if (this.items.length > 0) return
 
-        this.isLoading = true
+            this.isLoading = true
 
-        // Lazily load input items
-        fetch('https://api.coingecko.com/api/v3/coins/list')
-          .then(res => res.clone().json())
-          .then(res => {
-            this.items = res
-          })
-          .catch(err => {
-            console.log(err)
-          })
-          .finally(() => (this.isLoading = false))
-      },
+            // Lazily load input items
+            fetch('https://api.coingecko.com/api/v3/coins/list')
+            .then(res => res.clone().json())
+            .then(res => {
+                this.items = res
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => (this.isLoading = false))
+        },
     },
   }
 </script>

@@ -15,6 +15,8 @@ use App\Http\Controllers\Admins\ProductTypeController;
 use App\Http\Controllers\Admins\DailySetupController;
 use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Pos\HomeController;
+use App\Http\Controllers\Pos\DailySetupValueController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +41,9 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier'])->group(function () {
     Route::get('/pos', [HomeController::class, 'index'])->name('pos.index');
     Route::get('/pos/poduct-list', [HomeController::class, 'productList'])->name('pos.product.lists');
-    Route::get('/pos/search/{id}', [HomeController::class, 'search'])->name('pos.search');
+    Route::get('/pos/search/{sku}', [HomeController::class, 'search'])->name('pos.search');
+    Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
+
 });
 
 
@@ -79,4 +83,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::resource('product_types', ProductTypeController::class)->except(['create', 'show', 'edit']);
     Route::resource('daily_setups', DailySetupController::class)->except(['create', 'show', 'edit']);
     Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');
+
 });

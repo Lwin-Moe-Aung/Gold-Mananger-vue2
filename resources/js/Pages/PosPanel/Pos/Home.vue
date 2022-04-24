@@ -1,9 +1,40 @@
 <template>
     <pos-panel-layout>
-        <!--<Search/>  -->
         <v-toolbar color="rgba(0,0,0,0)" flat>
             <v-row>
                 <v-col cols="12" sm="12">
+                    <v-card flat class="rounded-lg mx-2">
+                        <v-row>
+                            <v-toolbar color="#ECBD00">
+                                <v-col cols="10" sm="4">
+                                    <div class="ma-auto" style="max-width: 300px">
+                                        <v-otp-input
+                                            v-model="searchValue"
+                                            :length="length"
+                                            type="text"
+                                            plain
+                                            @finish="searchProduct"
+                                        ></v-otp-input>
+                                    </div>
+                                </v-col>
+                                <v-col cols="2" class="my-3">
+                                    <!-- <v-btn
+                                        block
+                                        :disabled="!isActive"
+                                        v-on:click="searchProduct"
+                                    >
+                                        Search
+                                    </v-btn> -->
+                                </v-col>
+                            </v-toolbar>
+
+                        </v-row>
+                    </v-card>
+                </v-col>
+
+            </v-row>
+            <!-- <v-row>
+                 <v-col cols="12" sm="12">
                     <v-card flat class="rounded-lg mx-2">
                         <v-row>
                             <v-toolbar color="#ECBD00">
@@ -37,7 +68,7 @@
                                                 item,
                                                 selected,
                                             }"
-                                        >
+                                            >
                                             <v-chip
                                                 v-bind="attr"
                                                 :input-value="selected"
@@ -64,7 +95,6 @@
                                                     max-width="90"
                                                     contain
                                                 ></v-img>
-                                                <!-- {{ item.name.charAt(0) }} -->
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title
@@ -84,7 +114,7 @@
                         </v-row>
                     </v-card>
                 </v-col>
-            </v-row>
+            </v-row>-->
         </v-toolbar>
 
         <v-item-group mandatory class="mt-n1">
@@ -186,6 +216,8 @@ export default {
             items: [],
             model: null,
             search: null,
+            searchValue: '',
+            length: 9,
         };
     },
     watch: {
@@ -194,32 +226,60 @@ export default {
                 this.items = [];
                 return;
             }
-            axios.get(this.route("pos.search", val)).then((response) => {
+            axios.get(this.route("pos.search", val))
+            .then((response) => {
                 // console.log(response);
                 this.items = response.data;
             });
         },
-        search(val) {
-            // products have already been loaded
-            if (this.products.length > 0) return;
-            this.isLoading = true;
-            // Lazily load input products
-            fetch(this.route("pos.product.lists"))
-                // fetch('https://api.coingecko.com/api/v3/coins/list')
-                .then((res) => res.clone().json())
-                .then((res) => {
-                    this.products = res;
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-                .finally(() => (this.isLoading = false));
-        },
+        // search(val) {
+        //     // products have already been loaded
+        //     if (this.products.length > 0) return;
+        //     this.isLoading = true;
+        //     // Lazily load input products
+        //     fetch(this.route("pos.product.lists"))
+        //         // fetch('https://api.coingecko.com/api/v3/coins/list')
+        //         .then((res) => res.clone().json())
+        //         .then((res) => {
+        //             this.products = res;
+        //         })
+        //         .catch((err) => {
+        //             console.log(err);
+        //         })
+        //         .finally(() => (this.isLoading = false));
+        // },
     },
     methods: {
         select(item) {
             this.$store.dispatch("selectItem", item);
         },
+        searchProduct() {
+            const regex = /[0-9]{2}[a-z]{2}[0-9]{5}/ig;
+            const matches = regex.exec(this.searchValue);
+            if( matches == null){
+                Swal.fire(
+                    '',
+                    'Sku format is something wrong',
+                    'fail'
+                )
+                return false;
+            }
+            axios.get(this.route("pos.search", this.searchValue))
+            .then((response) => {
+                if(response.data.message == "existing"){
+                    this.items = response.data.items;
+                }else{
+                    this.select(response.data.items)
+                }
+
+            });
+
+        },
+    },
+    computed: {
+      isActive () {
+        return this.searchValue.length === this.length
+      },
     },
 };
 </script>
@@ -245,5 +305,8 @@ export default {
 } */
 .v-timeline {
     padding-top: 0 !important;
+}
+.v-toolbar__content {
+    height: 71px !important;
 }
 </style>

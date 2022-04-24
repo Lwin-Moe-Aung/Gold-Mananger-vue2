@@ -24,7 +24,6 @@ class AuthController extends Controller
         ]);
         $credential = $request->only('email', 'password');
         if (Auth::attempt($credential)) {
-            // dd("fuck my life");
             return redirect()->route('admin.dashboard.index');
         }
     }

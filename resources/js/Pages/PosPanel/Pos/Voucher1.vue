@@ -22,10 +22,69 @@
                         <v-list-item-subtitle class="mt-1">
                             {{ form.item_description }}
                         </v-list-item-subtitle>
+
                         <strong class="mt-3">
-                            {{ $page.props.daily_setup[15].kyat }}
-                            .kyats
+                            <v-tooltip top>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+
+                                    dark
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    @click="openModel"
+                                    >
+                                    {{ dailySetup.kyat | formatNumber }}
+                                    .kyats
+                                </v-btn>
+                            </template>
+                            <span>{{quality}} .ပဲရည်</span>
+                            </v-tooltip>
+
                         </strong>
+                        <v-row
+                            justify="center"
+                            >
+                            <v-dialog
+                                v-model="dialog2"
+                                max-width="500px"
+                            >
+                                <v-card>
+                                    <v-card-title>
+                                        {{ quality }} ပဲရည်
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <form @submit.prevent="editDailySetup">
+
+                                            <v-text-field
+                                                v-model="dailyValue"
+                                                :error-messages="nameErrors"
+                                                :counter="10"
+                                                label="Quality"
+                                                required
+                                                @input="$v.name.$touch()"
+                                                @blur="$v.name.$touch()"
+                                            ></v-text-field>
+
+                                            <v-btn
+                                                color="success"
+                                                text
+                                                type="submit"
+                                            >
+                                            Add
+                                            </v-btn>
+                                            <v-btn
+                                                color="primary"
+                                                text
+                                                @click="dialog2 = false"
+                                            >
+                                                Close
+                                            </v-btn>
+                                        </form>
+                                    </v-card-text>
+
+                                </v-card>
+                            </v-dialog>
+                        </v-row>
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item
@@ -48,6 +107,7 @@
                     <!--new-->
                     <v-form>
                         <v-container>
+
                             <v-row>
                                 <v-col cols="12" sm="8">
                                     <!--row for voucher-->
@@ -342,6 +402,7 @@
                                     </v-row>
                                 </v-col>
                             </v-row>
+
                             <!--row for voucher-->
                         </v-container>
                     </v-form>
@@ -353,162 +414,218 @@
 </template>
 
 <script>
-export default {
-    name: "ItemList",
+    import { validationMixin } from 'vuelidate'
+    import { required, maxLength, email } from 'vuelidate/lib/validators'
+    import axios from 'axios';
 
-    data() {
-        return {
-            form: this.$inertia.form({
-                id: "",
-                name: "",
-                image: "",
-                item_sku: "",
-                gold_weight: { kyat: "", pal: "", yway: "" },
-                gold_price: "",
-                gem_weight: { kyat: "", pal: "", yway: "" },
-                gem_price: "",
-                fee: { kyat: "", pal: "", yway: "" },
-                fee_price: "",
-                fee_for_making: "",
-                item_discount: "",
-                tax: "",
-                item_description: "",
-                total_kyat: "",
-                total_pal: "",
-                exceed_pal_form_yway: "",
-                total_yway: "",
-                total_before: "",
-                total_after: "",
-                paid_money: "",
-                credit_money: "",
-            }),
-            quality: "",
-        };
-    },
-    methods: {
-        addToCart() {
-            let item = [];
-            item.id = this.form.id;
-            item.name = this.form.name;
-            item.image = this.form.image;
-            item.total_after = this.form.total_after;
-            this.$store.dispatch("addItem", item);
+    export default {
+        mixins: [validationMixin],
+        validations: {
+            name: { required, maxLength: maxLength(10) },
         },
-    },
+        name: "ItemList",
 
-    computed: {
-        item() {
-            let value = this.$store.state.selectedItem;
-            this.form.id = value.id;
-            this.form.name = value.name;
-            this.form.image = value.image1;
-            this.form.item_sku = value.item_sku;
-            this.form.item_description = value.item_description;
-            this.form.gold_weight.kyat = value.gold_weight.kyat;
-            this.form.gold_weight.pal = value.gold_weight.pal;
-            this.form.gold_weight.yway = value.gold_weight.yway;
-            this.form.gem_weight.kyat = value.gem_weight.kyat;
-            this.form.gem_weight.pal = value.gem_weight.pal;
-            this.form.gem_weight.yway = value.gem_weight.yway;
-            this.form.gem_price = value.gem_price;
-            this.form.fee.kyat = value.fee.kyat;
-            this.form.fee.pal = value.fee.pal;
-            this.form.fee.yway = value.fee.yway;
-            this.form.fee_for_making = value.fee_for_making;
-            this.form.tax = value.tax;
-            this.quality = value.product.quality;
-            return value;
+        data() {
+            return {
+                form: this.$inertia.form({
+                    id: "",
+                    name: "",
+                    image: "",
+                    item_sku: "",
+                    gold_weight: { kyat: "", pal: "", yway: "" },
+                    gold_price: "",
+                    gem_weight: { kyat: "", pal: "", yway: "" },
+                    gem_price: "",
+                    fee: { kyat: "", pal: "", yway: "" },
+                    fee_price: "",
+                    fee_for_making: "",
+                    item_discount: "",
+                    tax: "",
+                    item_description: "",
+                    total_kyat: "",
+                    total_pal: "",
+                    exceed_pal_form_yway: "",
+                    total_yway: "",
+                    total_before: "",
+                    total_after: "",
+                    paid_money: "",
+                    credit_money: "",
+                }),
+                quality: '',
+                dialog2: false,
+                name: '',
+                email: '',
+                dailyValue: '',
+                dailySetup: [],
+            };
         },
-        goldPrice() {
-            let price = this.$page.props.daily_setup[this.quality];
-            let kyat_p =
-                parseInt(this.form.gold_weight.kyat) * parseInt(price.kyat);
-            let pal_p =
-                parseInt(this.form.gold_weight.pal) * parseInt(price.pal);
-            let yway_p =
-                parseInt(this.form.gold_weight.yway) * parseInt(price.yway);
-            this.form.gold_price = kyat_p + pal_p + yway_p;
-            if (isNaN(this.form.gold_price)) this.form.gold_price = "";
-            return this.form.gold_price;
-        },
-        feePrice() {
-            let price = this.$page.props.daily_setup[this.quality];
-            let kyat_p = parseInt(this.form.fee.kyat) * parseInt(price.kyat);
-            let pal_p = parseInt(this.form.fee.pal) * parseInt(price.pal);
-            let yway_p = parseInt(this.form.fee.yway) * parseInt(price.yway);
-            this.form.fee_price = kyat_p + pal_p + yway_p;
-            if (isNaN(this.form.fee_price)) this.form.fee_price = "";
+        methods: {
+            addToCart() {
+                let item = [];
+                item.id = this.form.id;
+                item.name = this.form.name;
+                item.image = this.form.image;
+                item.total_after = this.form.total_after;
+                this.$store.dispatch("addItem", item);
+            },
+            openModel() {
+                this.dialog2 = true;
+            },
+            editDailySetup() {
+                this.dialog2 = false;
+                this.dailySetup.kyat = this.dailyValue;
 
-            return this.form.fee_price;
-        },
-        totalKyat() {
-            this.form.total_kyat =
-                parseInt(this.form.gold_weight.kyat) +
-                parseInt(this.form.gem_weight.kyat) +
-                parseInt(this.form.fee.kyat);
-            if (isNaN(this.form.total_kyat)) this.form.total_kyat = "";
+                let data = { dailySetup: this.dailySetup, quality:this.quality}
+                axios.post('/pos/edit_daily_setup', data)
+                .then(res => {
+                    this.dailySetup.kyat = res.data.kyat;
+                    this.dailySetup.pal = res.data.pal;
+                    this.dailySetup.yway = res.data.yway;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
 
-            return this.form.total_kyat;
+            },
         },
-        totalPal() {
-            this.form.total_pal =
-                parseInt(this.form.gold_weight.pal) +
-                parseInt(this.form.gem_weight.pal) +
-                parseInt(this.form.fee.pal) +
-                parseInt(this.form.exceed_pal_form_yway);
-            if (isNaN(this.form.total_pal)) {
-                this.form.total_pal = "";
-            }
-            if (this.form.total_pal >= 16) {
+
+        computed: {
+
+            item() {
+                let value = this.$store.state.selectedItem;
+                console.log(value);
+                this.form.id = value.id;
+                this.form.name = value.name;
+                this.form.image = value.image1;
+                this.form.item_sku = value.item_sku;
+                this.form.item_description = value.item_description;
+                this.form.gold_weight.kyat = value.gold_weight.kyat;
+                this.form.gold_weight.pal = value.gold_weight.pal;
+                this.form.gold_weight.yway = value.gold_weight.yway;
+                this.form.gem_weight.kyat = value.gem_weight.kyat;
+                this.form.gem_weight.pal = value.gem_weight.pal;
+                this.form.gem_weight.yway = value.gem_weight.yway;
+                this.form.gem_price = value.gem_price;
+                this.form.fee.kyat = value.fee.kyat;
+                this.form.fee.pal = value.fee.pal;
+                this.form.fee.yway = value.fee.yway;
+                this.form.fee_for_making = value.fee_for_making;
+                this.form.tax = value.tax;
+                this.quality = value.quality;
+
+                this.dailySetup = this.$page.props.daily_setup[this.quality];
+                this.dailyValue = this.$page.props.daily_setup[this.quality].kyat;
+                return value;
+            },
+            goldPrice() {
+                let price = this.$page.props.daily_setup[this.quality];
+                let kyat_p =
+                    parseInt(this.form.gold_weight.kyat) * parseInt(price.kyat);
+                let pal_p =
+                    parseInt(this.form.gold_weight.pal) * parseInt(price.pal);
+                let yway_p =
+                    parseInt(this.form.gold_weight.yway) * parseInt(price.yway);
+                this.form.gold_price = kyat_p + pal_p + yway_p;
+                if (isNaN(this.form.gold_price)) this.form.gold_price = "";
+                return this.form.gold_price;
+            },
+            gemPrice() {
+                let price = this.$page.props.daily_setup[this.quality];
+                let kyat_p =
+                    parseInt(this.form.gem_weight.kyat) * parseInt(price.kyat);
+                let pal_p =
+                    parseInt(this.form.gem_weight.pal) * parseInt(price.pal);
+                let yway_p =
+                    parseInt(this.form.gem_weight.yway) * parseInt(price.yway);
+                this.form.gem_price = kyat_p + pal_p + yway_p;
+                if (isNaN(this.form.gem_price)) this.form.gem_price = "";
+                return this.form.gem_price;
+            },
+            feePrice() {
+                let price = this.$page.props.daily_setup[this.quality];
+                let kyat_p = parseInt(this.form.fee.kyat) * parseInt(price.kyat);
+                let pal_p = parseInt(this.form.fee.pal) * parseInt(price.pal);
+                let yway_p = parseInt(this.form.fee.yway) * parseInt(price.yway);
+                this.form.fee_price = kyat_p + pal_p + yway_p;
+                if (isNaN(this.form.fee_price)) this.form.fee_price = "";
+
+                return this.form.fee_price;
+            },
+            totalKyat() {
                 this.form.total_kyat =
-                    this.form.total_kyat + parseInt(this.form.total_pal / 16);
-                this.form.total_pal = this.form.total_pal % 16;
-            }
-            return this.form.total_pal;
-        },
-        totalYway() {
-            this.form.total_yway =
-                parseInt(this.form.gold_weight.yway) +
-                parseInt(this.form.gem_weight.yway) +
-                parseInt(this.form.fee.yway);
-            if (isNaN(this.form.total_yway)) {
-                this.form.total_yway = "";
-            }
-            if (this.form.total_yway >= 8) {
-                this.form.exceed_pal_form_yway = parseInt(
-                    this.form.total_yway / 8
-                );
-                this.form.total_yway = this.form.total_yway % 8;
-            }
-            return this.form.total_yway;
-        },
-        totalBefore() {
-            this.form.total_before =
-                parseInt(this.form.gold_price) +
-                parseInt(this.form.gem_price) +
-                parseInt(this.form.fee_price) +
-                parseInt(this.form.fee_for_making);
+                    parseInt(this.form.gold_weight.kyat) +
+                    parseInt(this.form.gem_weight.kyat) +
+                    parseInt(this.form.fee.kyat);
+                if (isNaN(this.form.total_kyat)) this.form.total_kyat = "";
 
-            if (isNaN(this.form.total_before)) this.form.total_before = "";
+                return this.form.total_kyat;
+            },
+            totalPal() {
+                this.form.total_pal =
+                    parseInt(this.form.gold_weight.pal) +
+                    parseInt(this.form.gem_weight.pal) +
+                    parseInt(this.form.fee.pal) +
+                    parseInt(this.form.exceed_pal_form_yway);
+                if (isNaN(this.form.total_pal)) {
+                    this.form.total_pal = "";
+                }
+                if (this.form.total_pal >= 16) {
+                    this.form.total_kyat =
+                        this.form.total_kyat + parseInt(this.form.total_pal / 16);
+                    this.form.total_pal = this.form.total_pal % 16;
+                }
+                return this.form.total_pal;
+            },
+            totalYway() {
+                this.form.total_yway =
+                    parseInt(this.form.gold_weight.yway) +
+                    parseInt(this.form.gem_weight.yway) +
+                    parseInt(this.form.fee.yway);
+                if (isNaN(this.form.total_yway)) {
+                    this.form.total_yway = "";
+                }
+                if (this.form.total_yway >= 8) {
+                    this.form.exceed_pal_form_yway = parseInt(
+                        this.form.total_yway / 8
+                    );
+                    this.form.total_yway = this.form.total_yway % 8;
+                }
+                return this.form.total_yway;
+            },
+            totalBefore() {
+                this.form.total_before =
+                    parseInt(this.form.gold_price) +
+                    parseInt(this.form.gem_price) +
+                    parseInt(this.form.fee_price) +
+                    parseInt(this.form.fee_for_making);
 
-            return this.form.total_before;
+                if (isNaN(this.form.total_before)) this.form.total_before = "";
+
+                return this.form.total_before;
+            },
+            totalAfter() {
+                this.form.total_after =
+                    parseInt(this.form.total_before) -
+                    parseInt(this.form.item_discount);
+                if (isNaN(this.form.total_after)) this.form.total_after = "";
+                return this.form.total_after;
+            },
+            creditMoney() {
+                this.form.credit_money =
+                    parseInt(this.form.total_after) -
+                    parseInt(this.form.paid_money);
+                if (isNaN(this.form.credit_money)) this.form.credit_money = "";
+                return this.form.credit_money;
+            },
+            nameErrors () {
+                const errors = []
+                if (!this.$v.name.$dirty) return errors
+                !this.$v.name.maxLength && errors.push('Name must be at most 10 characters long')
+                !this.$v.name.required && errors.push('Name is required.')
+                return errors
+            },
         },
-        totalAfter() {
-            this.form.total_after =
-                parseInt(this.form.total_before) -
-                parseInt(this.form.item_discount);
-            if (isNaN(this.form.total_after)) this.form.total_after = "";
-            return this.form.total_after;
-        },
-        creditMoney() {
-            this.form.credit_money =
-                parseInt(this.form.total_after) -
-                parseInt(this.form.paid_money);
-            if (isNaN(this.form.credit_money)) this.form.credit_money = "";
-            return this.form.credit_money;
-        },
-    },
-};
+    };
 </script>
 <style>
 .row + .row {

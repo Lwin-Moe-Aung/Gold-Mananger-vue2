@@ -35,8 +35,8 @@ class DailySetup extends Model
      */
     protected $hidden = [];
 
-    public function productType()
+    public function dailySetupDetail()
     {
-        return $this->belongsTo(ProductType::class, 'type_of_daily_setup');
+        return $this->hasMany(DailySetupDetail::class, 'daily_setup_id');
     }
 }

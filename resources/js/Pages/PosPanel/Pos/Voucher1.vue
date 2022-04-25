@@ -17,8 +17,18 @@
                     </v-list-item-avatar>
                     <v-list-item-content>
                         <v-list-item-title class="text-h5">
-                            {{ form.name }}</v-list-item-title
-                        >
+                            <v-col
+                                cols="12"
+                                sm="6"
+                            >
+                                <v-text-field
+                                    label="Product Name"
+                                    v-model="form.name"
+
+                                ></v-text-field>
+                            </v-col>
+
+                        </v-list-item-title>
                         <v-list-item-subtitle class="mt-1">
                             {{ form.item_description }}
                         </v-list-item-subtitle>
@@ -394,6 +404,7 @@
                                                 block
                                                 dark
                                                 class="withoutupercase black--text"
+                                                @click="printbill"
                                                 >Print Bill</v-btn
                                             >
                                         </v-col>
@@ -487,6 +498,9 @@
                 });
 
             },
+            printbill() {
+                alert("hello wrold");
+            }
         },
 
         computed: {
@@ -567,7 +581,7 @@
                     parseInt(this.form.fee.pal) +
                     parseInt(this.form.exceed_pal_form_yway);
                 if (isNaN(this.form.total_pal)) {
-                    this.form.total_pal = "";
+                    this.form.total_pal = "hello";
                 }
                 if (this.form.total_pal >= 16) {
                     this.form.total_kyat =
@@ -589,6 +603,8 @@
                         this.form.total_yway / 8
                     );
                     this.form.total_yway = this.form.total_yway % 8;
+                }else{
+                    this.form.exceed_pal_form_yway = 0;
                 }
                 return this.form.total_yway;
             },

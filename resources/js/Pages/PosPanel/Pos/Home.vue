@@ -254,12 +254,19 @@ export default {
             this.$store.dispatch("selectItem", item);
         },
         searchProduct() {
-            const regex = /[0-9]{2}[a-z]{2}[0-9]{5}/ig;
+            const regex = /(^(0[5-9]|1[0-6]))([a-z]{2})[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
             const matches = regex.exec(this.searchValue);
             if( matches == null){
                 Swal.fire(
                     '',
                     'Sku format is something wrong',
+                    'fail'
+                )
+                return false;
+            }else{
+                Swal.fire(
+                    '',
+                    'Sku format is Right',
                     'fail'
                 )
                 return false;

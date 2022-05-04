@@ -581,7 +581,7 @@
                     parseInt(this.form.fee.pal) +
                     parseInt(this.form.exceed_pal_form_yway);
                 if (isNaN(this.form.total_pal)) {
-                    this.form.total_pal = "hello";
+                    this.form.total_pal = "";
                 }
                 if (this.form.total_pal >= 16) {
                     this.form.total_kyat =

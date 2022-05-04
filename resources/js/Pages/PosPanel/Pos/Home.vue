@@ -253,9 +253,28 @@ export default {
         select(item) {
             this.$store.dispatch("selectItem", item);
         },
+        newSelect() {
+            let fee = {kyat:0, pal:3, yway:0};
+            let gem_weight = {kyat:0, pal:0, yway:0};
+            let gold_weight = {
+                kyat:parseInt(String(this.searchValue.charAt(4))+String(this.searchValue.charAt(5))),
+                pal:parseInt(String(this.searchValue.charAt(6))+String(this.searchValue.charAt(7))),
+                yway:this.searchValue.charAt(8),
+            };
+            let selectItem = [];
+            selectItem["name"] = "";
+            selectItem["image1"] = "";
+            selectItem["quality"] = String(this.searchValue.charAt(0))+String(this.searchValue.charAt(1));
+            selectItem["fee_for_making"] = "5000";
+            selectItem["fee"] = fee;
+            selectItem["gem_weight"] = gem_weight;
+            selectItem["gold_weight"] = gold_weight;
+            this.select(selectItem);
+        },
         searchProduct() {
             const regex = /(^(0[5-9]|1[0-6]))([a-z]{2})[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
             const matches = regex.exec(this.searchValue);
+
             if( matches == null){
                 Swal.fire(
                     '',
@@ -263,20 +282,16 @@ export default {
                     'fail'
                 )
                 return false;
-            }else{
-                Swal.fire(
-                    '',
-                    'Sku format is Right',
-                    'fail'
-                )
-                return false;
             }
+            this.newSelect();
+            return false;
             axios.get(this.route("pos.search", this.searchValue))
             .then((response) => {
                 if(response.data.message == "existing"){
                     this.items = response.data.items;
                 }else{
-                    this.select(response.data.items)
+                    this.newSelect()
+                    //this.select(response.data.items)
                 }
 
             });

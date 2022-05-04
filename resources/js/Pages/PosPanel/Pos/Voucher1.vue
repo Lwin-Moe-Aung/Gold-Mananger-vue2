@@ -7,14 +7,48 @@
                 flat
                 class="mx-auto rounded-lg mx-3"
             >
+            <v-form ref="form" lazy-validation>
+
                 <v-list-item three-line>
-                    <v-list-item-avatar
+                    <!-- <v-list-item-avatar
                         rounded
                         size="100"
                         color="grey lighten-4"
                     >
                         <v-img :src="form.image"></v-img>
-                    </v-list-item-avatar>
+                    </v-list-item-avatar> -->
+                    <!-- image upload -->
+
+                     <v-card rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
+                        <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
+                        <v-fade-transition mode="out-in">
+                        <v-img v-if="image" aspect-ratio="1" :src="form.image">
+                            <v-row class="fill-height" align="end" justify="center">
+                            <v-slide-y-reverse-transition>
+                                <v-sheet v-if="mask" color="error" width="100%" height="100%" class="mask" />
+                            </v-slide-y-reverse-transition>
+                            <v-btn
+                                class="mb-3"
+                                fab
+                                x-small
+                                color="error"
+                                @click.stop="deleteImage"
+                                @mouseenter="mask=true"
+                                @mouseleave="mask=false"
+                            >
+                                <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                            </v-row>
+                        </v-img>
+                        <v-row v-else class="d-flex flex-column align-center justify-center fill-height">
+                            <v-icon>
+                            mdi-paperclip
+                            </v-icon>
+                            <span class="mt-3">Select an Image</span>
+                        </v-row>
+                        </v-fade-transition>
+                    </v-card>
+                    <!-- end image upload -->
                     <v-list-item-content>
                         <v-list-item-title class="text-h5">
                             <v-col
@@ -24,7 +58,8 @@
                                 <v-text-field
                                     label="Product Name"
                                     v-model="form.name"
-
+                                    :rules="nameRules"
+                                    required
                                 ></v-text-field>
                             </v-col>
 
@@ -51,50 +86,7 @@
                             </v-tooltip>
 
                         </strong>
-                        <v-row
-                            justify="center"
-                            >
-                            <v-dialog
-                                v-model="dialog2"
-                                max-width="500px"
-                            >
-                                <v-card>
-                                    <v-card-title>
-                                        {{ quality }} ပဲရည်
-                                    </v-card-title>
-                                    <v-card-text>
-                                        <form @submit.prevent="editDailySetup">
 
-                                            <v-text-field
-                                                v-model="dailyValue"
-                                                :error-messages="nameErrors"
-                                                :counter="10"
-                                                label="Quality"
-                                                required
-                                                @input="$v.name.$touch()"
-                                                @blur="$v.name.$touch()"
-                                            ></v-text-field>
-
-                                            <v-btn
-                                                color="success"
-                                                text
-                                                type="submit"
-                                            >
-                                            Add
-                                            </v-btn>
-                                            <v-btn
-                                                color="primary"
-                                                text
-                                                @click="dialog2 = false"
-                                            >
-                                                Close
-                                            </v-btn>
-                                        </form>
-                                    </v-card-text>
-
-                                </v-card>
-                            </v-dialog>
-                        </v-row>
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item
@@ -115,7 +107,6 @@
                 </v-list-item>
                 <v-card-actions>
                     <!--new-->
-                    <v-form>
                         <v-container>
 
                             <v-row>
@@ -134,6 +125,8 @@
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
+                                                :rules="goldWeightKyatRules"
+                                                required
                                             >
                                             </v-text-field>
                                         </v-col>
@@ -145,6 +138,8 @@
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
+                                                :rules="goldWeightPalRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
 
@@ -155,6 +150,8 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
+                                                :rules="goldWeightYwayRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -181,6 +178,8 @@
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
+                                                :rules="gemWeightKyatRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
 
@@ -191,6 +190,8 @@
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
+                                                :rules="gemWeightPalRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
 
@@ -201,6 +202,8 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
+                                                :rules="gemWeightYwayRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -227,6 +230,8 @@
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
+                                                :rules="feeWeightKyatRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
 
@@ -237,6 +242,8 @@
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
+                                                :rules="feeWeightPalRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
 
@@ -247,6 +254,8 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
+                                                :rules="feeWeightYwayRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -277,6 +286,8 @@
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
                                                 dense
+                                                :rules="feeForMakingRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -346,6 +357,8 @@
                                                 placeholder="kyats"
                                                 outlined
                                                 dense
+                                                :rules="itemDiscountRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -362,6 +375,8 @@
                                                 placeholder="kyats"
                                                 outlined
                                                 dense
+                                                :rules="totalAfterRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -378,6 +393,8 @@
                                                 placeholder="kyats"
                                                 outlined
                                                 dense
+                                                :rules="paidMoneyRules"
+                                                required
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -394,6 +411,7 @@
                                                 placeholder="kyats"
                                                 outlined
                                                 dense
+
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -416,9 +434,54 @@
 
                             <!--row for voucher-->
                         </v-container>
-                    </v-form>
+
                     <!--end new-->
                 </v-card-actions>
+                </v-form>
+                    <v-row
+                            justify="center"
+                            >
+                            <v-dialog
+                                v-model="dialog2"
+                                max-width="500px"
+                            >
+                                <v-card>
+                                    <v-card-title>
+                                        {{ quality }} ပဲရည်
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <form @submit.prevent="editDailySetup">
+
+                                            <v-text-field
+                                                v-model="dailyValue"
+                                                :error-messages="nameErrors"
+                                                :counter="10"
+                                                label="Quality"
+                                                required
+                                                @input="$v.quality.$touch()"
+                                                @blur="$v.quality.$touch()"
+                                            ></v-text-field>
+
+                                            <v-btn
+                                                color="success"
+                                                text
+                                                type="submit"
+                                            >
+                                            Add
+                                            </v-btn>
+                                            <v-btn
+                                                color="primary"
+                                                text
+                                                @click="dialog2 = false"
+                                            >
+                                                Close
+                                            </v-btn>
+                                        </form>
+                                    </v-card-text>
+
+                                </v-card>
+                            </v-dialog>
+                        </v-row>
             </v-card>
         </v-hover>
     </v-col>
@@ -432,7 +495,7 @@
     export default {
         mixins: [validationMixin],
         validations: {
-            name: { required, maxLength: maxLength(10) },
+            quality: { required, maxLength: maxLength(10) },
         },
         name: "ItemList",
 
@@ -468,7 +531,69 @@
                 email: '',
                 dailyValue: '',
                 dailySetup: [],
+                nameRules: [
+                    v => !!v || 'Required',
+                ],
+                goldWeightKyatRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                goldWeightPalRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                goldWeightYwayRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                gemWeightKyatRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                gemWeightPalRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                gemWeightYwayRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                feeWeightKyatRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                feeWeightPalRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                feeWeightYwayRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                feeForMakingRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                itemDiscountRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                totalAfterRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                paidMoneyRules: [
+                    v => !!v || 'Required',
+                    v => /^\d+$/.test(v) || 'Must be a number',
+                ],
+                input: undefined,
+                image: undefined,
+                imageFile: undefined,
+                mask: false
             };
+        },
+        mounted () {
+            this.input = document.getElementById('fileInput')
         },
         methods: {
             addToCart() {
@@ -499,7 +624,26 @@
 
             },
             printbill() {
-                alert("hello wrold");
+                this.$refs.form.validate();
+            },
+            selectImage () {
+                if (!this.imageFile) {
+                    this.input.click()
+                }
+            },
+            updateValue (event) {
+                this.imageFile = event.target.files[0]
+                this.image = this.imageFile ? URL.createObjectURL(this.imageFile) : undefined
+                this.$emit('input', this.imageFile)
+            },
+            deleteImage () {
+                if (this.imageFile) {
+                    this.imageFile = undefined
+                    this.image = undefined
+                    this.mask = false
+                    this.input.value = '' // <-- this will fix the issue
+                    this.$emit('input', undefined)
+                }
             }
         },
 
@@ -513,16 +657,16 @@
                 this.form.image = value.image1;
                 this.form.item_sku = value.item_sku;
                 this.form.item_description = value.item_description;
-                this.form.gold_weight.kyat = value.gold_weight.kyat;
-                this.form.gold_weight.pal = value.gold_weight.pal;
-                this.form.gold_weight.yway = value.gold_weight.yway;
-                this.form.gem_weight.kyat = value.gem_weight.kyat;
-                this.form.gem_weight.pal = value.gem_weight.pal;
-                this.form.gem_weight.yway = value.gem_weight.yway;
-                this.form.gem_price = value.gem_price;
-                this.form.fee.kyat = value.fee.kyat;
-                this.form.fee.pal = value.fee.pal;
-                this.form.fee.yway = value.fee.yway;
+                this.form.gold_weight.kyat = String(value.gold_weight.kyat);
+                this.form.gold_weight.pal = String(value.gold_weight.pal);
+                this.form.gold_weight.yway = String(value.gold_weight.yway);
+                this.form.gem_weight.kyat = String(value.gem_weight.kyat);
+                this.form.gem_weight.pal = String(value.gem_weight.pal);
+                this.form.gem_weight.yway = String(value.gem_weight.yway);
+                this.form.gem_price = String(value.gem_price);
+                this.form.fee.kyat = String(value.fee.kyat);
+                this.form.fee.pal = String(value.fee.pal);
+                this.form.fee.yway = String(value.fee.yway);
                 this.form.fee_for_making = value.fee_for_making;
                 this.form.tax = value.tax;
                 this.quality = value.quality;
@@ -635,9 +779,9 @@
             },
             nameErrors () {
                 const errors = []
-                if (!this.$v.name.$dirty) return errors
-                !this.$v.name.maxLength && errors.push('Name must be at most 10 characters long')
-                !this.$v.name.required && errors.push('Name is required.')
+                if (!this.$v.quality.$dirty) return errors
+                !this.$v.quality.maxLength && errors.push('Name must be at most 10 characters long')
+                !this.$v.quality.required && errors.push('Name is required.')
                 return errors
             },
         },
@@ -646,5 +790,9 @@
 <style>
 .row + .row {
     margin-top: 0px !important;
+}
+.mask{
+    position: absolute;
+    mask-image: radial-gradient(circle at bottom, rgba(0,0,0,0.3) 10%, transparent  50%);
 }
 </style>

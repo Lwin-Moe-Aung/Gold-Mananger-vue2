@@ -283,13 +283,12 @@ export default {
                 )
                 return false;
             }
-            this.newSelect();
-            return false;
             axios.get(this.route("pos.search", this.searchValue))
             .then((response) => {
                 if(response.data.message == "existing"){
                     this.items = response.data.items;
                 }else{
+                    this.items = [];
                     this.newSelect()
                     //this.select(response.data.items)
                 }

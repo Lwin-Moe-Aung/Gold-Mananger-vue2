@@ -42,6 +42,7 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos', [HomeController::class, 'index'])->name('pos.index');
     Route::get('/pos/poduct-list', [HomeController::class, 'productList'])->name('pos.product.lists');
     Route::get('/pos/search/{sku}', [HomeController::class, 'search'])->name('pos.search');
+    Route::post('/pos/save_order', [HomeController::class, 'saveOrder'])->name('pos.save_order');
     Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
 
 });

@@ -22,7 +22,7 @@
                      <v-card rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
                         <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
                         <v-fade-transition mode="out-in">
-                        <v-img v-if="image" aspect-ratio="1" :src="form.image">
+                        <v-img v-if="image" aspect-ratio="1" :src="image">
                             <v-row class="fill-height" align="end" justify="center">
                             <v-slide-y-reverse-transition>
                                 <v-sheet v-if="mask" color="error" width="100%" height="100%" class="mask" />
@@ -505,6 +505,7 @@
                     id: "",
                     name: "",
                     image: "",
+                    imageFile: undefined,
                     item_sku: "",
                     gold_weight: { kyat: "", pal: "", yway: "" },
                     gold_price: "",
@@ -586,9 +587,9 @@
                     v => !!v || 'Required',
                     v => /^\d+$/.test(v) || 'Must be a number',
                 ],
+                //image upload
                 input: undefined,
                 image: undefined,
-                imageFile: undefined,
                 mask: false
             };
         },
@@ -624,21 +625,32 @@
 
             },
             printbill() {
-                this.$refs.form.validate();
+                if(this.$refs.form.validate()){
+                    this.form.post(this.route('pos.save_order'), {
+                        preserveScroll: true,
+                        onSuccess:() => {
+                            this.closeModal()
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'New Product created!'
+                            })
+                        }
+                    })
+                }
             },
             selectImage () {
-                if (!this.imageFile) {
+                if (!this.form.imageFile) {
                     this.input.click()
                 }
             },
             updateValue (event) {
-                this.imageFile = event.target.files[0]
-                this.image = this.imageFile ? URL.createObjectURL(this.imageFile) : undefined
-                this.$emit('input', this.imageFile)
+                this.form.imageFile = event.target.files[0]
+                this.image = this.form.imageFile ? URL.createObjectURL(this.form.imageFile) : undefined
+                this.$emit('input', this.form.imageFile)
             },
             deleteImage () {
-                if (this.imageFile) {
-                    this.imageFile = undefined
+                if (this.form.imageFile) {
+                    this.form.imageFile = undefined
                     this.image = undefined
                     this.mask = false
                     this.input.value = '' // <-- this will fix the issue

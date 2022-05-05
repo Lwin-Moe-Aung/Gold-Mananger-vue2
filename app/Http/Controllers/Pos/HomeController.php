@@ -54,6 +54,17 @@ class HomeController extends Controller
             $items[$key]['fee'] = json_decode($item['fee']);
         }
         return response()->json(['items'=>$items, 'message'=>'existing']);
+
+
+    }
+
+    public function saveOrder(Request $request)
+    {
+        dd($request->all());
+        //check id
+        //id is equal null , assume it is new
+        //id not equql null, assume that it is the old one and update this.
+
         // $type = Type::where('key',$sku[2])
         //             ->first();
         // if($type == null){
@@ -110,6 +121,5 @@ class HomeController extends Controller
         // $items['fee'] = json_decode($nitem['fee']);
 
         // return response()->json(['items'=>$items, 'message'=>'new item']);
-
     }
 }

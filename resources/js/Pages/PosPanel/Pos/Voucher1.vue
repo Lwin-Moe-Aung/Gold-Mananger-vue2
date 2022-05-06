@@ -526,6 +526,7 @@
                     total_after: "",
                     paid_money: "",
                     credit_money: "",
+                    note: "",
                 }),
                 quality: '',
                 dialog2: false,

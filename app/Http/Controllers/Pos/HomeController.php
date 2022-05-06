@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\Product;
 use App\Models\Type;
+use App\Models\Order;
 use App\Models\ItemName;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
@@ -63,20 +64,24 @@ class HomeController extends Controller
 
         // dd($request->all());
         if($request->id != null){
-            $item = Item::find($request->id);
-            $item->name = $request->name;
-            $item->gold_weight = json_encode($request->gold_weight);
-            $item->gold_price = $request->gold_price;
-            $item->gem_weight = json_encode($request->gem_weight);
-            $item->gem_price = $request->gem_price;
-            $item->fee = json_encode($request->fee);
-            $item->fee_price = $request->fee_price;
-            $item->fee_for_making = $request->fee_for_making;
-            $item->item_discount = $request->name;
-            $item->tax = $request->name;
-
-
-
+            $order = new Order;
+            $order->item_id = $request->id;
+            $order->created_by = Auth::user()->id;
+            $order->gold_weight = json_encode($request->gold_weight);
+            $order->gold_price = $request->gold_price;
+            $order->gem_weight = json_encode($request->gem_weight);
+            $order->gem_price = $request->gem_price;
+            $order->fee = json_encode($request->fee);
+            $order->fee_price = $request->fee_price;
+            $order->fee_for_making = $request->fee_for_making;
+            $order->item_discount = $request->item_discount;
+            $order->total_weight = json_encode(array("kyat"=>(string)$request->total_kyat, "pal"=>(string)$request->total_pal, "yway"=>(string)$request->total_yway));
+            $order->total_before = $request->total_before;
+            $order->total_after = $request->total_after;
+            $order->paid_money = $request->paid_money;
+            $order->credit_money = $request->credit_money;
+            $order->note = $request->note;
+            $order->save();
         }
         //check id
         //id is equal null , assume it is new

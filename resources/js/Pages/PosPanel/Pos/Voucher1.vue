@@ -10,16 +10,17 @@
             <v-form ref="form" lazy-validation>
 
                 <v-list-item three-line>
-                    <!-- <v-list-item-avatar
+                    <v-list-item-avatar
                         rounded
                         size="100"
                         color="grey lighten-4"
+                        v-if="form.image"
                     >
                         <v-img :src="form.image"></v-img>
-                    </v-list-item-avatar> -->
+                    </v-list-item-avatar>
                     <!-- image upload -->
 
-                     <v-card rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
+                     <v-card v-else rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
                         <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
                         <v-fade-transition mode="out-in">
                         <v-img v-if="image" aspect-ratio="1" :src="image">

@@ -28,6 +28,7 @@ class CreateItemsTable extends Migration
             $table->string('gem_weight', 100)->nullable();
             $table->string('gem_price', 100)->nullable();
             $table->string('fee', 100)->nullable();
+            $table->string('fee_price', 100)->nullable();
             $table->string('fee_for_making', 100)->nullable();
             $table->decimal('item_discount', 8, 2)->default(0);
             $table->decimal('tax', 8, 2)->default(0);

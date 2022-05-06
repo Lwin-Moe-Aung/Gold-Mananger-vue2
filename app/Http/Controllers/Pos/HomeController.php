@@ -60,7 +60,24 @@ class HomeController extends Controller
 
     public function saveOrder(Request $request)
     {
-        dd($request->all());
+
+        // dd($request->all());
+        if($request->id != null){
+            $item = Item::find($request->id);
+            $item->name = $request->name;
+            $item->gold_weight = json_encode($request->gold_weight);
+            $item->gold_price = $request->gold_price;
+            $item->gem_weight = json_encode($request->gem_weight);
+            $item->gem_price = $request->gem_price;
+            $item->fee = json_encode($request->fee);
+            $item->fee_price = $request->fee_price;
+            $item->fee_for_making = $request->fee_for_making;
+            $item->item_discount = $request->name;
+            $item->tax = $request->name;
+
+
+
+        }
         //check id
         //id is equal null , assume it is new
         //id not equql null, assume that it is the old one and update this.

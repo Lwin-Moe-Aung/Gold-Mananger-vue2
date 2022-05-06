@@ -33,6 +33,7 @@ class Item extends Model
         'gem_weight',
         'gem_price',
         'fee',
+        'fee_price',
         'fee_for_making',
         'item_discount',
         'tax',

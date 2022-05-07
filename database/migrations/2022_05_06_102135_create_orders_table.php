@@ -36,7 +36,7 @@ class CreateOrdersTable extends Migration
 
             $table->string('total_weight', 100)->nullable();
             $table->decimal('total_before', 10, 2)->default(0);
-            $table->decimal('total_after', 10, 2)->default(0);
+            $table->decimal('final_total', 10, 2)->default(0);
             $table->decimal('paid_money', 10, 2)->default(0);
             $table->decimal('credit_money', 10, 2)->default(0);
 

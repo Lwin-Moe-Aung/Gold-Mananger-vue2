@@ -37,7 +37,7 @@ class Order extends Model
         'tax',
         'total_weight',
         'total_before',
-        'total_after',
+        'final_total',
         'paid_money',
         'credit_money',
         'note',

@@ -371,7 +371,7 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="12" md="7">
                                             <v-text-field
-                                                v-model="form.total_after"
+                                                v-model="form.final_total"
                                                 label="kyats"
                                                 placeholder="kyats"
                                                 outlined
@@ -523,7 +523,7 @@
                     exceed_pal_form_yway: "",
                     total_yway: "",
                     total_before: "",
-                    total_after: "",
+                    final_total: "",
                     paid_money: "",
                     credit_money: "",
                     note: "",
@@ -604,7 +604,7 @@
                 item.id = this.form.id;
                 item.name = this.form.name;
                 item.image = this.form.image;
-                item.total_after = this.form.total_after;
+                item.final_total = this.form.final_total;
                 this.$store.dispatch("addItem", item);
             },
             openModel() {
@@ -778,15 +778,15 @@
                 return this.form.total_before;
             },
             totalAfter() {
-                this.form.total_after =
+                this.form.final_total =
                     parseInt(this.form.total_before) -
                     parseInt(this.form.item_discount);
-                if (isNaN(this.form.total_after)) this.form.total_after = "";
-                return this.form.total_after;
+                if (isNaN(this.form.final_total)) this.form.final_total = "";
+                return this.form.final_total;
             },
             creditMoney() {
                 this.form.credit_money =
-                    parseInt(this.form.total_after) -
+                    parseInt(this.form.final_total) -
                     parseInt(this.form.paid_money);
                 if (isNaN(this.form.credit_money)) this.form.credit_money = "";
                 return this.form.credit_money;

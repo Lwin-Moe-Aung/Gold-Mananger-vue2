@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Product;
 use App\Models\Type;
 use App\Models\Order;
+use App\Models\Transaction;
 use App\Models\ItemName;
 use Facade\FlareClient\Http\Response;
 use Illuminate\Http\Request;
@@ -59,14 +60,53 @@ class HomeController extends Controller
 
     }
 
+    function invoiceNumber()
+    {
+        $transactionLatest = Transaction::where('business_id',Auth::user()->business_id)
+                            ->latest()
+                            ->first();
+        if (! $transactionLatest) {
+            return 'arm00001';
+        }
+        $string = preg_replace("/[^0-9\.]/", '', $transactionLatest->invoice_no);
+        return 'arm' . sprintf('%04d', $string+1);
+    }
+
     public function saveOrder(Request $request)
     {
-
         // dd($request->all());
         if($request->id != null){
+            $business_id = Auth::user()->business_id;
+            $business_location_id = Auth::user()->business_location_id;
+            $created_by = Auth::user()->id;
+            $transactionLatest = Transaction::where('business_id',$business_id)
+                            ->latest()
+                            ->first();
+
+            $transaction = new Transaction;
+            $transaction->business_id =  $business_id;
+            $transaction->business_location_id = $business_location_id;
+            $transaction->type = "sell";
+            $transaction->status = "received";
+            $transaction->payment_status = "paid";
+            $transaction->contact_id = 1;
+            $transaction->invoice_no = $this->invoiceNumber();
+            $transaction->transaction_date = Carbon::now()->format('Y-m-d');
+            $transaction->total_before = $request->total_before;
+            $transaction->discount_type = 'fixed';
+            $transaction->discount_amount = $request->item_discount;
+            // $transaction->shipping_details = $request->total_before;
+            // $transaction->shipping_charges = $request->total_after;
+            $transaction->additional_notes = $request->note;
+            // $transaction->staff_note = $request->credit_money;
+            $transaction->final_total = $request->final_total;
+            $transaction->created_by = $created_by;
+            $transaction->save();
+
             $order = new Order;
             $order->item_id = $request->id;
-            $order->created_by = Auth::user()->id;
+            $order->transaction_id = $transaction->id;
+            $order->created_by = $created_by;
             $order->gold_weight = json_encode($request->gold_weight);
             $order->gold_price = $request->gold_price;
             $order->gem_weight = json_encode($request->gem_weight);
@@ -77,11 +117,13 @@ class HomeController extends Controller
             $order->item_discount = $request->item_discount;
             $order->total_weight = json_encode(array("kyat"=>(string)$request->total_kyat, "pal"=>(string)$request->total_pal, "yway"=>(string)$request->total_yway));
             $order->total_before = $request->total_before;
-            $order->total_after = $request->total_after;
+            $order->final_total = $request->final_total;
             $order->paid_money = $request->paid_money;
             $order->credit_money = $request->credit_money;
             $order->note = $request->note;
             $order->save();
+
+            return response()->json(['status'=>true, 'message'=>'Order success!']);
         }
         //check id
         //id is equal null , assume it is new

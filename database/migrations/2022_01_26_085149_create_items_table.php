@@ -24,12 +24,15 @@ class CreateItemsTable extends Migration
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->string('item_sku', 100);
             $table->string('gold_weight', 100)->nullable();
-            $table->string('gold_price', 100)->nullable();
+            $table->decimal('gold_price', 10, 2)->default(0);
+
             $table->string('gem_weight', 100)->nullable();
-            $table->string('gem_price', 100)->nullable();
+            $table->decimal('gem_price', 10, 2)->default(0);
+
             $table->string('fee', 100)->nullable();
-            $table->string('fee_price', 100)->nullable();
-            $table->string('fee_for_making', 100)->nullable();
+            $table->decimal('fee_price', 10, 2)->default(0);
+
+            $table->decimal('fee_for_making', 10, 2)->default(0);
             $table->decimal('item_discount', 8, 2)->default(0);
             $table->decimal('tax', 8, 2)->default(0);
             $table->enum('is_active', ['0', '1'])->default('1');

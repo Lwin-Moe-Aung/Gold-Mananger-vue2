@@ -505,6 +505,7 @@
                 form: this.$inertia.form({
                     id: "",
                     name: "",
+                    product_sku: "",
                     image: "",
                     imageFile: undefined,
                     item_sku: "",
@@ -631,10 +632,11 @@
                     this.form.post(this.route('pos.save_order'), {
                         preserveScroll: true,
                         onSuccess:() => {
-                            this.closeModal()
+                            this.form.reset();
+                            this.$store.dispatch("selectItem", []);
                             Toast.fire({
                                 icon: 'success',
-                                title: 'New Product created!'
+                                title: 'Order Success'
                             })
                         }
                     })
@@ -668,6 +670,7 @@
                 console.log(value);
                 this.form.id = value.id;
                 this.form.name = value.name;
+                this.form.product_sku = value.product_sku;
                 this.form.image = value.image1;
                 this.form.item_sku = value.item_sku;
                 this.form.item_description = value.item_description;

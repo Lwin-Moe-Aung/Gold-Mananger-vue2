@@ -21,18 +21,9 @@ class CreateOrdersTable extends Migration
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             $table->unsignedBigInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->string('gold_weight', 100)->nullable();
-            $table->decimal('gold_price', 10, 2)->default(0);
 
-            $table->string('gem_weight', 100)->nullable();
-            $table->decimal('gem_price', 10, 2)->default(0);
-
-            $table->string('fee', 100)->nullable();
-            $table->decimal('fee_price', 10, 2)->default(0);
-
-            $table->decimal('fee_for_making', 8, 2)->default(0);
-            $table->decimal('item_discount', 8, 2)->default(0);
-            $table->decimal('tax', 8, 2)->default(0);
+            // $table->string('fee', 100)->nullable();
+            // $table->decimal('fee_price', 10, 2)->default(0);
 
             $table->string('total_weight', 100)->nullable();
             $table->decimal('total_before', 10, 2)->default(0);

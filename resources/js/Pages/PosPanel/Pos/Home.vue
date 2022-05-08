@@ -253,7 +253,7 @@ export default {
         select(item) {
             this.$store.dispatch("selectItem", item);
         },
-        newSelect() {
+        newItemSelect() {
             let fee = {kyat:0, pal:3, yway:0};
             let gem_weight = {kyat:0, pal:0, yway:0};
             let gold_weight = {
@@ -263,6 +263,7 @@ export default {
             };
             let selectItem = [];
             selectItem["name"] = "";
+            selectItem["product_sku"] = this.searchValue;
             selectItem["image1"] = "";
             selectItem["quality"] = String(this.searchValue.charAt(0))+String(this.searchValue.charAt(1));
             selectItem["fee_for_making"] = "5000";
@@ -289,7 +290,7 @@ export default {
                     this.items = response.data.items;
                 }else{
                     this.items = [];
-                    this.newSelect()
+                    this.newItemSelect()
                     //this.select(response.data.items)
                 }
 

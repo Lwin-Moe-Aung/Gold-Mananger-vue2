@@ -22,19 +22,11 @@ class Order extends Model
      *
      * @var array
      */
+
     protected $fillable = [
         'item_id',
         'transaction_id',
         'created_by',
-        'gold_weight',
-        'gold_price',
-        'gem_weight',
-        'gem_price',
-        'fee',
-        'fee_price',
-        'fee_for_making',
-        'item_discount',
-        'tax',
         'total_weight',
         'total_before',
         'final_total',

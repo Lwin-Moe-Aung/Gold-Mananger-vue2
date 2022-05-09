@@ -138,6 +138,25 @@
                             </li>
                         </ul>
                     </li>
+                     <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fab fa-product-hunt"></i>
+                            <p>
+                                Orders Management
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.orders.index')" class="nav-link" :class="route().current('admin.orders.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Order Lists
+                                    </p>
+                                </Link>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-header">MISCELLANEOUS</li>
                     <li class="nav-item">
                         <Link :href="route('dashboard')" class="nav-link">

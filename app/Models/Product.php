@@ -32,6 +32,7 @@ class Product extends Model
         'is_active',
         'business_id',
         'created_by',
+        'draft',
         'image'
     ];
 

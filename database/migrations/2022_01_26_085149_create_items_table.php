@@ -38,6 +38,7 @@ class CreateItemsTable extends Migration
             $table->enum('is_active', ['0', '1'])->default('1');
             $table->string('image1')->nullable();
             $table->string('image2')->nullable();
+            $table->enum('draft', ['0', '1'])->default('0');
             $table->text('item_description')->nullable();
             $table->softDeletes();
             $table->timestamps();

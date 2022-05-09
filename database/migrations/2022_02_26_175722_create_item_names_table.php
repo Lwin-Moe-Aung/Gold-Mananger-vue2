@@ -18,6 +18,7 @@ class CreateItemNamesTable extends Migration
             $table->string('name', 191);
             $table->string('key', 100);
             $table->unsignedBigInteger('business_id');
+            $table->enum('draft', ['0', '1'])->default('0');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->timestamps();
         });

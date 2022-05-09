@@ -40,6 +40,7 @@ class Item extends Model
         'is_active',
         'image1',
         'image2',
+        'draft',
         'item_description'
     ];
 

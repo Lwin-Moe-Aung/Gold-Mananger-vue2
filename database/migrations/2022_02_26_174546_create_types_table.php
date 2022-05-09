@@ -21,6 +21,7 @@ class CreateTypesTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->enum('is_active', ['0', '1'])->default('1');
+            $table->enum('draft', ['0', '1'])->default('0');
             $table->timestamps();
         });
     }

@@ -26,7 +26,8 @@ class Type extends Model
         'image',
         'business_id',
         'is_active',
-        'key'
+        'key',
+        'draft'
     ];
 
     /**

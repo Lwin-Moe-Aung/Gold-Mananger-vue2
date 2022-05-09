@@ -26,6 +26,7 @@ class ItemName extends Model
         'name',
         'key',
         'business_id',
+        'draft'
     ];
 
     /**

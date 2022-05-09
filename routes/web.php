@@ -14,6 +14,7 @@ use App\Http\Controllers\Admins\SupplierController;
 use App\Http\Controllers\Admins\ProductTypeController;
 use App\Http\Controllers\Admins\DailySetupController;
 use App\Http\Controllers\Admins\ProductController;
+use App\Http\Controllers\Admins\OrderController;
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\DailySetupValueController;
 
@@ -84,5 +85,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::resource('product_types', ProductTypeController::class)->except(['create', 'show', 'edit']);
     Route::resource('daily_setups', DailySetupController::class)->except(['create', 'show', 'edit']);
     Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');
+
+    //Order Management
+    Route::resource('orders', OrderController::class)->except(['create', 'show', 'edit']);
 
 });

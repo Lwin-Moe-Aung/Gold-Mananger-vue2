@@ -55,4 +55,13 @@ class Item extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+
+     /**
+     * @return HasOne
+     * @description get the order associated with the transaction
+     */
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
 }

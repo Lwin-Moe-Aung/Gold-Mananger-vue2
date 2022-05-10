@@ -12,14 +12,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                                <div class="card-header">
-                                    <input type="search" v-model="params.search" aria-label="Search" placeholder="Search..." class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                                    <div class="card-tools" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                        <button type="button" class="btn btn-info text-uppercase" style="letter-spacing: 0.1em;" @click="openModal">
-                                            Create
-                                        </button>
-                                    </div>
-                                </div>
+
                                 <div class="card-body table-responsive p-0">
                                     <table class="table table-hover text-nowrap">
                                         <thead>
@@ -35,7 +28,7 @@
                                                     </span>
                                                 </th>
                                                 <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-white uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">SKU
+                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Invoice No
                                                         <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
                                                             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
                                                         </svg>
@@ -46,7 +39,7 @@
                                                 </th>
 
                                                 <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-white uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Description
+                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Payment Status
                                                         <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
                                                             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
                                                         </svg>
@@ -57,7 +50,7 @@
                                                 </th>
 
                                                 <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-white uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Tax
+                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Total Before
                                                         <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
                                                             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
                                                         </svg>
@@ -68,7 +61,7 @@
                                                 </th>
 
                                                 <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-white uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Item Count
+                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Final Total
                                                         <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
                                                             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
                                                         </svg>
@@ -91,196 +84,35 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(product, index) in products.data" :key="index">
+                                            <tr v-for="(order, index) in orders.data" :key="index">
                                                 <td>
-                                                    <img class="w-10 h-10 rounded-full" :src="product.image" alt="" style="width:60px;"/>
-                                                    {{ product.name }}
+                                                    <img class="w-10 h-10 rounded-full" :src="order.item.image1" alt="" style="width:60px;"/>
+                                                    {{ order.item.name }}
                                                 </td>
-                                                <td>{{ product.product_sku }}</td>
-                                                <td>{{ product.description }}</td>
-                                                <td>{{ product.tax }}</td>
-                                                <td>{{ product.item_count }}</td>
-                                                <td>{{ dateTime(product.created_at) }}</td>
+                                                <td>{{ order.transaction.invoice_no }}</td>
+                                                <td>{{ order.transaction.payment_status }}</td>
+                                                <td>{{ order.transaction.total_before }}</td>
+                                                <td>{{ order.transaction.final_total }}</td>
+                                                <td>{{ dateTime(order.created_at) }}</td>
                                                 <td class="text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                                    <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;" @click="editModal(product)">Edit</button>
-                                                    <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteProductType(product.id)">Delete</button>
+                                                    <Link :href="route('admin.orders.detail',order.id)" class="btn btn-success text-uppercase" >
+                                                            Detial
+                                                    </Link>
+                                                    <!-- <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;" :href="route('admin.orders.detail',1)">Detail</button> -->
+                                                    <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteOrder(order.id)">Delete</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="card-footer clearfix">
-                                    <pagination :links="products.links"></pagination>
+                                    <pagination :links="orders.links"></pagination>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <div class="modal fade" id="modal-lg">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">{{ formTitle }}</h4>
-                            <button type="button" class="close" @click="closeModal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body overflow-hidden">
-                            <div class="card card-primary">
-                                <form @submit.prevent="checkMode">
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input type="text" class="form-control" placeholder="Name" v-model="form.name" :class="{ 'is-invalid' : form.errors.name }" autofocus="autofocus" autocomplete="off">
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
-                                            {{ form.errors.name }}
-                                        </div>
-
-                                        <div class="form-group">
-                                            <div class="row">
-                                                <div class="col sm-3 md-3">
-                                                    <label for="permissions">Quality</label>
-                                                    <multiselect
-                                                        v-model="form.quality"
-                                                        :options="gold_qualities"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="Quality"
-                                                        label="quality"
-                                                        track-by="id"
-                                                    ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.quality}">
-                                                        {{ form.errors.quality }}
-                                                    </div>
-                                                </div>
-                                                 <div class="col sm-3 md-3">
-                                                    <label for="permissions">Type</label>
-                                                    <multiselect
-                                                        v-model="form.type"
-                                                        :options="types"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="Type"
-                                                        label="name"
-                                                        track-by="key"
-                                                    ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.type}">
-                                                        {{ form.errors.type }}
-                                                    </div>
-                                                </div>
-                                                 <div class="col sm-3 md-3">
-                                                    <label for="permissions">Name</label>
-                                                    <multiselect
-                                                        v-model="form.item_name"
-                                                        :options="item_names"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="Name"
-                                                        label="name"
-                                                        track-by="id"
-                                                    ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.item_name}">
-                                                        {{ form.errors.item_name }}
-                                                    </div>
-                                                </div>
-                                                <div class="col sm-3 md-3">
-                                                    <label for="w_kyat">Kyats</label>
-                                                    <multiselect
-                                                        v-model="form.w_kyat"
-                                                        :options="weight_kyats"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="Kyats"
-                                                        label="name"
-                                                        track-by="id"
-                                                    ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.w_kyat}">
-                                                        {{ form.errors.w_kyat }}
-                                                    </div>
-                                                </div>
-                                                <div class="col sm-3 md-3">
-                                                    <label for="w_pal">Pals</label>
-                                                    <multiselect
-                                                        v-model="form.w_pal"
-                                                        :options="weight_pals"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="Pal"
-                                                        label="name"
-                                                        track-by="id"
-                                                    ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.w_pal}">
-                                                        {{ form.errors.w_pal }}
-                                                    </div>
-                                                </div>
-                                                <div class="col sm-3 md-3">
-                                                    <label for="w_yway">Yways</label>
-                                                    <multiselect
-                                                        v-model="form.w_yway"
-                                                        :options="weight_yways"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="Yway"
-                                                        label="name"
-                                                        track-by="id"
-                                                    ></multiselect>
-                                                    <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.w_yway}">
-                                                        {{ form.errors.w_yway }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="name">Product Sku : {{form.quality.quality}}{{form.type.key}}{{form.item_name.key}}{{ form.w_kyat.name }}{{ form.w_pal.name }}{{ form.w_yway.name }}</label>
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.product_sku}">
-                                            {{ form.errors.product_sku }}
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="name">Description</label>
-                                            <input type="text" class="form-control" placeholder="Description" v-model="form.description" :class="{ 'is-invalid' : form.errors.description }" autofocus="autofocus" autocomplete="off">
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.description}">
-                                            {{ form.errors.description }}
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="name">Tax</label>
-                                            <input type="number" class="form-control" placeholder="Tax" v-model="form.tax" :class="{ 'is-invalid' : form.errors.tax }" autofocus="autofocus" autocomplete="off">
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.tax}">
-                                            {{ form.errors.tax }}
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="alert_quantity">Alert Quantity</label>
-                                            <input type="number" class="form-control" placeholder="Alert quantity" v-model="form.alert_quantity" :class="{ 'is-invalid' : form.errors.alert_quantity }" autofocus="autofocus" autocomplete="off">
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.alert_quantity}">
-                                            {{ form.errors.alert_quantity }}
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="image">Choose Image</label>
-                                            <input type="file" :class="['form-control',form.errors.image?'border border-danger':'']"  @change="selectImage">
-                                            <!-- <img :src="$page.props.auth_user.image" width="30%" height="166px" alt=""> -->
-                                            <!-- <small v-if="form.errors.image" class="text text-danger">{{ form.errors.image }} </small> -->
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.image}">
-                                            {{ form.errors.image }}
-                                        </div>
-                                    </div>
-
-                                    <div class="modal-footer justify-content-between">
-                                        <button type="button" class="btn btn-danger text-uppercase" style="letter-spacing: 0.1em;" @click="closeModal">Cancel</button>
-                                        <button type="submit" class="btn btn-info text-uppercase" style="letter-spacing: 0.1em;" :disabled="!form.name || form.processing">{{ buttonTxt }}</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
         </admin-layout>
     </div>
@@ -291,40 +123,22 @@
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import moment from 'moment';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
-
+    import { Link } from '@inertiajs/inertia-vue';
     import { pickBy, throttle } from 'lodash';
     export default {
         props: [
-            'products',
-            'filters',
-            'gold_qualities',
-            'types',
-            'item_names',
-            'weight_kyats',
-            'weight_pals',
-            'weight_yways'
+            'orders',
+            'filters'
+
             ],
         components: {
             AdminLayout,
             Pagination,
+            Link
         },
         data() {
             return {
-                editedIndex: -1,
-                editMode: false,
-                form: this.$inertia.form({
-                    name: '',
-                    quality: '',
-                    type: '',
-                    item_name: '',
-                    w_kyat: '',
-                    w_pal: '',
-                    w_yway: '',
-                    description: '',
-                    tax: '',
-                    alert_quantity: '',
-                    image: ''
-                }),
+
                 params: {
                     search: this.filters.search,
                     field: this.filters.field,
@@ -333,17 +147,7 @@
 
             }
         },
-        computed: {
-            formTitle() {
-                return this.editedIndex === -1 ? 'Create New Product Type' : 'Edit Current Product Type';
-            },
-            buttonTxt() {
-                return this.editedIndex === -1 ? 'Create' : 'Edit';
-            },
-            checkMode() {
-                return this.editMode === false ? this.createProduct : this.editProductType
-            }
-        },
+
         watch: {
             params: {
                 handler: throttle(function () {
@@ -355,9 +159,7 @@
         },
 
         methods: {
-            selectImage(e){
-                this.form.image = e.target.files[0];
-            },
+
             sort(field) {
                 this.params.field = field;
                 this.params.direction = this.params.direction === 'asc' ? 'desc' : 'asc';
@@ -366,49 +168,7 @@
                 return moment(value).format('YYYY-MM-DD');
             },
 
-            editModal(product) {
-                // console.log(product_type);
-                this.editMode = true
-                $('#modal-lg').modal('show')
-                this.editedIndex = this.products.data.indexOf(product_type)
-                this.form.id = product_type.id
-                this.form.name = product_type.name
-            },
-            openModal() {
-                this.editedIndex = -1
-                $('#modal-lg').modal('show')
-            },
-            closeModal() {
-                this.form.clearErrors()
-                this.editMode = false
-                this.form.reset()
-                $('#modal-lg').modal('hide')
-            },
-            createProduct() {
-                this.form.post(this.route('admin.products.store'), {
-                    preserveScroll: true,
-                    onSuccess:() => {
-                        this.closeModal()
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'New Product created!'
-                        })
-                    }
-                })
-            },
-            editProductType() {
-                this.form.patch(this.route('admin.types.update', this.form.id, this.form), {
-                    preserveScroll: true,
-                    onSuccess:() => {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Product Type has been updated!'
-                        })
-                        this.closeModal()
-                    }
-                })
-            },
-            deleteProductType(id) {
+            deleteOrder(id) {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",

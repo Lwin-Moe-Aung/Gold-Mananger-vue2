@@ -46,4 +46,9 @@ class Contact extends Model
     {
         return $this->belongsTo(Business::class, 'business_id');
     }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class, 'contact_id');
+    }
 }

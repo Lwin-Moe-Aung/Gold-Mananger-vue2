@@ -51,4 +51,9 @@ class Business extends Model
     {
         return $this->hasMany(Contact::class, 'business_id');
     }
+
+    public function transaction()
+    {
+        return $this->hasMany(Transaction::class, 'business_id');
+    }
 }

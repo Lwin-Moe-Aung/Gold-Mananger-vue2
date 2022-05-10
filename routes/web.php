@@ -88,5 +88,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     //Order Management
     Route::resource('orders', OrderController::class)->except(['create', 'show', 'edit']);
+    Route::get('/orders/detail/{id}', [OrderController::class, 'detail'])->name('orders.detail');
 
 });

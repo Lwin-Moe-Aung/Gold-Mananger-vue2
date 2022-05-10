@@ -27,11 +27,14 @@ class Order extends Model
         'item_id',
         'transaction_id',
         'created_by',
+        'business_id',
+        'business_location_id',
         'total_weight',
         'total_before',
         'final_total',
         'paid_money',
         'credit_money',
+        'discount_amount',
         'note',
     ];
 
@@ -41,6 +44,21 @@ class Order extends Model
      * @var array
      */
     protected $hidden = [];
+    /**
+     * @return BelongsTo
+     * @description Get the transaction that owns the order
+     */
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
 
-
+    /**
+     * @return BelongsTo
+     * @description Get the item that owns the order
+    */
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

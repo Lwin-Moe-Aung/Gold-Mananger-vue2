@@ -4,6 +4,15 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\Transaction;
+use App\Models\Item;
+use App\Models\Product;
+use App\Models\Type;
+use App\Models\ItemName;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+
 
 class OrderController extends Controller
 {
@@ -14,24 +23,54 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $business_id = auth()->user()->business_id;
-        $products = Product::where('business_id', $business_id)->with('user')->paginate(10);
-        $gold_qualities = GoldQuality::where('business_id', $business_id)->get();
-        $types = Type::where('business_id', $business_id)->get();
-        $item_names = ItemName::where('business_id', $business_id)->get();
-        $weight_kyats = WeightKyat::where('business_id', $business_id)->get();
-        $weight_pals = WeightPal::where('business_id', $business_id)->get();
-        $weight_yways = WeightYway::where('business_id', $business_id)->get();
+        $business_id = Auth::user()->business_id;
+        $business_location_id = Auth::user()->business_location_id;
 
-        return Inertia::render('AdminPanel/ProductManagement/Products/Index', [
-            'products' => $products,
-            'gold_qualities' => $gold_qualities,
-            'types' => $types,
-            'item_names' => $item_names,
-            'weight_kyats' => $weight_kyats,
-            'weight_pals' => $weight_pals,
-            'weight_yways' => $weight_yways,
+        $orders = Order::where('business_id',$business_id)
+                ->where('business_location_id', $business_location_id)
+                ->with('item')
+                ->with('transaction')
+                ->paginate(5);
+
+        return Inertia::render('AdminPanel/OrderManagement/OrderList/Index', [
+            'orders' => $orders,
             'filters' => request()->all(['search', 'field', 'direction'])
+        ]);
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+    */
+    public function detail($id)
+    {
+        $order = Order::find($id);
+        if($order == null) return false;
+        $order->total_weight = json_decode($order->total_weight);
+        $transaction = Transaction::where('id',$order->transaction_id)
+                    ->with('business')
+                    ->with('businessLocation')
+                    ->with('contact')
+                    ->first();
+
+        $item = Item::find($order->item_id);
+        $item->gold_weight = json_decode($item->gold_weight);
+        $item->gem_weight = json_decode($item->gem_weight);
+        $item->fee = json_decode($item->fee);
+
+        $product = Product::find($item->product_id);
+        $type = Type::where('key',$product->product_sku[2])
+                ->first();
+        $itemname = ItemName::where('key',$product->product_sku[3])
+                ->first();
+
+        return Inertia::render('AdminPanel/OrderManagement/OrderDetail/Index', [
+            'order' => $order,
+            'transaction' => $transaction,
+            'item' => $item,
+            'product' => $product,
+            'type' => $type,
+            'itemname' => $itemname
         ]);
     }
 

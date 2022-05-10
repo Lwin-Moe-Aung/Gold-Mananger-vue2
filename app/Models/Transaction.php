@@ -50,5 +50,26 @@ class Transaction extends Model
      */
     protected $hidden = [];
 
+    /**
+     * @return HasOne
+     * @description get the order associated with the transaction
+     */
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
 
+    public function business()
+    {
+        return $this->belongsTo(Business::class, 'business_id');
+    }
+    public function businessLocation()
+    {
+        return $this->belongsTo(BusinessLocation::class, 'business_location_id');
+    }
+
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class, 'contact_id');
+    }
 }

@@ -29,8 +29,6 @@ class CreateTransactionsTable extends Migration
             $table->dateTime('transaction_date');
             $table->decimal('total_before', 10, 2)->default(0)->comment('Total before the purchase/invoice tax, this includeds the indivisual product tax');
 
-            $table->enum('discount_type', ['fixed', 'percentage'])->nullable();
-            $table->string('discount_amount', 10)->nullable();
             $table->string('shipping_details')->nullable();
             $table->decimal('shipping_charges', 8, 2)->default(0);
             $table->text('additional_notes')->nullable();

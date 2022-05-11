@@ -89,5 +89,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     //Order Management
     Route::resource('orders', OrderController::class)->except(['create', 'show', 'edit']);
     Route::get('/orders/detail/{id}', [OrderController::class, 'detail'])->name('orders.detail');
+    Route::post('/orders/product_form_save', [OrderController::class, 'productFormSave'])->name('orders.product_form_save');
+    Route::post('/orders/item_form_save', [OrderController::class, 'itemFormSave'])->name('orders.item_form_save');
+    Route::post('/orders/type_form_save', [OrderController::class, 'typeFormSave'])->name('orders.type_form_save');
+    Route::post('/orders/itemname_form_save', [OrderController::class, 'itemNameFormSave'])->name('orders.itemname_form_save');
+
+
 
 });

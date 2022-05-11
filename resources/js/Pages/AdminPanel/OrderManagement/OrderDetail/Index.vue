@@ -117,7 +117,7 @@
                                             <div class="row">
                                                 <!-- accepted payments column -->
                                                 <div class="col-6">
-                                                    <p class="lead">Item:</p>
+                                                    <p class="lead">Item: {{item.name}}</p>
                                                     <img class="w-10 h-10 rounded-full" :src="item.image1" alt=""  style="width:100px;"/>
                                                     <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
                                                         Product sku :{{ product.product_sku }}
@@ -185,58 +185,121 @@
             <section class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="">Product</h4>
-                                </div>
-                                <div class="card-body">
-                                    <form @submit.prevent="checkMode">
-                                        <!-- <div class="form-group">
-                                            <label for="name">Description</label>
-                                            <input type="text" class="form-control" placeholder="Description" v-model="form.description" :class="{ 'is-invalid' : form.errors.description }" autofocus="autofocus" autocomplete="off">
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.description}">
-                                            {{ form.errors.description }}
-                                        </div>
+                         <div class="col-6" v-if="product.draft == 1">
+                            <form @submit.prevent="productFormSubmit">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="">Product</h4>
+                                    </div>
+                                    <div class="card-body">
                                         <div class="form-group">
-                                            <label for="name">Tax</label>
-                                            <input type="number" class="form-control" placeholder="Tax" v-model="form.tax" :class="{ 'is-invalid' : form.errors.tax }" autofocus="autofocus" autocomplete="off">
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" placeholder="Name" :value="product.product_sku" autofocus="autofocus" autocomplete="off" disabled>
                                         </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.tax}">
-                                            {{ form.errors.tax }}
-                                        </div> -->
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="">Item</h4>
-                                </div>
-                                <div class="card-body">
-                                    <form>
                                         <div class="form-group">
                                             <label for="name">Name</label>
                                             <input type="text" class="form-control" placeholder="Name" v-model="product_form.name" autofocus="autofocus" autocomplete="off">
                                         </div>
-                                        <!-- <div class="invalid-feedback mb-3" :class="{ 'd-block' : product_form.errors.name}">
-                                            {{ product_form.errors.name }}
-                                        </div> -->
                                         <div class="form-group">
                                             <label for="name">Description</label>
                                             <input type="text" class="form-control" placeholder="Description" v-model="product_form.description" autofocus="autofocus" autocomplete="off">
                                         </div>
-
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                                            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                                            <input type="checkbox" class="form-check-input" v-model="product_form.approve_changes">
+                                            <label class="form-check-label" for="exampleCheck1">Approve changes</label>
                                         </div>
-                                    </form>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
+                        </div>
+
+                        <div class="col-6" v-if="item.draft == 1">
+                            <form @submit.prevent="itemFormSubmit">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="">Item</h4>
+                                    </div>
+                                    <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="name">Name</label>
+                                                <input type="text" class="form-control" placeholder="Name" v-model="item_form.name" autofocus="autofocus" autocomplete="off">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="name">Description</label>
+                                                <input type="text" class="form-control" placeholder="Description" v-model="item_form.description" autofocus="autofocus" autocomplete="off">
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" v-model="item_form.approve_changes">
+                                                <label class="form-check-label" for="exampleCheck1">Approve changes</label>
+                                            </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                         <div class="col-6" v-if="type.draft == 1">
+                            <form @submit.prevent="typeFormSubmit">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="">Type</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="name">Key</label>
+                                            <input type="text" class="form-control" placeholder="Name" :value="type.key" autofocus="autofocus" autocomplete="off" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" placeholder="Name" v-model="type_form.name" autofocus="autofocus" autocomplete="off">
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" v-model="type_form.approve_changes">
+                                            <label class="form-check-label" for="exampleCheck1">Approve changes</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="col-6" v-if="itemname.draft == 1">
+                            <form @submit.prevent="itemNameFormSubmit">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="">ItemName</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label for="name">Key</label>
+                                            <input type="text" class="form-control" placeholder="Name" :value="itemname.key" autofocus="autofocus" autocomplete="off" disabled>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" placeholder="Description" v-model="itemname_form.name" autofocus="autofocus" autocomplete="off">
+                                        </div>
+                                            <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" v-model="itemname_form.approve_changes">
+                                            <label class="form-check-label" for="exampleCheck1">Approve changes</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -252,6 +315,8 @@
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
     import { pickBy, throttle } from 'lodash';
+    import axios from 'axios';
+
     export default {
         props: [
             'order',
@@ -266,17 +331,45 @@
             Pagination,
             Link
         },
+        created() {
+            if(this.product.draft == 1) this.productForm();
+            if(this.item.draft == 1) this.itemForm();
+            if(this.itemname.draft == 1) this.itemnameForm();
+            if(this.type.draft == 1) this.typeForm();
+        },
         data() {
             return {
                 product_form : {
+                    'id': '',
                     'name': '',
                     'image': '',
                     'imagefile': undefined,
                     'description': '',
-                    'draft': ''
-                    },
+                    'approve_changes': false
+                },
+                item_form : {
+                    'id': '',
+                    'name': '',
+                    'image': '',
+                    'imagefile': undefined,
+                    'description': '',
+                    'approve_changes': false
 
+                },
+                itemname_form : {
+                    'id': '',
+                    'name': '',
+                    'key': '',
+                    'approve_changes': false
 
+                },
+                type_form : {
+                    'id': '',
+                    'name': '',
+                    'key': '',
+                    'approve_changes': false
+
+                }
             }
         },
 
@@ -284,6 +377,64 @@
             dateTime(value) {
                 return moment(value).format('DD/MM/YYYY');
             },
+            productForm() {
+                this.product_form.id = this.product.id;
+                this.product_form.name = this.product.name;
+                this.product_form.description = this.product.description;
+            },
+            itemForm() {
+                this.item_form.id = this.item.id;
+                this.item_form.name = this.item.name;
+                this.item_form.description = this.item.description;
+            },
+            itemnameForm() {
+                this.itemname_form.id = this.itemname.id;
+                this.itemname_form.name = this.itemname.name;
+            },
+            typeForm() {
+                this.type_form.id = this.type.id;
+                this.type_form.name = this.type.name;
+            },
+            productFormSubmit() {
+                let data = { product_form: this.product_form }
+                axios.post('/admin/orders/product_form_save', data)
+                    .then(res => {
+                        this.product.draft = 0;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            itemFormSubmit() {
+                let data = { item_form: this.item_form }
+                axios.post('/admin/orders/item_form_save', data)
+                    .then(res => {
+                        this.item.draft = 0;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            typeFormSubmit() {
+                let data = { type_form: this.type_form }
+                axios.post('/admin/orders/type_form_save', data)
+                    .then(res => {
+                        this.type.draft = 0;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            itemNameFormSubmit() {
+                let data = { itemname_form: this.itemname_form }
+                axios.post('/admin/orders/itemname_form_save', data)
+                    .then(res => {
+                        this.itemname.draft = 0;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
         }
     }
 </script>

@@ -30,6 +30,7 @@ class OrderController extends Controller
                 ->where('business_location_id', $business_location_id)
                 ->with('item')
                 ->with('transaction')
+                ->orderBy('created_at', 'DESC')
                 ->paginate(5);
 
         return Inertia::render('AdminPanel/OrderManagement/OrderList/Index', [
@@ -174,5 +175,77 @@ class OrderController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+    */
+    public function productFormSave(Request $request)
+    {
+        $product_form = $request->product_form;
+        $product = Product::find($product_form['id']);
+        $product->name = $product_form['name'];
+        $product->description = $product_form['description'];
+        $product->draft = $product_form['approve_changes'] ? '0' : '1';
+        $product->save();
+
+        return back();
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+    */
+    public function itemFormSave(Request $request)
+    {
+        $item_form = $request->item_form;
+        $item = Item::find($item_form['id']);
+        $item->name = $item_form['name'];
+        $item->item_description = $item_form['description'];
+        $item->draft = $item_form['approve_changes'] ? '0' : '1';
+        $item->save();
+
+        return back();
+
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+    */
+    public function typeFormSave(Request $request)
+    {
+        $type_form = $request->type_form;
+        $type = Type::find($type_form['id']);
+        $type->name = $type_form['name'];
+        $type->draft = $type_form['approve_changes'] ? '0' : '1';
+        $type->save();
+
+        return back();
+
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+    */
+    public function itemNameFormSave(Request $request)
+    {
+        $itemname_form = $request->itemname_form;
+        $item_name = ItemName::find($itemname_form['id']);
+        $item_name->name = $itemname_form['name'];
+        $item_name->draft = $itemname_form['approve_changes'] ? '0' : '1';
+        $item_name->save();
+
+        return back();
+
     }
 }

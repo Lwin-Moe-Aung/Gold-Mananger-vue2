@@ -634,6 +634,7 @@
                         onSuccess:() => {
                             this.form.reset();
                             this.$store.dispatch("selectItem", []);
+                            this.$inertia.get(`/pos/generate_invoice`);
                             Toast.fire({
                                 icon: 'success',
                                 title: 'Order Success'

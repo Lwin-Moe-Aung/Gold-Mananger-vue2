@@ -61,7 +61,7 @@
                                             <!-- Table row -->
                                             <div class="row">
                                                 <div class="col-12 table-responsive">
-                                                    <table class="table table-striped">
+                                                    <table class="table table-striped" ref="printTable">
                                                         <thead>
                                                             <tr>
                                                                 <th>အမျိုးအစား</th>
@@ -161,7 +161,7 @@
                                             <!-- this row will not appear when printing -->
                                             <div class="row no-print">
                                                 <div class="col-12">
-                                                <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+                                                <a href="#" @click="printData" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
                                                 <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Submit
                                                     Payment
                                                 </button>
@@ -318,6 +318,10 @@
     import axios from 'axios';
 
     export default {
+        env: {
+                browser: true,
+                node: true,
+            },
         props: [
             'order',
             'transaction',
@@ -434,6 +438,13 @@
                     .catch(function (error) {
                         console.log(error);
                     });
+            },
+            printData() {
+                var divToPrint = this.$refs.printTable;
+                newWin = window.open("");
+                newWin.document.write(divToPrint.outerHTML);
+                newWin.print();
+                newWin.close();
             }
         }
     }

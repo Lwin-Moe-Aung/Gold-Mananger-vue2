@@ -46,6 +46,8 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::post('/pos/save_order', [HomeController::class, 'saveOrder'])->name('pos.save_order');
     Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
 
+    //generate invoice
+    Route::get('/pos/generate_invoice', [HomeController::class, 'generateInvoice'])->name('pos.generate_invoice');
 });
 
 
@@ -93,6 +95,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::post('/orders/item_form_save', [OrderController::class, 'itemFormSave'])->name('orders.item_form_save');
     Route::post('/orders/type_form_save', [OrderController::class, 'typeFormSave'])->name('orders.type_form_save');
     Route::post('/orders/itemname_form_save', [OrderController::class, 'itemNameFormSave'])->name('orders.itemname_form_save');
+
+
 
 
 

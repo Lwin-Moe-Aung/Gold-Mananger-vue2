@@ -262,4 +262,17 @@ class HomeController extends Controller
             DB::rollback();
         }
     }
+
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+    */
+    public function generateInvoice()
+    {
+        // dd("dadsas");
+        return Inertia::render('PosPanel/Pos/Invoice');
+
+    }
 }

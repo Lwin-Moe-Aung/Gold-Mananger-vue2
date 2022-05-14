@@ -25,6 +25,7 @@ class BusinessLocation extends Model
     protected $fillable = [
         'business_id',
         'name',
+        'address',
         'state',
         'city',
         'division',

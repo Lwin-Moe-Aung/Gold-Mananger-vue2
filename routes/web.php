@@ -50,7 +50,7 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::post('/pos/save_order', [CustomerOrderController::class, 'saveOrder'])->name('pos.save_order');
 
     //generate invoice
-    Route::get('/pos/generate_invoice', [CustomerOrderController::class, 'generateInvoice'])->name('pos.generate_invoice');
+    Route::get('/pos/generate_invoice/{id}', [CustomerOrderController::class, 'generateInvoice'])->name('pos.generate_invoice');
 });
 
 

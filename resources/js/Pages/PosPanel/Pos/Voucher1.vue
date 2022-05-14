@@ -5,7 +5,7 @@
                 :elevation="hover ? 16 : 2"
                 :class="{ 'on-hover': hover }"
                 flat
-                class="mx-auto rounded-lg mx-3"
+                class="mx-auto rounded-lg mx-3 no-print"
             >
             <v-form ref="form" lazy-validation>
 
@@ -485,6 +485,14 @@
                         </v-row>
             </v-card>
         </v-hover>
+         <!-- <Link href="/pos/generate_invoice/4" class="nav-link" preserve-state>
+            <i class="far fa-circle nav-icon"></i>
+            <p>
+                Click me
+            </p>
+        </Link> -->
+    <!-- <Invoice/> -->
+
     </v-col>
 </template>
 
@@ -492,8 +500,14 @@
     import { validationMixin } from 'vuelidate'
     import { required, maxLength, email } from 'vuelidate/lib/validators'
     import axios from 'axios';
+    import Invoice from "./Invoice";
+    import { Link } from '@inertiajs/inertia-vue'
 
     export default {
+        components: {
+            Invoice,
+            Link,
+        },
         mixins: [validationMixin],
         validations: {
             quality: { required, maxLength: maxLength(10) },
@@ -629,6 +643,7 @@
 
             },
             printbill() {
+
                 if(this.$refs.form.validate()){
                     let data = new FormData();
                     data.append('id',this.form.id);
@@ -660,7 +675,10 @@
                             {
                                 Object.assign(this.$data, this.$options.data.apply(this));
                                 this.$store.dispatch("selectItem", []);
-                                this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
+
+                                window.open( "http://localhost:8000/pos/generate_invoice/"+res.data.order_id, "_blank");
+                                // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
+
                                 Toast.fire({
                                     icon: 'success',
                                     title: 'Order Success'
@@ -691,6 +709,9 @@
                     this.input.value = '' // <-- this will fix the issue
                     this.$emit('input', undefined)
                 }
+            },
+            printVoucher() {
+                window.print();
             }
         },
 
@@ -842,5 +863,11 @@
 .mask{
     position: absolute;
     mask-image: radial-gradient(circle at bottom, rgba(0,0,0,0.3) 10%, transparent  50%);
+}
+@media print {
+	.no-print  {
+		display: none;
+	}
+
 }
 </style>

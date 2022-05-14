@@ -18,6 +18,7 @@ class CreateBusinessLocationsTable extends Migration
             $table->unsignedBigInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->string('name', 191);
+            $table->string('address', 100)->nullable();
             $table->string('state', 100);
             $table->string('city', 100);
             $table->string('division', 100);

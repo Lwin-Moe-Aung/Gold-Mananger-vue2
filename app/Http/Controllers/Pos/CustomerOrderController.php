@@ -226,10 +226,28 @@ class CustomerOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
     */
-    public function generateInvoice(Request $request)
+    public function generateInvoice($order_id)
     {
-        dd($request->order_id);
-        return Inertia::render('PosPanel/Pos/Invoice');
+        $order = Order::find($order_id);
+        if($order == null) return false;
+        $order->total_weight = json_decode($order->total_weight);
+        $transaction = Transaction::where('id',$order->transaction_id)
+                    ->with('business')
+                    ->with('businessLocation')
+                    ->with('contact')
+                    ->first();
 
+        $item = Item::find($order->item_id);
+        $item->gold_weight = json_decode($item->gold_weight);
+        $item->gem_weight = json_decode($item->gem_weight);
+        $item->fee = json_decode($item->fee);
+
+        $product = Product::find($item->product_id);
+        return Inertia::render('PosPanel/Pos/Invoice', [
+            'order' => $order,
+            'transaction' => $transaction,
+            'item' => $item,
+            'product' => $product
+        ]);
     }
 }

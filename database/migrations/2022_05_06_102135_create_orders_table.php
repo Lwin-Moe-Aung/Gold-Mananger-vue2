@@ -30,11 +30,11 @@ class CreateOrdersTable extends Migration
             // $table->decimal('fee_price', 10, 2)->default(0);
 
             $table->string('total_weight', 100);
-            $table->decimal('total_before', 10, 2)->default(0);
-            $table->decimal('final_total', 10, 2)->default(0);
-            $table->decimal('paid_money', 10, 2)->default(0);
-            $table->decimal('credit_money', 10, 2)->default(0);
-            $table->decimal('discount_amount', 10, 2)->default(0);
+            $table->decimal('total_before', 10, 2)->default(0.00);
+            $table->decimal('final_total', 10, 2)->default(0.00);
+            $table->decimal('paid_money', 10, 2)->default(0.00);
+            $table->decimal('credit_money', 10, 2)->default(0.00);
+            $table->decimal('discount_amount', 10, 2)->default(0.00);
 
             $table->text('note')->nullable();
             $table->softDeletes();

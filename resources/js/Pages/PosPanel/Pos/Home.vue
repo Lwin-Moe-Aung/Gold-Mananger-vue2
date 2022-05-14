@@ -232,22 +232,6 @@ export default {
                 this.items = response.data;
             });
         },
-        // search(val) {
-        //     // products have already been loaded
-        //     if (this.products.length > 0) return;
-        //     this.isLoading = true;
-        //     // Lazily load input products
-        //     fetch(this.route("pos.product.lists"))
-        //         // fetch('https://api.coingecko.com/api/v3/coins/list')
-        //         .then((res) => res.clone().json())
-        //         .then((res) => {
-        //             this.products = res;
-        //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //         })
-        //         .finally(() => (this.isLoading = false));
-        // },
     },
     methods: {
         select(item) {
@@ -262,6 +246,7 @@ export default {
                 yway:this.searchValue.charAt(8),
             };
             let selectItem = [];
+            selectItem["id"] = "";
             selectItem["name"] = "";
             selectItem["product_sku"] = this.searchValue;
             selectItem["image1"] = "";

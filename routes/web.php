@@ -16,6 +16,7 @@ use App\Http\Controllers\Admins\DailySetupController;
 use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Admins\OrderController;
 use App\Http\Controllers\Pos\HomeController;
+use App\Http\Controllers\Pos\CustomerOrderController;
 use App\Http\Controllers\Pos\DailySetupValueController;
 
 
@@ -43,11 +44,13 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos', [HomeController::class, 'index'])->name('pos.index');
     Route::get('/pos/poduct-list', [HomeController::class, 'productList'])->name('pos.product.lists');
     Route::get('/pos/search/{sku}', [HomeController::class, 'search'])->name('pos.search');
-    Route::post('/pos/save_order', [HomeController::class, 'saveOrder'])->name('pos.save_order');
     Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
 
+    //customer order
+    Route::post('/pos/save_order', [CustomerOrderController::class, 'saveOrder'])->name('pos.save_order');
+
     //generate invoice
-    Route::get('/pos/generate_invoice', [HomeController::class, 'generateInvoice'])->name('pos.generate_invoice');
+    Route::get('/pos/generate_invoice', [CustomerOrderController::class, 'generateInvoice'])->name('pos.generate_invoice');
 });
 
 

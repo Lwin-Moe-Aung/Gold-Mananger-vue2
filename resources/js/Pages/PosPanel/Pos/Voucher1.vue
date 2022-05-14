@@ -502,7 +502,8 @@
 
         data() {
             return {
-                form: this.$inertia.form({
+
+                form: {
                     id: "",
                     name: "",
                     product_sku: "",
@@ -528,7 +529,7 @@
                     paid_money: "",
                     credit_money: "",
                     note: "",
-                }),
+                },
                 quality: '',
                 dialog2: false,
                 name: '',
@@ -629,18 +630,47 @@
             },
             printbill() {
                 if(this.$refs.form.validate()){
-                    this.form.post(this.route('pos.save_order'), {
-                        preserveScroll: true,
-                        onSuccess:() => {
-                            this.form.reset();
-                            this.$store.dispatch("selectItem", []);
-                            this.$inertia.get(`/pos/generate_invoice`);
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'Order Success'
-                            })
-                        }
-                    })
+                    let data = new FormData();
+                    data.append('id',this.form.id);
+                    data.append('name',this.form.name);
+                    data.append('product_sku',this.form.product_sku);
+                    data.append('image',this.form.image);
+                    data.append('imageFile',this.form.imageFile);
+                    data.append('item_sku',this.form.item_sku);
+                    data.append('gold_weight',JSON.stringify(this.form.gold_weight));
+                    data.append('gold_price',this.form.gold_price);
+                    data.append('gem_weight',JSON.stringify(this.form.gem_weight));
+                    data.append('gem_price',this.form.gem_price);
+                    data.append('fee',JSON.stringify(this.form.fee));
+                    data.append('fee_price',this.form.fee_price);
+                    data.append('fee_for_making',this.form.fee_for_making);
+                    data.append('item_discount',this.form.item_discount);
+                    data.append('total_kyat',this.form.total_kyat);
+                    data.append('total_pal',this.form.total_pal);
+                    data.append('total_yway',this.form.total_yway);
+                    data.append('total_before',this.form.total_before);
+                    data.append('final_total',this.form.final_total);
+                    data.append('paid_money',this.form.paid_money);
+                    data.append('credit_money',this.form.credit_money);
+                    data.append('note',this.form.note);
+
+                    axios.post('/pos/save_order', data)
+                        .then(res => {
+                            if(res.data.status)
+                            {
+                                Object.assign(this.$data, this.$options.data.apply(this));
+                                this.$store.dispatch("selectItem", []);
+                                this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: 'Order Success'
+                                })
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
                 }
             },
             selectImage () {

@@ -200,6 +200,7 @@ class CustomerOrderController extends Controller
             $order->final_total = $request->final_total;
             $order->paid_money = $request->paid_money;
             $order->credit_money = $request->credit_money;
+            $order->discount_amount = $request->item_discount;
             $order->note = $request->note;
             $order->save();
 

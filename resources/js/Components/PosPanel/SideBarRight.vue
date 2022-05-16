@@ -35,14 +35,19 @@
                     <v-list-item-subtitle
                         >X1
                         <v-btn plain color="#704232" small
-                            >Notes
-                            <v-icon right>mdi-pencil</v-icon>
+                            >Note
+                            <!-- <v-icon right>mdi-pencil</v-icon> -->
                         </v-btn>
+                        <v-btn plain color="#704232" small
+                            @click="editItemFromCart(item)"
+                            >Edit
+
+                        </v-btn>
+
+
                     </v-list-item-subtitle>
                 </v-list-item-content>
-                <v-list-item-action class="caption">{{
-                    item.total_after
-                }}</v-list-item-action>
+                <v-list-item-action class="caption">{{item.final_total}}</v-list-item-action>
             </v-list-item>
         </v-list>
 
@@ -231,6 +236,11 @@ export default {
             return total;
         },
     },
+    methods: {
+        editItemFromCart(item) {
+            this.$store.dispatch("selectItem", item);
+        }
+    }
 };
 </script>
 

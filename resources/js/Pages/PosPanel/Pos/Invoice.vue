@@ -5,7 +5,7 @@
             <div class="container">
                 <div class="container-fluid">
                     <!-- title row -->
-                    <div class="row">
+                    <div class="row row-invoice-page">
                         <div class="col-4">
 
                         </div>
@@ -25,7 +25,7 @@
                         <!-- /.col -->
                     </div>
                     <!-- info row -->
-                    <div class="row invoice-info">
+                    <div class="row invoice-info row-invoice-page">
                         <div class="col-sm-4 invoice-col">
                         Customer Info
                         <address>
@@ -51,9 +51,9 @@
                     </div>
                     <!-- info row -->
                     <!-- /glod quality Table-->
-                    <div class="row">
+                    <div class="row row-invoice-page">
                         <!-- /.col -->
-                        <div class="col-6">
+                        <div class="col-6 col-invoice-page">
                             <div class="table-responsive">
                                 <table class="table table-bordered text-center bg-white">
                                     <tr>
@@ -70,15 +70,15 @@
                         </div>
                         <!-- /.col -->
                          <!-- accepted payments column -->
-                        <div class="col-6">
+                        <div class="col-6 col-invoice-page">
 
                         </div>
                     </div>
                     <!-- /glod quality -->
 
                     <!-- Table row -->
-                    <div class="row">
-                        <div class="col-12 table-responsive">
+                    <div class="row row-invoice-page">
+                        <div class="col-12 table-responsive col-invoice-page">
                             <table class="table table-bordered text-center bg-white">
                                 <thead>
                                     <tr>
@@ -132,13 +132,13 @@
                     </div>
                     <!-- /.row -->
 
-                    <div class="row">
+                    <div class="row row-invoice-page">
                         <!-- accepted payments column -->
-                        <div class="col-6">
+                        <div class="col-6 col-invoice-page">
 
                         </div>
                         <!-- /.col -->
-                        <div class="col-6">
+                        <div class="col-6 col-invoice-page">
                             <div class="table-responsive">
                                 <table class="table table-bordered text-center bg-white">
                                     <tr>
@@ -214,10 +214,10 @@
         }
 
     }
-    .row {
+    .row-invoice-page {
         margin-top: 0px !important;
     }
-    .col-6,.col-12 {
+    .col-invoice-page {
         padding: 0px !important;
     }
 

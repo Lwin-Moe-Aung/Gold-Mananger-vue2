@@ -616,11 +616,32 @@
         },
         methods: {
             addToCart() {
-                let item = [];
-                item.id = this.form.id;
-                item.name = this.form.name;
-                item.image = this.form.image;
-                item.final_total = this.form.final_total;
+                let item = {
+                    id: this.form.id,
+                    name: this.form.name,
+                    product_sku: this.form.product_sku,
+                    image: this.form.image,
+                    item_sku: this.form.item_sku,
+                    gold_weight: this.form.gold_weight,
+                    gold_price: this.form.gold_price,
+                    gem_weight: this.form.gem_weight,
+                    gem_price: this.form.gem_price,
+                    fee: this.form.fee,
+                    fee_price: this.form.fee_price,
+                    fee_for_making: this.form.fee_for_making,
+                    item_discount: this.form.item_discount,
+                    tax: this.form.tax,
+                    item_description: this.form.item_description,
+                    total_kyat: this.form.total_kyat,
+                    total_pal: this.form.total_pal,
+                    exceed_pal_form_yway: this.form.exceed_pal_form_yway,
+                    total_yway: this.form.total_yway,
+                    total_before: this.form.total_before,
+                    final_total: this.form.final_total,
+                    paid_money: this.form.paid_money,
+                    credit_money: this.form.credit_money,
+                    note: this.form.note,
+                };
                 this.$store.dispatch("addItem", item);
             },
             openModel() {
@@ -736,7 +757,7 @@
                 this.form.fee.kyat = String(value.fee.kyat);
                 this.form.fee.pal = String(value.fee.pal);
                 this.form.fee.yway = String(value.fee.yway);
-                this.form.fee_for_making = value.fee_for_making;
+                this.form.fee_for_making = String(value.fee_for_making);
                 this.form.tax = value.tax;
                 this.quality = value.quality;
 

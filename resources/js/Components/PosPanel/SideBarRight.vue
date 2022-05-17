@@ -26,7 +26,7 @@
         >
             <v-list-item>
                 <v-list-item-avatar rounded color="grey lighten-4">
-                    <v-img :src="item.image"></v-img>
+                    <v-img :src="item.image1"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
                     <v-list-item-title class="subtitle-2">{{
@@ -35,14 +35,17 @@
                     <v-list-item-subtitle
                         >X1
                         <v-btn plain color="#704232" small
-                            >Note
-                            <!-- <v-icon right>mdi-pencil</v-icon> -->
-                        </v-btn>
-                        <v-btn plain color="#704232" small
                             @click="editItemFromCart(item)"
                             >Edit
 
                         </v-btn>
+
+                        <v-btn plain color="#704232" small
+                            @click="deleteItemFromCart(item)"
+                            >Note
+                            <!-- <v-icon right>mdi-pencil</v-icon> -->
+                        </v-btn>
+
 
 
                     </v-list-item-subtitle>
@@ -239,6 +242,9 @@ export default {
     methods: {
         editItemFromCart(item) {
             this.$store.dispatch("selectItem", item);
+        },
+        deleteItemFromCart(item) {
+            this.$store.dispatch("removeItem", item);
         }
     }
 };

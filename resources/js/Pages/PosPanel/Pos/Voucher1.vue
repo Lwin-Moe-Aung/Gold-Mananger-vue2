@@ -616,33 +616,37 @@
         },
         methods: {
             addToCart() {
-                let item = {
-                    id: this.form.id,
-                    name: this.form.name,
-                    product_sku: this.form.product_sku,
-                    image: this.form.image,
-                    item_sku: this.form.item_sku,
-                    gold_weight: this.form.gold_weight,
-                    gold_price: this.form.gold_price,
-                    gem_weight: this.form.gem_weight,
-                    gem_price: this.form.gem_price,
-                    fee: this.form.fee,
-                    fee_price: this.form.fee_price,
-                    fee_for_making: this.form.fee_for_making,
-                    item_discount: this.form.item_discount,
-                    tax: this.form.tax,
-                    item_description: this.form.item_description,
-                    total_kyat: this.form.total_kyat,
-                    total_pal: this.form.total_pal,
-                    exceed_pal_form_yway: this.form.exceed_pal_form_yway,
-                    total_yway: this.form.total_yway,
-                    total_before: this.form.total_before,
-                    final_total: this.form.final_total,
-                    paid_money: this.form.paid_money,
-                    credit_money: this.form.credit_money,
-                    note: this.form.note,
-                };
-                this.$store.dispatch("addItem", item);
+                if(this.$refs.form.validate()){
+                    let item = {
+                        id: this.form.id,
+                        name: this.form.name,
+                        product_sku: this.form.product_sku,
+                        image1: this.form.image,
+                        item_sku: this.form.item_sku,
+                        gold_weight: this.form.gold_weight,
+                        gold_price: this.form.gold_price,
+                        gem_weight: this.form.gem_weight,
+                        gem_price: this.form.gem_price,
+                        fee: this.form.fee,
+                        fee_price: this.form.fee_price,
+                        fee_for_making: this.form.fee_for_making,
+                        item_discount: this.form.item_discount,
+                        tax: this.form.tax,
+                        item_description: this.form.item_description,
+                        total_kyat: this.form.total_kyat,
+                        total_pal: this.form.total_pal,
+                        exceed_pal_form_yway: this.form.exceed_pal_form_yway,
+                        total_yway: this.form.total_yway,
+                        total_before: this.form.total_before,
+                        final_total: this.form.final_total,
+                        paid_money: this.form.paid_money,
+                        credit_money: this.form.credit_money,
+                        note: this.form.note,
+                        quality: this.quality
+
+                    };
+                    this.$store.dispatch("addItem", item);
+                }
             },
             openModel() {
                 this.dialog2 = true;
@@ -740,7 +744,6 @@
 
             item() {
                 let value = this.$store.state.selectedItem;
-                console.log(value);
                 this.form.id = value.id;
                 this.form.name = value.name;
                 this.form.product_sku = value.product_sku;
@@ -760,10 +763,14 @@
                 this.form.fee_for_making = String(value.fee_for_making);
                 this.form.tax = value.tax;
                 this.quality = value.quality;
-
+                this.form.item_discount = value.item_discount;
+                this.form.total_before = value.total_before;
+                this.form.final_total = value.final_total;
+                this.form.paid_money = value.paid_money;
+                this.form.credit_money = value.credit_money;
                 this.dailySetup = this.$page.props.daily_setup[this.quality];
                 this.dailyValue = this.$page.props.daily_setup[this.quality].kyat;
-                return value;
+                return this.form;
             },
             goldPrice() {
                 let price = this.$page.props.daily_setup[this.quality];

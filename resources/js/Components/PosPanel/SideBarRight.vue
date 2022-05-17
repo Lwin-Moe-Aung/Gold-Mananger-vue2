@@ -21,8 +21,9 @@
             subheader
             two-line
             class="mt-1"
-            v-for="item in carts"
+            v-for="(item, index) in carts"
             :key="item.id"
+            :index="index"
         >
             <v-list-item>
                 <v-list-item-avatar rounded color="grey lighten-4">
@@ -42,7 +43,7 @@
 
                         <v-btn plain color="#704232" small
                             @click="deleteItemFromCart(item)"
-                            >Note
+                            >Delete
                             <!-- <v-icon right>mdi-pencil</v-icon> -->
                         </v-btn>
 
@@ -241,7 +242,7 @@ export default {
     },
     methods: {
         editItemFromCart(item) {
-            this.$store.dispatch("selectItem", item);
+            this.$store.dispatch("editItem", item);
         },
         deleteItemFromCart(item) {
             this.$store.dispatch("removeItem", item);

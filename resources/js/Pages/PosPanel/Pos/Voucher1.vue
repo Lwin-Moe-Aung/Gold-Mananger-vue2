@@ -645,7 +645,13 @@
                         quality: this.quality
 
                     };
-                    this.$store.dispatch("addItem", item);
+                    if(this.item_from_cart){
+                        //edit item from cart
+                        this.$store.dispatch("editItemFromCart", item);
+                    }else{
+                        //add item to cart
+                        this.$store.dispatch("addItem", item);
+                    }
                 }
             },
             openModel() {
@@ -881,6 +887,9 @@
                 !this.$v.quality.required && errors.push('Name is required.')
                 return errors
             },
+            item_from_cart () {
+                return this.$store.state.item_from_cart;
+            }
         },
     };
 </script>

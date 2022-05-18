@@ -28,7 +28,9 @@ export const store = new Vuex.Store({
         },
         editItemFromCart: (state, item) => {
             let foundIndex = state.carts.findIndex(x => x.id == item.id);
-            state.carts[foundIndex] = item;
+            if(foundIndex > -1) {
+                Object.assign(state.carts[foundIndex], item);
+            }
         }
     },
     actions: {

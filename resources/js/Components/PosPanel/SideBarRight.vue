@@ -215,11 +215,225 @@
                 block
                 dark
                 class="widthoutupercase black--text"
-                @click="printAllBill"
+                @click="dialog = true"
                 >Print Bills</v-btn
             >
         </div>
+        <!-- start dialog box -->
+        <template>
+            <v-row justify="center">
+                <v-dialog
+                    v-model="dialog"
+                    fullscreen
+                    hide-overlay
+                    transition="dialog-bottom-transition"
+                    >
+                <!-- <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                    color="primary"
+                    dark
+                    v-bind="attrs"
+                    v-on="on"
+                    >
+                    Open Dialog
+                    </v-btn>
+                </template> -->
+                <v-card>
+                    <v-toolbar
+                        dark
+                        color="primary"
+                        >
+
+                        <v-toolbar-title>Settings</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-toolbar-items>
+                            <v-btn
+                                icon
+                                dark
+                                @click="dialog = false"
+                            >
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                        </v-toolbar-items>
+                    </v-toolbar>
+                    <v-list
+                        three-line
+                        subheader
+                        >
+                        <v-subheader>1 #</v-subheader>
+                        <div class="row row-invoice-page">
+                            <div class="col-12 table-responsive col-invoice-page">
+                                <table class="table table-bordered text-center bg-white">
+                                   <tbody>
+                                    	<tr>
+                                            <td colspan="3">၁၅ပဲရည်           1700000 ကျပ်</td>
+                                            <td colspan="3">ရွှေချိန်</td>
+                                            <td colspan="3">ကျောက်ချိန်</td>
+                                            <td colspan="3">အလျော့</td>
+											<td rowspan="3" class="text-center">လက်ခ</td>
+                                            <td colspan="3">စုစုပေါင်း</td>
+                                            <td rowspan="4">Print</td>
+
+
+                                        </tr>
+                                        <tr>
+                                            <td> Customer</td>
+                                            <td> Product Sku</td>
+                                            <td> Item Name</td>
+
+
+                                            <td style="width: 50px">ကျပ်</td>
+                                            <td style="width: 50px">ပဲ</td>
+                                            <td style="width: 50px">ရွေး</td>
+
+                                            <td style="width: 50px">ကျပ်</td>
+                                            <td style="width: 50px">ပဲ</td>
+                                            <td style="width: 50px">ရွေး</td>
+
+                                            <td style="width: 50px">ကျပ်</td>
+                                            <td style="width: 50px">ပဲ</td>
+                                            <td style="width: 50px">ရွေး</td>
+
+
+                                            <td style="width: 50px">ကျပ်</td>
+                                            <td style="width: 50px">ပဲ</td>
+                                            <td style="width: 50px">ရွေး</td>
+                                        </tr>
+                                        <tr>
+                                            <td> ဒေါ် တင်စိန်</td>
+                                            <td> 15tr02033</td>
+                                            <td> ရွှေလည်ဆွဲ</td>
+
+                                            <td>1</td>
+                                            <td>2</td>
+                                            <td>3</td>
+
+                                            <td>1</td>
+                                            <td>3</td>
+                                            <td>0</td>
+
+                                            <td>4</td>
+                                            <td>3</td>
+                                            <td>1</td>
+
+
+                                            <td>1</td>
+                                            <td>0</td>
+                                            <td>1</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">ကျသင့်ငွေတန်ဖိုး</td>
+                                            <td colspan="3">1000</td>
+
+                                            <td colspan="3">2000</td>
+
+                                            <td colspan="3">3000</td>
+                                            <td> 500</td>
+                                            <td colspan="3">6000</td>
+
+
+                                        </tr>
+
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </v-list>
+                     <v-list
+                        three-line
+                        subheader
+                        >
+                        <v-subheader>1 #</v-subheader>
+                        <div class="row row-invoice-page">
+                            <div class="col-12 table-responsive col-invoice-page">
+                                <table class="table table-bordered text-center bg-white">
+                                   <tbody>
+                                    	<tr>
+                                            <td colspan="3">၁၅ပဲရည်           1700000 ကျပ်</td>
+                                            <td colspan="3">ရွှေချိန်</td>
+                                            <td colspan="3">ကျောက်ချိန်</td>
+                                            <td colspan="3">အလျော့</td>
+											<td rowspan="3" class="text-center">လက်ခ</td>
+                                            <td colspan="3">စုစုပေါင်း</td>
+                                            <td rowspan="4">Print</td>
+
+
+                                        </tr>
+                                        <tr>
+                                            <td> Customer</td>
+                                            <td> Product Sku</td>
+                                            <td> Item Name</td>
+
+
+                                            <td style="width: 50px">ကျပ်</td>
+                                            <td style="width: 50px">ပဲ</td>
+                                            <td style="width: 50px">ရွေး</td>
+
+                                            <td style="width: 50px">ကျပ်</td>
+                                            <td style="width: 50px">ပဲ</td>
+                                            <td style="width: 50px">ရွေး</td>
+
+                                            <td style="width: 50px">ကျပ်</td>
+                                            <td style="width: 50px">ပဲ</td>
+                                            <td style="width: 50px">ရွေး</td>
+
+
+                                            <td style="width: 50px">ကျပ်</td>
+                                            <td style="width: 50px">ပဲ</td>
+                                            <td style="width: 50px">ရွေး</td>
+                                        </tr>
+                                        <tr>
+                                            <td> ဒေါ် တင်စိန်</td>
+                                            <td> 15tr02033</td>
+                                            <td> ရွှေလည်ဆွဲ</td>
+
+                                            <td>1</td>
+                                            <td>2</td>
+                                            <td>3</td>
+
+                                            <td>1</td>
+                                            <td>3</td>
+                                            <td>0</td>
+
+                                            <td>4</td>
+                                            <td>3</td>
+                                            <td>1</td>
+
+
+                                            <td>1</td>
+                                            <td>0</td>
+                                            <td>1</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">ကျသင့်ငွေတန်ဖိုး</td>
+                                            <td colspan="3">1000</td>
+
+                                            <td colspan="3">2000</td>
+
+                                            <td colspan="3">3000</td>
+                                            <td> 500</td>
+                                            <td colspan="3">6000</td>
+
+
+                                        </tr>
+
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </v-list>
+
+                </v-card>
+                </v-dialog>
+            </v-row>
+        </template>
+        <!-- end dialog box -->
     </v-navigation-drawer>
+
 </template>
 
 <script>
@@ -228,6 +442,52 @@ export default {
     data() {
         return {
             total: "",
+            dialog: true,
+            notifications: false,
+            sound: true,
+            widgets: false,
+            desserts: [
+          {
+            name: 'Frozen Yogurt',
+            calories: 159,
+          },
+          {
+            name: 'Ice cream sandwich',
+            calories: 237,
+          },
+          {
+            name: 'Eclair',
+            calories: 262,
+          },
+          {
+            name: 'Cupcake',
+            calories: 305,
+          },
+          {
+            name: 'Gingerbread',
+            calories: 356,
+          },
+          {
+            name: 'Jelly bean',
+            calories: 375,
+          },
+          {
+            name: 'Lollipop',
+            calories: 392,
+          },
+          {
+            name: 'Honeycomb',
+            calories: 408,
+          },
+          {
+            name: 'Donut',
+            calories: 452,
+          },
+          {
+            name: 'KitKat',
+            calories: 518,
+          },
+        ],
         };
     },
     computed: {
@@ -251,47 +511,51 @@ export default {
             this.$store.dispatch("removeItem", item_id);
         },
         printAllBill() {
-            this.$store.state.carts.forEach((item) => {
-                let data = new FormData();
-                data.append('id',item.id);
-                data.append('name',item.name);
-                data.append('product_sku',item.product_sku);
-                data.append('image',item.image);
-                data.append('imageFile',item.imageFile);
-                data.append('item_sku',item.item_sku);
-                data.append('gold_weight',JSON.stringify(item.gold_weight));
-                data.append('gold_price',item.gold_price);
-                data.append('gem_weight',JSON.stringify(item.gem_weight));
-                data.append('gem_price',item.gem_price);
-                data.append('fee',JSON.stringify(item.fee));
-                data.append('fee_price',item.fee_price);
-                data.append('fee_for_making',item.fee_for_making);
-                data.append('item_discount',item.item_discount);
-                data.append('total_kyat',item.total_kyat);
-                data.append('total_pal',item.total_pal);
-                data.append('total_yway',item.total_yway);
-                data.append('total_before',item.total_before);
-                data.append('final_total',item.final_total);
-                data.append('paid_money',item.paid_money);
-                data.append('credit_money',item.credit_money);
-                data.append('note',item.note);
+            for (let i = 43; i < 47; i++) {
+                window.open( "http://localhost:8000/pos/generate_invoice/"+i, "_blank");
+            }
 
-                axios.post('/pos/save_order', data)
-                    .then(res => {
-                        if(res.data.status)
-                        {
-                            window.open( "http://localhost:8000/pos/generate_invoice/"+res.data.order_id, "_blank");
-                            // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'Order Success'
-                            })
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            });
+            // this.$store.state.carts.forEach((item) => {
+            //     let data = new FormData();
+            //     data.append('id',item.id);
+            //     data.append('name',item.name);
+            //     data.append('product_sku',item.product_sku);
+            //     data.append('image',item.image);
+            //     data.append('imageFile',item.imageFile);
+            //     data.append('item_sku',item.item_sku);
+            //     data.append('gold_weight',JSON.stringify(item.gold_weight));
+            //     data.append('gold_price',item.gold_price);
+            //     data.append('gem_weight',JSON.stringify(item.gem_weight));
+            //     data.append('gem_price',item.gem_price);
+            //     data.append('fee',JSON.stringify(item.fee));
+            //     data.append('fee_price',item.fee_price);
+            //     data.append('fee_for_making',item.fee_for_making);
+            //     data.append('item_discount',item.item_discount);
+            //     data.append('total_kyat',item.total_kyat);
+            //     data.append('total_pal',item.total_pal);
+            //     data.append('total_yway',item.total_yway);
+            //     data.append('total_before',item.total_before);
+            //     data.append('final_total',item.final_total);
+            //     data.append('paid_money',item.paid_money);
+            //     data.append('credit_money',item.credit_money);
+            //     data.append('note',item.note);
+
+            //     axios.post('/pos/save_order', data)
+            //         .then(res => {
+            //             if(res.data.status)
+            //             {
+            //                 window.open( "http://localhost:8000/pos/generate_invoice/"+res.data.order_id, "_blank");
+            //                 // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
+            //                 Toast.fire({
+            //                     icon: 'success',
+            //                     title: 'Order Success'
+            //                 })
+            //             }
+            //         })
+            //         .catch(function (error) {
+            //             console.log(error);
+            //         });
+            // });
         }
     }
 };

@@ -648,9 +648,28 @@
                     if(this.item_from_cart){
                         //edit item from cart
                         this.$store.dispatch("editItemFromCart", item);
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Successfully update'
+                        })
                     }else{
                         //add item to cart
-                        this.$store.dispatch("addItem", item);
+                        let status = true;
+                        this.$store.state.carts.forEach((x) => {
+                            if(x.id == item.id) status = false;
+                        });
+                        if(status) {
+                            this.$store.dispatch("addItem", item);
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Success Add to Cart'
+                            })
+                        }else{
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Already exist'
+                            })
+                        }
                     }
                 }
             },

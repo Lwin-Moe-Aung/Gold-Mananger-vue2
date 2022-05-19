@@ -42,7 +42,7 @@
                         </v-btn>
 
                         <v-btn plain color="#704232" small
-                            @click="deleteItemFromCart(item)"
+                            @click="removeItemFromCart(item.id)"
                             >Delete
                             <!-- <v-icon right>mdi-pencil</v-icon> -->
                         </v-btn>
@@ -215,6 +215,7 @@
                 block
                 dark
                 class="widthoutupercase black--text"
+                @click="printAllBill"
                 >Print Bills</v-btn
             >
         </div>
@@ -222,6 +223,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     data() {
         return {
@@ -235,7 +237,8 @@ export default {
         subTotal() {
             let total = 0;
             this.$store.state.carts.forEach((item) => {
-                total = total + parseInt(item.total_after);
+                total = total + parseInt(item.final_total);
+                // alert(parseInt(item.total_after));
             });
             return total;
         },
@@ -244,8 +247,51 @@ export default {
         editItemFromCart(item) {
             this.$store.dispatch("editItem", item);
         },
-        deleteItemFromCart(item) {
-            this.$store.dispatch("removeItem", item);
+        removeItemFromCart(item_id) {
+            this.$store.dispatch("removeItem", item_id);
+        },
+        printAllBill() {
+            this.$store.state.carts.forEach((item) => {
+                let data = new FormData();
+                data.append('id',item.id);
+                data.append('name',item.name);
+                data.append('product_sku',item.product_sku);
+                data.append('image',item.image);
+                data.append('imageFile',item.imageFile);
+                data.append('item_sku',item.item_sku);
+                data.append('gold_weight',JSON.stringify(item.gold_weight));
+                data.append('gold_price',item.gold_price);
+                data.append('gem_weight',JSON.stringify(item.gem_weight));
+                data.append('gem_price',item.gem_price);
+                data.append('fee',JSON.stringify(item.fee));
+                data.append('fee_price',item.fee_price);
+                data.append('fee_for_making',item.fee_for_making);
+                data.append('item_discount',item.item_discount);
+                data.append('total_kyat',item.total_kyat);
+                data.append('total_pal',item.total_pal);
+                data.append('total_yway',item.total_yway);
+                data.append('total_before',item.total_before);
+                data.append('final_total',item.final_total);
+                data.append('paid_money',item.paid_money);
+                data.append('credit_money',item.credit_money);
+                data.append('note',item.note);
+
+                axios.post('/pos/save_order', data)
+                    .then(res => {
+                        if(res.data.status)
+                        {
+                            window.open( "http://localhost:8000/pos/generate_invoice/"+res.data.order_id, "_blank");
+                            // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Order Success'
+                            })
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            });
         }
     }
 };

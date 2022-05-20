@@ -275,8 +275,6 @@
                                                 >Print</v-btn
                                             >
                                         </td>
-
-
                                     </tr>
                                     <tr>
                                         <td> Customer</td>
@@ -339,17 +337,64 @@
                                         <td colspan="3">{{ numberWithCommas(item.total_before) }}</td>
                                         <td> {{ numberWithCommas(item.item_discount) }}</td>
                                         <td> {{ numberWithCommas(item.final_total) }}</td>
-
                                     </tr>
-
-
                                 </tbody>
-
                             </table>
                         </div>
                     </v-list>
+                    <!-- <v-list
+                        three-line
+                        subheader
+
+                        >
+                        <div class="text-right">
 
 
+                        </div>
+                    </v-list> -->
+                    <div>
+                        <v-container class="grey lighten-5">
+                            <v-row
+
+                            >
+                                <v-col
+                                key="start"
+                                align-self="start"
+                                >
+                                </v-col>
+
+                                <v-col
+                                key="end"
+                                align-self="end"
+                                >
+                                    <!-- /.col -->
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered text-center bg-white">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width:50%">လျော့ငွေ:</td>
+                                                        <td class="text-right">{{numberWithCommas(discount)}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>ကျသင့်ငွေ</td>
+                                                        <td class="text-right">{{numberWithCommas(final_total)}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>ပေးငွေ:</td>
+                                                        <td class="text-right">{{numberWithCommas(paid_money)}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>ကျန်ငွေ:</td>
+                                                        <td class="text-right">{{numberWithCommas(credit_money)}}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    <!-- /.col -->
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </div>
 
                 </v-card>
                 </v-dialog>
@@ -370,6 +415,11 @@ export default {
             notifications: false,
             sound: true,
             widgets: false,
+            alignments: [
+        'start',
+        'center',
+        'end',
+      ],
 
         };
     },
@@ -385,6 +435,34 @@ export default {
             });
             return total;
         },
+        discount() {
+            let discount = 0;
+            this.$store.state.carts.forEach((item) => {
+                discount = discount + parseInt(item.item_discount);
+            });
+            return discount;
+        },
+        final_total() {
+            let final_total = 0;
+            this.$store.state.carts.forEach((item) => {
+                final_total = final_total + parseInt(item.final_total);
+            });
+            return final_total;
+        },
+        paid_money() {
+            let paid_money = 0;
+            this.$store.state.carts.forEach((item) => {
+                paid_money = paid_money + parseInt(item.paid_money);
+            });
+            return paid_money;
+        },
+        credit_money() {
+            let credit_money = 0;
+            this.$store.state.carts.forEach((item) => {
+                credit_money = credit_money + parseInt(item.credit_money);
+            });
+            return credit_money;
+        }
     },
     methods: {
         numberWithCommas(value) {

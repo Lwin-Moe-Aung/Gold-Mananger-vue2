@@ -652,6 +652,8 @@
                             icon: 'success',
                             title: 'Successfully update'
                         })
+                        Object.assign(this.$data, this.$options.data.apply(this));
+                        this.$store.dispatch("selectItem", []);
                     }else{
                         //add item to cart
                         let status = true;
@@ -670,6 +672,9 @@
                                 title: 'Already exist'
                             })
                         }
+                        Object.assign(this.$data, this.$options.data.apply(this));
+                        this.$store.dispatch("selectItem", []);
+
                     }
                 }
             },

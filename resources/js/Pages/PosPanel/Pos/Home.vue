@@ -18,103 +18,13 @@
                                     </div>
                                 </v-col>
                                 <v-col cols="2" class="my-3">
-                                    <!-- <v-btn
-                                        block
-                                        :disabled="!isActive"
-                                        v-on:click="searchProduct"
-                                    >
-                                        Search
-                                    </v-btn> -->
                                 </v-col>
                             </v-toolbar>
 
                         </v-row>
                     </v-card>
                 </v-col>
-
             </v-row>
-            <!-- <v-row>
-                 <v-col cols="12" sm="12">
-                    <v-card flat class="rounded-lg mx-2">
-                        <v-row>
-                            <v-toolbar color="#ECBD00">
-                                <v-col cols="12" sm="5">
-                                    <v-autocomplete
-                                        v-model="model"
-                                        :items="products"
-                                        :loading="isLoading"
-                                        :search-input.sync="search"
-                                        chips
-                                        clearable
-                                        hide-details
-                                        hide-selected
-                                        item-text="product_sku"
-                                        item-value="id"
-                                        label="Search for a coin..."
-                                        solo
-                                    >
-                                        <template v-slot:no-data>
-                                            <v-list-item>
-                                                <v-list-item-title>
-                                                    Search for
-                                                    <strong>Product Sku</strong>
-                                                </v-list-item-title>
-                                            </v-list-item>
-                                        </template>
-                                        <template
-                                            v-slot:selection="{
-                                                attr,
-                                                on,
-                                                item,
-                                                selected,
-                                            }"
-                                            >
-                                            <v-chip
-                                                v-bind="attr"
-                                                :input-value="selected"
-                                                color="blue-grey"
-                                                class="white--text"
-                                                v-on="on"
-                                            >
-                                                <v-icon left>
-                                                    mdi-bitcoin
-                                                </v-icon>
-                                                <span
-                                                    v-text="item.product_sku"
-                                                ></span>
-                                            </v-chip>
-                                        </template>
-                                        <template v-slot:item="{ item }">
-                                            <v-list-item-avatar
-                                                color="indigo"
-                                                class="text-h5 font-weight-light white--text"
-                                            >
-                                                <v-img
-                                                    :src="item.image"
-                                                    max-height="90"
-                                                    max-width="90"
-                                                    contain
-                                                ></v-img>
-                                            </v-list-item-avatar>
-                                            <v-list-item-content>
-                                                <v-list-item-title
-                                                    v-text="item.product_sku"
-                                                ></v-list-item-title>
-                                                <v-list-item-subtitle
-                                                    v-text="item.name"
-                                                ></v-list-item-subtitle>
-                                            </v-list-item-content>
-                                            <v-list-item-action>
-                                                <v-icon>mdi-bitcoin</v-icon>
-                                            </v-list-item-action>
-                                        </template>
-                                    </v-autocomplete>
-                                </v-col>
-                            </v-toolbar>
-                        </v-row>
-                    </v-card>
-                </v-col>
-            </v-row>-->
         </v-toolbar>
 
         <v-item-group mandatory class="mt-n1">

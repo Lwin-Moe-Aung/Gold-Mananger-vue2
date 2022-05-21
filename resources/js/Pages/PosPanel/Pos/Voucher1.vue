@@ -485,14 +485,26 @@
                         </v-row>
             </v-card>
         </v-hover>
-         <!-- <Link href="/pos/generate_invoice/4" class="nav-link" preserve-state>
-            <i class="far fa-circle nav-icon"></i>
-            <p>
-                Click me
-            </p>
-        </Link> -->
-    <!-- <Invoice/> -->
-
+        <v-dialog
+            v-model="loading"
+            hide-overlay
+            persistent
+            width="300"
+                    >
+            <v-card
+                color="primary"
+                dark
+            >
+                <v-card-text>
+                Please stand by
+                <v-progress-linear
+                    indeterminate
+                    color="white"
+                    class="mb-0"
+                ></v-progress-linear>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-col>
 </template>
 
@@ -550,6 +562,7 @@
                 email: '',
                 dailyValue: '',
                 dailySetup: [],
+                loading: false,
                 nameRules: [
                     v => !!v || 'Required',
                 ],
@@ -698,8 +711,9 @@
 
             },
             printbill() {
-
+                // return;
                 if(this.$refs.form.validate()){
+                    this.loading = true;
                     let data = new FormData();
                     data.append('id',this.form.id);
                     data.append('name',this.form.name);
@@ -768,6 +782,12 @@
             printVoucher() {
                 window.print();
             }
+        },
+        watch: {
+            loading (val) {
+                if (!val) return
+                setTimeout(() => (this.loading = false), 2000)
+            },
         },
 
         computed: {

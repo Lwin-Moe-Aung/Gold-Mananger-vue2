@@ -35,14 +35,14 @@
                                         <b>ဝယ်ယူမှုများ</b> <a class="float-right">1,322,678,897</a>
                                     </li>
                                     <li class="list-group-item">
-                                        <b>ကျန်ငွေ</b> <a class="float-right">543</a>
+                                        <b>ကျန်ငွေ</b> <a class="float-right">500,000</a>
                                     </li>
                                     <li class="list-group-item">
-                                        <b>နောက်ဆုံးပေးငွေ</b> <a class="float-right">13,287</a>
+                                        <b>နောက်ဆုံးပေးငွေ</b> <a class="float-right">15,000</a>
                                     </li>
                                     </ul>
 
-                                    <a href="#" class="btn btn-primary btn-block"><b>View Detail</b></a>
+                                    <a href="#" class="btn btn-primary btn-block" style="color: white !important;"><b>View Detail</b></a>
                                 </div>
                             <!-- /.card-body -->
                             </div>

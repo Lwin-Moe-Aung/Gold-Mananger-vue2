@@ -251,4 +251,15 @@ class CustomerOrderController extends Controller
             'product' => $product
         ]);
     }
+
+    public function jsonSearch(){
+        $kyat = '9';
+        $pal = 2;
+        $yway = 3;
+        $item = Item::where('business_id',1)
+                    ->whereJsonContains('gold_weight->kyat', $kyat)
+                    ->get()
+                    ->toArray();
+        dd($item);
+    }
 }

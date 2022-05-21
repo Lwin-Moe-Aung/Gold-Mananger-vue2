@@ -51,6 +51,9 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
 
     //generate invoice
     Route::get('/pos/generate_invoice/{id}', [CustomerOrderController::class, 'generateInvoice'])->name('pos.generate_invoice');
+
+    Route::get('/pos/json_search', [CustomerOrderController::class, 'jsonSearch'])->name('pos.json_search');
+
 });
 
 

@@ -56,6 +56,12 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos/generate_invoice/{id}', [CustomerOrderController::class, 'generateInvoice'])->name('pos.generate_invoice');
 
     Route::get('/pos/json_search', [CustomerOrderController::class, 'jsonSearch'])->name('pos.json_search');
+    //get gold quality
+    Route::get('/pos/get_gold_qualitys', [HomeController::class, 'getGoldQualitys'])->name('pos.get_gold_qualitys');
+    //get type and name for pos voucher1
+    Route::get('/pos/get_types_and_names', [HomeController::class, 'getTypesAndNames'])->name('pos.get_types_and_names');
+
+
 
 });
 

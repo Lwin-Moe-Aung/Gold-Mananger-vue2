@@ -52,17 +52,54 @@
                     <!-- end image upload -->
                     <v-list-item-content>
                         <v-list-item-title class="text-h5">
-                            <v-col
-                                cols="12"
-                                sm="6"
-                            >
-                                <v-text-field
-                                    label="Product Name"
-                                    v-model="form.name"
-                                    :rules="nameRules"
-                                    required
-                                ></v-text-field>
-                            </v-col>
+                            <v-row>
+
+                            <!-- combo box -->
+                                <v-col
+                                    cols="2"
+                                    sm="2"
+                                >
+                                    <v-combobox
+                                        v-model="goldQuality"
+                                        :items="goldQualitys"
+                                        @change="onChange"
+                                        item-text="name"
+                                        item-value="quality"
+                                        return-object
+                                        label="ပဲရည်"
+                                    ></v-combobox>
+                                </v-col>
+                                <v-col
+                                    cols="3"
+                                    sm="3"
+                                >
+                                    <v-combobox
+                                        v-model="type"
+                                        :items="types"
+                                        @change="onChange"
+                                        item-text="name"
+                                        item-value="key"
+                                        return-object
+                                        label="ရွှေ/ကျောက်"
+                                    ></v-combobox>
+                                </v-col>
+                                <v-col
+                                    cols="3"
+                                    sm="3"
+                                >
+                                    <v-combobox
+                                        v-model="item_name"
+                                        :items="item_names"
+                                        @change="onChange"
+                                        item-text="name"
+                                        item-value="key"
+                                        return-object
+                                        label="အမျိုးအမည်"
+                                    ></v-combobox>
+                                </v-col>
+
+                            <!-- combo box -->
+                            </v-row>
 
                         </v-list-item-title>
                         <v-list-item-subtitle class="mt-1">
@@ -621,13 +658,60 @@
                 //image upload
                 input: undefined,
                 image: undefined,
-                mask: false
+                mask: false,
+                // combobox
+                goldQuality: null,
+                goldQualitys: [],
+                type: null,
+                types: [],
+                item_name: null,
+                item_names: [],
+                // end combobox
             };
         },
         mounted () {
             this.input = document.getElementById('fileInput')
         },
+        created() {
+            this.getGoldQualitys();
+            this.getTypesAndNames();
+        },
         methods: {
+            getGoldQualitys() {
+                axios.get(this.route("pos.get_gold_qualitys"))
+                    .then((response) => {
+                        this.goldQualitys = response.data.goldQualitys;
+                });
+            },
+            getTypesAndNames() {
+                axios.get(this.route("pos.get_types_and_names"))
+                    .then((response) => {
+                        this.types = response.data.types;
+                        this.item_names = response.data.item_names;
+
+                });
+
+            },
+            //combo box
+            addItem(name) {
+                const newItem = {
+                    id: nextId++,
+                    name,
+                }
+                this.goldQualitys.push(newItem)
+                return newItem
+            },
+            onChange(entry) {
+                if (typeof entry === 'string' && entry.trim()) {
+                    const item = this.goldQualitys.find(item => item.name === entry)
+                    if (item) {
+                    this.goldQuality = item
+                    } else {
+                    this.goldQuality = this.addItem(entry)
+                    }
+                }
+            },
+            //combo box
             addToCart() {
                 if(this.$refs.form.validate()){
                     let item = {

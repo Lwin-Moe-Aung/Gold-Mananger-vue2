@@ -33,8 +33,6 @@ class CustomerOrderController extends Controller
 
     public function saveOrder(Request $request)
     {
-        // dd($request->all());
-
         if($request->id != null){
             $order_id = $this->savingOldItemOrder($request);
             return response()->json(['status'=>true, 'order_id'=>$order_id]);
@@ -43,7 +41,6 @@ class CustomerOrderController extends Controller
             $order_id = $this->savingNewItemOrder($request);
             return response()->json(['status'=>true, 'order_id'=>$order_id]);
         }
-
     }
     public function savingNewItemOrder(Request $request)
     {

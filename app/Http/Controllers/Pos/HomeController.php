@@ -66,21 +66,45 @@ class HomeController extends Controller
             $items[$key]['fee'] = json_decode($item['fee']);
         }
         return response()->json(['items'=>$items, 'message'=>'existing']);
-
-
     }
 
     public function productSkuSearch($sku)
     {
-        // dd($sku);
         $product_sku_list =  Product::where('business_id', Auth::user()->business_id)
                     ->where('product_sku', 'LIKE', '%'.$sku.'%')
                     ->pluck('product_sku');
-                    // ->get();
-        // dd($product_sku_list);
+
         return response()->json(['productsku'=>$product_sku_list]);
 
     }
 
+    public function getGoldQualitys()
+    {
+        $goldQualitys = Product::orderBy('quality', 'desc')
+            ->where('business_id', Auth::user()->business_id)
+            ->select('quality')
+            ->groupBy('quality')
+            ->get()
+            ->toArray();
+        foreach($goldQualitys as $key=>$value) {
+            $goldQualitys[$key]['name'] = $value['quality'] . "ပဲရည်";
+
+        }
+        return response()->json(['goldQualitys'=>$goldQualitys]);
+    }
+
+    public function getTypesAndNames()
+    {
+        $types = Type::where('business_id', Auth::user()->business_id)
+            ->select('id', 'name', 'key')
+            ->get()
+            ->toArray();
+        $item_names = ItemName::where('business_id', Auth::user()->business_id)
+            ->select('id', 'name', 'key')
+            ->get()
+            ->toArray();
+
+        return response()->json(['types' => $types , 'item_names' => $item_names]);
+    }
 
 }

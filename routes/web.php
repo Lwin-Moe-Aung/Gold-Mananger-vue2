@@ -43,7 +43,10 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier'])->group(function () {
     Route::get('/pos', [HomeController::class, 'index'])->name('pos.index');
     Route::get('/pos/poduct-list', [HomeController::class, 'productList'])->name('pos.product.lists');
-    Route::get('/pos/search/{sku}', [HomeController::class, 'search'])->name('pos.search');
+    Route::post('/pos/search', [HomeController::class, 'search'])->name('pos.search');
+    //product sku search
+    Route::get('/pos/productsku_search/{sku}', [HomeController::class, 'productSkuSearch'])->name('pos.productsku_search');
+
     Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
 
     //customer order

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\DailySetup;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -58,7 +59,8 @@ class HandleInertiaRequests extends Middleware
             'daily_setup' => function () {
                 $daily_price =  DailySetup::with('dailySetupDetail')
                     ->where('type', 1)
-                    ->where('business_id', 1)
+                    // ->where('business_id', Auth::user()->business_id)
+                    ->where('business_id',1)
                     ->latest('created_at')
                     ->first();
                 $data = [];
@@ -73,6 +75,7 @@ class HandleInertiaRequests extends Middleware
                 };
                 return $data;
             },
+
             // 'success' => session()->has('success') ? session()->get('success') : "",
             // 'fail' => session()->has('fail') ? session()->get('fail') : "",
         ]);

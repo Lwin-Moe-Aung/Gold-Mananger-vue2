@@ -6,7 +6,25 @@
                     <v-card flat class="rounded-lg mx-2">
                         <v-row>
                             <v-toolbar color="#ECBD00">
-                                <v-col cols="10" sm="4">
+                                <!-- autocomplete for product sku -->
+                                <v-col cols="2">
+                                    <v-autocomplete
+                                        v-model="selectProductSku"
+                                        :loading="loading"
+                                        :items="productsku"
+                                        :search-input.sync="searchProductSku"
+                                        cache-items
+                                        class="mx-4"
+                                        flat
+                                        hide-no-data
+                                        hide-details
+                                        label="sku?"
+                                        solo-inverted
+                                        ></v-autocomplete>
+                                </v-col>
+                                <!-- end autocomplete for product sku -->
+
+                                <v-col cols="2" sm="2">
                                     <div class="ma-auto" style="max-width: 300px">
                                         <v-otp-input
                                             v-model="searchValue"
@@ -17,7 +35,7 @@
                                         ></v-otp-input>
                                     </div>
                                 </v-col>
-                                <v-col cols="2" class="my-3">
+                                <v-col cols="8" class="my-3">
                                 </v-col>
                             </v-toolbar>
 
@@ -118,16 +136,18 @@ export default {
         Voucher2,
     },
     data() {
+
         return {
-            loading: false,
-            product: [],
-            isLoading: false,
-            products: [],
             items: [],
             model: null,
-            search: null,
             searchValue: '',
-            length: 9,
+            length: 5,
+            //for product sku auto complete
+            loading: false,
+            productsku: [],
+            searchProductSku: null,
+            selectProductSku: null,
+            //end for product sku auto complete
         };
     },
     watch: {
@@ -142,8 +162,32 @@ export default {
                 this.items = response.data;
             });
         },
+        isUpdating (val) {
+            if (val) {
+            setTimeout(() => (this.isUpdating = false), 3000)
+            }
+        },
+        searchProductSku (val) {
+            val && val !== this.selectProductSku && this.querySelections(val)
+        },
     },
     methods: {
+        querySelections (v) {
+            this.loading = true
+            // Simulated ajax query
+            setTimeout(() => {
+                axios.get(this.route("pos.productsku_search", v))
+                    .then((response) => {
+                        this.productsku = response.data.productsku;
+                });
+                this.loading = false
+            }, 500)
+        },
+        remove (item) {
+            this.friends = [];
+            // const index = this.friends.indexOf(item.name)
+            // if (index >= 0) this.friends.splice(index, 1)
+        },
         select(item) {
             this.$store.dispatch("selectItem", item);
         },
@@ -168,7 +212,12 @@ export default {
             this.select(selectItem);
         },
         searchProduct() {
-            const regex = /(^(0[5-9]|1[0-6]))([a-z]{2})[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
+            //regular expression test for "15gr02157"
+            // const regex = /(^(0[5-9]|1[0-6]))([a-z]{2})[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
+
+            //regular expression test for "02157"
+            const regex = /[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
+
             const matches = regex.exec(this.searchValue);
 
             if( matches == null){
@@ -179,17 +228,18 @@ export default {
                 )
                 return false;
             }
-            axios.get(this.route("pos.search", this.searchValue))
-            .then((response) => {
-                if(response.data.message == "existing"){
-                    this.items = response.data.items;
-                }else{
-                    this.items = [];
-                    this.newItemSelect()
-                    //this.select(response.data.items)
-                }
+            let data = { product_sku: this.searchProductSku, item_spe:this.searchValue}
+            axios.post(this.route("pos.search", data))
+                .then((response) => {
+                    if(response.data.message == "existing"){
+                        this.items = response.data.items;
+                    }else{
+                        this.items = [];
+                        this.newItemSelect()
+                        //this.select(response.data.items)
+                    }
 
-            });
+                });
 
         },
     },

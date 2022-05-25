@@ -154,51 +154,56 @@
                                         <v-list-item-content>
                                             <strong class="mb-7 ml-5">
                                                 ရွှေချိန်
+
                                             </strong>
                                         </v-list-item-content>
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                v-model="form.gold_weight.kyat"
+                                                :value = "selectedItem.gold_weight.kyat"
                                                 label="ကျပ်"
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
                                                 :rules="goldWeightKyatRules"
                                                 required
+                                                @change="changeKyat"
                                             >
                                             </v-text-field>
                                         </v-col>
 
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                v-model="form.gold_weight.pal"
+                                                :value = "selectedItem.gold_weight.pal"
                                                 label="ပဲ"
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
                                                 :rules="goldWeightPalRules"
                                                 required
+                                                @change="changePal"
                                             ></v-text-field>
                                         </v-col>
 
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                v-model="form.gold_weight.yway"
+                                                :value = "selectedItem.gold_weight.yway"
                                                 label="ရွေး"
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
                                                 :rules="goldWeightYwayRules"
                                                 required
+                                                @change="changeYway"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                v-model="form.gold_price"
+                                                :value = "gold_price"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
                                                 dense
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -218,6 +223,7 @@
                                                 dense
                                                 :rules="gemWeightKyatRules"
                                                 required
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
 
@@ -230,6 +236,7 @@
                                                 dense
                                                 :rules="gemWeightPalRules"
                                                 required
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
 
@@ -242,15 +249,18 @@
                                                 dense
                                                 :rules="gemWeightYwayRules"
                                                 required
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                v-model="form.gem_price"
+
+                                                :value = "gem_price"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
                                                 dense
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -298,11 +308,12 @@
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                v-model="form.fee_price"
+                                                :value = "fee_price"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
                                                 dense
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -338,39 +349,43 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                v-model="form.total_kyat"
+                                                :value = "total_kyat"
                                                 label="ကျပ်"
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                v-model="form.total_pal"
+                                                :value = "total_pal"
                                                 label="ပဲ"
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                v-model="form.total_yway"
+                                                :value = "total_yway"
                                                 label="ရွေး"
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
 
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                v-model="form.total_before"
+                                                :value = "total_before"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
                                                 dense
+                                                readonly
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -408,7 +423,7 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="12" md="7">
                                             <v-text-field
-                                                v-model="form.final_total"
+                                                :value = "final_total"
                                                 label="kyats"
                                                 placeholder="kyats"
                                                 outlined
@@ -444,7 +459,7 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="12" md="7">
                                             <v-text-field
-                                                v-model="form.credit_money"
+                                                :value = "credit_money"
                                                 label="kyats"
                                                 placeholder="kyats"
                                                 outlined
@@ -569,7 +584,6 @@
 
         data() {
             return {
-
                 form: {
                     id: "",
                     name: "",
@@ -681,6 +695,15 @@
             this.getTypesAndNames();
         },
         methods: {
+            changeKyat() {
+                alert("hello kyat");
+            },
+            changePal() {
+                alert("hello pal");
+            },
+            changeYway() {
+                alert("hello yway");
+            },
             getGoldQualitys() {
                 axios.get(this.route("pos.get_gold_qualitys"))
                     .then((response) => {
@@ -876,12 +899,7 @@
                 if (!val) return
                 setTimeout(() => (this.loading = false), 2000)
             },
-        },
-
-        computed: {
-            ...mapGetters(['selectedItem']),
-            item() {
-                let value = this.$store.state.selectedItem;
+            selectedItem(value) {
                 this.form.id = value.id;
                 this.form.name = value.name;
                 this.form.product_sku = value.product_sku;
@@ -894,7 +912,7 @@
                 this.form.gem_weight.kyat = String(value.gem_weight.kyat);
                 this.form.gem_weight.pal = String(value.gem_weight.pal);
                 this.form.gem_weight.yway = String(value.gem_weight.yway);
-                this.form.gem_price = String(value.gem_price);
+                // this.form.gem_price = String(value.gem_price);
                 this.form.fee.kyat = String(value.fee.kyat);
                 this.form.fee.pal = String(value.fee.pal);
                 this.form.fee.yway = String(value.fee.yway);
@@ -908,9 +926,13 @@
                 this.form.credit_money = value.credit_money;
                 this.dailySetup = this.$page.props.daily_setup[this.quality];
                 this.dailyValue = this.$page.props.daily_setup[this.quality].kyat;
-                return this.form;
-            },
-            goldPrice() {
+            }
+        },
+
+        computed: {
+            ...mapGetters(['selectedItem']),
+
+            gold_price() {
                 let price = this.$page.props.daily_setup[this.quality];
                 let kyat_p =
                     parseInt(this.form.gold_weight.kyat) * parseInt(price.kyat);
@@ -918,11 +940,14 @@
                     parseInt(this.form.gold_weight.pal) * parseInt(price.pal);
                 let yway_p =
                     parseInt(this.form.gold_weight.yway) * parseInt(price.yway);
-                this.form.gold_price = kyat_p + pal_p + yway_p;
-                if (isNaN(this.form.gold_price)) this.form.gold_price = "";
-                return this.form.gold_price;
+                let gold_price = kyat_p + pal_p + yway_p;
+
+                if (isNaN(gold_price)) gold_price = "";
+                this.form.gold_price = gold_price;
+
+                return gold_price;
             },
-            gemPrice() {
+            gem_price() {
                 let price = this.$page.props.daily_setup[this.quality];
                 let kyat_p =
                     parseInt(this.form.gem_weight.kyat) * parseInt(price.kyat);
@@ -930,87 +955,102 @@
                     parseInt(this.form.gem_weight.pal) * parseInt(price.pal);
                 let yway_p =
                     parseInt(this.form.gem_weight.yway) * parseInt(price.yway);
-                this.form.gem_price = kyat_p + pal_p + yway_p;
-                if (isNaN(this.form.gem_price)) this.form.gem_price = "";
-                return this.form.gem_price;
+                let gem_price = kyat_p + pal_p + yway_p;
+
+                if (isNaN(gem_price)) gem_price = "";
+
+                this.form.gem_price = gem_price;
+
+                return gem_price;
             },
-            feePrice() {
+            fee_price() {
                 let price = this.$page.props.daily_setup[this.quality];
                 let kyat_p = parseInt(this.form.fee.kyat) * parseInt(price.kyat);
                 let pal_p = parseInt(this.form.fee.pal) * parseInt(price.pal);
                 let yway_p = parseInt(this.form.fee.yway) * parseInt(price.yway);
-                this.form.fee_price = kyat_p + pal_p + yway_p;
-                if (isNaN(this.form.fee_price)) this.form.fee_price = "";
+                let fee_price = kyat_p + pal_p + yway_p;
 
-                return this.form.fee_price;
+                if (isNaN(fee_price)) fee_price = "";
+                this.form.fee_price = fee_price;
+
+                return fee_price;
             },
-            totalKyat() {
-                this.form.total_kyat =
+            total_kyat() {
+                let total_kyat =
                     parseInt(this.form.gold_weight.kyat) +
                     parseInt(this.form.gem_weight.kyat) +
                     parseInt(this.form.fee.kyat);
-                if (isNaN(this.form.total_kyat)) this.form.total_kyat = "";
-
-                return this.form.total_kyat;
+                if (isNaN(total_kyat)) total_kyat = "";
+                this.form.total_kyat = total_kyat;
+                return total_kyat;
             },
-            totalPal() {
-                this.form.total_pal =
+            total_pal() {
+                let total_pal =
                     parseInt(this.form.gold_weight.pal) +
                     parseInt(this.form.gem_weight.pal) +
                     parseInt(this.form.fee.pal) +
                     parseInt(this.form.exceed_pal_form_yway);
-                if (isNaN(this.form.total_pal)) {
-                    this.form.total_pal = "";
+                if (isNaN(total_pal)) {
+                    total_pal = "";
                 }
-                if (this.form.total_pal >= 16) {
+                if (total_pal >= 16) {
                     this.form.total_kyat =
-                        this.form.total_kyat + parseInt(this.form.total_pal / 16);
-                    this.form.total_pal = this.form.total_pal % 16;
+                        this.form.total_kyat + parseInt(total_pal / 16);
+                    total_pal = total_pal % 16;
                 }
-                return this.form.total_pal;
+                this.form.total_pal = total_pal;
+
+                return total_pal;
             },
-            totalYway() {
-                this.form.total_yway =
+            total_yway() {
+                let total_yway =
                     parseInt(this.form.gold_weight.yway) +
                     parseInt(this.form.gem_weight.yway) +
                     parseInt(this.form.fee.yway);
-                if (isNaN(this.form.total_yway)) {
-                    this.form.total_yway = "";
+                    console.log(total_yway);
+                if (isNaN(total_yway)) {
+                    total_yway = "";
                 }
-                if (this.form.total_yway >= 8) {
+                if (total_yway >= 8) {
                     this.form.exceed_pal_form_yway = parseInt(
-                        this.form.total_yway / 8
+                        total_yway / 8
                     );
-                    this.form.total_yway = this.form.total_yway % 8;
+                    total_yway = total_yway % 8;
                 }else{
                     this.form.exceed_pal_form_yway = 0;
                 }
-                return this.form.total_yway;
+                this.form.total_yway = total_yway;
+                return total_yway;
             },
-            totalBefore() {
-                this.form.total_before =
+            total_before() {
+                let total_before =
                     parseInt(this.form.gold_price) +
                     parseInt(this.form.gem_price) +
                     parseInt(this.form.fee_price) +
                     parseInt(this.form.fee_for_making);
 
-                if (isNaN(this.form.total_before)) this.form.total_before = "";
+                if (isNaN(total_before)) total_before = "";
+                this.form.total_before = total_before;
 
-                return this.form.total_before;
+                return total_before;
             },
-            totalAfter() {
-                this.form.final_total =
+            final_total() {
+                let final_total =
                     parseInt(this.form.total_before) -
                     parseInt(this.form.item_discount);
-                if (isNaN(this.form.final_total)) this.form.final_total = "";
-                return this.form.final_total;
+                if (isNaN(final_total)) final_total = "";
+                this.form.final_total = final_total;
+
+                return final_total;
             },
-            creditMoney() {
-                this.form.credit_money =
+            credit_money() {
+                let credit_money =
                     parseInt(this.form.final_total) -
                     parseInt(this.form.paid_money);
-                if (isNaN(this.form.credit_money)) this.form.credit_money = "";
-                return this.form.credit_money;
+                if (isNaN(credit_money)) credit_money = "";
+                this.form.credit_money = credit_money;
+
+                return credit_money;
             },
             nameErrors () {
                 const errors = []

@@ -125,6 +125,10 @@ import Voucher1 from "./Voucher1";
 import Voucher2 from "./Voucher2";
 // import { pickBy, throttle } from 'lodash';
 import axios from "axios";
+import {
+    mapGetters,
+    mapActions
+  } from "vuex";
 
 export default {
     components: {
@@ -138,7 +142,7 @@ export default {
     data() {
 
         return {
-            items: [],
+            // items: [],
             model: null,
             searchValue: '',
             length: 5,
@@ -172,6 +176,8 @@ export default {
         },
     },
     methods: {
+        ...mapActions(["searchItem", "selectItem"]),
+
         querySelections (v) {
             this.loading = true
             // Simulated ajax query
@@ -189,28 +195,29 @@ export default {
             // if (index >= 0) this.friends.splice(index, 1)
         },
         select(item) {
-            this.$store.dispatch("selectItem", item);
+            // this.$store.dispatch("selectItem", item);
+            this.selectItem(item);
         },
-        newItemSelect() {
-            let fee = {kyat:0, pal:3, yway:0};
-            let gem_weight = {kyat:0, pal:0, yway:0};
-            let gold_weight = {
-                kyat:parseInt(String(this.searchValue.charAt(4))+String(this.searchValue.charAt(5))),
-                pal:parseInt(String(this.searchValue.charAt(6))+String(this.searchValue.charAt(7))),
-                yway:this.searchValue.charAt(8),
-            };
-            let selectItem = [];
-            selectItem["id"] = "";
-            selectItem["name"] = "";
-            selectItem["product_sku"] = this.searchValue;
-            selectItem["image1"] = "";
-            selectItem["quality"] = String(this.searchValue.charAt(0))+String(this.searchValue.charAt(1));
-            selectItem["fee_for_making"] = "5000";
-            selectItem["fee"] = fee;
-            selectItem["gem_weight"] = gem_weight;
-            selectItem["gold_weight"] = gold_weight;
-            this.select(selectItem);
-        },
+        // newItemSelect() {
+        //     let fee = {kyat:0, pal:3, yway:0};
+        //     let gem_weight = {kyat:0, pal:0, yway:0};
+        //     let gold_weight = {
+        //         kyat:parseInt(String(this.searchValue.charAt(4))+String(this.searchValue.charAt(5))),
+        //         pal:parseInt(String(this.searchValue.charAt(6))+String(this.searchValue.charAt(7))),
+        //         yway:this.searchValue.charAt(8),
+        //     };
+        //     let selectItem = [];
+        //     selectItem["id"] = "";
+        //     selectItem["name"] = "";
+        //     selectItem["product_sku"] = this.searchValue;
+        //     selectItem["image1"] = "";
+        //     selectItem["quality"] = String(this.searchValue.charAt(0))+String(this.searchValue.charAt(1));
+        //     selectItem["fee_for_making"] = "5000";
+        //     selectItem["fee"] = fee;
+        //     selectItem["gem_weight"] = gem_weight;
+        //     selectItem["gold_weight"] = gold_weight;
+        //     this.select(selectItem);
+        // },
         searchProduct() {
             //regular expression test for "15gr02157"
             // const regex = /(^(0[5-9]|1[0-6]))([a-z]{2})[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
@@ -229,17 +236,9 @@ export default {
                 return false;
             }
             let data = { product_sku: this.searchProductSku, item_spe:this.searchValue}
-            axios.post(this.route("pos.search", data))
-                .then((response) => {
-                    if(response.data.message == "existing"){
-                        this.items = response.data.items;
-                    }else{
-                        this.items = [];
-                        this.newItemSelect()
-                        //this.select(response.data.items)
-                    }
-
-                });
+            // this.$store.dispatch("searchItem", data);
+            // this.items = this.$store.state.searchItem;
+            this.searchItem(data);
 
         },
     },
@@ -247,6 +246,7 @@ export default {
       isActive () {
         return this.searchValue.length === this.length
       },
+      ...mapGetters(['items']),
     },
 };
 </script>

@@ -551,6 +551,10 @@
     import axios from 'axios';
     import Invoice from "./Invoice";
     import { Link } from '@inertiajs/inertia-vue'
+    import {
+        mapGetters,
+        mapActions
+    } from "vuex";
 
     export default {
         components: {
@@ -875,7 +879,7 @@
         },
 
         computed: {
-
+            ...mapGetters(['selectedItem']),
             item() {
                 let value = this.$store.state.selectedItem;
                 this.form.id = value.id;

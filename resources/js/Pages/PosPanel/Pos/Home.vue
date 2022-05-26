@@ -48,11 +48,15 @@
         <v-item-group mandatory class="mt-n1">
             <v-container>
                 <v-sheet class="mx-auto" elevation="8" max-width="1090">
-                    <v-slide-group active-class="success" show-arrows>
+                    <v-slide-group
+                        active-class="success"
+                        show-arrows
+                        v-model="model"
+                        >
                         <v-slide-item
-                            v-for="item in items"
-                            :key="item.id"
-                            v-slot="{ active, toggle }"
+                            v-for="(item,index) in items"
+                            :key="index"
+                            v-slot:default="{ active }"
                         >
                             <v-card
                                 :color="active ? '#F6EFEF' : 'white'"
@@ -60,7 +64,7 @@
                                 class="d-flex align-center rounded-lg mx-2 mt-1 mb-1"
                                 dark
                                 height="130"
-                                @click="toggle"
+                                @click="onCardClick(index)"
                                 flat
                             >
                                 <v-row @click="select(item)">
@@ -142,6 +146,7 @@ export default {
     },
     data() {
         return {
+            model:null,
             searchValue: '',
             length: 5,
             //for product sku auto complete
@@ -159,6 +164,9 @@ export default {
     },
     methods: {
         ...mapActions(["searchItem", "selectItem"]),
+        onCardClick(n){
+            this.model = n ;
+        },
         querySelections (v) {
             this.loading = true
             // Simulated ajax query
@@ -197,27 +205,41 @@ export default {
         isActive () {
             return this.searchValue.length === this.length
         },
-        ...mapGetters(['items']),
-        ...mapState(['product_sku', 'searchValue']),
+        ...mapGetters(['items','product_sku', 'searchValue']),
+        // ...mapState(['product_sku', 'searchValue']),
 
     },
     created() {
         this.unwatch1 = this.$store.watch(
+            (state, getters) => getters.items,
+            (newValue, oldValue) => {
+                let item = newValue.find(function(val) {
+                    return newValue.indexOf(val) == 0;
+                });
+                this.select(item);
+                this.onCardClick(0);
+
+            },
+        );
+        this.unwatch2 = this.$store.watch(
             (state, getters) => getters.product_sku,
             (newValue, oldValue) => {
                 this.searchProductSku = newValue,
                 this.selectProductSku = newValue
             },
         );
-        this.unwatch2 = this.$store.watch(
+        this.unwatch3 = this.$store.watch(
             (state, getters) => getters.item_spe,
             (newValue, oldValue) => {
                 this.searchValue = newValue
             },
         );
+
     },
     beforeDestroy() {
-        this.unwatch();
+        this.unwatch1();
+        this.unwatch2();
+        this.unwatch3();
     },
 };
 </script>

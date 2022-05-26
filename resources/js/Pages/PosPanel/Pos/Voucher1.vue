@@ -730,7 +730,6 @@
                 let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
 
                 let item_spe = kyat + pal+this.form.gold_weight.yway;
-                alert(item_spe);
                 let data = { product_sku: product_sku, item_spe: item_spe}
                 this.searchItem(data);
 

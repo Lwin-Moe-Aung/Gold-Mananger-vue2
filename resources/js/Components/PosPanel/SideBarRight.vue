@@ -407,6 +407,8 @@
 
 <script>
 import axios from 'axios';
+import constant from "../../constant";
+
 export default {
     data() {
         return {
@@ -504,7 +506,7 @@ export default {
                     if(res.data.status)
                     {
                         this.removeItemFromCart(item);
-                        window.open( "http://localhost:8000/pos/generate_invoice/"+res.data.order_id, "_blank");
+                        window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
                         // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
                         Toast.fire({
                             icon: 'success',

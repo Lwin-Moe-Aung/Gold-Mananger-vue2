@@ -205,9 +205,7 @@ export default {
         isActive () {
             return this.searchValue.length === this.length
         },
-        ...mapGetters(['items','product_sku', 'searchValue']),
-        // ...mapState(['product_sku', 'searchValue']),
-
+        ...mapGetters(['items','product_sku', 'item_spe']),
     },
     created() {
         this.unwatch1 = this.$store.watch(
@@ -234,7 +232,6 @@ export default {
                 this.searchValue = newValue
             },
         );
-
     },
     beforeDestroy() {
         this.unwatch1();

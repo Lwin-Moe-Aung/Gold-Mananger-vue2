@@ -14,7 +14,7 @@
                         rounded
                         size="100"
                         color="grey lighten-4"
-                        v-if="form.image"
+                        v-if="form.id"
                     >
                         <v-img :src="form.image"></v-img>
                     </v-list-item-avatar>
@@ -23,7 +23,7 @@
                      <v-card v-else rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
                         <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
                         <v-fade-transition mode="out-in">
-                        <v-img v-if="image" aspect-ratio="1" :src="image">
+                        <v-img v-if="form.image" aspect-ratio="1" :src="form.image">
                             <v-row class="fill-height" align="end" justify="center">
                             <v-slide-y-reverse-transition>
                                 <v-sheet v-if="mask" color="error" width="100%" height="100%" class="mask" />
@@ -198,7 +198,7 @@
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                :value = "gold_price"
+                                                v-model = "form.gold_price"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
@@ -255,7 +255,7 @@
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
 
-                                                :value = "gem_price"
+                                                v-model = "form.gem_price"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
@@ -308,7 +308,7 @@
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                :value = "fee_price"
+                                                :value = "form.fee_price"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
@@ -589,7 +589,7 @@
                     id: "",
                     name: "",
                     product_sku: "",
-                    image: "",
+                    image: undefined,
                     imageFile: undefined,
                     item_sku: "",
                     gold_weight: { kyat: "", pal: "", yway: "" },
@@ -874,13 +874,13 @@
             },
             updateValue (event) {
                 this.form.imageFile = event.target.files[0]
-                this.image = this.form.imageFile ? URL.createObjectURL(this.form.imageFile) : undefined
+                this.form.image = this.form.imageFile ? URL.createObjectURL(this.form.imageFile) : undefined
                 this.$emit('input', this.form.imageFile)
             },
             deleteImage () {
                 if (this.form.imageFile) {
                     this.form.imageFile = undefined
-                    this.image = undefined
+                    this.form.image = undefined
                     this.mask = false
                     this.input.value = '' // <-- this will fix the issue
                     this.$emit('input', undefined)

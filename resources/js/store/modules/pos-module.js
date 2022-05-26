@@ -26,27 +26,30 @@ const actions = {
                         // state.items = response.data.items;
 
                     }else{
-                        state.items = [];
+                        console.log(data.item_spe);
                         let fee = {kyat:0, pal:3, yway:0};
                         let gem_weight = {kyat:0, pal:0, yway:0};
                         let gold_weight = {
-                            kyat: parseInt(String(data.item_spe.charAt(4))+String(data.item_spe.charAt(5))),
-                            pal: parseInt(String(data.item_spe.charAt(6))+String(data.item_spe.charAt(7))),
-                            yway: data.item_spe.charAt(8),
+                            kyat: parseInt(String(data.item_spe.charAt(0))+String(data.item_spe.charAt(1))),
+                            pal: parseInt(String(data.item_spe.charAt(2))+String(data.item_spe.charAt(3))),
+                            yway: data.item_spe.charAt(4),
                         };
-                        let selectItem = [];
-                        selectItem["id"] = "";
-                        selectItem["name"] = "";
-                        selectItem["product_sku"] = data.product_sku+data.item_spe;
-                        selectItem["image1"] = "";
-                        selectItem["quality"] = String(data.product_sku.charAt(0))+String(data.product_sku.charAt(1));
-                        selectItem["fee_for_making"] = "5000";
-                        selectItem["fee"] = fee;
-                        selectItem["gem_weight"] = gem_weight;
-                        selectItem["gold_weight"] = gold_weight;
+                        let item = {
+                            id: "",
+                            name: "",
+                            product_sku: data.product_sku+data.item_spe,
+                            image1: "/images/pos/new-default.jpg",
+                            quality: parseInt(String(data.product_sku.charAt(0))+String(data.product_sku.charAt(1))),
+                            gold_weight: gold_weight,
+                            gem_weight: gem_weight,
+                            fee: fee,
+                            fee_for_making: "5000"
 
-                        // state.items = selectItem;
-                        commit("setItem", selectItem);
+                        };
+                        let seleItem = [
+                            item
+                        ];
+                        commit("setItem", seleItem);
                 }
 
             });

@@ -96,11 +96,11 @@ class HomeController extends Controller
     public function getTypesAndNames()
     {
         $types = Type::where('business_id', Auth::user()->business_id)
-            ->select('id', 'name', 'key')
+            ->select('name', 'key')
             ->get()
             ->toArray();
         $item_names = ItemName::where('business_id', Auth::user()->business_id)
-            ->select('id', 'name', 'key')
+            ->select('name', 'key')
             ->get()
             ->toArray();
 

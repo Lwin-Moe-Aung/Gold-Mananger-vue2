@@ -6,10 +6,15 @@ const state = {
     carts:[],
     item_from_cart:false,
     items:[],
+    product_sku: "",
+    item_spe: "",
 };
 const getters = {
     items: state => state.items,
     selectedItem: state => state.selectedItem,
+    product_sku: state => state.product_sku,
+    item_spe: state => state.item_spe,
+
 };
 const actions = {
     async searchItem({commit}, data){
@@ -45,6 +50,10 @@ const actions = {
                 }
 
             });
+
+        commit("setProductSku", data.product_sku);
+        commit("setItemSpe", data.item_spe);
+
     },
     async selectItem({commit}, item){
 
@@ -61,7 +70,13 @@ const mutations = {
     selectItem: (state, item) => (
         state.selectedItem = item,
         state.item_from_cart = false
-    )
+    ),
+    setProductSku: (state, data) => (
+        state.product_sku = data
+    ),
+    setItemSpe: (state, data) => (
+        state.item_spe = data
+    ),
 };
 export default {
     state,

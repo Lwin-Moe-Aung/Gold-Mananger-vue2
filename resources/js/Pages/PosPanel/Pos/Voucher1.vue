@@ -70,8 +70,8 @@
                                     ></v-combobox>
                                 </v-col>
                                 <v-col
-                                    cols="3"
-                                    sm="3"
+                                    cols="2"
+                                    sm="2"
                                 >
                                     <v-combobox
                                         v-model="type"
@@ -84,8 +84,8 @@
                                     ></v-combobox>
                                 </v-col>
                                 <v-col
-                                    cols="3"
-                                    sm="3"
+                                    cols="2"
+                                    sm="2"
                                 >
                                     <v-combobox
                                         v-model="item_name"
@@ -159,41 +159,41 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                :value = "selectedItem.gold_weight.kyat"
+                                                v-model = "form.gold_weight.kyat"
                                                 label="ကျပ်"
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
                                                 :rules="goldWeightKyatRules"
                                                 required
-                                                @change="changeKyat"
+                                                @change="onChange"
                                             >
                                             </v-text-field>
                                         </v-col>
 
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                :value = "selectedItem.gold_weight.pal"
+                                                v-model = "form.gold_weight.pal"
                                                 label="ပဲ"
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
                                                 :rules="goldWeightPalRules"
                                                 required
-                                                @change="changePal"
+                                                @change="onChange"
                                             ></v-text-field>
                                         </v-col>
 
                                         <v-col cols="12" sm="6" md="2">
                                             <v-text-field
-                                                :value = "selectedItem.gold_weight.yway"
+                                                v-model = "form.gold_weight.yway"
                                                 label="ရွေး"
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
                                                 :rules="goldWeightYwayRules"
                                                 required
-                                                @change="changeYway"
+                                                @change="onChange"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -568,7 +568,8 @@
     import { Link } from '@inertiajs/inertia-vue'
     import {
         mapGetters,
-        mapActions
+        mapActions,
+        mapState
     } from "vuex";
 
     export default {
@@ -690,11 +691,14 @@
         mounted () {
             this.input = document.getElementById('fileInput')
         },
+
         created() {
             this.getGoldQualitys();
             this.getTypesAndNames();
         },
+
         methods: {
+            ...mapActions(["searchItem"]),
             changeKyat() {
                 alert("hello kyat");
             },
@@ -720,23 +724,16 @@
 
             },
             //combo box
-            addItem(name) {
-                const newItem = {
-                    id: nextId++,
-                    name,
-                }
-                this.goldQualitys.push(newItem)
-                return newItem
-            },
             onChange(entry) {
-                if (typeof entry === 'string' && entry.trim()) {
-                    const item = this.goldQualitys.find(item => item.name === entry)
-                    if (item) {
-                    this.goldQuality = item
-                    } else {
-                    this.goldQuality = this.addItem(entry)
-                    }
-                }
+                let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
+                let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
+                let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
+
+                let item_spe = kyat + pal+this.form.gold_weight.yway;
+                alert(item_spe);
+                let data = { product_sku: product_sku, item_spe: item_spe}
+                this.searchItem(data);
+
             },
             //combo box
             addToCart() {
@@ -926,12 +923,39 @@
                 this.form.credit_money = value.credit_money;
                 this.dailySetup = this.$page.props.daily_setup[this.quality];
                 this.dailyValue = this.$page.props.daily_setup[this.quality].kyat;
+
+                //combobox
+                let qty = value.quality;
+                let goldQuality = this.goldQualitys.find(function(val) {
+                    return val.quality == qty;
+                });
+                let type_key = this.form.product_sku.charAt(2);
+                let type = this.types.find(function(val) {
+                    return val.key == type_key;
+                });
+
+                let item_name_key = this.form.product_sku.charAt(3);
+                let item_name = this.item_names.find(function(val) {
+                    return val.key == item_name_key;
+                });
+                this.goldQuality = {
+                    'name' : goldQuality.name,
+                    'quality' : goldQuality.quality,
+                };
+                this.type = {
+                    'key' : type.key,
+                    'name' : type.name,
+                };
+                this.item_name = {
+                    'key' : item_name.key,
+                    'name' : item_name.name,
+                };
+                //combobox
             }
         },
 
         computed: {
             ...mapGetters(['selectedItem']),
-
             gold_price() {
                 let price = this.$page.props.daily_setup[this.quality];
                 let kyat_p =

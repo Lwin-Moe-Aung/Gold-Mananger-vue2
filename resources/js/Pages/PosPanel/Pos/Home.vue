@@ -217,6 +217,13 @@ export default {
                 this.select(item);
                 this.onCardClick(0);
 
+                if(item.id == "") var title = "ပစ္စည်းအသစ် ဖန်တီးထားပေးသည်";
+                else var title = "System ထဲကပစ္စည်းများ"
+                Toast.fire({
+                    icon: 'success',
+                    title: title
+                })
+
             },
         );
         this.unwatch2 = this.$store.watch(

@@ -103,6 +103,7 @@ class HomeController extends Controller
             foreach($goldQualitys[$key]["types"] as $key1=>$val) {
                 $item_names_ids = Product::where('business_id', $business_id)
                         ->where('type_id', $val->id)
+                        ->where('quality', $value['quality'])
                         ->select('item_names_id')
                         ->groupBy('item_names_id')
                         ->pluck('item_names_id');

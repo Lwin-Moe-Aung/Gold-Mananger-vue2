@@ -62,7 +62,7 @@
                                     <v-combobox
                                         v-model="goldQuality"
                                         :items="goldQualitys"
-                                        @change="onChange"
+                                        @change="onChangeQ"
                                         item-text="name"
                                         item-value="quality"
                                         return-object
@@ -76,7 +76,7 @@
                                     <v-combobox
                                         v-model="type"
                                         :items="types"
-                                        @change="onChangeType"
+                                        @change="onChangeT"
                                         item-text="name"
                                         item-value="key"
                                         return-object
@@ -108,18 +108,18 @@
 
                         <strong class="mt-3">
                             <v-tooltip top>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
 
-                                    dark
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    @click="openModel"
-                                    >
-                                    {{ dailySetup.kyat | formatNumber }}
-                                    .kyats
-                                </v-btn>
-                            </template>
+                                        dark
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        @click="openModel"
+                                        >
+                                        {{ dailySetup.kyat | formatNumber }}
+                                        .kyats
+                                    </v-btn>
+                                </template>
                             <span>{{quality}} .ပဲရည်</span>
                             </v-tooltip>
 
@@ -423,7 +423,7 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="12" md="7">
                                             <v-text-field
-                                                :value = "final_total"
+                                                v-model = "final_total"
                                                 label="kyats"
                                                 placeholder="kyats"
                                                 outlined
@@ -699,15 +699,7 @@
 
         methods: {
             ...mapActions(["searchItem"]),
-            changeKyat() {
-                alert("hello kyat");
-            },
-            changePal() {
-                alert("hello pal");
-            },
-            changeYway() {
-                alert("hello yway");
-            },
+
             getDataForCombobox() {
                 axios.get(this.route("pos.get_data_for_combobox"))
                     .then((response) => {
@@ -716,18 +708,30 @@
             },
 
             //combo box
-            onChangeType (entry) {
-                this.item_names = this.dataForCombobox.item_names[this.type.key];
+            onChangeQ (entry) {
+                this.type = null;
+                this.types = this.goldQuality.types;
                 this.item_name = null;
+                this.item_names = [];
+
+            },
+            onChangeT (entry) {
+                this.item_name = null;
+                this.item_names = this.type.item_names;
             },
             onChange(entry) {
-                let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
-                let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
-                let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
+                if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != ""
+                     && this.form.gold_weight.yway != "" && this.goldQuality != null
+                      && this.type != null  && this.item_name != null ){
 
-                let item_spe = kyat + pal+this.form.gold_weight.yway;
-                let data = { product_sku: product_sku, item_spe: item_spe}
-                this.searchItem(data);
+                    let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
+                    let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
+                    let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
+
+                    let item_spe = kyat + pal+this.form.gold_weight.yway;
+                    let data = { product_sku: product_sku, item_spe: item_spe}
+                    this.searchItem(data);
+                }
             },
             //combo box
             addToCart() {
@@ -919,49 +923,37 @@
                 this.dailyValue = this.$page.props.daily_setup[this.quality].kyat;
 
                 //combobox
-
                 this.goldQualitys = this.dataForCombobox.goldQualitys;
-                // this.types = this.dataForCombobox.goldQualitys[value.quality];
-                this.goldQualitys.forEach(function callback(val, index) {
-                    if(val.quality == value.quality){
-                        console.log(val.types);
-                        // this.types = val.types;
-                            // this.types.forEach(function callback(val1, ind) {
-                            //     if(val1.key == this.form.product_sku.charAt(2)){
-                            //         this.item_names = val1.item_names;
-                            //     }
-                            // });
-
-                    }
+                let qty = value.quality;
+                let goldQuality = this.goldQualitys.find(function(val) {
+                    return val.quality == qty;
                 });
-                // this.item_names = this.dataForCombobox.goldQualitys[value.quality].types[this.form.product_sku.charAt(2)];
-                // console.log(this.goldQualitys);
-                // let qty = value.quality;
-                // let goldQuality = this.goldQualitys.find(function(val) {
-                //     return val.quality == qty;
-                // });
-                // let type_key = this.form.product_sku.charAt(2);
-                // let type = this.types.find(function(val) {
-                //     return val.key == type_key;
-                // });
 
-                // let item_name_key = this.form.product_sku.charAt(3);
-                // let item_name = this.item_names.find(function(val) {
-                //     return val.key == item_name_key;
-                // });
-                // this.goldQuality = {
-                //     'name' : goldQuality.name,
-                //     'quality' : goldQuality.quality,
-                // };
-                // this.type = {
-                //     'key' : type.key,
-                //     'name' : type.name,
-                // };
-                // this.item_name = {
-                //     'key' : item_name.key,
-                //     'name' : item_name.name,
-                // };
+                this.types = goldQuality.types;
+                let type_key = this.form.product_sku.charAt(2);
+                let type = this.types.find(function(val) {
+                    return val.key == type_key;
+                });
+
+                this.item_names = type.item_names;
+                let item_name_key = this.form.product_sku.charAt(3);
+                let item_name = this.item_names.find(function(val) {
+                    return val.key == item_name_key;
+                });
+                this.goldQuality = {
+                    'name' : goldQuality.name,
+                    'quality' : goldQuality.quality,
+                };
+                this.type = {
+                    'key' : type.key,
+                    'name' : type.name,
+                };
+                this.item_name = {
+                    'key' : item_name.key,
+                    'name' : item_name.name,
+                };
                 //combobox
+
             }
         },
 

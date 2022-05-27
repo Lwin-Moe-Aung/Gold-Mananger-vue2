@@ -76,7 +76,7 @@
                                     <v-combobox
                                         v-model="type"
                                         :items="types"
-                                        @change="onChange"
+                                        @change="onChangeType"
                                         item-text="name"
                                         item-value="key"
                                         return-object
@@ -679,6 +679,7 @@
                 image: undefined,
                 mask: false,
                 // combobox
+                dataForCombobox:[],
                 goldQuality: null,
                 goldQualitys: [],
                 type: null,
@@ -693,8 +694,7 @@
         },
 
         created() {
-            this.getGoldQualitys();
-            this.getTypesAndNames();
+            this.getDataForCombobox();
         },
 
         methods: {
@@ -708,22 +708,18 @@
             changeYway() {
                 alert("hello yway");
             },
-            getGoldQualitys() {
-                axios.get(this.route("pos.get_gold_qualitys"))
+            getDataForCombobox() {
+                axios.get(this.route("pos.get_data_for_combobox"))
                     .then((response) => {
-                        this.goldQualitys = response.data.goldQualitys;
+                        this.dataForCombobox = response.data;
                 });
             },
-            getTypesAndNames() {
-                axios.get(this.route("pos.get_types_and_names"))
-                    .then((response) => {
-                        this.types = response.data.types;
-                        this.item_names = response.data.item_names;
 
-                });
-
-            },
             //combo box
+            onChangeType (entry) {
+                this.item_names = this.dataForCombobox.item_names[this.type.key];
+                this.item_name = null;
+            },
             onChange(entry) {
                 let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
                 let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
@@ -732,7 +728,6 @@
                 let item_spe = kyat + pal+this.form.gold_weight.yway;
                 let data = { product_sku: product_sku, item_spe: item_spe}
                 this.searchItem(data);
-
             },
             //combo box
             addToCart() {
@@ -924,31 +919,48 @@
                 this.dailyValue = this.$page.props.daily_setup[this.quality].kyat;
 
                 //combobox
-                let qty = value.quality;
-                let goldQuality = this.goldQualitys.find(function(val) {
-                    return val.quality == qty;
-                });
-                let type_key = this.form.product_sku.charAt(2);
-                let type = this.types.find(function(val) {
-                    return val.key == type_key;
-                });
 
-                let item_name_key = this.form.product_sku.charAt(3);
-                let item_name = this.item_names.find(function(val) {
-                    return val.key == item_name_key;
+                this.goldQualitys = this.dataForCombobox.goldQualitys;
+                // this.types = this.dataForCombobox.goldQualitys[value.quality];
+                this.goldQualitys.forEach(function callback(val, index) {
+                    if(val.quality == value.quality){
+                        console.log(val.types);
+                        // this.types = val.types;
+                            // this.types.forEach(function callback(val1, ind) {
+                            //     if(val1.key == this.form.product_sku.charAt(2)){
+                            //         this.item_names = val1.item_names;
+                            //     }
+                            // });
+
+                    }
                 });
-                this.goldQuality = {
-                    'name' : goldQuality.name,
-                    'quality' : goldQuality.quality,
-                };
-                this.type = {
-                    'key' : type.key,
-                    'name' : type.name,
-                };
-                this.item_name = {
-                    'key' : item_name.key,
-                    'name' : item_name.name,
-                };
+                // this.item_names = this.dataForCombobox.goldQualitys[value.quality].types[this.form.product_sku.charAt(2)];
+                // console.log(this.goldQualitys);
+                // let qty = value.quality;
+                // let goldQuality = this.goldQualitys.find(function(val) {
+                //     return val.quality == qty;
+                // });
+                // let type_key = this.form.product_sku.charAt(2);
+                // let type = this.types.find(function(val) {
+                //     return val.key == type_key;
+                // });
+
+                // let item_name_key = this.form.product_sku.charAt(3);
+                // let item_name = this.item_names.find(function(val) {
+                //     return val.key == item_name_key;
+                // });
+                // this.goldQuality = {
+                //     'name' : goldQuality.name,
+                //     'quality' : goldQuality.quality,
+                // };
+                // this.type = {
+                //     'key' : type.key,
+                //     'name' : type.name,
+                // };
+                // this.item_name = {
+                //     'key' : item_name.key,
+                //     'name' : item_name.name,
+                // };
                 //combobox
             }
         },

@@ -78,33 +78,38 @@ class HomeController extends Controller
 
     }
 
-    public function getGoldQualitys()
+    public function getDataForCombobox()
     {
+        $business_id = Auth::user()->business_id;
         $goldQualitys = Product::orderBy('quality', 'desc')
-            ->where('business_id', Auth::user()->business_id)
+            ->where('business_id',$business_id)
             ->select('quality')
             ->groupBy('quality')
             ->get()
             ->toArray();
+
         foreach($goldQualitys as $key=>$value) {
             $goldQualitys[$key]['name'] = $value['quality'] . "ပဲရည်";
 
+            $types_ids = Product::where('business_id', $business_id)
+                    ->where('quality', $value['quality'])
+                    ->select('type_id')
+                    ->groupBy('type_id')
+                    ->pluck('type_id');
+            $types = DB::table('types')->whereIn('id',$types_ids)->get()->toArray();
+            $goldQualitys[$key]["types"] = $types;
+            //get data from item_name table
+            $it_ns = [];
+            foreach($goldQualitys[$key]["types"] as $key1=>$val) {
+                $item_names_ids = Product::where('business_id', $business_id)
+                        ->where('type_id', $val->id)
+                        ->select('item_names_id')
+                        ->groupBy('item_names_id')
+                        ->pluck('item_names_id');
+                $item_names = DB::table('item_names')->whereIn('id',$item_names_ids)->get()->toArray();
+                $goldQualitys[$key]["types"][$key1]->item_names = $item_names;
+            }
         }
         return response()->json(['goldQualitys'=>$goldQualitys]);
     }
-
-    public function getTypesAndNames()
-    {
-        $types = Type::where('business_id', Auth::user()->business_id)
-            ->select('name', 'key')
-            ->get()
-            ->toArray();
-        $item_names = ItemName::where('business_id', Auth::user()->business_id)
-            ->select('name', 'key')
-            ->get()
-            ->toArray();
-
-        return response()->json(['types' => $types , 'item_names' => $item_names]);
-    }
-
 }

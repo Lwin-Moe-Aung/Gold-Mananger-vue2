@@ -25,6 +25,8 @@ class Product extends Model
         'name',
         'product_sku',
         'quality',
+        'type_id',
+        'item_names_id',
         'description',
         'tax',
         'item_count',

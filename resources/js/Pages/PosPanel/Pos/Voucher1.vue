@@ -70,8 +70,8 @@
                                     ></v-combobox>
                                 </v-col>
                                 <v-col
-                                    cols="2"
-                                    sm="2"
+                                    cols="3"
+                                    sm="3"
                                 >
                                     <v-combobox
                                         v-model="type"
@@ -84,8 +84,8 @@
                                     ></v-combobox>
                                 </v-col>
                                 <v-col
-                                    cols="2"
-                                    sm="2"
+                                    cols="3"
+                                    sm="3"
                                 >
                                     <v-combobox
                                         v-model="item_name"
@@ -105,25 +105,32 @@
                         <v-list-item-subtitle class="mt-1">
                             {{ form.item_description }}
                         </v-list-item-subtitle>
-
-                        <strong class="mt-3">
-                            <v-tooltip top>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn
-
-                                        dark
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        @click="openModel"
-                                        >
-                                        {{ dailySetup.kyat | formatNumber }}
-                                        .kyats
-                                    </v-btn>
-                                </template>
-                            <span>{{quality}} .ပဲရည်</span>
-                            </v-tooltip>
-
-                        </strong>
+                         <v-row>
+                            <v-col
+                                cols="5"
+                                sm="5"
+                                >
+                                    <v-text-field
+                                        v-model = "dailyValue"
+                                        label="Daily Setup"
+                                        :hint="!isEditing ? 'Click the icon to edit' : 'Click the icon to save'"
+                                        :readonly="!isEditing"
+                                    >
+                                        <template v-slot:append-outer>
+                                            <v-slide-x-reverse-transition
+                                                mode="out-in"
+                                            >
+                                                <v-icon
+                                                    :key="`icon-${isEditing}`"
+                                                    :color="isEditing ? 'success' : 'info'"
+                                                    @click="editDailySetup"
+                                                    v-text="isEditing ? 'fas fa-check' : 'fas fa-edit'"
+                                                ></v-icon>
+                                            </v-slide-x-reverse-transition>
+                                        </template>
+                                    </v-text-field>
+                            </v-col>
+                        </v-row>
 
                     </v-list-item-content>
                 </v-list-item>
@@ -146,7 +153,6 @@
                 <v-card-actions>
                     <!--new-->
                         <v-container>
-
                             <v-row>
                                 <v-col cols="12" sm="8">
                                     <!--row for voucher-->
@@ -423,7 +429,7 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="12" md="7">
                                             <v-text-field
-                                                v-model = "final_total"
+                                                v-model = "form.final_total"
                                                 label="kyats"
                                                 placeholder="kyats"
                                                 outlined
@@ -479,62 +485,15 @@
                                                 >Print Bill</v-btn
                                             >
                                         </v-col>
-                                        <!-- <v-card-actions>
-                                      </v-card-actions> -->
                                     </v-row>
                                 </v-col>
                             </v-row>
 
                             <!--row for voucher-->
                         </v-container>
-
-                    <!--end new-->
-                </v-card-actions>
+                        <!--end new-->
+                    </v-card-actions>
                 </v-form>
-                    <v-row
-                            justify="center"
-                            >
-                            <v-dialog
-                                v-model="dialog2"
-                                max-width="500px"
-                            >
-                                <v-card>
-                                    <v-card-title>
-                                        {{ quality }} ပဲရည်
-                                    </v-card-title>
-                                    <v-card-text>
-                                        <form @submit.prevent="editDailySetup">
-
-                                            <v-text-field
-                                                v-model="dailyValue"
-                                                :error-messages="nameErrors"
-                                                :counter="10"
-                                                label="Quality"
-                                                required
-                                                @input="$v.quality.$touch()"
-                                                @blur="$v.quality.$touch()"
-                                            ></v-text-field>
-
-                                            <v-btn
-                                                color="success"
-                                                text
-                                                type="submit"
-                                            >
-                                            Add
-                                            </v-btn>
-                                            <v-btn
-                                                color="primary"
-                                                text
-                                                @click="dialog2 = false"
-                                            >
-                                                Close
-                                            </v-btn>
-                                        </form>
-                                    </v-card-text>
-
-                                </v-card>
-                            </v-dialog>
-                        </v-row>
             </v-card>
         </v-hover>
         <v-dialog
@@ -548,12 +507,12 @@
                 dark
             >
                 <v-card-text>
-                Please stand by
-                <v-progress-linear
-                    indeterminate
-                    color="white"
-                    class="mb-0"
-                ></v-progress-linear>
+                    Please stand by
+                    <v-progress-linear
+                        indeterminate
+                        color="white"
+                        class="mb-0"
+                    ></v-progress-linear>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -613,7 +572,6 @@
                     note: "",
                 },
                 quality: '',
-                dialog2: false,
                 name: '',
                 email: '',
                 dailyValue: '',
@@ -687,6 +645,7 @@
                 item_name: null,
                 item_names: [],
                 // end combobox
+                isEditing: false,
             };
         },
         mounted () {
@@ -797,13 +756,11 @@
                     }
                 }
             },
-            openModel() {
-                this.dialog2 = true;
-            },
             editDailySetup() {
-                this.dialog2 = false;
-                this.dailySetup.kyat = this.dailyValue;
+                this.isEditing = !this.isEditing
+                if(this.isEditing || this.quality == "") return;
 
+                this.dailySetup.kyat = this.dailyValue;
                 let data = { dailySetup: this.dailySetup, quality:this.quality}
                 axios.post('/pos/edit_daily_setup', data)
                 .then(res => {
@@ -848,7 +805,7 @@
                         .then(res => {
                             if(res.data.status)
                             {
-                                Object.assign(this.$data, this.$options.data.apply(this));
+                                this.clearFormData();
                                 this.$store.dispatch("selectItem", []);
 
                                 window.open( "http://localhost:8000/pos/generate_invoice/"+res.data.order_id, "_blank");
@@ -887,7 +844,35 @@
             },
             printVoucher() {
                 window.print();
+            },
+            clearFormData() {
+                    this.form.id= "",
+                    this.form.name= "",
+                    this.form.product_sku= "",
+                    this.form.image= undefined,
+                    this.form.imageFile= undefined,
+                    this.form.item_sku= "",
+                    this.form.gold_weight= { kyat: "", pal: "", yway: "" },
+                    this.form.gold_price= "",
+                    this.form.gem_weight= { kyat: "", pal: "", yway: "" },
+                    this.form.gem_price= "",
+                    this.form.fee= { kyat: "", pal: "", yway: "" },
+                    this.form.fee_price= "",
+                    this.form.fee_for_making= "",
+                    this.form.item_discount= "",
+                    this.form.tax= "",
+                    this.form.item_description= "",
+                    this.form.total_kyat= "",
+                    this.form.total_pal= "",
+                    this.form.exceed_pal_form_yway= "",
+                    this.form.total_yway= "",
+                    this.form.total_before= "",
+                    this.form.final_total= "",
+                    this.form.paid_money= "",
+                    this.form.credit_money= "",
+                    this.form.note= ""
             }
+
         },
         watch: {
             loading (val) {

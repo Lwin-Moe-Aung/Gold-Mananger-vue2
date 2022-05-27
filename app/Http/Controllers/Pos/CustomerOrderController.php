@@ -76,13 +76,7 @@ class CustomerOrderController extends Controller
 
 
             $quality = $product_sku[0].$product_sku[1];
-            $nproduct = new Product;
-            $nproduct->name = "New Product".Carbon::now()->format('Y-m-d H:i:s');
-            $nproduct->product_sku = $request->product_sku;
-            $nproduct->quality = (int)$quality;
-            $nproduct->business_id = $business_id;
-            $nproduct->created_by = $created_by;
-            $nproduct->save();
+            $nproduct = Product::where('product_sku', $request->product_sku)->first();
 
             if ($file = $request->file('imageFile')) {
                 $image_name = uniqid() . str_replace(' ', '', $file->getClientOriginalName());
@@ -96,6 +90,8 @@ class CustomerOrderController extends Controller
             $nitem = new Item;
             $nitem->name = $request->name;
             $nitem->product_id = $nproduct->id;
+            $nitem->business_id = $business_id;
+
             $nitem->business_location_id = $business_location_id;
             $nitem->created_by = $created_by;
             $nitem->item_sku = rand(10000,100000);

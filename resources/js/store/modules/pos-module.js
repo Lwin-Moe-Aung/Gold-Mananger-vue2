@@ -37,7 +37,7 @@ const actions = {
                         let item = {
                             id: "",
                             name: "ကုန်ပစ္စည်းအသစ် ဖန်တီးထားသော",
-                            product_sku: data.product_sku+data.item_spe,
+                            product_sku: data.product_sku,
                             image1: "/images/pos/new-default.jpg",
                             quality: parseInt(String(data.product_sku.charAt(0))+String(data.product_sku.charAt(1))),
                             gold_weight: gold_weight,

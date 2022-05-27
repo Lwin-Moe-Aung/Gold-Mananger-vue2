@@ -56,7 +56,7 @@ class HomeController extends Controller
         $items = [];
         foreach ($items_data as $key => $item) {
             $items[$key]['id'] = $item["id"];
-            $items[$key]['product_sku'] =  $request->product_sku.$request->item_spe;
+            $items[$key]['product_sku'] =  $request->product_sku;
             $items[$key]['name'] = $item["name"];
             $items[$key]['image1'] = $item["image1"];
             $items[$key]['quality'] = $products->quality;

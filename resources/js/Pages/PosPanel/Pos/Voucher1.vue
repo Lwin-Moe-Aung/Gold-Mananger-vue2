@@ -228,7 +228,7 @@
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                v-model = "form.gold_price"
+                                                :value = "goldPrice"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
@@ -284,8 +284,7 @@
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-
-                                                v-model = "form.gem_price"
+                                                :value = "gemPrice"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
@@ -338,7 +337,7 @@
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                :value = "form.fee_price"
+                                                :value = "feePrice"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
@@ -410,7 +409,7 @@
 
                                         <v-col cols="12" sm="6" md="3">
                                             <v-text-field
-                                                :value = "total_before"
+                                                :value = "totalBefore"
                                                 label="ကျသင့်ငွေ"
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
@@ -453,7 +452,7 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="12" md="7">
                                             <v-text-field
-                                                v-model = "form.final_total"
+                                                :value = "finalTotal"
                                                 label="kyats"
                                                 placeholder="kyats"
                                                 outlined
@@ -489,7 +488,7 @@
                                         </v-list-item-content>
                                         <v-col cols="12" sm="12" md="7">
                                             <v-text-field
-                                                :value = "credit_money"
+                                                :value = "creditMoney"
                                                 label="kyats"
                                                 placeholder="kyats"
                                                 outlined
@@ -554,6 +553,7 @@
         mapActions,
         mapState
     } from "vuex";
+import { integer } from '../../../../../public/js/app';
 
     export default {
         components: {
@@ -932,13 +932,14 @@
                 this.form.fee.kyat = String(value.fee.kyat);
                 this.form.fee.pal = String(value.fee.pal);
                 this.form.fee.yway = String(value.fee.yway);
-                this.form.fee_for_making = String(value.fee_for_making);
+                this.form.fee_for_making = value.fee_for_making;
                 this.form.item_sku = value.item_sku;
                 this.form.tax = value.tax;
                 this.quality = value.quality;
                 this.form.item_discount = value.item_discount;
                 this.form.total_before = value.total_before;
                 this.form.final_total = value.final_total;
+
                 this.form.paid_money = value.paid_money;
                 this.form.credit_money = value.credit_money;
                 this.dailySetup = this.$page.props.daily_setup[this.quality];
@@ -981,7 +982,8 @@
 
         computed: {
             ...mapGetters(['selectedItem', 'item_from_cart', 'carts']),
-            gold_price() {
+            goldPrice() {
+                if(this.form.product_sku == "")return;
                 let price = this.$page.props.daily_setup[this.quality];
                 let kyat_p =
                     parseInt(this.form.gold_weight.kyat) * parseInt(price.kyat);
@@ -996,7 +998,8 @@
 
                 return gold_price;
             },
-            gem_price() {
+            gemPrice() {
+                if(this.form.product_sku == "")return;
                 let price = this.$page.props.daily_setup[this.quality];
                 let kyat_p =
                     parseInt(this.form.gem_weight.kyat) * parseInt(price.kyat);
@@ -1012,7 +1015,8 @@
 
                 return gem_price;
             },
-            fee_price() {
+            feePrice() {
+                if(this.form.product_sku == "")return;
                 let price = this.$page.props.daily_setup[this.quality];
                 let kyat_p = parseInt(this.form.fee.kyat) * parseInt(price.kyat);
                 let pal_p = parseInt(this.form.fee.pal) * parseInt(price.pal);
@@ -1025,6 +1029,7 @@
                 return fee_price;
             },
             total_kyat() {
+                if(this.form.product_sku == "")return;
                 let total_kyat =
                     parseInt(this.form.gold_weight.kyat) +
                     parseInt(this.form.gem_weight.kyat) +
@@ -1034,6 +1039,7 @@
                 return total_kyat;
             },
             total_pal() {
+                if(this.form.product_sku == "")return;
                 let total_pal =
                     parseInt(this.form.gold_weight.pal) +
                     parseInt(this.form.gem_weight.pal) +
@@ -1052,6 +1058,7 @@
                 return total_pal;
             },
             total_yway() {
+                if(this.form.product_sku == "")return;
                 let total_yway =
                     parseInt(this.form.gold_weight.yway) +
                     parseInt(this.form.gem_weight.yway) +
@@ -1071,7 +1078,8 @@
                 this.form.total_yway = total_yway;
                 return total_yway;
             },
-            total_before() {
+            totalBefore() {
+                if(this.form.product_sku == "")return;
                 let total_before =
                     parseInt(this.form.gold_price) +
                     parseInt(this.form.gem_price) +
@@ -1083,7 +1091,8 @@
 
                 return total_before;
             },
-            final_total() {
+            finalTotal() {
+                if(this.form.product_sku == "")return;
                 let final_total =
                     parseInt(this.form.total_before) -
                     parseInt(this.form.item_discount);
@@ -1092,7 +1101,8 @@
 
                 return final_total;
             },
-            credit_money() {
+            creditMoney() {
+                if(this.form.product_sku == "")return;
                 let credit_money =
                     parseInt(this.form.final_total) -
                     parseInt(this.form.paid_money);

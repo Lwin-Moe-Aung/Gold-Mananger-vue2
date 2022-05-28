@@ -14,6 +14,9 @@ const getters = {
     selectedItem: state => state.selectedItem,
     product_sku: state => state.product_sku,
     item_spe: state => state.item_spe,
+    item_from_cart: state => state.item_from_cart,
+    carts: state => state.carts,
+
 
 };
 const actions = {
@@ -58,9 +61,44 @@ const actions = {
         commit("setItemSpe", data.item_spe);
 
     },
-    async selectItem({commit}, item){
+    async searchItemByItemId({commit}, item_id){
 
-        commit("selectItem", item)
+        await axios.get(constant.URL+"search_by_item_id",   { params: { item_id }})
+            .then((response) => {
+                if(response.data.message == "success"){
+                    let item_lists = response.data.items;
+                    let select_Ite = item_lists.find(function(val) {
+                        return val.item_sku == item_id;
+                    });
+                    item_lists.splice(item_lists.indexOf(select_Ite),1)
+                    item_lists.unshift(select_Ite)
+                    commit("setItem", item_lists);
+                    commit("setProductSku", select_Ite.product_sku);
+                    let kyat = String(select_Ite.gold_weight.kyat).length == 1 ? '0'+select_Ite.gold_weight.kyat : select_Ite.gold_weight.kyat;
+                    let pal = String(select_Ite.gold_weight.pal).length == 1 ? '0'+select_Ite.gold_weight.pal : select_Ite.gold_weight.pal;
+
+                    let item_spe = String(kyat)+String(pal)+String(select_Ite.gold_weight.yway)
+                    commit("setItemSpe", item_spe);
+                }
+        });
+    },
+    async selectItem({commit}, data){
+        await commit("selectItem", data)
+    },
+    async addItem({commit}, data){
+        await commit("setItemToCart", data)
+    },
+    async editItem({commit}, data){
+        await commit("editItem", data)
+    },
+    async editItemFromCart({commit}, data){
+        await commit("editItemFromCart", data)
+    },
+    async removeItem({commit}, data){
+        await commit("removeItem", data)
+    },
+    async selectItemReset({commit}, data){
+        await commit("selectItemReset", data)
     },
 
 };
@@ -79,6 +117,25 @@ const mutations = {
     ),
     setItemSpe: (state, data) => (
         state.item_spe = data
+    ),
+    setItemToCart: (state, data) => (
+        state.carts.push(data)
+    ),
+    editItem: (state, data) => (
+        state.selectedItem = data,
+        state.item_from_cart = true
+    ),
+    editItemFromCart: (state, data) => {
+        let foundIndex = state.carts.findIndex(x => x.id == data.id);
+        if(foundIndex > -1) {
+            Object.assign(state.carts[foundIndex], data);
+        }
+    },
+    removeItem: (state, data) => (
+        state.carts.splice(state.carts.indexOf(data),1)
+    ),
+    selectItemReset: (state, data) => (
+        state.selectedItem = ""
     ),
 };
 export default {

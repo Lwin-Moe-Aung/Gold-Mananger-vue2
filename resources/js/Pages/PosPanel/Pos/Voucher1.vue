@@ -28,17 +28,17 @@
                             <v-slide-y-reverse-transition>
                                 <v-sheet v-if="mask" color="error" width="100%" height="100%" class="mask" />
                             </v-slide-y-reverse-transition>
-                            <v-btn
-                                class="mb-3"
-                                fab
-                                x-small
-                                color="error"
-                                @click.stop="deleteImage"
-                                @mouseenter="mask=true"
-                                @mouseleave="mask=false"
-                            >
-                                <v-icon>mdi-delete</v-icon>
-                            </v-btn>
+                                <v-btn
+                                    class="mb-3"
+                                    fab
+                                    x-small
+                                    color="error"
+                                    @click.stop="deleteImage"
+                                    @mouseenter="mask=true"
+                                    @mouseleave="mask=false"
+                                >
+                                    <v-icon>mdi-delete</v-icon>
+                                </v-btn>
                             </v-row>
                         </v-img>
                         <v-row v-else class="d-flex flex-column align-center justify-center fill-height">
@@ -125,6 +125,30 @@
                                                     :color="isEditing ? 'success' : 'info'"
                                                     @click="editDailySetup"
                                                     v-text="isEditing ? 'fas fa-check' : 'fas fa-edit'"
+                                                ></v-icon>
+                                            </v-slide-x-reverse-transition>
+                                        </template>
+                                    </v-text-field>
+                            </v-col>
+                            <v-col
+                                cols="3"
+                                sm="3"
+                                >
+                                    <v-text-field
+                                        v-model = "form.item_sku"
+                                        label="Unit Id"
+                                        :hint="!isEditingItemId ? 'Click the icon to edit' : 'Click the icon to save'"
+                                        :readonly="!isEditingItemId"
+                                    >
+                                        <template v-slot:append-outer>
+                                            <v-slide-x-reverse-transition
+                                                mode="out-in"
+                                            >
+                                                <v-icon
+                                                    :key="`icon-${isEditingItemId}`"
+                                                    :color="isEditingItemId ? 'success' : 'info'"
+                                                    @click="searchByItemId"
+                                                    v-text="isEditingItemId ? 'fas fa-check' : 'fas fa-edit'"
                                                 ></v-icon>
                                             </v-slide-x-reverse-transition>
                                         </template>
@@ -560,6 +584,7 @@
                     fee_for_making: "",
                     item_discount: "",
                     tax: "",
+                    item_sku: "",
                     item_description: "",
                     total_kyat: "",
                     total_pal: "",
@@ -646,6 +671,7 @@
                 item_names: [],
                 // end combobox
                 isEditing: false,
+                isEditingItemId: false,
             };
         },
         mounted () {
@@ -657,7 +683,7 @@
         },
 
         methods: {
-            ...mapActions(["searchItem"]),
+            ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId"]),
 
             getDataForCombobox() {
                 axios.get(this.route("pos.get_data_for_combobox"))
@@ -725,21 +751,22 @@
                     };
                     if(this.item_from_cart){
                         //edit item from cart
-                        this.$store.dispatch("editItemFromCart", item);
+                        this.editItemFromCart(item);
                         Toast.fire({
                             icon: 'success',
                             title: 'Successfully update'
                         })
-                        Object.assign(this.$data, this.$options.data.apply(this));
-                        this.$store.dispatch("selectItem", []);
+                        // Object.assign(this.$data, this.$options.data.apply(this));
+                        this.clearFormData();
+                        this.selectItemReset();
                     }else{
                         //add item to cart
                         let status = true;
-                        this.$store.state.carts.forEach((x) => {
+                        this.carts.forEach((x) => {
                             if(x.id == item.id) status = false;
                         });
                         if(status) {
-                            this.$store.dispatch("addItem", item);
+                            this.addItem(item);
                             Toast.fire({
                                 icon: 'success',
                                 title: 'Success Add to Cart'
@@ -750,8 +777,8 @@
                                 title: 'Already exist'
                             })
                         }
-                        Object.assign(this.$data, this.$options.data.apply(this));
-                        this.$store.dispatch("selectItem", []);
+                        this.clearFormData();
+                        this.selectItemReset();
 
                     }
                 }
@@ -771,6 +798,13 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+
+            },
+            searchByItemId() {
+                this.isEditingItemId = !this.isEditingItemId
+                if(this.isEditingItemId || this.form.item_sku == "") return;
+
+                this.searchItemByItemId(this.form.item_sku);
 
             },
             printbill() {
@@ -880,6 +914,8 @@
                 setTimeout(() => (this.loading = false), 2000)
             },
             selectedItem(value) {
+                if(value == "") return;
+                // if (isNaN(value)) return;
                 this.form.id = value.id;
                 this.form.name = value.name;
                 this.form.product_sku = value.product_sku;
@@ -897,6 +933,7 @@
                 this.form.fee.pal = String(value.fee.pal);
                 this.form.fee.yway = String(value.fee.yway);
                 this.form.fee_for_making = String(value.fee_for_making);
+                this.form.item_sku = value.item_sku;
                 this.form.tax = value.tax;
                 this.quality = value.quality;
                 this.form.item_discount = value.item_discount;
@@ -943,7 +980,7 @@
         },
 
         computed: {
-            ...mapGetters(['selectedItem']),
+            ...mapGetters(['selectedItem', 'item_from_cart', 'carts']),
             gold_price() {
                 let price = this.$page.props.daily_setup[this.quality];
                 let kyat_p =
@@ -1071,9 +1108,7 @@
                 !this.$v.quality.required && errors.push('Name is required.')
                 return errors
             },
-            item_from_cart () {
-                return this.$store.state.item_from_cart;
-            }
+
         },
     };
 </script>

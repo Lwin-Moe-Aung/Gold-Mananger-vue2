@@ -32,7 +32,8 @@ class Contact extends Model
         'mobile2',
         'address',
         'created_by',
-        'customer_group_id',
+        'total_amount',
+        'customer_group_id'
     ];
 
     /**

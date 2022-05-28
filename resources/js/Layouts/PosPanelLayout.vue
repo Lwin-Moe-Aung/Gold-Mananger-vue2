@@ -1,7 +1,7 @@
 <template>
     <v-app :style="{background: $vuetify.theme.themes.dark.background}">
         <SideBar />
-        <!-- <SideBarRight /> -->
+        <SideBarRight />
         <v-container style="margin-left: 68px; padding: 39px;">
           <!-- Main content -->
                   <slot></slot>

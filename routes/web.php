@@ -17,6 +17,7 @@ use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Admins\OrderController;
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\CustomerOrderController;
+use App\Http\Controllers\Pos\ContactController;
 use App\Http\Controllers\Pos\DailySetupValueController;
 
 
@@ -48,13 +49,15 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos/productsku_search/{sku}', [HomeController::class, 'productSkuSearch'])->name('pos.productsku_search');
 
     Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
-
+    Route::get('/pos/customer_search', [ContactController::class, 'customerSearch'])->name('pos.customer_search');
+    Route::get('/pos/search_by_item_id', [HomeController::class, 'searchByItemId'])->name('pos.search_by_item_id');
     //customer order
     Route::post('/pos/save_order', [CustomerOrderController::class, 'saveOrder'])->name('pos.save_order');
 
     //generate invoice
     Route::get('/pos/generate_invoice/{id}', [CustomerOrderController::class, 'generateInvoice'])->name('pos.generate_invoice');
 
+    //test route
     Route::get('/pos/json_search', [CustomerOrderController::class, 'jsonSearch'])->name('pos.json_search');
     //get gold quality
     Route::get('/pos/get_data_for_combobox', [HomeController::class, 'getDataForCombobox'])->name('pos.get_data_for_combobox');

@@ -36,13 +36,13 @@
                     <v-list-item-subtitle
                         >X1
                         <v-btn plain color="#704232" small
-                            @click="editItemFromCart(item)"
+                            @click="editItem(item)"
                             >Edit
 
                         </v-btn>
 
                         <v-btn plain color="#704232" small
-                            @click="removeItemFromCart(item)"
+                            @click="removeItem(item)"
                             >Delete
                             <!-- <v-icon right>mdi-pencil</v-icon> -->
                         </v-btn>
@@ -408,6 +408,11 @@
 <script>
 import axios from 'axios';
 import constant from "../../constant";
+import {
+        mapGetters,
+        mapActions,
+        mapState
+    } from "vuex";
 
 export default {
     data() {
@@ -426,12 +431,11 @@ export default {
         };
     },
     computed: {
-        carts() {
-            return this.$store.state.carts;
-        },
+        ...mapGetters(['carts']),
+
         subTotal() {
             let total = 0;
-            this.$store.state.carts.forEach((item) => {
+            this.carts.forEach((item) => {
                 total = total + parseInt(item.final_total);
                 // alert(parseInt(item.total_after));
             });
@@ -439,43 +443,39 @@ export default {
         },
         discount() {
             let discount = 0;
-            this.$store.state.carts.forEach((item) => {
+            this.carts.forEach((item) => {
                 discount = discount + parseInt(item.item_discount);
             });
             return discount;
         },
         final_total() {
             let final_total = 0;
-            this.$store.state.carts.forEach((item) => {
+            this.carts.forEach((item) => {
                 final_total = final_total + parseInt(item.final_total);
             });
             return final_total;
         },
         paid_money() {
             let paid_money = 0;
-            this.$store.state.carts.forEach((item) => {
+            this.carts.forEach((item) => {
                 paid_money = paid_money + parseInt(item.paid_money);
             });
             return paid_money;
         },
         credit_money() {
             let credit_money = 0;
-            this.$store.state.carts.forEach((item) => {
+            this.carts.forEach((item) => {
                 credit_money = credit_money + parseInt(item.credit_money);
             });
             return credit_money;
         }
     },
     methods: {
+        ...mapActions(["editItem", "removeItem"]),
         numberWithCommas(value) {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
-        editItemFromCart(item) {
-            this.$store.dispatch("editItem", item);
-        },
-        removeItemFromCart(item) {
-            this.$store.dispatch("removeItem", item);
-        },
+
         printBill(item) {
             let data = new FormData();
             data.append('id',item.id);
@@ -505,7 +505,7 @@ export default {
                 .then(res => {
                     if(res.data.status)
                     {
-                        this.removeItemFromCart(item);
+                        this.removeItem(item);
                         window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
                         // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
                         Toast.fire({

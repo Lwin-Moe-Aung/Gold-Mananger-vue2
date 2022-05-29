@@ -166,12 +166,11 @@
                     "
                 >
                     <v-row style="margin-left: 705px">
-                        <i
-                            class="fas fa-solid fa-cart-plus"
-                            style="padding-right: 12px; color: gold"
+                        <v-icon
+                            color="info"
                             @click="addToCart()"
-                        ></i>
-                        <i class="fas fa-save" style="color: gold"></i>
+                            v-text="'fas fa-shopping-cart'"
+                        ></v-icon>
                     </v-row>
                 </v-list-item>
                 <v-card-actions>
@@ -194,7 +193,7 @@
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
-                                                :rules="goldWeightKyatRules"
+                                                :rules="validationRules"
                                                 required
                                                 @change="onChange"
                                             >
@@ -208,7 +207,7 @@
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
-                                                :rules="goldWeightPalRules"
+                                                :rules="validationRules"
                                                 required
                                                 @change="onChange"
                                             ></v-text-field>
@@ -221,7 +220,7 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
-                                                :rules="goldWeightYwayRules"
+                                                :rules="validationRules"
                                                 required
                                                 @change="onChange"
                                             ></v-text-field>
@@ -251,7 +250,7 @@
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
-                                                :rules="gemWeightKyatRules"
+                                                :rules="validationRules"
                                                 required
                                                 readonly
                                             ></v-text-field>
@@ -264,7 +263,7 @@
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
-                                                :rules="gemWeightPalRules"
+                                                :rules="validationRules"
                                                 required
                                                 readonly
                                             ></v-text-field>
@@ -277,7 +276,7 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
-                                                :rules="gemWeightYwayRules"
+                                                :rules="validationRules"
                                                 required
                                                 readonly
                                             ></v-text-field>
@@ -307,7 +306,7 @@
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
-                                                :rules="feeWeightKyatRules"
+                                                :rules="validationRules"
                                                 required
                                             ></v-text-field>
                                         </v-col>
@@ -319,7 +318,7 @@
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
-                                                :rules="feeWeightPalRules"
+                                                :rules="validationRules"
                                                 required
                                             ></v-text-field>
                                         </v-col>
@@ -331,7 +330,7 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
-                                                :rules="feeWeightYwayRules"
+                                                :rules="validationRules"
                                                 required
                                             ></v-text-field>
                                         </v-col>
@@ -364,7 +363,7 @@
                                                 placeholder="ကျသင့်ငွေ"
                                                 outlined
                                                 dense
-                                                :rules="feeForMakingRules"
+                                                :rules="validationRules"
                                                 required
                                             ></v-text-field>
                                         </v-col>
@@ -439,7 +438,7 @@
                                                 placeholder="kyats"
                                                 outlined
                                                 dense
-                                                :rules="itemDiscountRules"
+                                                :rules="validationRules"
                                                 required
                                             ></v-text-field>
                                         </v-col>
@@ -457,7 +456,7 @@
                                                 placeholder="kyats"
                                                 outlined
                                                 dense
-                                                :rules="totalAfterRules"
+                                                :rules="validationRules"
                                                 required
                                             ></v-text-field>
                                         </v-col>
@@ -475,7 +474,7 @@
                                                 placeholder="kyats"
                                                 outlined
                                                 dense
-                                                :rules="paidMoneyRules"
+                                                :rules="validationRules"
                                                 required
                                             ></v-text-field>
                                         </v-col>
@@ -548,12 +547,8 @@
     import axios from 'axios';
     import Invoice from "./Invoice";
     import { Link } from '@inertiajs/inertia-vue'
-    import {
-        mapGetters,
-        mapActions,
-        mapState
-    } from "vuex";
-import { integer } from '../../../../../public/js/app';
+    import constant from "../../../constant";
+    import {mapGetters, mapActions} from "vuex";
 
     export default {
         components: {
@@ -602,64 +597,14 @@ import { integer } from '../../../../../public/js/app';
                 dailyValue: '',
                 dailySetup: [],
                 loading: false,
-                nameRules: [
-                    v => !!v || 'Required',
-                ],
-                goldWeightKyatRules: [
+                validationRules:[
                     v => !!v || 'Required',
                     v => /^\d+$/.test(v) || 'Must be a number',
                 ],
-                goldWeightPalRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                goldWeightYwayRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                gemWeightKyatRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                gemWeightPalRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                gemWeightYwayRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                feeWeightKyatRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                feeWeightPalRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                feeWeightYwayRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                feeForMakingRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                itemDiscountRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                totalAfterRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
-                paidMoneyRules: [
-                    v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
-                ],
+
                 //image upload
                 input: undefined,
-                image: undefined,
+                // image: undefined,
                 mask: false,
                 // combobox
                 dataForCombobox:[],
@@ -756,7 +701,6 @@ import { integer } from '../../../../../public/js/app';
                             icon: 'success',
                             title: 'Successfully update'
                         })
-                        // Object.assign(this.$data, this.$options.data.apply(this));
                         this.clearFormData();
                         this.selectItemReset();
                     }else{
@@ -840,11 +784,8 @@ import { integer } from '../../../../../public/js/app';
                             if(res.data.status)
                             {
                                 this.clearFormData();
-                                this.$store.dispatch("selectItem", []);
-
-                                window.open( "http://localhost:8000/pos/generate_invoice/"+res.data.order_id, "_blank");
-                                // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
-
+                                this.selectItemReset();
+                                window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
                                 Toast.fire({
                                     icon: 'success',
                                     title: 'Order Success'
@@ -920,6 +861,7 @@ import { integer } from '../../../../../public/js/app';
                 this.form.name = value.name;
                 this.form.product_sku = value.product_sku;
                 this.form.image = value.image1;
+                this.form.imageFile = undefined;
                 this.form.item_sku = value.item_sku;
                 this.form.item_description = value.item_description;
                 this.form.gold_weight.kyat = String(value.gold_weight.kyat);

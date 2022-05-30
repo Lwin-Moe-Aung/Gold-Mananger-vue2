@@ -46,6 +46,7 @@ class HomeController extends Controller
             $yway = (int)($item_spe[4]);
             // dd((string)$kyat);
             $items_data = Item::where('product_id',$products->id)
+                    ->where('sold_out', '0')
                     ->whereJsonContains('gold_weight->kyat', (string)$kyat)
                     ->whereJsonContains('gold_weight->pal', (string)$pal)
                     ->whereJsonContains('gold_weight->yway', (string)$yway)
@@ -139,6 +140,7 @@ class HomeController extends Controller
         $business_id = Auth::user()->business_id;
         $gold_weight = json_decode($item->gold_weight) ;
         $items_data = Item::where('product_id',$product->id)
+            ->where('sold_out', '0')
             ->whereJsonContains('gold_weight->kyat', $gold_weight->kyat)
             ->whereJsonContains('gold_weight->pal', $gold_weight->pal)
             ->whereJsonContains('gold_weight->yway', $gold_weight->yway)

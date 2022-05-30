@@ -42,7 +42,7 @@
                         </v-btn>
 
                         <v-btn plain color="#704232" small
-                            @click="removeItem(item)"
+                            @click="removeItem(item.id)"
                             >Delete
                             <!-- <v-icon right>mdi-pencil</v-icon> -->
                         </v-btn>
@@ -505,7 +505,7 @@ export default {
                 .then(res => {
                     if(res.data.status)
                     {
-                        this.removeItem(item);
+                        this.removeItem(item.id);
                         window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
                         // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
                         Toast.fire({

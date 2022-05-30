@@ -229,6 +229,7 @@ export default {
         this.unwatch2 = this.$store.watch(
             (state, getters) => getters.product_sku,
             (newValue, oldValue) => {
+                // console.log("hello changin product_sku");
                 this.searchProductSku = newValue,
                 this.selectProductSku = newValue
             },

@@ -107,6 +107,7 @@ class CustomerOrderController extends Controller
             $nitem->item_discount = $request->item_discount;
             $nitem->image1 = $image_name_path;
             $nitem->draft = '1';
+            $nitem->sold_out = '1';
             $nitem->save();
 
             $transaction = new Transaction;
@@ -206,6 +207,7 @@ class CustomerOrderController extends Controller
             $item->fee = $request->fee;
             $item->fee_price = $request->fee_price;
             $item->fee_for_making = $request->fee_for_making;
+            $item->sold_out = '1';
             $item->save();
 
             DB::commit();

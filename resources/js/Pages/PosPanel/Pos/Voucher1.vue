@@ -642,7 +642,7 @@
         },
 
         methods: {
-            ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId"]),
+            ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList"]),
 
             getDataForCombobox() {
                 axios.get(this.route("pos.get_data_for_combobox"))
@@ -693,6 +693,13 @@
             },
             //combo box
             addToCart() {
+                if(this.form.id == ""){
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'ဖန်တီးထားသောကုန်ပစ္စည်းကို cart ထဲ့ထည့်မရပါ'
+                    });
+                    return;
+                }
                 if(this.$refs.form.validate()){
                     let item = {
                         id: this.form.id,
@@ -813,6 +820,8 @@
                             {
                                 this.clearFormData();
                                 this.selectItemReset();
+                                this.removeItem(this.form.id);
+                                this.removeItemFromSearchList(this.form.id);
                                 window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
                                 Toast.fire({
                                     icon: 'success',

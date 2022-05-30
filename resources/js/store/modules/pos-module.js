@@ -63,13 +63,11 @@ const actions = {
                         let message = "အခုမှဖန်တီးလိုက်သော ကုန်ပစ္စည်းအသစ်";
                         commit("setItem", seleItem);
                         commit("setmessage", message);
-
                 }
 
             });
-
-        commit("setProductSku", data.product_sku);
-        commit("setItemSpe", data.item_spe);
+        // commit("setProductSku", data.product_sku);
+        // commit("setItemSpe", data.item_spe);
 
     },
     async searchItemByItemId({commit}, item_id){
@@ -84,12 +82,12 @@ const actions = {
                     item_lists.splice(item_lists.indexOf(select_Ite),1)
                     item_lists.unshift(select_Ite)
                     commit("setItem", item_lists);
-                    commit("setProductSku", select_Ite.product_sku);
-                    let kyat = String(select_Ite.gold_weight.kyat).length == 1 ? '0'+select_Ite.gold_weight.kyat : select_Ite.gold_weight.kyat;
-                    let pal = String(select_Ite.gold_weight.pal).length == 1 ? '0'+select_Ite.gold_weight.pal : select_Ite.gold_weight.pal;
+                    // commit("setProductSku", select_Ite.product_sku);
+                    // let kyat = String(select_Ite.gold_weight.kyat).length == 1 ? '0'+select_Ite.gold_weight.kyat : select_Ite.gold_weight.kyat;
+                    // let pal = String(select_Ite.gold_weight.pal).length == 1 ? '0'+select_Ite.gold_weight.pal : select_Ite.gold_weight.pal;
 
-                    let item_spe = String(kyat)+String(pal)+String(select_Ite.gold_weight.yway)
-                    commit("setItemSpe", item_spe);
+                    // let item_spe = String(kyat)+String(pal)+String(select_Ite.gold_weight.yway)
+                    // commit("setItemSpe", item_spe);
                     let message = "id -"+item_id +"နဲ့ ဆက်စပ့် ပစ္စည်းများ";
                     commit("setmessage", message);
                 }
@@ -97,6 +95,7 @@ const actions = {
     },
     async selectItem({commit}, data){
         await commit("selectItem", data)
+
         await commit("setProductSku", data.product_sku)
         await commit("setItemSpe", data.item_spe)
     },
@@ -109,11 +108,14 @@ const actions = {
     async editItemFromCart({commit}, data){
         await commit("editItemFromCart", data)
     },
-    async removeItem({commit}, data){
-        await commit("removeItem", data)
+    async removeItem({commit}, item_id){
+        await commit("removeItem", item_id)
     },
     async selectItemReset({commit}, data){
         await commit("selectItemReset", data)
+    },
+    async removeItemFromSearchList({commit}, item_id){
+        await commit("removeItemFromSearchList", item_id)
     },
 
 };
@@ -146,9 +148,16 @@ const mutations = {
             Object.assign(state.carts[foundIndex], data);
         }
     },
-    removeItem: (state, data) => (
-        state.carts.splice(state.carts.indexOf(data),1)
+    removeItem: (state, item_id) => (
+        state.carts.splice( state.carts.findIndex(x => x.id == item_id),1)
     ),
+    removeItemFromSearchList: (state, item_id) => {
+        if(item_id != ""){
+            state.items.splice( state.items.findIndex(x => x.id == item_id),1)
+        }else{
+            state.items.splice(0,1)
+        }
+    },
     selectItemReset: (state, data) => (
         state.selectedItem = ""
     ),

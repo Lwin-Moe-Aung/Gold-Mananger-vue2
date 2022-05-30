@@ -42,6 +42,7 @@ class Item extends Model
         'image1',
         'image2',
         'draft',
+        'sold_out',
         'item_description'
     ];
 

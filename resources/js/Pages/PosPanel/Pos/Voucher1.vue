@@ -112,7 +112,7 @@
                                 >
                                     <v-text-field
                                         v-model = "dailyValue"
-                                        label="Daily Setup"
+                                        label="ပေါက်စေ◌ျး"
                                         :hint="!isEditing ? 'Click the icon to edit' : 'Click the icon to save'"
                                         :readonly="!isEditing"
                                     >

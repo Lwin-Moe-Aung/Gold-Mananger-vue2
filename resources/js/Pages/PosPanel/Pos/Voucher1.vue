@@ -90,7 +90,7 @@
                                     <v-combobox
                                         v-model="item_name"
                                         :items="item_names"
-                                        @change="onChange"
+                                        @change="onChangeItemName"
                                         item-text="name"
                                         item-value="key"
                                         return-object
@@ -196,6 +196,7 @@
                                                 :rules="validationRules"
                                                 required
                                                 @change="onChange"
+                                                type="number"
                                             >
                                             </v-text-field>
                                         </v-col>
@@ -210,6 +211,7 @@
                                                 :rules="validationRules"
                                                 required
                                                 @change="onChange"
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
 
@@ -223,6 +225,7 @@
                                                 :rules="validationRules"
                                                 required
                                                 @change="onChange"
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -253,6 +256,7 @@
                                                 :rules="validationRules"
                                                 required
                                                 readonly
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
 
@@ -266,6 +270,7 @@
                                                 :rules="validationRules"
                                                 required
                                                 readonly
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
 
@@ -279,6 +284,7 @@
                                                 :rules="validationRules"
                                                 required
                                                 readonly
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -308,6 +314,7 @@
                                                 dense
                                                 :rules="validationRules"
                                                 required
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
 
@@ -320,6 +327,7 @@
                                                 dense
                                                 :rules="validationRules"
                                                 required
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
 
@@ -332,6 +340,7 @@
                                                 dense
                                                 :rules="validationRules"
                                                 required
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -365,6 +374,7 @@
                                                 dense
                                                 :rules="validationRules"
                                                 required
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -440,6 +450,7 @@
                                                 dense
                                                 :rules="validationRules"
                                                 required
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -458,6 +469,7 @@
                                                 dense
                                                 :rules="validationRules"
                                                 required
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -476,6 +488,7 @@
                                                 dense
                                                 :rules="validationRules"
                                                 required
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -492,7 +505,8 @@
                                                 placeholder="kyats"
                                                 outlined
                                                 dense
-
+                                                readonly
+                                                type="number"
                                             ></v-text-field>
                                         </v-col>
                                     </v-row>
@@ -649,6 +663,18 @@
                 this.item_name = null;
                 this.item_names = this.type.item_names;
             },
+            onChangeItemName (entry) {
+                if(this.goldQuality == null && this.type == null  && this.item_name == null ) return;
+                let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
+                var item_spe = null;
+                if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != "" && this.form.gold_weight.yway != ""){
+                    let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
+                    let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
+                    item_spe = kyat + pal+this.form.gold_weight.yway;
+                }
+                let data = { product_sku: product_sku, item_spe: item_spe}
+                this.searchItem(data);
+            },
             onChange(entry) {
                 if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != ""
                      && this.form.gold_weight.yway != "" && this.goldQuality != null
@@ -661,6 +687,8 @@
                     let item_spe = kyat + pal+this.form.gold_weight.yway;
                     let data = { product_sku: product_sku, item_spe: item_spe}
                     this.searchItem(data);
+                }else{
+                    alert("valitation");
                 }
             },
             //combo box

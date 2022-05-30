@@ -36,26 +36,38 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $business_id = Auth::user()->business_id;
         $products = Product::where('product_sku', $request->product_sku)
                     ->first();
         // dd($products->id);
         $item_spe = $request->item_spe;
-        $kyat = (int)($item_spe[0].$item_spe[1]);
-        $pal = (int)($item_spe[2].$item_spe[3]);
-        $yway = (int)($item_spe[4]);
-        // dd($kyat."ssdd".$pal."jjj".$yway);
-        $items_data = Item::where('business_id',$business_id)
-                ->where('product_id',$products->id)
-                ->whereJsonContains('gold_weight->kyat', $kyat)
-                ->whereJsonContains('gold_weight->pal', $pal)
-                ->whereJsonContains('gold_weight->yway', $yway)
-                ->get()
-                ->toArray();
-                // dd($items_data);
-        if(empty($items_data)) return response()->json(['items'=>[], 'message'=>'new item']);
+        if($item_spe != null){
+            $kyat = (int)($item_spe[0].$item_spe[1]);
+            $pal = (int)($item_spe[2].$item_spe[3]);
+            $yway = (int)($item_spe[4]);
+            // dd((string)$kyat);
+            $items_data = Item::where('product_id',$products->id)
+                    ->whereJsonContains('gold_weight->kyat', (string)$kyat)
+                    ->whereJsonContains('gold_weight->pal', (string)$pal)
+                    ->whereJsonContains('gold_weight->yway', (string)$yway)
+                    ->get()
+                    ->toArray();
+            $message = $request->product_sku.$item_spe."အောက်မှာရှိတဲ့ ပစ္စည်းများ.";
+        }else{
+            $items_data = Item::where('product_id',$products->id)
+                    ->inRandomOrder()
+                    ->get()
+                    ->toArray();
+            $message = $request->product_sku."အောက်မှာရှိတဲ့ random ပစ္စည်းများ.";
+
+        }
+        if(empty($items_data)) return response()->json(['items'=>[], 'message'=>'newItem']);
         $items = [];
         foreach ($items_data as $key => $item) {
+            $gold_weight = json_decode($item['gold_weight']);
+            $kyat = strlen((string)$gold_weight->kyat) < 2 ? "0".$gold_weight->kyat : $gold_weight->kyat;
+            $pal = strlen((string)$gold_weight->pal) < 2 ? "0".$gold_weight->pal : $gold_weight->pal;
+            $items[$key]['item_spe'] = $kyat.$pal.$gold_weight->yway;
+
             $items[$key]['id'] = $item["id"];
             $items[$key]['product_sku'] =  $request->product_sku;
             $items[$key]['name'] = $item["name"];
@@ -63,11 +75,11 @@ class HomeController extends Controller
             $items[$key]['quality'] = $products->quality;
             $items[$key]['item_sku'] = $item["item_sku"];
             $items[$key]['fee_for_making'] = $item["fee_for_making"];
-            $items[$key]['gold_weight'] = json_decode($item['gold_weight']);
+            $items[$key]['gold_weight'] = $gold_weight;
             $items[$key]['gem_weight'] = json_decode($item['gem_weight']);
             $items[$key]['fee'] = json_decode($item['fee']);
         }
-        return response()->json(['items'=>$items, 'message'=>'existing']);
+        return response()->json(['items'=>$items, 'message'=> $message]);
     }
 
     public function productSkuSearch($sku)
@@ -135,6 +147,11 @@ class HomeController extends Controller
 
         $items = [];
         foreach ($items_data as $key => $item) {
+            $gold_weight = json_decode($item['gold_weight']);
+            $kyat = strlen((string)$gold_weight->kyat) < 2 ? "0".$gold_weight->kyat : $gold_weight->kyat;
+            $pal = strlen((string)$gold_weight->pal) < 2 ? "0".$gold_weight->pal : $gold_weight->pal;
+            $items[$key]['item_spe'] = $kyat.$pal.$gold_weight->yway;
+
             $items[$key]['id'] = $item["id"];
             $items[$key]['product_sku'] =  $product->product_sku;
             $items[$key]['name'] = $item["name"];

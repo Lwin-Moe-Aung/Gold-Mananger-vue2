@@ -205,7 +205,7 @@ export default {
         isActive () {
             return this.searchValue.length === this.length
         },
-        ...mapGetters(['items','product_sku', 'item_spe']),
+        ...mapGetters(['items','product_sku', 'item_spe','message']),
     },
     created() {
         this.unwatch1 = this.$store.watch(
@@ -217,11 +217,11 @@ export default {
                 this.select(item);
                 this.onCardClick(0);
 
-                if(item.id == "") var title = "ပစ္စည်းအသစ် ဖန်တီးထားပေးသည်";
-                else var title = "System ထဲကပစ္စည်းများ"
+                // if(item.id == "") var title = "ပစ္စည်းအသစ် ဖန်တီးထားပေးသည်";
+                // else var title = "System ထဲကပစ္စည်းများ"
                 Toast.fire({
                     icon: 'success',
-                    title: title
+                    title: this.message
                 })
 
             },

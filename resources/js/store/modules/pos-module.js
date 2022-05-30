@@ -8,6 +8,7 @@ const state = {
     items:[],
     product_sku: "",
     item_spe: "",
+    message: "",
 };
 const getters = {
     items: state => state.items,
@@ -16,31 +17,38 @@ const getters = {
     item_spe: state => state.item_spe,
     item_from_cart: state => state.item_from_cart,
     carts: state => state.carts,
-
-
+    message: state => state.message,
 };
 const actions = {
     async searchItem({commit}, data){
         await axios.post(constant.URL+"search", data)
                 .then((response) => {
-                    if(response.data.message == "existing"){
-                        // state.items = [];
+                    if(response.data.message !== "newItem"){
                         commit("setItem", response.data.items);
-                        // state.items = response.data.items;
-
+                        commit("setmessage", response.data.message);
                     }else{
-                        console.log(data.item_spe);
                         let fee = {kyat:0, pal:3, yway:0};
                         let gem_weight = {kyat:0, pal:0, yway:0};
+
+                        var kyat = 1;
+                        var pal = 0;
+                        var yway = 0;
+                        if(data.item_spe !== null){
+                            kyat = parseInt(String(data.item_spe.charAt(0))+String(data.item_spe.charAt(1)))
+                            pal = parseInt(String(data.item_spe.charAt(2))+String(data.item_spe.charAt(3)))
+                            yway = data.item_spe.charAt(4)
+                        }
                         let gold_weight = {
-                            kyat: parseInt(String(data.item_spe.charAt(0))+String(data.item_spe.charAt(1))),
-                            pal: parseInt(String(data.item_spe.charAt(2))+String(data.item_spe.charAt(3))),
-                            yway: data.item_spe.charAt(4),
+                            kyat: kyat,
+                            pal: pal,
+                            yway: yway,
                         };
+
                         let item = {
                             id: "",
-                            name: "ကုန်ပစ္စည်းအသစ် ဖန်တီးထားသော",
+                            name: "ဖန်တီးထားသော ကုန်ပစ္စည်းအသစ်",
                             product_sku: data.product_sku,
+                            item_spe: data.item_spe !== null ? data.item_spe : '01000',
                             image1: "/images/pos/new-default.jpg",
                             quality: parseInt(String(data.product_sku.charAt(0))+String(data.product_sku.charAt(1))),
                             gold_weight: gold_weight,
@@ -52,7 +60,10 @@ const actions = {
                         let seleItem = [
                             item
                         ];
+                        let message = "အခုမှဖန်တီးလိုက်သော ကုန်ပစ္စည်းအသစ်";
                         commit("setItem", seleItem);
+                        commit("setmessage", message);
+
                 }
 
             });
@@ -79,11 +90,15 @@ const actions = {
 
                     let item_spe = String(kyat)+String(pal)+String(select_Ite.gold_weight.yway)
                     commit("setItemSpe", item_spe);
+                    let message = "id -"+item_id +"နဲ့ ဆက်စပ့် ပစ္စည်းများ";
+                    commit("setmessage", message);
                 }
         });
     },
     async selectItem({commit}, data){
         await commit("selectItem", data)
+        await commit("setProductSku", data.product_sku)
+        await commit("setItemSpe", data.item_spe)
     },
     async addItem({commit}, data){
         await commit("setItemToCart", data)
@@ -136,6 +151,9 @@ const mutations = {
     ),
     selectItemReset: (state, data) => (
         state.selectedItem = ""
+    ),
+    setmessage: (state, data) => (
+        state.message = data
     ),
 };
 export default {

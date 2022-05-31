@@ -12,25 +12,41 @@
                         <div class="text-center">
                             <img class="profile-user-img img-fluid img-circle" src="images/pos/customer.jpg" alt="User profile picture">
                         </div>
-                        <!-- combobox -->
-                            <v-combobox
-                                v-model="customerInfo"
-                                :items="customerList"
-                                item-text="name"
-                                item-value="id"
-                                return-object
-                                label="ပဲရည်"
-                            ></v-combobox>
-                       <!-- combobox -->
-                        <v-container v-if="customerInfo != null">
 
-                            <p class="text-muted text-center" style="font-size: 13px !important;" >{{customerInfo.address}}</p>
-                            <p class="text-muted text-center" style="font-size: 13px !important;">{{customerInfo.mobile1}},{{customerInfo.mobile2}}</p>
+                       <!-- autocomplete -->
+                        <div>
+                            <input
+                                placeholder="Search"
+                                v-model="query"
+                                v-on:keyup="autoComplete"
+                                class="form-control">
+
+                                <div class="panel-footer"
+                                    v-if="results.length"
+                                    style="position:relative !important; z-index: 1000; border: 1px solid #ccc; background: #fff;"
+
+                                >
+
+                                    <ul class="list-group" v-for="result in results" style="padding-left: 0px !important;">
+                                        <li class="list-group-item" style="font-size: 13px !important;"
+                                            @click="selectCustomer(result)"
+                                        >
+                                        {{ result.search_name }}
+                                        </li>
+                                    </ul>
+                                </div>
+                        </div>
+                       <!-- end autocomplete -->
+
+                        <v-container v-if="customer != null">
+
+                            <p class="text-muted text-center" style="font-size: 13px !important;" >{{customer.address}}</p>
+                            <p class="text-muted text-center" style="font-size: 13px !important;">{{customer.mobile1}},{{customer.mobile2}}</p>
 
 
                             <ul class="list-group list-group-unbordered mb-3">
                             <li class="list-group-item">
-                                <b>ဝယ်ယူမှုများ</b> <a class="float-right">{{customerInfo.total_amount}}</a>
+                                <b>ဝယ်ယူမှုများ</b> <a class="float-right">{{customer.total_amount}}</a>
                             </li>
                             <li class="list-group-item">
                                 <b>ကျန်ငွေ</b> <a class="float-right">500,000</a>
@@ -57,22 +73,28 @@
     export default {
         data() {
             return {
-                // combobox
-                customerInfo: null,
-                customerList: [],
-                // end combobox
+                customer: null,
+                query: '',
+                results: [],
+
             };
         },
         created() {
-            this.getCustomerInfo();
         },
         methods: {
-            getCustomerInfo() {
-                axios.get(this.route("pos.customer_search"))
-                    .then((response) => {
-                        this.customerList = response.data.customerList;
-                });
+            autoComplete(){
+                this.results = [];
+                if(this.query.length > 2){
+                    axios.get(this.route("pos.customer_search"),{params: {search_value: this.query}}).then(response => {
+                        this.results = response.data.data;
+                    });
+                }
             },
+            selectCustomer(result){
+                this.customer = result;
+                this.query = result.name;
+                this.results = [];
+            }
         },
     };
 </script>

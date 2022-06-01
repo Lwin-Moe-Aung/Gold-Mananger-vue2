@@ -9,6 +9,7 @@ const state = {
     product_sku: "",
     item_spe: "",
     message: "",
+    customer: "",
 };
 const getters = {
     items: state => state.items,
@@ -18,6 +19,7 @@ const getters = {
     item_from_cart: state => state.item_from_cart,
     carts: state => state.carts,
     message: state => state.message,
+    customer: state => state.customer,
 };
 const actions = {
     async searchItem({commit}, data){
@@ -98,6 +100,8 @@ const actions = {
 
         await commit("setProductSku", data.product_sku)
         await commit("setItemSpe", data.item_spe)
+        await commit("resetCustomer")
+
     },
     async addItem({commit}, data){
         await commit("setItemToCart", data)
@@ -116,6 +120,12 @@ const actions = {
     },
     async removeItemFromSearchList({commit}, item_id){
         await commit("removeItemFromSearchList", item_id)
+    },
+    async setCustomer({commit}, data){
+        await commit("setCustomer", data)
+    },
+    async resetCustomer({commit},data){
+        await commit("resetCustomer")
     },
 
 };
@@ -140,6 +150,7 @@ const mutations = {
     ),
     editItem: (state, data) => (
         state.selectedItem = data,
+        state.customer = data.customer,
         state.item_from_cart = true
     ),
     editItemFromCart: (state, data) => {
@@ -148,9 +159,14 @@ const mutations = {
             Object.assign(state.carts[foundIndex], data);
         }
     },
-    removeItem: (state, item_id) => (
-        state.carts.splice( state.carts.findIndex(x => x.id == item_id),1)
-    ),
+    removeItem: (state, item_id) => {
+        state.carts.splice( state.carts.findIndex(x => x.id == item_id),1);
+        if(state.selectedItem.id == item_id) {
+            state.selectedItem = "";
+            state.customer = "";
+        }
+
+    },
     removeItemFromSearchList: (state, item_id) => {
         if(item_id != ""){
             state.items.splice( state.items.findIndex(x => x.id == item_id),1)
@@ -164,6 +180,12 @@ const mutations = {
     setmessage: (state, data) => (
         state.message = data
     ),
+    setCustomer: (state, data) => (
+        state.customer = data
+    ),
+    resetCustomer: (state, data) => (
+        state.customer = ""
+    )
 };
 export default {
     state,

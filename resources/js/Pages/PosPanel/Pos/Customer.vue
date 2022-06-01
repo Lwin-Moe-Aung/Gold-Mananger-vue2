@@ -14,7 +14,7 @@
                         </div>
 
                        <!-- autocomplete -->
-                        <div>
+                        <!-- <div>
                             <input
                                 placeholder="Search"
                                 v-model="query"
@@ -29,14 +29,28 @@
 
                                     <ul class="list-group" v-for="result in results" style="padding-left: 0px !important;">
                                         <li class="list-group-item" style="font-size: 13px !important;"
-                                            @click="selectCustomer(result)"
+                                            @click="setCustomer(result)"
                                         >
                                         {{ result.search_name }}
                                         </li>
                                     </ul>
                                 </div>
-                        </div>
+                        </div> -->
                        <!-- end autocomplete -->
+                        <!-- Multiselect -->
+                        <div class="text-center" >
+                            <multiselect
+                                v-model="selectedCustomer"
+                                id="customer_id" placeholder="Search customer"
+                                :options="customersList" name="name" label="search_name" track-by="id"
+                                @search-change="onSearchCustomersChange"
+                                @input="onSelectedCustomer"
+                                :show-labels="false"
+                                style="padding-left: 0px !important;"
+                            />
+                        </div>
+
+                        <!-- Multiselect -->
 
                         <v-container v-if="customer != null">
 
@@ -70,31 +84,68 @@
 
 <script>
     import axios from "axios";
+    import {mapGetters, mapActions} from "vuex";
+    import Multiselect from 'vue-multiselect';
+    import {throttle} from "lodash";
+
     export default {
+
+        components: {
+            Multiselect
+        },
         data() {
             return {
-                customer: null,
                 query: '',
                 results: [],
+
+                //multiselect
+                customersList:[],
+                selectedCustomer: undefined,
 
             };
         },
         created() {
+            this.unwatch1 = this.$store.watch(
+                (state, getters) => getters.customer,
+                (newValue, oldValue) => {
+                    this.customersList = [],
+                    this.selectedCustomer.search_name = newValue.name
+                },
+            );
         },
         methods: {
-            autoComplete(){
-                this.results = [];
-                if(this.query.length > 2){
-                    axios.get(this.route("pos.customer_search"),{params: {search_value: this.query}}).then(response => {
-                        this.results = response.data.data;
-                    });
-                }
-            },
-            selectCustomer(result){
-                this.customer = result;
-                this.query = result.name;
-                this.results = [];
+            ...mapActions(["setCustomer"]),
+            // autoComplete(){
+            //     this.results = [];
+            //     if(this.query.length > 2){
+            //         axios.get(this.route("pos.customer_search"),{params: {search_value: this.query}}).then(response => {
+            //             this.results = response.data.data;
+            //         });
+            //     }
+            // },
+            onSearchCustomersChange: throttle(function (search_value) {
+                axios.get(this.route("pos.customer_search"),{params: {search_value: search_value}})
+                    .then(response => {
+                        this.customersList = response.data.data;
+                });
+            }, 300),
+
+            onSelectedCustomer(customer) {
+                this.selectedCustomer.search_name = customer.name;
+                this.setCustomer(customer);
             }
+        },
+        computed: {
+        ...mapGetters(['customer']),
+        },
+        beforeDestroy() {
+            this.unwatch1();
         },
     };
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style>
+    .multiselect__content {
+        padding-left: 0px !important;
+    }
+</style>

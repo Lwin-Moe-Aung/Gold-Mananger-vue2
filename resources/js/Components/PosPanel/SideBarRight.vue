@@ -419,15 +419,6 @@ export default {
         return {
             total: "",
             dialog: false,
-            notifications: false,
-            sound: true,
-            widgets: false,
-            alignments: [
-        'start',
-        'center',
-        'end',
-      ],
-
         };
     },
     computed: {

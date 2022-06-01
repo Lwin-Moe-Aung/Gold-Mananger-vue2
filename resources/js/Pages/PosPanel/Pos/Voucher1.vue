@@ -642,7 +642,7 @@
         },
 
         methods: {
-            ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList"]),
+            ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList","resetCustomer"]),
 
             getDataForCombobox() {
                 axios.get(this.route("pos.get_data_for_combobox"))
@@ -700,6 +700,13 @@
                     });
                     return;
                 }
+                if(this.customer == ""){
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'customer ထည့်သွင့်ရန်လိုအပ့်နေသည်'
+                    });
+                    return;
+                }
                 if(this.$refs.form.validate()){
                     let item = {
                         id: this.form.id,
@@ -726,7 +733,8 @@
                         paid_money: this.form.paid_money,
                         credit_money: this.form.credit_money,
                         note: this.form.note,
-                        quality: this.quality
+                        quality: this.quality,
+                        customer:this.customer
 
                     };
                     if(this.item_from_cart){
@@ -738,6 +746,7 @@
                         })
                         this.clearFormData();
                         this.selectItemReset();
+                        this.resetCustomer();
                     }else{
                         //add item to cart
                         let status = true;
@@ -746,6 +755,7 @@
                         });
                         if(status) {
                             this.addItem(item);
+                            this.resetCustomer();
                             Toast.fire({
                                 icon: 'success',
                                 title: 'Success Add to Cart'
@@ -787,7 +797,13 @@
 
             },
             printbill() {
-                // return;
+                if(this.customer == ""){
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'customer ထည့်သွင့်ရန်လိုအပ့်နေသည်'
+                    });
+                    return;
+                }
                 if(this.$refs.form.validate()){
                     this.loading = true;
                     let data = new FormData();
@@ -813,6 +829,7 @@
                     data.append('paid_money',this.form.paid_money);
                     data.append('credit_money',this.form.credit_money);
                     data.append('note',this.form.note);
+                    data.append('customer_id',this.customer.id);
 
                     axios.post('/pos/save_order', data)
                         .then(res => {
@@ -822,6 +839,7 @@
                                 this.selectItemReset();
                                 this.removeItem(this.form.id);
                                 this.removeItemFromSearchList(this.form.id);
+                                this.resetCustomer();
                                 window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
                                 Toast.fire({
                                     icon: 'success',
@@ -892,7 +910,10 @@
                 setTimeout(() => (this.loading = false), 2000)
             },
             selectedItem(value) {
-                if(value == "") return;
+                if(value == "") {
+                    this.clearFormData();
+                    return;
+                }
                 // if (isNaN(value)) return;
                 this.form.id = value.id;
                 this.form.name = value.name;
@@ -960,7 +981,7 @@
         },
 
         computed: {
-            ...mapGetters(['selectedItem', 'item_from_cart', 'carts']),
+            ...mapGetters(['selectedItem', 'item_from_cart', 'carts','customer']),
             goldPrice() {
                 if(this.form.product_sku == "")return;
                 let price = this.$page.props.daily_setup[this.quality];

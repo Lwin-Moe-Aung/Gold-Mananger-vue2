@@ -23,6 +23,7 @@ class ContactController extends Controller
                     ->orWhere('mobile2','like','%'.$search_value.'%')
                     ->orWhere('address','like','%'.$search_value.'%');
                 })
+            ->limit(15)
             ->get()
             ->toArray();
         // if(empty($customerList))

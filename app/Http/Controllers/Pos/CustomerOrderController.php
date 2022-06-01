@@ -116,7 +116,7 @@ class CustomerOrderController extends Controller
             $transaction->type = "sell";
             $transaction->status = "received";
             $transaction->payment_status = "paid";
-            $transaction->contact_id = 1;
+            $transaction->contact_id = $request->customer_id;
             $transaction->invoice_no = $this->invoiceNumber();
             $transaction->transaction_date = Carbon::now()->format('Y-m-d');
             $transaction->total_before = $request->total_before;
@@ -169,7 +169,7 @@ class CustomerOrderController extends Controller
             $transaction->type = "sell";
             $transaction->status = "received";
             $transaction->payment_status = "paid";
-            $transaction->contact_id = 1;
+            $transaction->contact_id = $request->customer_id;
             $transaction->invoice_no = $this->invoiceNumber();
             $transaction->transaction_date = Carbon::now()->format('Y-m-d');
             $transaction->total_before = $request->total_before;

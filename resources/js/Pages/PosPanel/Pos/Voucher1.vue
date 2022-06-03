@@ -691,23 +691,23 @@
                     alert("valitation");
                 }
             },
+            toastMessage(icon, title) {
+                Toast.fire({
+                    icon: icon,
+                    title: title
+                });
+            },
             //combo box
             addToCart() {
-                if(this.form.id == ""){
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'ဖန်တီးထားသောကုန်ပစ္စည်းကို cart ထဲ့ထည့်မရပါ'
-                    });
-                    return;
-                }
-                if(this.customer == ""){
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'customer ထည့်သွင့်ရန်လိုအပ့်နေသည်'
-                    });
-                    return;
-                }
                 if(this.$refs.form.validate()){
+                    if(this.form.id == ""){
+                        this.toastMessage('error', 'ဖန်တီးထားသောကုန်ပစ္စည်းကို cart ထဲ့ထည့်မရပါ')
+                        return;
+                    }
+                    if(this.customer == ""){
+                        this.toastMessage('warning', 'customer ထည့်သွင့်ရန်လိုအပ့်နေသည်')
+                        return;
+                    }
                     let item = {
                         id: this.form.id,
                         name: this.form.name,
@@ -740,10 +740,7 @@
                     if(this.item_from_cart){
                         //edit item from cart
                         this.editItemFromCart(item);
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Successfully update'
-                        })
+                        this.toastMessage('success', 'Successfully update')
                         this.clearFormData();
                         this.selectItemReset();
                         this.resetCustomer();
@@ -756,15 +753,9 @@
                         if(status) {
                             this.addItem(item);
                             this.resetCustomer();
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'Success Add to Cart'
-                            })
+                            this.toastMessage('success', 'Success Add to Cart')
                         }else{
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'Already exist'
-                            })
+                            this.toastMessage('warning', 'Already exist')
                         }
                         this.clearFormData();
                         this.selectItemReset();
@@ -797,14 +788,11 @@
 
             },
             printbill() {
-                if(this.customer == ""){
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'customer ထည့်သွင့်ရန်လိုအပ့်နေသည်'
-                    });
-                    return;
-                }
                 if(this.$refs.form.validate()){
+                    if(this.customer == ""){
+                        this.toastMessage('warning', 'customer ထည့်သွင့်ရန်လိုအပ့်နေသည်')
+                        return;
+                    }
                     this.loading = true;
                     let data = new FormData();
                     data.append('id',this.form.id);
@@ -835,16 +823,14 @@
                         .then(res => {
                             if(res.data.status)
                             {
-                                this.clearFormData();
-                                this.selectItemReset();
                                 this.removeItem(this.form.id);
                                 this.removeItemFromSearchList(this.form.id);
-                                this.resetCustomer();
                                 window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
-                                Toast.fire({
-                                    icon: 'success',
-                                    title: 'Order Success'
-                                })
+                                this.toastMessage('success', 'Order Success');
+                                this.clearFormData();
+                                this.selectItemReset();
+                                this.resetCustomer();
+
                             }
                         })
                         .catch(function (error) {
@@ -1135,5 +1121,36 @@
 		display: none;
 	}
 
+}
+.colored-toast.swal2-icon-success {
+  background-color: #a5dc86 !important;
+}
+
+.colored-toast.swal2-icon-error {
+  background-color: #f27474 !important;
+}
+
+.colored-toast.swal2-icon-warning {
+  background-color: #f8bb86 !important;
+}
+
+.colored-toast.swal2-icon-info {
+  background-color: #3fc3ee !important;
+}
+
+.colored-toast.swal2-icon-question {
+  background-color: #87adbd !important;
+}
+
+.colored-toast .swal2-title {
+  color: white;
+}
+
+.colored-toast .swal2-close {
+  color: white;
+}
+
+.colored-toast .swal2-html-container {
+  color: white;
 }
 </style>

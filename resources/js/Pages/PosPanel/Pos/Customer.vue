@@ -108,8 +108,13 @@
             this.unwatch1 = this.$store.watch(
                 (state, getters) => getters.customer,
                 (newValue, oldValue) => {
-                    this.customersList = [],
-                    this.selectedCustomer.search_name = newValue.name
+                    this.customersList = [];
+                    if(newValue == ""){
+                        this.selectedCustomer = "";
+                    }else{
+                        this.selectedCustomer = newValue;
+                        this.selectedCustomer.search_name = newValue.name;
+                    }
                 },
             );
         },
@@ -137,6 +142,7 @@
         },
         computed: {
         ...mapGetters(['customer']),
+
         },
         beforeDestroy() {
             this.unwatch1();

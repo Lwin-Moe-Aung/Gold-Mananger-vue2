@@ -300,7 +300,7 @@
                                         <td style="width: 40px">ရွေး</td>
                                     </tr>
                                     <tr>
-                                        <td> ဒေါ် တင်စိန်</td>
+                                        <td> {{item.customer.name}}</td>
                                         <td> {{item.product_sku}}</td>
                                         <td>
                                             <v-list-item-avatar rounded color="grey lighten-4">
@@ -491,6 +491,7 @@ export default {
             data.append('paid_money',item.paid_money);
             data.append('credit_money',item.credit_money);
             data.append('note',item.note);
+            data.append('customer_id',item.customer.id);
 
             axios.post('/pos/save_order', data)
                 .then(res => {

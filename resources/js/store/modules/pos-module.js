@@ -108,6 +108,8 @@ const actions = {
     },
     async editItem({commit}, data){
         await commit("editItem", data)
+        await commit("setCustomer", data.customer)
+
     },
     async editItemFromCart({commit}, data){
         await commit("editItemFromCart", data)
@@ -125,7 +127,7 @@ const actions = {
         await commit("setCustomer", data)
     },
     async resetCustomer({commit},data){
-        await commit("resetCustomer")
+        await commit("resetCustomer",data)
     },
 
 };
@@ -150,7 +152,6 @@ const mutations = {
     ),
     editItem: (state, data) => (
         state.selectedItem = data,
-        state.customer = data.customer,
         state.item_from_cart = true
     ),
     editItemFromCart: (state, data) => {
@@ -165,7 +166,6 @@ const mutations = {
             state.selectedItem = "";
             state.customer = "";
         }
-
     },
     removeItemFromSearchList: (state, item_id) => {
         if(item_id != ""){

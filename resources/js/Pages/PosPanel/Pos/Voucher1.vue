@@ -666,14 +666,16 @@
             onChangeItemName (entry) {
                 if(this.goldQuality == null && this.type == null  && this.item_name == null ) return;
                 let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
-                var item_spe = null;
-                if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != "" && this.form.gold_weight.yway != ""){
-                    let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
-                    let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
-                    item_spe = kyat + pal+this.form.gold_weight.yway;
-                }
-                let data = { product_sku: product_sku, item_spe: item_spe}
+                // var item_spe = null;
+                // if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != "" && this.form.gold_weight.yway != ""){
+                //     let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
+                //     let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
+                //     item_spe = kyat + pal+this.form.gold_weight.yway;
+                // }
+                // let data = { product_sku: product_sku, item_spe: item_spe}
+                let data = { product_sku: product_sku}
                 this.searchItem(data);
+                this.clearFormData();
             },
             onChange(entry) {
                 if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != ""
@@ -687,8 +689,6 @@
                     let item_spe = kyat + pal+this.form.gold_weight.yway;
                     let data = { product_sku: product_sku, item_spe: item_spe}
                     this.searchItem(data);
-                }else{
-                    alert("valitation");
                 }
             },
             toastMessage(icon, title) {

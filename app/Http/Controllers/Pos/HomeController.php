@@ -34,7 +34,7 @@ class HomeController extends Controller
         return response()->json($products, 200);
     }
 
-    public function search(Request $request)
+    public function searchOld(Request $request)
     {
         $products = Product::where('product_sku', $request->product_sku)
                     ->first();
@@ -61,6 +61,40 @@ class HomeController extends Controller
             $message = $request->product_sku."အောက်မှာရှိတဲ့ random ပစ္စည်းများ.";
 
         }
+        if(empty($items_data)) return response()->json(['items'=>[], 'message'=>'newItem']);
+        $items = [];
+        foreach ($items_data as $key => $item) {
+            $gold_weight = json_decode($item['gold_weight']);
+            $kyat = strlen((string)$gold_weight->kyat) < 2 ? "0".$gold_weight->kyat : $gold_weight->kyat;
+            $pal = strlen((string)$gold_weight->pal) < 2 ? "0".$gold_weight->pal : $gold_weight->pal;
+            $items[$key]['item_spe'] = $kyat.$pal.$gold_weight->yway;
+
+            $items[$key]['id'] = $item["id"];
+            $items[$key]['product_sku'] =  $request->product_sku;
+            $items[$key]['name'] = $item["name"];
+            $items[$key]['image1'] = $item["image1"];
+            $items[$key]['quality'] = $products->quality;
+            $items[$key]['item_sku'] = $item["item_sku"];
+            $items[$key]['fee_for_making'] = $item["fee_for_making"];
+            $items[$key]['gold_weight'] = $gold_weight;
+            $items[$key]['gem_weight'] = json_decode($item['gem_weight']);
+            $items[$key]['fee'] = json_decode($item['fee']);
+        }
+        return response()->json(['items'=>$items, 'message'=> $message]);
+    }
+
+    public function search(Request $request)
+    {
+        $products = Product::where('product_sku', $request->product_sku)
+                    ->first();
+        // dd($products->id);
+
+        $items_data = Item::where('product_id',$products->id)
+                ->inRandomOrder()
+                ->get()
+                ->toArray();
+
+        $message = $request->product_sku."အောက်မှာရှိတဲ့ random ပစ္စည်းများ.";
         if(empty($items_data)) return response()->json(['items'=>[], 'message'=>'newItem']);
         $items = [];
         foreach ($items_data as $key => $item) {

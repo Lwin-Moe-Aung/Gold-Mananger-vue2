@@ -13,6 +13,7 @@
                                         :loading="loading"
                                         :items="productsku"
                                         :search-input.sync="searchProductSku"
+                                        @change="onChange()"
                                         cache-items
                                         class="mx-4"
                                         flat
@@ -200,6 +201,10 @@ export default {
             let data = { product_sku: this.searchProductSku, item_spe:this.searchValue}
             this.searchItem(data);
         },
+        onChange() {
+            let data = { product_sku: this.selectProductSku}
+            this.searchItem(data);
+        }
     },
     computed: {
         isActive () {

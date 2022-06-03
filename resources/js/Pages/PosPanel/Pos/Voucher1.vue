@@ -788,6 +788,8 @@
 
             },
             printbill() {
+                // this.removeItem(this.form.id);
+                // return;
                 if(this.$refs.form.validate()){
                     if(this.customer == ""){
                         this.toastMessage('warning', 'customer ထည့်သွင့်ရန်လိုအပ့်နေသည်')

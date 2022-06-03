@@ -161,7 +161,14 @@ const mutations = {
         }
     },
     removeItem: (state, item_id) => {
-        state.carts.splice( state.carts.findIndex(x => x.id == item_id),1);
+
+        let item = state.carts.find(function(val) {
+            return val.id == item_id;
+        });
+        if(typeof item  !== 'undefined' ){
+            state.carts.splice( state.carts.indexOf(item),1);
+        }
+        // state.carts.splice( state.carts.findIndex(x => x.id == item_id),1);
         if(state.selectedItem.id == item_id) {
             state.selectedItem = "";
             state.customer = "";
@@ -169,7 +176,13 @@ const mutations = {
     },
     removeItemFromSearchList: (state, item_id) => {
         if(item_id != ""){
-            state.items.splice( state.items.findIndex(x => x.id == item_id),1)
+            let item = state.items.find(function(val) {
+                return val.id == item_id;
+            });
+            if(typeof item  !== 'undefined' ){
+                state.items.splice( state.items.indexOf(item),1);
+            }
+            // state.items.splice( state.items.findIndex(x => x.id == item_id),1)
         }else{
             state.items.splice(0,1)
         }

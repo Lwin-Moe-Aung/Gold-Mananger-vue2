@@ -8,7 +8,8 @@ const state = {
     items:[],
     product_sku: "",
     item_spe: "",
-    message: "",
+    toast_message: "",
+    toast_icon:"",
     customer: "",
 };
 const getters = {
@@ -18,7 +19,8 @@ const getters = {
     item_spe: state => state.item_spe,
     item_from_cart: state => state.item_from_cart,
     carts: state => state.carts,
-    message: state => state.message,
+    toast_message: state => state.toast_message,
+    toast_icon: state => state.toast_icon,
     customer: state => state.customer,
 };
 const actions = {
@@ -27,7 +29,8 @@ const actions = {
                 .then((response) => {
                     if(response.data.message !== "newItem"){
                         commit("setItem", response.data.items);
-                        commit("setmessage", response.data.message);
+                        commit("setToastMessage", response.data.message);
+                        commit("setToastIcon", "success");
                     }else{
                         let fee = {kyat:0, pal:3, yway:0};
                         let gem_weight = {kyat:0, pal:0, yway:0};
@@ -64,7 +67,8 @@ const actions = {
                         ];
                         let message = "အခုမှဖန်တီးလိုက်သော ကုန်ပစ္စည်းအသစ်";
                         commit("setItem", seleItem);
-                        commit("setmessage", message);
+                        commit("setToastMessage", message);
+                        commit("setToastIcon", "warning");
                 }
 
             });
@@ -81,8 +85,17 @@ const actions = {
                     let select_Ite = item_lists.find(function(val) {
                         return val.item_sku == item_id;
                     });
-                    item_lists.splice(item_lists.indexOf(select_Ite),1)
-                    item_lists.unshift(select_Ite)
+
+                    if(typeof select_Ite  !== 'undefined' ){
+                        item_lists.splice(item_lists.indexOf(select_Ite),1)
+                        item_lists.unshift(select_Ite)
+                        var message = "id -"+item_id +"နဲ့ သူရဲ့ ဆက်စပ့် ပစ္စည်းများ";
+                        var icon = "success";
+                    }else{
+                        var message = "id -"+item_id +"ကရောင်းထွက်ပီးသွားပါပီ။ သူနဲ့ ဆက်စပ့် ပစ္စည်းများသာကြည့်ပါ။";
+                        var icon = "warning";
+                    }
+
                     commit("setItem", item_lists);
                     // commit("setProductSku", select_Ite.product_sku);
                     // let kyat = String(select_Ite.gold_weight.kyat).length == 1 ? '0'+select_Ite.gold_weight.kyat : select_Ite.gold_weight.kyat;
@@ -90,8 +103,9 @@ const actions = {
 
                     // let item_spe = String(kyat)+String(pal)+String(select_Ite.gold_weight.yway)
                     // commit("setItemSpe", item_spe);
-                    let message = "id -"+item_id +"နဲ့ ဆက်စပ့် ပစ္စည်းများ";
-                    commit("setmessage", message);
+                    commit("setToastMessage", message);
+                    commit("setToastIcon", icon);
+
                 }
         });
     },
@@ -190,9 +204,12 @@ const mutations = {
     selectItemReset: (state, data) => (
         state.selectedItem = ""
     ),
-    setmessage: (state, data) => (
-        state.message = data
-    ),
+    setToastMessage: (state, data) => {
+        state.toast_message = data
+    },
+    setToastIcon: (state, data) => {
+        state.toast_icon = data
+    },
     setCustomer: (state, data) => (
         state.customer = data
     ),

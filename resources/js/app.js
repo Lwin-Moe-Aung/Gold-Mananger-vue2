@@ -6,7 +6,7 @@ window.Toast = Swal.mixin({
     popup: 'colored-toast'
     },
     showConfirmButton: false,
-    timer: 1500,
+    timer: 2300,
     timerProgressBar: true
 })
 

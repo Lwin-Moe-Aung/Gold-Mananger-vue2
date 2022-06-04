@@ -50,113 +50,8 @@
                         </v-fade-transition>
                     </v-card>
                     <!-- end image upload -->
-                    <v-list-item-content>
-                        <v-list-item-title class="text-h5">
-                            <v-row>
+                    <VoucherTitleBar/>
 
-                            <!-- combo box -->
-                                <v-col
-                                    cols="2"
-                                    sm="2"
-                                >
-                                    <v-combobox
-                                        v-model="goldQuality"
-                                        :items="goldQualitys"
-                                        @change="onChangeQ"
-                                        item-text="name"
-                                        item-value="quality"
-                                        return-object
-                                        label="ပဲရည်"
-                                    ></v-combobox>
-                                </v-col>
-                                <v-col
-                                    cols="3"
-                                    sm="3"
-                                >
-                                    <v-combobox
-                                        v-model="type"
-                                        :items="types"
-                                        @change="onChangeT"
-                                        item-text="name"
-                                        item-value="key"
-                                        return-object
-                                        label="ရွှေ/ကျောက်"
-                                    ></v-combobox>
-                                </v-col>
-                                <v-col
-                                    cols="3"
-                                    sm="3"
-                                >
-                                    <v-combobox
-                                        v-model="item_name"
-                                        :items="item_names"
-                                        @change="onChangeItemName"
-                                        item-text="name"
-                                        item-value="key"
-                                        return-object
-                                        label="အမျိုးအမည်"
-                                    ></v-combobox>
-                                </v-col>
-
-                            <!-- combo box -->
-                            </v-row>
-
-                        </v-list-item-title>
-                        <v-list-item-subtitle class="mt-1">
-                            {{ form.item_description }}
-                        </v-list-item-subtitle>
-                         <v-row>
-                            <v-col
-                                cols="5"
-                                sm="5"
-                                >
-                                    <v-text-field
-                                        v-model = "dailyValue"
-                                        label="ပေါက်စေ◌ျး"
-                                        :hint="!isEditing ? 'Click the icon to edit' : 'Click the icon to save'"
-                                        :readonly="!isEditing"
-                                    >
-                                        <template v-slot:append-outer>
-                                            <v-slide-x-reverse-transition
-                                                mode="out-in"
-                                            >
-                                                <v-icon
-                                                    :key="`icon-${isEditing}`"
-                                                    :color="isEditing ? 'success' : 'info'"
-                                                    @click="editDailySetup"
-                                                    v-text="isEditing ? 'fas fa-check' : 'fas fa-edit'"
-                                                ></v-icon>
-                                            </v-slide-x-reverse-transition>
-                                        </template>
-                                    </v-text-field>
-                            </v-col>
-                            <v-col
-                                cols="3"
-                                sm="3"
-                                >
-                                    <v-text-field
-                                        v-model = "form.item_sku"
-                                        label="Unit Id"
-                                        :hint="!isEditingItemId ? 'Click the icon to edit' : 'Click the icon to save'"
-                                        :readonly="!isEditingItemId"
-                                    >
-                                        <template v-slot:append-outer>
-                                            <v-slide-x-reverse-transition
-                                                mode="out-in"
-                                            >
-                                                <v-icon
-                                                    :key="`icon-${isEditingItemId}`"
-                                                    :color="isEditingItemId ? 'success' : 'info'"
-                                                    @click="searchByItemId"
-                                                    v-text="isEditingItemId ? 'fas fa-check' : 'fas fa-edit'"
-                                                ></v-icon>
-                                            </v-slide-x-reverse-transition>
-                                        </template>
-                                    </v-text-field>
-                            </v-col>
-                        </v-row>
-
-                    </v-list-item-content>
                 </v-list-item>
                 <v-list-item
                     style="
@@ -563,11 +458,14 @@
     import { Link } from '@inertiajs/inertia-vue'
     import constant from "../../../constant";
     import {mapGetters, mapActions} from "vuex";
+    import VoucherTitleBar from "./VoucherTitleBar";
+
 
     export default {
         components: {
             Invoice,
             Link,
+            VoucherTitleBar
         },
         mixins: [validationMixin],
         validations: {
@@ -620,17 +518,17 @@
                 input: undefined,
                 // image: undefined,
                 mask: false,
-                // combobox
-                dataForCombobox:[],
-                goldQuality: null,
-                goldQualitys: [],
-                type: null,
-                types: [],
-                item_name: null,
-                item_names: [],
-                // end combobox
-                isEditing: false,
-                isEditingItemId: false,
+                // // combobox
+                // dataForCombobox:[],
+                // goldQuality: null,
+                // goldQualitys: [],
+                // type: null,
+                // types: [],
+                // item_name: null,
+                // item_names: [],
+                // // end combobox
+                // isEditing: false,
+                // isEditingItemId: false,
             };
         },
         mounted () {
@@ -638,45 +536,45 @@
         },
 
         created() {
-            this.getDataForCombobox();
+            // this.getDataForCombobox();
         },
 
         methods: {
             ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList","resetCustomer"]),
 
-            getDataForCombobox() {
-                axios.get(this.route("pos.get_data_for_combobox"))
-                    .then((response) => {
-                        this.dataForCombobox = response.data;
-                });
-            },
+            // getDataForCombobox() {
+            //     axios.get(this.route("pos.get_data_for_combobox"))
+            //         .then((response) => {
+            //             this.dataForCombobox = response.data;
+            //     });
+            // },
 
             //combo box
-            onChangeQ (entry) {
-                this.type = null;
-                this.types = this.goldQuality.types;
-                this.item_name = null;
-                this.item_names = [];
+            // onChangeQ (entry) {
+            //     this.type = null;
+            //     this.types = this.goldQuality.types;
+            //     this.item_name = null;
+            //     this.item_names = [];
 
-            },
-            onChangeT (entry) {
-                this.item_name = null;
-                this.item_names = this.type.item_names;
-            },
-            onChangeItemName (entry) {
-                if(this.goldQuality == null && this.type == null  && this.item_name == null ) return;
-                let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
-                // var item_spe = null;
-                // if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != "" && this.form.gold_weight.yway != ""){
-                //     let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
-                //     let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
-                //     item_spe = kyat + pal+this.form.gold_weight.yway;
-                // }
-                // let data = { product_sku: product_sku, item_spe: item_spe}
-                let data = { product_sku: product_sku}
-                this.searchItem(data);
-                this.clearFormData();
-            },
+            // },
+            // onChangeT (entry) {
+            //     this.item_name = null;
+            //     this.item_names = this.type.item_names;
+            // },
+            // onChangeItemName (entry) {
+            //     if(this.goldQuality == null && this.type == null  && this.item_name == null ) return;
+            //     let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
+            //     // var item_spe = null;
+            //     // if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != "" && this.form.gold_weight.yway != ""){
+            //     //     let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
+            //     //     let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
+            //     //     item_spe = kyat + pal+this.form.gold_weight.yway;
+            //     // }
+            //     // let data = { product_sku: product_sku, item_spe: item_spe}
+            //     let data = { product_sku: product_sku}
+            //     this.searchItem(data);
+            //     this.clearFormData();
+            // },
             onChange(entry) {
                 if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != ""
                      && this.form.gold_weight.yway != "" && this.goldQuality != null
@@ -763,30 +661,30 @@
                     }
                 }
             },
-            editDailySetup() {
-                this.isEditing = !this.isEditing
-                if(this.isEditing || this.quality == "") return;
+            // editDailySetup() {
+            //     this.isEditing = !this.isEditing
+            //     if(this.isEditing || this.quality == "") return;
 
-                this.dailySetup.kyat = this.dailyValue;
-                let data = { dailySetup: this.dailySetup, quality:this.quality}
-                axios.post('/pos/edit_daily_setup', data)
-                .then(res => {
-                    this.dailySetup.kyat = res.data.kyat;
-                    this.dailySetup.pal = res.data.pal;
-                    this.dailySetup.yway = res.data.yway;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            //     this.dailySetup.kyat = this.dailyValue;
+            //     let data = { dailySetup: this.dailySetup, quality:this.quality}
+            //     axios.post('/pos/edit_daily_setup', data)
+            //     .then(res => {
+            //         this.dailySetup.kyat = res.data.kyat;
+            //         this.dailySetup.pal = res.data.pal;
+            //         this.dailySetup.yway = res.data.yway;
+            //     })
+            //     .catch(function (error) {
+            //         console.log(error);
+            //     });
 
-            },
-            searchByItemId() {
-                this.isEditingItemId = !this.isEditingItemId
-                if(this.isEditingItemId || this.form.item_sku == "") return;
+            // },
+            // searchByItemId() {
+            //     this.isEditingItemId = !this.isEditingItemId
+            //     if(this.isEditingItemId || this.form.item_sku == "") return;
 
-                this.searchItemByItemId(this.form.item_sku);
+            //     this.searchItemByItemId(this.form.item_sku);
 
-            },
+            // },
             printbill() {
                 // this.removeItem(this.form.id);
                 // return;
@@ -934,35 +832,35 @@
                 this.dailyValue = this.$page.props.daily_setup[this.quality].kyat;
 
                 //combobox
-                this.goldQualitys = this.dataForCombobox.goldQualitys;
-                let qty = value.quality;
-                let goldQuality = this.goldQualitys.find(function(val) {
-                    return val.quality == qty;
-                });
+                // this.goldQualitys = this.dataForCombobox.goldQualitys;
+                // let qty = value.quality;
+                // let goldQuality = this.goldQualitys.find(function(val) {
+                //     return val.quality == qty;
+                // });
 
-                this.types = goldQuality.types;
-                let type_key = this.form.product_sku.charAt(2);
-                let type = this.types.find(function(val) {
-                    return val.key == type_key;
-                });
+                // this.types = goldQuality.types;
+                // let type_key = this.form.product_sku.charAt(2);
+                // let type = this.types.find(function(val) {
+                //     return val.key == type_key;
+                // });
 
-                this.item_names = type.item_names;
-                let item_name_key = this.form.product_sku.charAt(3);
-                let item_name = this.item_names.find(function(val) {
-                    return val.key == item_name_key;
-                });
-                this.goldQuality = {
-                    'name' : goldQuality.name,
-                    'quality' : goldQuality.quality,
-                };
-                this.type = {
-                    'key' : type.key,
-                    'name' : type.name,
-                };
-                this.item_name = {
-                    'key' : item_name.key,
-                    'name' : item_name.name,
-                };
+                // this.item_names = type.item_names;
+                // let item_name_key = this.form.product_sku.charAt(3);
+                // let item_name = this.item_names.find(function(val) {
+                //     return val.key == item_name_key;
+                // });
+                // this.goldQuality = {
+                //     'name' : goldQuality.name,
+                //     'quality' : goldQuality.quality,
+                // };
+                // this.type = {
+                //     'key' : type.key,
+                //     'name' : type.name,
+                // };
+                // this.item_name = {
+                //     'key' : item_name.key,
+                //     'name' : item_name.name,
+                // };
                 //combobox
 
             }

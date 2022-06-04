@@ -5,6 +5,7 @@ const state = {
     selectedItem: "",
     carts:[],
     item_from_cart:false,
+    searched_Items_data:[],
     items:[],
     product_sku: "",
     item_spe: "",
@@ -22,59 +23,61 @@ const getters = {
     toast_message: state => state.toast_message,
     toast_icon: state => state.toast_icon,
     customer: state => state.customer,
+    searched_Items_data: state => state.searched_Items_data,
 };
 const actions = {
     async searchItem({commit}, data){
         await axios.post(constant.URL+"search", data)
                 .then((response) => {
                     if(response.data.message !== "newItem"){
-                        commit("setItem", response.data.items);
-                        commit("setToastMessage", response.data.message);
-                        commit("setToastIcon", "success");
+                        var items = response.data.items;
+                        var message = response.data.message;
+                        var icon = "success"
+
                     }else{
-                        let fee = {kyat:0, pal:3, yway:0};
-                        let gem_weight = {kyat:0, pal:0, yway:0};
+                        alert("create new Item?");
+                        // let fee = {kyat:0, pal:3, yway:0};
+                        // let gem_weight = {kyat:0, pal:0, yway:0};
 
-                        var kyat = 1;
-                        var pal = 0;
-                        var yway = 0;
-                        if(data.item_spe !== null){
-                            kyat = parseInt(String(data.item_spe.charAt(0))+String(data.item_spe.charAt(1)))
-                            pal = parseInt(String(data.item_spe.charAt(2))+String(data.item_spe.charAt(3)))
-                            yway = data.item_spe.charAt(4)
-                        }
-                        let gold_weight = {
-                            kyat: kyat,
-                            pal: pal,
-                            yway: yway,
-                        };
+                        // var kyat = 1;
+                        // var pal = 0;
+                        // var yway = 0;
+                        // if(data.item_spe !== null){
+                        //     kyat = parseInt(String(data.item_spe.charAt(0))+String(data.item_spe.charAt(1)))
+                        //     pal = parseInt(String(data.item_spe.charAt(2))+String(data.item_spe.charAt(3)))
+                        //     yway = data.item_spe.charAt(4)
+                        // }
+                        // let gold_weight = {
+                        //     kyat: kyat,
+                        //     pal: pal,
+                        //     yway: yway,
+                        // };
 
-                        let item = {
-                            id: "",
-                            name: "ဖန်တီးထားသော ကုန်ပစ္စည်းအသစ်",
-                            product_sku: data.product_sku,
-                            item_spe: data.item_spe !== null ? data.item_spe : '01000',
-                            image1: "/images/pos/new-default.jpg",
-                            quality: parseInt(String(data.product_sku.charAt(0))+String(data.product_sku.charAt(1))),
-                            gold_weight: gold_weight,
-                            gem_weight: gem_weight,
-                            fee: fee,
-                            fee_for_making: "5000"
+                        // let item = {
+                        //     id: "",
+                        //     name: "ဖန်တီးထားသော ကုန်ပစ္စည်းအသစ်",
+                        //     product_sku: data.product_sku,
+                        //     item_spe: data.item_spe !== null ? data.item_spe : '01000',
+                        //     image1: "/images/pos/new-default.jpg",
+                        //     quality: parseInt(String(data.product_sku.charAt(0))+String(data.product_sku.charAt(1))),
+                        //     gold_weight: gold_weight,
+                        //     gem_weight: gem_weight,
+                        //     fee: fee,
+                        //     fee_for_making: "5000"
 
-                        };
-                        let seleItem = [
-                            item
-                        ];
-                        let message = "အခုမှဖန်တီးလိုက်သော ကုန်ပစ္စည်းအသစ်";
-                        commit("setItem", seleItem);
-                        commit("setToastMessage", message);
-                        commit("setToastIcon", "warning");
-                }
+                        // };
+                        // var items = [
+                        //     item
+                        // ];
+                        // var message = "အခုမှဖန်တီးလိုက်သော ကုန်ပစ္စည်းအသစ်";
+                        // var icon = "warning";
+                    }
+                    commit("setItem", items);
+                    commit("setItemToSearchedItemsData", items);
+                    commit("setToastMessage", message);
+                    commit("setToastIcon", icon);
 
-            });
-        // commit("setProductSku", data.product_sku);
-        // commit("setItemSpe", data.item_spe);
-
+                });
     },
     async searchItemByItemId({commit}, item_id){
 
@@ -97,17 +100,19 @@ const actions = {
                     }
 
                     commit("setItem", item_lists);
-                    // commit("setProductSku", select_Ite.product_sku);
-                    // let kyat = String(select_Ite.gold_weight.kyat).length == 1 ? '0'+select_Ite.gold_weight.kyat : select_Ite.gold_weight.kyat;
-                    // let pal = String(select_Ite.gold_weight.pal).length == 1 ? '0'+select_Ite.gold_weight.pal : select_Ite.gold_weight.pal;
-
-                    // let item_spe = String(kyat)+String(pal)+String(select_Ite.gold_weight.yway)
-                    // commit("setItemSpe", item_spe);
                     commit("setToastMessage", message);
                     commit("setToastIcon", icon);
 
                 }
         });
+    },
+    async searchItemByItemSpe({commit}, data){
+        if (state.searched_Items_data.length === 0) {
+            //do something
+        }else{
+            const result = state.searched_Items_data.filter(val => val.item_spe == data);
+            commit("setItem", result);
+        }
     },
     async selectItem({commit}, data){
         await commit("selectItem", data)
@@ -148,8 +153,10 @@ const actions = {
 const mutations = {
 
     setItem: (state, data) => (
-        state.items = [],
         state.items = data
+    ),
+    setItemToSearchedItemsData: (state, data) => (
+        state.searched_Items_data = data
     ),
     selectItem: (state, item) => (
         state.selectedItem = item,

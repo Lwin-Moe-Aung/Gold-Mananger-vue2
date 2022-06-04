@@ -32,7 +32,7 @@
                                             :length="length"
                                             type="text"
                                             plain
-                                            @finish="searchProduct"
+                                            @finish="searchItemByItemSpe"
                                         ></v-otp-input>
                                     </div>
                                 </v-col>
@@ -164,7 +164,7 @@ export default {
         },
     },
     methods: {
-        ...mapActions(["searchItem", "selectItem"]),
+        ...mapActions(["searchItem", "selectItem", "searchItemByItemSpe"]),
         onCardClick(n){
             this.model = n ;
         },
@@ -198,8 +198,8 @@ export default {
                 )
                 return false;
             }
-            let data = { product_sku: this.searchProductSku, item_spe:this.searchValue}
-            this.searchItem(data);
+            // let data = { product_sku: this.searchProductSku, item_spe:this.searchValue}
+            this.searchItemByItemSpe(this.searchValue);
         },
         onChange() {
             let data = { product_sku: this.selectProductSku}

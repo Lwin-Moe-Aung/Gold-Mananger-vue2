@@ -1,0 +1,125 @@
+<template>
+    <v-toolbar color="#ECBD00">
+        <!-- autocomplete for product sku -->
+        <v-col cols="2">
+            <v-autocomplete
+                v-model="selectProductSku"
+                :loading="loading"
+                :items="productsku"
+                :search-input.sync="searchProductSku"
+                @change="onChange()"
+                cache-items
+                class="mx-4"
+                flat
+                hide-no-data
+                hide-details
+                label="sku?"
+                solo-inverted
+                ></v-autocomplete>
+        </v-col>
+        <!-- end autocomplete for product sku -->
+
+        <v-col cols="2" sm="2">
+            <div class="ma-auto" style="max-width: 300px">
+                <v-otp-input
+                    v-model="searchValue"
+                    :length="length"
+                    type="text"
+                    plain
+                    @finish="searchProduct"
+                ></v-otp-input>
+            </div>
+        </v-col>
+        <v-col cols="8" class="my-3">
+        </v-col>
+    </v-toolbar>
+</template>
+
+<script>
+    import {mapGetters, mapActions} from "vuex";
+    import axios from "axios";
+
+    export default {
+        name: 'ItemList',
+        data: () => ({
+            searchValue: '',
+            length: 5,
+            //for product sku auto complete
+            loading: false,
+            productsku: [],
+            searchProductSku: null,
+            selectProductSku: null,
+            //end for product sku auto complete
+        }),
+        created() {
+            this.unwatch1 = this.$store.watch(
+                (state, getters) => getters.product_sku,
+                (newValue, oldValue) => {
+                    // console.log("hello changin product_sku");
+                    this.searchProductSku = newValue,
+                    this.selectProductSku = newValue
+                },
+            );
+            this.unwatch2 = this.$store.watch(
+                (state, getters) => getters.item_spe,
+                (newValue, oldValue) => {
+                    this.searchValue = newValue
+                },
+            );
+        },
+        watch: {
+            searchProductSku (val) {
+                val && val !== this.selectProductSku && this.querySelections(val)
+            },
+        },
+        methods: {
+            ...mapActions([ "searchItem", "searchItemByItemSpe","resetVoucherForm"]),
+            querySelections (v) {
+                this.loading = true
+                // Simulated ajax query
+                setTimeout(() => {
+                    axios.get(this.route("pos.productsku_search", v))
+                        .then((response) => {
+                            this.productsku = response.data.productsku;
+                    });
+                    this.loading = false
+                }, 500)
+            },
+            searchProduct() {
+                //regular expression test for "15gr02157"
+                //-- const regex = /(^(0[5-9]|1[0-6]))([a-z]{2})[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
+
+                //regular expression test for "02157"
+                const regex = /[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
+
+                const matches = regex.exec(this.searchValue);
+                if( matches == null){
+                    Swal.fire(
+                        '',
+                        'Sku format is something wrong',
+                        'error'
+                    )
+                    return false;
+                }
+                // let data = { product_sku: this.searchProductSku, item_spe:this.searchValue}
+                this.searchItemByItemSpe(this.searchValue);
+                this.resetVoucherForm();
+            },
+            onChange() {
+                let data = { product_sku: this.selectProductSku}
+                this.searchItem(data);
+            },
+            onChangeOtpBox() {
+                alert("asdfasd otp box");
+            }
+        },
+        computed: {
+            ...mapGetters(['product_sku', 'item_spe','toast_message','toast_icon']),
+        },
+        beforeDestroy() {
+            this.unwatch1();
+            this.unwatch2();
+        },
+    }
+</script>
+<style>

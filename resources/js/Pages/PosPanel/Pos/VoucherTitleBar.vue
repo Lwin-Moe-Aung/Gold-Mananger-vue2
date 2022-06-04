@@ -129,6 +129,42 @@
         }),
         created() {
             this.getDataForCombobox();
+            this.unwatch1 = this.$store.watch(
+                (state, getters) => getters.product_sku,
+                (newValue, oldValue) => {
+                    if(newValue.length > 3){
+                        var q = newValue.charAt(0)+newValue.charAt(1);
+                        var t = newValue.charAt(2);
+                        var i_n = newValue.charAt(3);
+                    }else{
+                        var q = newValue.charAt(0);
+                        var t = newValue.charAt(1);
+                        var i_n = newValue.charAt(2);
+                    }
+                    this.dailySetup = this.$page.props.daily_setup[q];
+                    let g_Quality  = this.goldQualitys.find(function(val) {
+                        return val.quality == q;
+                    });
+                    this.goldQuality = g_Quality;
+                    this.types = this.goldQuality.types;
+                    let type_e = this.types.find(function(val) {
+                        return val.key == t;
+                    });
+                    this.type = type_e;
+                    this.item_names = this.type.item_names
+                    let item_n = this.item_names.find(function(val) {
+                        return val.key == i_n;
+                    });
+                    this.item_name = item_n;
+
+                },
+            );
+            this.unwatch2 = this.$store.watch(
+                (state, getters) => getters.selectedItem,
+                (newValue, oldValue) => {
+                   this.item_sku = newValue.item_sku
+                },
+            );
         },
         watch: {
 
@@ -167,9 +203,9 @@
                 let data = { dailySetup: this.dailySetup, quality:this.goldQuality.quality}
                 axios.post('/pos/edit_daily_setup', data)
                 .then(res => {
-                    this.dailySetup.kyat = res.data.kyat;
-                    this.dailySetup.pal = res.data.pal;
-                    this.dailySetup.yway = res.data.yway;
+                    this.dailySetup.kyat = res.data.daily_price_kyat;
+                    this.dailySetup.pal = res.data.daily_price_pal;
+                    this.dailySetup.yway = res.data.daily_price_yway;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -183,7 +219,13 @@
                 this.searchItemByItemId(this.item_sku);
 
             },
-        }
+        },
+        computed: {
+            ...mapGetters(['product_sku','toast_message','toast_icon','selectedItem']),
+        },
+        beforeDestroy() {
+            this.unwatch1();
+        },
     }
 </script>
 <style>

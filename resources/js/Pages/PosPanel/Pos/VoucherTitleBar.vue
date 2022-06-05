@@ -59,7 +59,7 @@
                 >
                 <v-text-field
                     v-model = "dailySetup.kyat"
-                    label="ပေါက်စေ◌ျး"
+                    label="ပေါက်ဈေး"
                     :hint="!isEditing ? 'Click the icon to edit' : 'Click the icon to save'"
                     :readonly="!isEditing"
                 >

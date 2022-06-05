@@ -32,4 +32,23 @@ class ContactController extends Controller
         }
         return response()->json(['data'=>$customerList]);
     }
+
+    public function saveCustomer(Request $request) {
+        try {
+            $customer = Contact::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'type' => 'customer',
+                'mobile1' => $request->mobile1,
+                'mobile2' => $request->mobile2,
+                'address' => $request->address,
+                'created_by' => Auth::user()->id,
+                'business_id' => Auth::user()->business_id,
+                'business_location_id' => Auth::user()->business_location_id,
+            ]);
+            return response()->json(['data'=>$customer, 'status'=>true]);
+        } catch (\Exception $e) {
+            return response()->json(['data'=>[], 'status'=>false]);
+        }
+    }
 }

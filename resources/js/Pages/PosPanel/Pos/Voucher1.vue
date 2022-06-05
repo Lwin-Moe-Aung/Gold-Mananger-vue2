@@ -92,6 +92,9 @@
                                                 required
                                                 @change="onChange"
                                                 type="number"
+                                                min="0"
+                                                max="16"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             >
                                             </v-text-field>
                                         </v-col>
@@ -107,6 +110,9 @@
                                                 required
                                                 @change="onChange"
                                                 type="number"
+                                                min="0"
+                                                max="15"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             ></v-text-field>
                                         </v-col>
 
@@ -117,10 +123,13 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
-                                                :rules="validationRules"
+                                                :rules="yway_validationRules"
                                                 required
                                                 @change="onChange"
                                                 type="number"
+                                                min="0"
+                                                max="7.9"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -152,6 +161,9 @@
                                                 required
                                                 readonly
                                                 type="number"
+                                                min="0"
+                                                max="16"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             ></v-text-field>
                                         </v-col>
 
@@ -166,6 +178,9 @@
                                                 required
                                                 readonly
                                                 type="number"
+                                                min="0"
+                                                max="15"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             ></v-text-field>
                                         </v-col>
 
@@ -176,10 +191,13 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
-                                                :rules="validationRules"
+                                                :rules="yway_validationRules"
                                                 required
                                                 readonly
                                                 type="number"
+                                                min="0"
+                                                max="7.9"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -210,6 +228,9 @@
                                                 :rules="validationRules"
                                                 required
                                                 type="number"
+                                                min="0"
+                                                max="16"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             ></v-text-field>
                                         </v-col>
 
@@ -223,6 +244,9 @@
                                                 :rules="validationRules"
                                                 required
                                                 type="number"
+                                                min="0"
+                                                max="15"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             ></v-text-field>
                                         </v-col>
 
@@ -233,9 +257,12 @@
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
-                                                :rules="validationRules"
+                                                :rules="yway_validationRules"
                                                 required
                                                 type="number"
+                                                min="0"
+                                                max="7.9"
+                                                oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                             ></v-text-field>
                                         </v-col>
                                         <v-col cols="12" sm="6" md="3">
@@ -281,34 +308,34 @@
                                             </strong>
                                         </v-list-item-content>
                                         <v-col cols="12" sm="6" md="2">
-                                            <v-text-field
+                                            <!-- <v-text-field
                                                 :value = "total_kyat"
                                                 label="ကျပ်"
                                                 placeholder="ကျပ်"
                                                 outlined
                                                 dense
                                                 readonly
-                                            ></v-text-field>
+                                            ></v-text-field> -->
                                         </v-col>
                                         <v-col cols="12" sm="6" md="2">
-                                            <v-text-field
+                                            <!-- <v-text-field
                                                 :value = "total_pal"
                                                 label="ပဲ"
                                                 placeholder="ပဲ"
                                                 outlined
                                                 dense
                                                 readonly
-                                            ></v-text-field>
+                                            ></v-text-field> -->
                                         </v-col>
                                         <v-col cols="12" sm="6" md="2">
-                                            <v-text-field
+                                            <!-- <v-text-field
                                                 :value = "total_yway"
                                                 label="ရွေး"
                                                 placeholder="ရွေး"
                                                 outlined
                                                 dense
                                                 readonly
-                                            ></v-text-field>
+                                            ></v-text-field> -->
                                         </v-col>
 
                                         <v-col cols="12" sm="6" md="3">
@@ -511,7 +538,11 @@
                 loading: false,
                 validationRules:[
                     v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'Must be a number',
+                    v => /^\d+$/.test(v) || 'limitation error',
+                ],
+                yway_validationRules:[
+                    v => !!v || 'Required',
+                    v => /^\d{0,1}(?:\.\d{1})?$/.test(v) || 'limitation error',
                 ],
 
                 //image upload
@@ -922,56 +953,56 @@
 
                 return fee_price;
             },
-            total_kyat() {
-                if(this.form.product_sku == "")return;
-                let total_kyat =
-                    parseInt(this.form.gold_weight.kyat) +
-                    parseInt(this.form.gem_weight.kyat) +
-                    parseInt(this.form.fee.kyat);
-                if (isNaN(total_kyat)) total_kyat = "";
-                this.form.total_kyat = total_kyat;
-                return total_kyat;
-            },
-            total_pal() {
-                if(this.form.product_sku == "")return;
-                let total_pal =
-                    parseInt(this.form.gold_weight.pal) +
-                    parseInt(this.form.gem_weight.pal) +
-                    parseInt(this.form.fee.pal) +
-                    parseInt(this.form.exceed_pal_form_yway);
-                if (isNaN(total_pal)) {
-                    total_pal = "";
-                }
-                if (total_pal >= 16) {
-                    this.form.total_kyat =
-                        this.form.total_kyat + parseInt(total_pal / 16);
-                    total_pal = total_pal % 16;
-                }
-                this.form.total_pal = total_pal;
+            // total_kyat() {
+            //     if(this.form.product_sku == "")return;
+            //     let total_kyat =
+            //         parseInt(this.form.gold_weight.kyat) +
+            //         parseInt(this.form.gem_weight.kyat) +
+            //         parseInt(this.form.fee.kyat);
+            //     if (isNaN(total_kyat)) total_kyat = "";
+            //     this.form.total_kyat = total_kyat;
+            //     return total_kyat;
+            // },
+            // total_pal() {
+            //     if(this.form.product_sku == "")return;
+            //     let total_pal =
+            //         parseInt(this.form.gold_weight.pal) +
+            //         parseInt(this.form.gem_weight.pal) +
+            //         parseInt(this.form.fee.pal) +
+            //         parseInt(this.form.exceed_pal_form_yway);
+            //     if (isNaN(total_pal)) {
+            //         total_pal = "";
+            //     }
+            //     if (total_pal >= 16) {
+            //         this.form.total_kyat =
+            //             this.form.total_kyat + parseInt(total_pal / 16);
+            //         total_pal = total_pal % 16;
+            //     }
+            //     this.form.total_pal = total_pal;
 
-                return total_pal;
-            },
-            total_yway() {
-                if(this.form.product_sku == "")return;
-                let total_yway =
-                    parseInt(this.form.gold_weight.yway) +
-                    parseInt(this.form.gem_weight.yway) +
-                    parseInt(this.form.fee.yway);
-                    console.log(total_yway);
-                if (isNaN(total_yway)) {
-                    total_yway = "";
-                }
-                if (total_yway >= 8) {
-                    this.form.exceed_pal_form_yway = parseInt(
-                        total_yway / 8
-                    );
-                    total_yway = total_yway % 8;
-                }else{
-                    this.form.exceed_pal_form_yway = 0;
-                }
-                this.form.total_yway = total_yway;
-                return total_yway;
-            },
+            //     return total_pal;
+            // },
+            // total_yway() {
+            //     if(this.form.product_sku == "")return;
+            //     let total_yway =
+            //         parseInt(this.form.gold_weight.yway) +
+            //         parseInt(this.form.gem_weight.yway) +
+            //         parseInt(this.form.fee.yway);
+            //         console.log(total_yway);
+            //     if (isNaN(total_yway)) {
+            //         total_yway = "";
+            //     }
+            //     if (total_yway >= 8) {
+            //         this.form.exceed_pal_form_yway = parseInt(
+            //             total_yway / 8
+            //         );
+            //         total_yway = total_yway % 8;
+            //     }else{
+            //         this.form.exceed_pal_form_yway = 0;
+            //     }
+            //     this.form.total_yway = total_yway;
+            //     return total_yway;
+            // },
             totalBefore() {
                 if(this.form.product_sku == "")return;
                 let total_before =
@@ -992,7 +1023,7 @@
                     parseInt(this.form.item_discount);
                 if (isNaN(final_total)) final_total = "";
                 this.form.final_total = final_total;
-
+                this.form.paid_money = final_total;
                 return final_total;
             },
             creditMoney() {

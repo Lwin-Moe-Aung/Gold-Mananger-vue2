@@ -49,7 +49,11 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos/productsku_search/{sku}', [HomeController::class, 'productSkuSearch'])->name('pos.productsku_search');
 
     Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
+
+    //contact
     Route::get('/pos/customer_search', [ContactController::class, 'customerSearch'])->name('pos.customer_search');
+    Route::post('/pos/save_customer', [ContactController::class, 'saveCustomer'])->name('pos.save_customer');
+
     Route::get('/pos/search_by_item_id', [HomeController::class, 'searchByItemId'])->name('pos.search_by_item_id');
     //customer order
     Route::post('/pos/save_order', [CustomerOrderController::class, 'saveOrder'])->name('pos.save_order');
@@ -61,6 +65,7 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos/json_search', [CustomerOrderController::class, 'jsonSearch'])->name('pos.json_search');
     //get gold quality
     Route::get('/pos/get_data_for_combobox', [HomeController::class, 'getDataForCombobox'])->name('pos.get_data_for_combobox');
+
 
 
 });

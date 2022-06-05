@@ -74,7 +74,7 @@ class CustomerController extends Controller
                 // // Session::put('message', 'hello bar tone');
                 return back();
             } catch (\Exception $e) {
-                dd("hlelo");
+                // dd("hlelo");
                 return back()->with('fail', 'Fail to Create Customer');
             }
         }

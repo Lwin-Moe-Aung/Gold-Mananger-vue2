@@ -30,6 +30,7 @@ const getters = {
 };
 const actions = {
     async searchItem({commit}, data){
+        console.log(data);
         await axios.post(constant.URL+"search", data)
             .then((response) => {
                 if(response.data.message !== "newItem"){

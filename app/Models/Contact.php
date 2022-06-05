@@ -31,6 +31,7 @@ class Contact extends Model
         'mobile1',
         'mobile2',
         'address',
+        'total_amount',
         'created_by',
         'total_amount',
         'customer_group_id'

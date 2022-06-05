@@ -26,6 +26,7 @@ class CreateContactsTable extends Migration
             $table->string('mobile1');
             $table->string('mobile2')->nullable();
             $table->string('address')->nullable();
+            $table->string('total_amount')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->integer('customer_group_id')->nullable();

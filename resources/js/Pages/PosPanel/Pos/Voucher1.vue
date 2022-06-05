@@ -536,11 +536,18 @@
         },
 
         created() {
-            // this.getDataForCombobox();
+            this.unwatch1 = this.$store.watch(
+                (state, getters) => getters.reset_voucher_form,
+                (newValue, oldValue) => {
+                    if(newValue)this.clearFormData();
+                },
+            );
         },
 
         methods: {
-            ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList","resetCustomer"]),
+            ...mapActions(["searchItem", "addItem", "editItemFromCart",
+                "selectItemReset","searchItemByItemId","removeItem",
+                "removeItemFromSearchList","resetCustomer", "resetVoucherForm"]),
 
             // getDataForCombobox() {
             //     axios.get(this.route("pos.get_data_for_combobox"))
@@ -762,31 +769,32 @@
                 window.print();
             },
             clearFormData() {
-                    this.form.id= "",
-                    this.form.name= "",
-                    this.form.product_sku= "",
-                    this.form.image= undefined,
-                    this.form.imageFile= undefined,
-                    this.form.item_sku= "",
-                    this.form.gold_weight= { kyat: "", pal: "", yway: "" },
-                    this.form.gold_price= "",
-                    this.form.gem_weight= { kyat: "", pal: "", yway: "" },
-                    this.form.gem_price= "",
-                    this.form.fee= { kyat: "", pal: "", yway: "" },
-                    this.form.fee_price= "",
-                    this.form.fee_for_making= "",
-                    this.form.item_discount= "",
-                    this.form.tax= "",
-                    this.form.item_description= "",
-                    this.form.total_kyat= "",
-                    this.form.total_pal= "",
-                    this.form.exceed_pal_form_yway= "",
-                    this.form.total_yway= "",
-                    this.form.total_before= "",
-                    this.form.final_total= "",
-                    this.form.paid_money= "",
-                    this.form.credit_money= "",
-                    this.form.note= ""
+                this.form.id= "",
+                this.form.name= "",
+                this.form.product_sku= "",
+                this.form.image= undefined,
+                this.form.imageFile= undefined,
+                this.form.item_sku= "",
+                this.form.gold_weight= { kyat: "", pal: "", yway: "" },
+                this.form.gold_price= "",
+                this.form.gem_weight= { kyat: "", pal: "", yway: "" },
+                this.form.gem_price= "",
+                this.form.fee= { kyat: "", pal: "", yway: "" },
+                this.form.fee_price= "",
+                this.form.fee_for_making= "",
+                this.form.item_discount= "",
+                this.form.tax= "",
+                this.form.item_description= "",
+                this.form.total_kyat= "",
+                this.form.total_pal= "",
+                this.form.exceed_pal_form_yway= "",
+                this.form.total_yway= "",
+                this.form.total_before= "",
+                this.form.final_total= "",
+                this.form.paid_money= "",
+                this.form.credit_money= "",
+                this.form.note= ""
+                this.resetVoucherForm();
             }
 
         },
@@ -867,7 +875,7 @@
         },
 
         computed: {
-            ...mapGetters(['selectedItem', 'item_from_cart', 'carts','customer']),
+            ...mapGetters(['selectedItem', 'item_from_cart', 'carts','customer', 'reset_voucher_form']),
             goldPrice() {
                 if(this.form.product_sku == "")return;
                 let price = this.$page.props.daily_setup[this.quality];

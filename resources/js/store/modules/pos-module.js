@@ -33,54 +33,30 @@ const actions = {
         await axios.post(constant.URL+"search", data)
             .then((response) => {
                 if(response.data.message !== "newItem"){
-                    var items = response.data.items;
-                    var message = response.data.message;
-                    var icon = "success"
+                    commit("selectItemReset");
+                    commit("setItem", response.data.items);
+                    commit("setItemToSearchedItemsData", response.data.items);
+                    commit("setToastMessage", response.data.message);
+                    commit("setToastIcon", "success");
 
                 }else{
-                    alert("create new Item?");
-                    // let fee = {kyat:0, pal:3, yway:0};
-                    // let gem_weight = {kyat:0, pal:0, yway:0};
-
-                    // var kyat = 1;
-                    // var pal = 0;
-                    // var yway = 0;
-                    // if(data.item_spe !== null){
-                    //     kyat = parseInt(String(data.item_spe.charAt(0))+String(data.item_spe.charAt(1)))
-                    //     pal = parseInt(String(data.item_spe.charAt(2))+String(data.item_spe.charAt(3)))
-                    //     yway = data.item_spe.charAt(4)
-                    // }
-                    // let gold_weight = {
-                    //     kyat: kyat,
-                    //     pal: pal,
-                    //     yway: yway,
-                    // };
-
-                    // let item = {
-                    //     id: "",
-                    //     name: "ဖန်တီးထားသော ကုန်ပစ္စည်းအသစ်",
-                    //     product_sku: data.product_sku,
-                    //     item_spe: data.item_spe !== null ? data.item_spe : '01000',
-                    //     image1: "/images/pos/new-default.jpg",
-                    //     quality: parseInt(String(data.product_sku.charAt(0))+String(data.product_sku.charAt(1))),
-                    //     gold_weight: gold_weight,
-                    //     gem_weight: gem_weight,
-                    //     fee: fee,
-                    //     fee_for_making: "5000"
-
-                    // };
-                    // var items = [
-                    //     item
-                    // ];
-                    // var message = "အခုမှဖန်တီးလိုက်သော ကုန်ပစ္စည်းအသစ်";
-                    // var icon = "warning";
+                    Swal.fire({
+                        title: 'သေချာပါသလား?',
+                        text: "သင်ရှာဖွေနေသောပစ္စည်းမရှိပါ။ အသစ် ဖန်တီးနိုင်ပါသည်။",
+                        confirmButtonColor: "#DD6B55",
+                        showDenyButton: true,
+                        confirmButtonText: `ဖန်တီးမယ်`,
+                        denyButtonText: `မဖန်တီးတော့ပါ`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            commit("createNewItem")
+                        }
+                    });
                 }
-                commit("setItem", items);
-                commit("setItemToSearchedItemsData", items);
-                commit("setToastMessage", message);
-                commit("setToastIcon", icon);
+
             });
         commit("setProductSku", data.product_sku);
+        commit("resetItemSpe");
 
     },
     async searchItemByItemId({commit}, item_id){
@@ -102,20 +78,38 @@ const actions = {
                         var message = "id -"+item_id +"ကရောင်းထွက်ပီးသွားပါပီ။ သူနဲ့ ဆက်စပ့် ပစ္စည်းများသာကြည့်ပါ။";
                         var icon = "warning";
                     }
-
+                    commit("selectItemReset");
                     commit("setItem", item_lists);
+                    commit("setItemToSearchedItemsData", item_lists);
                     commit("setToastMessage", message);
                     commit("setToastIcon", icon);
-
+                    commit("resetItemSpe");
                 }
         });
     },
     async searchItemByItemSpe({commit}, data){
+        await commit("setItemSpe", data)
         if (state.searched_Items_data.length === 0) {
             //do something
         }else{
             const result = state.searched_Items_data.filter(val => val.item_spe == data);
-            commit("setItem", result);
+            if(result.length != 0){
+                await commit("setItem", result);
+            }else{
+                Swal.fire({
+                    title: 'သေချာပါသလား?',
+                    text: "သင်ရှာဖွေနေသောပစ္စည်းမရှိပါ။ အသစ် ဖန်တီးနိုင်ပါသည်။",
+                    confirmButtonColor: "#DD6B55",
+                    showDenyButton: true,
+                    confirmButtonText: `ဖန်တီးမယ်`,
+                    denyButtonText: `မဖန်တီးတော့ပါ`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        commit("createNewItem")
+                    }
+                });
+            }
+
         }
     },
     async selectItem({commit}, data){
@@ -155,13 +149,18 @@ const actions = {
     async resetVoucherForm({commit},data){
         await commit("resetVoucherForm",data)
     },
+    async renewItemsArray({commit},data){
+        await commit("renewItemsArray",data)
+    },
 
 };
 const mutations = {
 
-    setItem: (state, data) => (
+    setItem: (state, data) => {
+        state.selectedItem = ""
+        state.items = []
         state.items = data
-    ),
+    },
     setItemToSearchedItemsData: (state, data) => (
         state.searched_Items_data = data
     ),
@@ -169,6 +168,34 @@ const mutations = {
         state.selectedItem = item,
         state.item_from_cart = false
     ),
+    createNewItem: (state, data) => {
+        let kyat = parseInt(String(state.item_spe.charAt(0))+String(state.item_spe.charAt(1)));
+        let pal = parseInt(String(state.item_spe.charAt(2))+String(state.item_spe.charAt(3)));
+        let yway = parseInt(state.item_spe.charAt(4));
+
+        let item = {
+            id: "",
+            name: "ဖန်တီးထားသော ကုန်ပစ္စည်းအသစ်",
+            product_sku: state.product_sku,
+            item_spe: state.item_spe,
+            image1: "/images/pos/new-default.jpg",
+            quality: state.product_sku.length > 3 ? parseInt(String(state.product_sku.charAt(0))+String(state.product_sku.charAt(1))) :
+                                                    state.product_sku.charAt(0),
+            gold_weight: {kyat:kyat, pal:pal, yway:yway},
+            gem_weight: {kyat:0, pal:0, yway:0},
+            fee: {kyat:0, pal:3, yway:0},
+            fee_for_making: "5000"
+        };
+        var items = [
+            item
+        ];
+        state.selectedItem = "";
+        state.items = [];
+        state.items = items;
+        state.toast_message = "အခုမှဖန်တီးလိုက်သော ကုန်ပစ္စည်းအသစ်";
+        state.toast_icon = "warning";
+
+    },
     setProductSku: (state, data) => (
         state.product_sku = data
     ),
@@ -230,8 +257,14 @@ const mutations = {
     resetCustomer: (state, data) => (
         state.customer = ""
     ),
+    resetItemSpe: (state, data) => (
+        state.item_spe = ""
+    ),
     resetVoucherForm: (state, data) => (
         state.reset_voucher_form = !state.reset_voucher_form
+    ),
+    renewItemsArray: (state, data) => (
+        state.items = state.searched_Items_data
     )
 };
 export default {

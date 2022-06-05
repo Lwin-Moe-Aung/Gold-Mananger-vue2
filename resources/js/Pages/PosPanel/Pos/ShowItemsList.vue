@@ -85,14 +85,11 @@
             ...mapGetters(['items','toast_message','toast_icon']),
         },
         created() {
+
             this.unwatch1 = this.$store.watch(
                 (state, getters) => getters.items,
                 (newValue, oldValue) => {
-                    // let item = newValue.find(function(val) {
-                    //     return newValue.indexOf(val) == 0;
-                    // });
-                    // this.select(item);
-                    // this.onCardClick(0);
+                    this.onCardClick(-1);
                     Toast.fire({
                         icon: this.toast_icon,
                         title: this.toast_message

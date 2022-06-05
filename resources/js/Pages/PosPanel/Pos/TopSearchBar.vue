@@ -20,14 +20,27 @@
         <!-- end autocomplete for product sku -->
 
         <v-col cols="2" sm="2">
-            <div class="ma-auto" style="max-width: 300px">
-                <v-otp-input
+            <div class="ma-auto mt-4" style="max-width: 300px">
+                <!-- <v-otp-input
                     v-model="searchValue"
                     :length="length"
                     type="text"
                     plain
-                    @finish="searchProduct"
-                ></v-otp-input>
+                    @finish="textFieldChange"
+                ></v-otp-input> -->
+
+                <v-text-field
+                    v-model="searchValue"
+                    label="အလေးချိန်"
+                    placeholder="အလေးချိန်"
+                    outlined
+                    solo
+                    dense
+                    counter
+                    maxlength="5"
+                    @input="textFieldChange"
+                ></v-text-field>
+
             </div>
         </v-col>
         <v-col cols="8" class="my-3">
@@ -55,7 +68,7 @@
             this.unwatch1 = this.$store.watch(
                 (state, getters) => getters.product_sku,
                 (newValue, oldValue) => {
-                    // console.log("hello changin product_sku");
+                    alert("hello changin product_sku");
                     this.searchProductSku = newValue,
                     this.selectProductSku = newValue
                 },
@@ -73,7 +86,7 @@
             },
         },
         methods: {
-            ...mapActions([ "searchItem", "searchItemByItemSpe","resetVoucherForm"]),
+            ...mapActions([ "searchItem", "searchItemByItemSpe","resetVoucherForm","renewItemsArray"]),
             querySelections (v) {
                 this.loading = true
                 // Simulated ajax query
@@ -85,13 +98,15 @@
                     this.loading = false
                 }, 500)
             },
-            searchProduct() {
+            textFieldChange() {
+                if(this.searchValue.length == 0) this.renewItemsArray();
+
+                if(this.searchValue.length == 5){
                 //regular expression test for "15gr02157"
                 //-- const regex = /(^(0[5-9]|1[0-6]))([a-z]{2})[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
 
                 //regular expression test for "02157"
                 const regex = /[0-9][0-9](0[0-9]|1[0-5])[0-7]$/g;
-
                 const matches = regex.exec(this.searchValue);
                 if( matches == null){
                     Swal.fire(
@@ -99,19 +114,20 @@
                         'Sku format is something wrong',
                         'error'
                     )
-                    return false;
+                    return;
                 }
-                // let data = { product_sku: this.searchProductSku, item_spe:this.searchValue}
                 this.searchItemByItemSpe(this.searchValue);
                 this.resetVoucherForm();
+                }
+
             },
             onChange() {
                 let data = { product_sku: this.selectProductSku}
                 this.searchItem(data);
+                this.resetVoucherForm();
+                this.searchValue = "";
             },
-            onChangeOtpBox() {
-                alert("asdfasd otp box");
-            }
+
         },
         computed: {
             ...mapGetters(['product_sku', 'item_spe','toast_message','toast_icon']),

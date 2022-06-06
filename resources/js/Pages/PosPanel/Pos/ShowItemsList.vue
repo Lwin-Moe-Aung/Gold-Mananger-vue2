@@ -82,14 +82,14 @@
             },
         },
         computed: {
-            ...mapGetters(['items','toast_message','toast_icon']),
+            ...mapGetters(['items','toast_message','toast_icon','reset_voucher_form']),
         },
         created() {
 
             this.unwatch1 = this.$store.watch(
                 (state, getters) => getters.items,
                 (newValue, oldValue) => {
-                    this.onCardClick(-1);
+                    this.onCardClick(-3);
                     Toast.fire({
                         icon: this.toast_icon,
                         title: this.toast_message
@@ -97,10 +97,18 @@
 
                 },
             );
+            this.unwatch2 = this.$store.watch(
+                (state, getters) => getters.reset_voucher_form,
+                (newValue, oldValue) => {
+                    if(newValue)this.onCardClick(-3);
+                },
+            );
 
         },
         beforeDestroy() {
             this.unwatch1();
+            this.unwatch2();
+
         },
     };
 </script>

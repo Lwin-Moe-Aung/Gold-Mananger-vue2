@@ -264,9 +264,12 @@ const mutations = {
     resetVoucherForm: (state, data) => (
         state.reset_voucher_form = !state.reset_voucher_form
     ),
-    renewItemsArray: (state, data) => (
-        state.items = state.searched_Items_data
-    )
+    renewItemsArray: (state, data) => {
+        state.items = state.searched_Items_data;
+        state.selectedItem = "";
+        state.item_spe = "";
+        state.reset_voucher_form = !state.reset_voucher_form;
+    }
 };
 export default {
     state,

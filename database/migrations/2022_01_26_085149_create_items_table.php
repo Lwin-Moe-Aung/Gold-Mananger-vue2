@@ -35,7 +35,7 @@ class CreateItemsTable extends Migration
             $table->string('fee', 100)->nullable();
             $table->string('fee_price', 100);
 
-            $table->decimal('fee_for_making', 10, 2)->default(0);
+            $table->string('fee_for_making', 100)->nullable();
             $table->decimal('item_discount', 8, 2)->default(0);
             $table->decimal('tax', 8, 2)->default(0);
             $table->enum('is_active', ['0', '1'])->default('1');

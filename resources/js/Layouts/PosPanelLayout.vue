@@ -1,24 +1,54 @@
 <template>
     <v-app :style="{background: $vuetify.theme.themes.dark.background}">
-        <SideBar />
-        <SideBarRight />
-        <v-container style="margin-left: 68px; padding: 39px;">
-          <!-- Main content -->
-                  <slot></slot>
-          <!-- /.content -->
-        </v-container>
+        <v-row no-gutters>
+            <v-col
+                lg="1"
+                class="d-none d-lg-flex d-md-none"
+            >
+                <SideBar :drawer="drawer" />
+            </v-col>
+            <v-col
+                lg="9"
+                md="12"
+                xs="12"
+                sm="12"
+            >
+                <slot></slot>
+            </v-col>
+            <FAB class="d-lg-none d-xl-flex"/>
+            <v-col
+                lg="2"
+                class="d-none d-lg-flex d-md-none"
+            >
+                <RightSideBar />
+            </v-col>
+        </v-row>
+
+        <!-- <RightSideBar /> -->
+
+        <!-- <SideBar /> -->
+        <!-- <SideBarRight /> -->
+        <!-- <v-container style="margin-left: 68px; padding: 39px;"> -->
+                  <!-- <slot></slot> -->
+
+        <!-- </v-container> -->
     </v-app>
 </template>
 
 <script>
     import SideBar from '../Components/PosPanel/SideBar'
-    import SideBarRight from '../Components/PosPanel/SideBarRight'
+    import FAB from '../Components/PosPanel/FAB'
+    import RightSideBar from '../Components/PosPanel/RightSideBar'
 
     export default {
         components: {
             SideBar,
-            SideBarRight,
+            RightSideBar,
+            FAB
         },
+        data: () => ({
+            drawer: true
+        }),
     }
 </script>
 <style>

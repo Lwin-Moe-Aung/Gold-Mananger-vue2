@@ -1,86 +1,165 @@
 <template>
     <pos-panel-layout>
-        <v-toolbar color="rgba(0,0,0,0)" flat>
-            <v-row>
-                <v-col cols="12" sm="12">
-                    <v-card flat class="rounded-lg mx-2">
-                        <v-row>
-                            <!-- search bar -->
-                            <TopSearchBar/>
-                        </v-row>
+            <v-row class="mt-n14">
+                <v-col
+                    cols="12"
+                    xs="12"
+                    sm="6"
+                    md="4"
+                    lg="4"
+                    v-for="(shoe, i) in shoes"
+                    :key="i"
+                >
+                    <v-card
+                        class="mx-auto my-12 rounded-xl"
+                        max-width="374"
+                        color="#151515"
+                    >
+                        <v-img height="170" :src="shoe.image"></v-img>
+                        <v-toolbar color="transparent" class="mt-n7" flat>
+                            <v-avatar color="white" rounded class="mr-2">
+                                <v-img :src="shoe.pic" contain></v-img>
+                            </v-avatar>
+                            <v-spacer></v-spacer>
+                            <v-avatar color="black" rounded class="mr-2" dark>
+                                <div class="three">
+                                <div class="four">
+                                    <span class="white--text caption">{{ shoe.price }}</span>
+                                </div>
+                                <div class="five">
+                                    <span class="green--text caption">HOLD</span>
+                                </div>
+                                </div>
+                            </v-avatar>
+                        </v-toolbar>
+                        <v-card-title class="grey--text caption">{{
+                        shoe.id
+                        }}</v-card-title>
+                        <v-card-title class="grey--text text-grey-darken-1 caption mt-n6">{{
+                        shoe.date
+                        }}</v-card-title>
+                        <v-card-text class="white--text text-grey-darken-1 mt-n2">{{
+                        shoe.marque
+                        }}</v-card-text>
+
+                        <v-card-text class="mt-n4">
+                            <v-chip-group
+                                active-class="deep-purple accent-4 white--text"
+                                column
+                            >
+                                <v-chip label dark>{{ shoe.pay1 }}</v-chip>
+                                <v-chip label dark>{{ shoe.pay2 }}</v-chip>
+                                <v-spacer></v-spacer>
+                                <v-avatar size="40">
+                                    <v-img :src="shoe.avatar"></v-img>
+                                </v-avatar>
+                            </v-chip-group>
+                        </v-card-text>
                     </v-card>
                 </v-col>
             </v-row>
-        </v-toolbar>
-        <v-item-group mandatory class="mt-n1">
-            <v-container>
-                <!-- item list showing -->
-                <ShowItemsList/>
-            </v-container>
-        </v-item-group>
-        <v-toolbar color="#EEEEEE" flat class="toolbar-middle">
-            <v-toolbar-title class="mb-7">Customer Profile</v-toolbar-title>
-            <v-spacer></v-spacer >
-            <span class="mb-7" color="grey">Open Voucher</span>
-        </v-toolbar>
-        <v-row>
-            <Customer />
-            <Voucher1 />
-        </v-row>
     </pos-panel-layout>
 </template>
 
 <script>
 import PosPanelLayout from "../../../Layouts/PosPanelLayout";
-import Customer from "./Customer";
-import ItemList from "./ItemList";
-import Search from "./Search";
-import Voucher1 from "./Voucher1";
-import TopSearchBar from "./TopSearchBar";
-import ShowItemsList from "./ShowItemsList";
+
 
 export default {
+    name: "Home",
     components: {
-        PosPanelLayout,
-        Customer,
-        ItemList,
-        Search,
-        Voucher1,
-        TopSearchBar,
-        ShowItemsList
+        PosPanelLayout
     },
-    data() {
-        return {
-            model:null,
-        };
-    },
+  data: () => ({
+    selection: 1,
+    drawer: true,
+    shoes: [
+      {
+        image: "3.jpg",
+        pic: "1.png",
+        price: "$465",
+        id: "ID: CK1911159967352",
+        date: "02.12.2021, 3:34 AM",
+        marque: "Nike Air MAx",
+        pay1: "LUXEMBURG",
+        pay2: "ITALY",
+        avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
+      },
+      {
+        image: "9.jfif",
+        pic: "2.png",
+        price: "$714",
+        id: "ID: CK1911159967621",
+        date: "02.12.2021, 4:12 AM",
+        marque: "AIR Jordon",
+        pay1: "FUTURE",
+        pay2: "WAR",
+        avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
+      },
+      {
+        image: "8.jpg",
+        pic: "3.png",
+        price: "$982",
+        id: "ID: CK1911159967532",
+        date: "02.12.2021, 6:24 AM",
+        marque: "Adidas GR",
+        pay1: "LONDON",
+        pay2: "ALGERIA",
+        avatar: "https://cdn.vuetifyjs.com/images/lists/3.jpg",
+      },
+      {
+        image: "7.jpg",
+        pic: "4.png",
+        price: "$394",
+        id: "ID: CK1911159968663",
+        date: "02.12.2021, 7:51 AM",
+        marque: "Puma New",
+        pay1: "SRILANKA",
+        pay2: "PALAU",
+        avatar: "https://cdn.vuetifyjs.com/images/lists/4.jpg",
+      },
+    ],
 
+  }),
+
+  methods: {},
 };
 </script>
-<!--
-<style>
-.v-card.borderme {
-    border: 2px solid #704232 !important;
+<style scoped>
+.v-tab.withoutupercase {
+  text-transform: none !important;
 }
-.v-card.borderout {
-    border: 1px solid #bcaaa4 !important;
+.v-tabs {
+  width: 50% !important;
 }
-.voucher-row {
-    margin-bottom: -22px;
+.v-btn.withoutupercase {
+  text-transform: none !important;
 }
-.voucher-row1 {
-    margin-bottom: -37px;
+/*div{
+  display:inline-block;
+  float:left;
+  color:#fff;
+  font-size:10px;
+}*/
+
+.three {
+  width: 50px;
+  height: 50px;
 }
-.toolbar-middle {
-    height: 40px !important;
+
+.four {
+  width: 50px;
+  height: 25px;
+  background: black;
 }
-/* .v-toolbar__content{
-  height: 31px !important;
-} */
-.v-timeline {
-    padding-top: 0 !important;
+.five {
+  width: 50px;
+  height: 25px;
+  background: #042a0f;
 }
-.v-toolbar__content {
-    height: 71px !important;
+.six {
+  width: 50px;
+  height: 25px;
+  background: #2c2107;
 }
-</style> -->
+</style>

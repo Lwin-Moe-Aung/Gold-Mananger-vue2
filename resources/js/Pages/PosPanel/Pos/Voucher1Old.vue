@@ -1,5 +1,5 @@
 <template>
-    <v-col cols="12" sm="12" md="12">
+    <v-col cols="12" sm="12">
         <v-hover v-slot="{ hover }" close-delay="200">
             <v-card
                 :elevation="hover ? 16 : 2"
@@ -65,18 +65,25 @@
                     <!--new-->
                         <v-container>
                             <v-row>
-                                <v-col cols="12" lg="9" sm="9" md="9" xs="12" >
-                                    <v-card flat class="mr-2">
-                                        <v-layout row wrap class="pl-4 textfield one">
-                                            <v-flex xs3 md3 sm3 class="mt-5 text-left">
-                                                <div>ရွှေချိန်</div>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
+                                <v-col cols="12" lg="8" sm="12" md="12" xs="12">
+                                    <!--row for voucher-->
+                                    <v-row>
+                                        <v-col cols="3">
+                                            <v-list-item-content>
+                                                <strong class="mb-7 ml-5">
+                                                    ရွှေချိန်
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-row>
+                                                <v-col cols="4">
                                                     <v-text-field
                                                         v-model = "form.gold_weight.kyat"
                                                         label="ကျပ်"
                                                         placeholder="ကျပ်"
+                                                        outlined
+                                                        dense
                                                         :rules="validationRules"
                                                         required
                                                         @change="onChange"
@@ -86,14 +93,14 @@
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     >
                                                     </v-text-field>
-                                                </v-flex>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
-                                                     <v-text-field
+                                                </v-col>
+                                                <v-col cols="4">
+                                                    <v-text-field
                                                         v-model = "form.gold_weight.pal"
                                                         label="ပဲ"
                                                         placeholder="ပဲ"
+                                                        outlined
+                                                        dense
                                                         :rules="validationRules"
                                                         required
                                                         @change="onChange"
@@ -102,14 +109,14 @@
                                                         max="15"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
-                                                </v-flex>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
-                                                   <v-text-field
+                                                </v-col>
+                                                <v-col cols="4">
+                                                    <v-text-field
                                                         v-model = "form.gold_weight.yway"
                                                         label="ရွေး"
                                                         placeholder="ရွေး"
+                                                        outlined
+                                                        dense
                                                         :rules="yway_validationRules"
                                                         required
                                                         @change="onChange"
@@ -118,286 +125,352 @@
                                                         max="7.9"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
-                                                </v-flex>
+                                                </v-col>
 
-                                            </v-flex>
-                                            <v-flex xs3 sm3 md3>
-                                                <div class="right">
-                                                <v-chip small class="one white--text my-6 caption">{{ goldPrice }}</v-chip>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                        <v-layout row wrap class="pl-4 textfield one">
-                                            <v-flex xs3 md3 sm3 class="mt-5 text-left">
-                                                <div>ကျောက်ချိန်</div>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
+                                            </v-row>
+                                        </v-col>
+                                        <v-col cols="3">
+                                            <v-text-field
+                                                :value = "goldPrice"
+                                                label="ကျသင့်ငွေ"
+                                                placeholder="ကျသင့်ငွေ"
+                                                outlined
+                                                dense
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+
+                                    <v-row>
+                                        <v-col cols="3">
+                                            <v-list-item-content>
+                                                <strong class="mb-7 ml-5">
+                                                    ကျောက်ချိန်
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-row>
+                                                <v-col cols="4">
                                                     <v-text-field
-                                                        v-model = "form.gem_weight.kyat"
+                                                        v-model="form.gem_weight.kyat"
                                                         label="ကျပ်"
                                                         placeholder="ကျပ်"
+                                                        outlined
+                                                        dense
                                                         :rules="validationRules"
                                                         required
-                                                        @change="onChange"
+                                                        readonly
                                                         type="number"
                                                         min="0"
                                                         max="16"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
-                                                    >
-                                                    </v-text-field>
-                                                </v-flex>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
-                                                     <v-text-field
-                                                        v-model = "form.gem_weight.pal"
+                                                    ></v-text-field>
+                                                </v-col>
+                                                <v-col cols="4">
+                                                    <v-text-field
+                                                        v-model="form.gem_weight.pal"
                                                         label="ပဲ"
                                                         placeholder="ပဲ"
+                                                        outlined
+                                                        dense
                                                         :rules="validationRules"
                                                         required
-                                                        @change="onChange"
+                                                        readonly
                                                         type="number"
                                                         min="0"
                                                         max="15"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
-                                                </v-flex>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
-                                                   <v-text-field
-                                                        v-model = "form.gem_weight.yway"
+                                                </v-col>
+                                                <v-col cols="4">
+                                                    <v-text-field
+                                                        v-model="form.gem_weight.yway"
                                                         label="ရွေး"
                                                         placeholder="ရွေး"
+                                                        outlined
+                                                        dense
                                                         :rules="yway_validationRules"
                                                         required
-                                                        @change="onChange"
+                                                        readonly
                                                         type="number"
                                                         min="0"
                                                         max="7.9"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
-                                                </v-flex>
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                        <v-col cols="3">
+                                            <v-text-field
+                                                :value = "gemPrice"
+                                                label="ကျသင့်ငွေ"
+                                                placeholder="ကျသင့်ငွေ"
+                                                outlined
+                                                dense
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
 
-                                            </v-flex>
-                                            <v-flex xs3 sm3 md3>
-                                                <div class="right">
-                                                    <v-chip small class="one white--text my-6 caption">{{ gemPrice }}</v-chip>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                        <v-layout row wrap class="pl-4 textfield one">
-                                            <v-flex xs3 md3 sm3 class="mt-5 text-left">
-                                                <div>အလျော့တွက်</div>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
+                                    <v-row>
+                                        <v-col cols="3">
+                                            <v-list-item-content>
+                                                <strong class="mb-7 ml-5">
+                                                    အလျော့တွက်
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-row>
+                                                <v-col cols="4">
                                                     <v-text-field
-                                                        v-model = "form.fee.kyat"
+                                                        v-model="form.fee.kyat"
                                                         label="ကျပ်"
                                                         placeholder="ကျပ်"
+                                                        outlined
+                                                        dense
                                                         :rules="validationRules"
                                                         required
-                                                        @change="onChange"
                                                         type="number"
                                                         min="0"
                                                         max="16"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
-                                                    >
-                                                    </v-text-field>
-                                                </v-flex>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
-                                                     <v-text-field
-                                                        v-model = "form.fee.pal"
+                                                    ></v-text-field>
+                                                </v-col>
+                                                <v-col cols="4">
+                                                    <v-text-field
+                                                        v-model="form.fee.pal"
                                                         label="ပဲ"
                                                         placeholder="ပဲ"
+                                                        outlined
+                                                        dense
                                                         :rules="validationRules"
                                                         required
-                                                        @change="onChange"
                                                         type="number"
                                                         min="0"
                                                         max="15"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
-                                                </v-flex>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                                <v-flex xs6 sm6 md6>
-                                                   <v-text-field
-                                                        v-model = "form.fee.yway"
+                                                </v-col>
+                                                <v-col cols="4">
+                                                    <v-text-field
+                                                        v-model="form.fee.yway"
                                                         label="ရွေး"
                                                         placeholder="ရွေး"
+                                                        outlined
+                                                        dense
                                                         :rules="yway_validationRules"
                                                         required
-                                                        @change="onChange"
                                                         type="number"
                                                         min="0"
                                                         max="7.9"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
-                                                </v-flex>
+                                                </v-col>
 
-                                            </v-flex>
-                                            <v-flex xs3 sm3 md3>
-                                                <div class="right">
-                                                    <v-chip small class="one white--text my-6 caption">{{ feePrice }}</v-chip>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                        <v-layout row wrap class="pl-4 textfield one">
-                                            <v-flex xs3 md3 sm3 class="mt-5 text-left">
-                                                <div>လက်ခ</div>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                            </v-flex>
-                                            <v-flex xs3 sm3 md3>
-                                                <div class="right">
-                                                    <v-flex xs7 sm7 md7>
-                                                        <v-text-field
-                                                            v-model="form.fee_for_making"
-                                                            label="ကျသင့်ငွေ"
-                                                            placeholder="ကျသင့်ငွေ"
-                                                            :rules="validationRules"
-                                                            required
-                                                            type="number"
-                                                        ></v-text-field>
-                                                    </v-flex>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                        <v-layout row wrap class="pl-4 textfield one">
-                                            <v-flex xs3 md3 sm3 class="mt-5 text-left">
-                                                <div>စုစုပေါင်း</div>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                            </v-flex>
-                                            <v-flex xs2 sm2 md2>
-                                            </v-flex>
-                                            <v-flex xs3 sm3 md3>
-                                                <div class="right">
-                                                    <v-chip small class="one white--text my-6 caption">{{ totalBefore }}</v-chip>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                    </v-card>
+                                            </v-row>
+                                        </v-col>
+                                        <v-col cols="3">
+                                            <v-text-field
+                                                :value = "feePrice"
+                                                label="ကျသင့်ငွေ"
+                                                placeholder="ကျသင့်ငွေ"
+                                                outlined
+                                                dense
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="3">
+                                            <v-list-item-content>
+                                                <strong class="mb-7 ml-5">
+                                                    လက်ခ
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-row>
+                                                <v-col cols="4">
+
+                                                </v-col>
+                                                <v-col cols="4">
+
+                                                </v-col>
+                                                <v-col cols="4">
+
+                                                </v-col>
+
+                                            </v-row>
+                                        </v-col>
+                                        <v-col cols="3">
+                                            <v-text-field
+                                                v-model="form.fee_for_making"
+                                                label="ကျသင့်ငွေ"
+                                                placeholder="ကျသင့်ငွေ"
+                                                outlined
+                                                dense
+                                                :rules="validationRules"
+                                                required
+                                                type="number"
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+
+                                    <v-row>
+                                        <v-col cols="3">
+                                            <v-list-item-content>
+                                                <strong class="mb-7 ml-5">
+                                                    စုစုပေါင်း
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-row>
+                                                <v-col cols="4">
+
+                                                </v-col>
+                                                <v-col cols="4">
+
+                                                </v-col>
+                                                <v-col cols="4">
+
+                                                </v-col>
+
+                                            </v-row>
+                                        </v-col>
+                                        <v-col cols="3">
+                                            <v-text-field
+                                                :value = "totalBefore"
+                                                label="ကျသင့်ငွေ"
+                                                placeholder="ကျသင့်ငွေ"
+                                                outlined
+                                                dense
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
                                 </v-col>
-
+                                <v-col cols="12" sm="1" md="1" xs="1" class="justify-center">
+                                    <!-- <v-divider
+                                      vertical
+                                    ></v-divider> -->
+                                </v-col>
 
                                 <v-col
                                     cols="12"
                                     lg="3"
-                                    sm="3"
-                                    md="3"
+                                    sm="12"
+                                    md="12"
                                     xs="12"
                                 >
-                                   <v-card flat>
-                                        <v-layout row wrap class="pa-3 textfield one">
-                                            <v-flex xs6 sm6 md6>
-                                                <div>လျော့ငွေ</div>
-                                            </v-flex>
+                                    <v-row>
+                                        <v-col
+                                            cols="5"
+                                            md="6"
+                                            offset="3"
+                                        >
+                                            <v-list-item-content>
+                                                <strong>
+                                                    လျော့ငွေ
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
 
-                                            <v-flex xs6 sm6 md6>
-                                                <div class="right">
-                                                    <v-text-field
-                                                        v-model="form.item_discount"
-                                                        label="kyats"
-                                                        placeholder="kyats"
-                                                        dense
-                                                        :rules="validationRules"
-                                                        required
-                                                        type="number"
-                                                    ></v-text-field>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                        <v-layout row wrap class="pa-3 textfield one">
-                                            <v-flex xs6 sm6 md6>
-                                                <div>ကျသင့်ငွေ</div>
-                                            </v-flex>
+                                        <v-col
+                                            cols="7"
+                                            md="6"
+                                            offset="3"
+                                        >
+                                            <v-text-field
+                                                v-model="form.item_discount"
+                                                label="kyats"
+                                                placeholder="kyats"
+                                                outlined
+                                                dense
+                                                :rules="validationRules"
+                                                required
+                                                type="number"
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="5">
+                                           <v-list-item-content>
+                                                <strong>
+                                                    ကျသင့်ငွေ
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
 
-                                            <v-flex xs6 sm6 md6>
-                                                <div class="right">
-                                                   <v-text-field
-                                                        :value = "finalTotal"
-                                                        label="kyats"
-                                                        dense
-                                                        placeholder="kyats"
-                                                        :rules="validationRules"
-                                                        required
-                                                        type="number"
-                                                    ></v-text-field>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                        <v-layout row wrap class="pa-3 textfield one">
-                                            <v-flex xs6 sm6 md6>
-                                                <div>ပေးငွေ</div>
-                                            </v-flex>
+                                        <v-col cols="7" lg="7" sm="3" md="3">
+                                            <v-text-field
+                                                :value = "finalTotal"
+                                                label="kyats"
+                                                placeholder="kyats"
+                                                outlined
+                                                dense
+                                                :rules="validationRules"
+                                                required
+                                                type="number"
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="5">
+                                            <v-list-item-content>
+                                                <strong>
+                                                    ပေးငွေ
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
+                                        <v-col cols="7">
+                                            <v-text-field
+                                                v-model="form.paid_money"
+                                                label="kyats"
+                                                placeholder="kyats"
+                                                outlined
+                                                dense
+                                                :rules="validationRules"
+                                                required
+                                                type="number"
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="5">
+                                            <v-list-item-content>
+                                                <strong>
+                                                    ကျန်ငွေ
+                                                </strong>
+                                            </v-list-item-content>
+                                        </v-col>
 
-                                            <v-flex xs6 sm6 md6>
-                                                <div class="right">
-                                                   <v-text-field
-                                                        v-model="form.paid_money"
-                                                        label="kyats"
-                                                        placeholder="kyats"
-                                                        dense
-                                                        :rules="validationRules"
-                                                        required
-                                                        type="number"
-                                                    ></v-text-field>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                        <v-layout row wrap class="pa-3 textfield one">
-                                            <v-flex xs6 sm6 md6>
-                                                <div>ကျန်ငွေ</div>
-                                            </v-flex>
-
-                                            <v-flex xs6 sm6 md6>
-                                                <div class="right">
-                                                   <v-text-field
-                                                        :value = "creditMoney"
-                                                        label="kyats"
-                                                        placeholder="kyats"
-                                                        dense
-                                                        readonly
-                                                        type="number"
-                                                    ></v-text-field>
-                                                </div>
-                                            </v-flex>
-                                        </v-layout>
-                                        <v-divider></v-divider>
-                                        <v-layout row wrap class="pa-3 textfield one">
-                                            <v-flex xs12 sm12 md12 lg12 class="justify-center">
-                                                <v-btn
-                                                    color="#ECBD00"
-                                                    block
-                                                    dark
-                                                    class="withoutupercase black--text"
-                                                    @click="printbill"
-                                                    >Print Bill</v-btn
-                                                >
-                                            </v-flex>
-                                        </v-layout>
-                                         <v-divider></v-divider>
-                                    </v-card>
+                                        <v-col cols="7">
+                                            <v-text-field
+                                                :value = "creditMoney"
+                                                label="kyats"
+                                                placeholder="kyats"
+                                                outlined
+                                                dense
+                                                readonly
+                                                type="number"
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" sm="12" md="12">
+                                            <v-btn
+                                                color="#ECBD00"
+                                                block
+                                                dark
+                                                class="withoutupercase black--text"
+                                                @click="printbill"
+                                                >Print Bill</v-btn
+                                            >
+                                        </v-col>
+                                    </v-row>
                                 </v-col>
                             </v-row>
 
@@ -484,13 +557,6 @@
                     credit_money: "",
                     note: "",
                 },
-                projects: [
-                        { title: 'ရွှေချိန်', person: '12', due: '12', status: 'ongoing', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                        { title: 'ကျောက်ချိန်', person: '22', due: '11', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                        { title: 'အလျော့တွက်', person: '11', due: '11', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                        { title: 'လက်ခ', person: '11', due: '11', status: 'overdue', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                        { title: 'စုစုပေါင်း', person: '22', due: '22', status: 'overdue', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                    ],
                 quality: '',
                 name: '',
                 email: '',
@@ -1053,24 +1119,4 @@
 .colored-toast .swal2-html-container {
   color: white;
 }
-.textfield.one{
-  border-left: 4px solid #0069D9;
-}
-.textfield.two{
-  border-left: 4px solid #ffaa2c;
-}
-.textfield.three{
-  border-left: 4px solid #f83e70;
-}
-.v-chip.one{
-    background: #ECBD00 !important;
-    width: 90px;
-}
-.v-chip.two{
-  background: #ECBD00 !important;
-}
-.v-chip.three{
-  background: #ECBD00 !important;
-}
-
 </style>

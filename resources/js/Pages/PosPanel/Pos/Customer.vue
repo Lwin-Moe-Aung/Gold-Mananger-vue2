@@ -1,5 +1,5 @@
 <template>
-    <v-col cols="12" sm="3">
+    <div>
         <v-hover v-slot="{ hover }" close-delay="200">
             <v-card
                 :elevation="hover ? 16 : 2"
@@ -7,7 +7,7 @@
                 flat
                 class="mx-auto rounded-lg mx-3 no-print"
             >
-                 <div class="card card-primary card-outline">
+                <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
                         <div class="float-right">
                             <v-icon
@@ -58,6 +58,8 @@
                 <!-- /.card-body -->
                 </div>
             </v-card>
+
+
         </v-hover>
         <!-- dialog box -->
         <v-dialog
@@ -145,8 +147,7 @@
         </v-dialog>
 
         <!-- end dialog box -->
-    </v-col>
-
+    </div>
 </template>
 
 <script>

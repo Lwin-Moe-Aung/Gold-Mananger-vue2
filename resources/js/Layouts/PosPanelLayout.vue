@@ -15,7 +15,7 @@
             >
                 <slot></slot>
             </v-col>
-            <FAB class="d-lg-none d-xl-flex"/>
+            <FAB class="d-lg-none d-sm-flex"/>
             <v-col
                 lg="2"
                 class="d-none d-lg-flex d-md-none"

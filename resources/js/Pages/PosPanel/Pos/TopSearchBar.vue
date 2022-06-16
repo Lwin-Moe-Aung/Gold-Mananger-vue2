@@ -1,50 +1,43 @@
 <template>
-    <v-toolbar color="#ECBD00">
-        <!-- autocomplete for product sku -->
-        <v-col cols="2">
-            <v-autocomplete
-                v-model="selectProductSku"
-                :loading="loading"
-                :items="productsku"
-                :search-input.sync="searchProductSku"
-                @change="onChange()"
-                cache-items
-                class="mx-4"
-                flat
-                hide-no-data
-                hide-details
-                label="sku?"
-                solo-inverted
-                ></v-autocomplete>
-        </v-col>
-        <!-- end autocomplete for product sku -->
+    <v-toolbar color="#ECBD00" flat >
+            <v-flex xs2 md2 sm2 class="text-left">
+                <v-autocomplete
+                    v-model="selectProductSku"
+                    :loading="loading"
+                    :items="productsku"
+                    :search-input.sync="searchProductSku"
+                    @change="onChange()"
+                    cache-items
+                    class="mx-4"
+                    flat
+                    hide-no-data
+                    hide-details
+                    label="sku?"
+                    solo-inverted
+                    ></v-autocomplete>
+            </v-flex>
+            <v-flex xs3 md3 sm3 class="mt-4">
 
-        <v-col cols="2" sm="2">
-            <div class="ma-auto mt-4" style="max-width: 300px">
-                <!-- <v-otp-input
-                    v-model="searchValue"
-                    :length="length"
-                    type="text"
-                    plain
-                    @finish="textFieldChange"
-                ></v-otp-input> -->
+                    <!-- <v-otp-input
+                        v-model="searchValue"
+                        :length="length"
+                        type="text"
+                        plain
+                        @finish="textFieldChange"
+                    ></v-otp-input> -->
 
-                <v-text-field
-                    v-model="searchValue"
-                    label="အလေးချိန်"
-                    placeholder="အလေးချိန်"
-                    outlined
-                    solo
-                    dense
-                    counter
-                    maxlength="5"
-                    @input="textFieldChange"
-                ></v-text-field>
-
-            </div>
-        </v-col>
-        <v-col cols="8" class="my-3">
-        </v-col>
+                    <v-text-field
+                        v-model="searchValue"
+                        label="အလေးချိန်"
+                        placeholder="အလေးချိန်"
+                        outlined
+                        solo
+                        dense
+                        counter
+                        maxlength="5"
+                        @input="textFieldChange"
+                    ></v-text-field>
+            </v-flex>
     </v-toolbar>
 </template>
 

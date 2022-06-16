@@ -1,129 +1,63 @@
 <template>
     <pos-panel-layout>
-            <v-row class="mt-n14">
+        <TopSearchBar/>
+        <v-item-group mandatory class="mt-n1">
+            <v-content class="pa-3">
+                <!-- item list showing -->
+                <ShowItemsList/>
+            </v-content>
+        </v-item-group>
+        <v-content class="pa-3">
+            <v-row >
                 <v-col
                     cols="12"
                     xs="12"
-                    sm="6"
-                    md="4"
-                    lg="4"
-                    v-for="(shoe, i) in shoes"
-                    :key="i"
+                    sm="12"
+                    md="12"
+                    lg="3"
                 >
-                    <v-card
-                        class="mx-auto my-12 rounded-xl"
-                        max-width="374"
-                        color="#151515"
-                    >
-                        <v-img height="170" :src="shoe.image"></v-img>
-                        <v-toolbar color="transparent" class="mt-n7" flat>
-                            <v-avatar color="white" rounded class="mr-2">
-                                <v-img :src="shoe.pic" contain></v-img>
-                            </v-avatar>
-                            <v-spacer></v-spacer>
-                            <v-avatar color="black" rounded class="mr-2" dark>
-                                <div class="three">
-                                <div class="four">
-                                    <span class="white--text caption">{{ shoe.price }}</span>
-                                </div>
-                                <div class="five">
-                                    <span class="green--text caption">HOLD</span>
-                                </div>
-                                </div>
-                            </v-avatar>
-                        </v-toolbar>
-                        <v-card-title class="grey--text caption">{{
-                        shoe.id
-                        }}</v-card-title>
-                        <v-card-title class="grey--text text-grey-darken-1 caption mt-n6">{{
-                        shoe.date
-                        }}</v-card-title>
-                        <v-card-text class="white--text text-grey-darken-1 mt-n2">{{
-                        shoe.marque
-                        }}</v-card-text>
-
-                        <v-card-text class="mt-n4">
-                            <v-chip-group
-                                active-class="deep-purple accent-4 white--text"
-                                column
-                            >
-                                <v-chip label dark>{{ shoe.pay1 }}</v-chip>
-                                <v-chip label dark>{{ shoe.pay2 }}</v-chip>
-                                <v-spacer></v-spacer>
-                                <v-avatar size="40">
-                                    <v-img :src="shoe.avatar"></v-img>
-                                </v-avatar>
-                            </v-chip-group>
-                        </v-card-text>
-                    </v-card>
+                    <Customer />
+                </v-col>
+                <v-col
+                    cols="12"
+                    xs="12"
+                    sm="12"
+                    md="12"
+                    lg="9"
+                >
+                    <Voucher1 />
                 </v-col>
             </v-row>
+        </v-content>
     </pos-panel-layout>
 </template>
 
 <script>
-import PosPanelLayout from "../../../Layouts/PosPanelLayout";
+    import PosPanelLayout from "../../../Layouts/PosPanelLayout";
+    import Customer from "./Customer";
+    import ItemList from "./ItemList";
+    import Search from "./Search";
+    import Voucher1 from "./Voucher1";
+    import TopSearchBar from "./TopSearchBar";
+    import ShowItemsList from "./ShowItemsList";
 
+    export default {
+        components: {
+            PosPanelLayout,
+            Customer,
+            ItemList,
+            Search,
+            Voucher1,
+            TopSearchBar,
+            ShowItemsList
+        },
+        data() {
+            return {
+                model:null,
+            };
+        },
 
-export default {
-    name: "Home",
-    components: {
-        PosPanelLayout
-    },
-  data: () => ({
-    selection: 1,
-    drawer: true,
-    shoes: [
-      {
-        image: "3.jpg",
-        pic: "1.png",
-        price: "$465",
-        id: "ID: CK1911159967352",
-        date: "02.12.2021, 3:34 AM",
-        marque: "Nike Air MAx",
-        pay1: "LUXEMBURG",
-        pay2: "ITALY",
-        avatar: "https://cdn.vuetifyjs.com/images/lists/1.jpg",
-      },
-      {
-        image: "9.jfif",
-        pic: "2.png",
-        price: "$714",
-        id: "ID: CK1911159967621",
-        date: "02.12.2021, 4:12 AM",
-        marque: "AIR Jordon",
-        pay1: "FUTURE",
-        pay2: "WAR",
-        avatar: "https://cdn.vuetifyjs.com/images/lists/2.jpg",
-      },
-      {
-        image: "8.jpg",
-        pic: "3.png",
-        price: "$982",
-        id: "ID: CK1911159967532",
-        date: "02.12.2021, 6:24 AM",
-        marque: "Adidas GR",
-        pay1: "LONDON",
-        pay2: "ALGERIA",
-        avatar: "https://cdn.vuetifyjs.com/images/lists/3.jpg",
-      },
-      {
-        image: "7.jpg",
-        pic: "4.png",
-        price: "$394",
-        id: "ID: CK1911159968663",
-        date: "02.12.2021, 7:51 AM",
-        marque: "Puma New",
-        pay1: "SRILANKA",
-        pay2: "PALAU",
-        avatar: "https://cdn.vuetifyjs.com/images/lists/4.jpg",
-      },
-    ],
-
-  }),
-
-  methods: {},
-};
+    };
 </script>
 <style scoped>
 .v-tab.withoutupercase {

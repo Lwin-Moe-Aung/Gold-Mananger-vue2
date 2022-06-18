@@ -1,6 +1,7 @@
 <template>
     <v-container>
-        <v-icon>fas fa-long-arrow-alt-left</v-icon>
+
+        <v-icon @click="back">fas fa-long-arrow-alt-left</v-icon>
         <!-- <i class="fa-solid fa-arrow-left-long"></i> -->
         <v-list subheader two-line class="mt-1">
             <v-list-item>
@@ -212,13 +213,15 @@
             </v-container>
         </v-item-group>
         <div class="mx-3 mt-2">
-            <v-btn
-                color="#ECBD00"
-                block
-                dark
-                class="widthoutupercase black--text"
-                @click="dialog = true"
-                >Print Bills</v-btn>
+            <Link :href="route('pos.print_all_from_cart')">
+                <v-btn
+                    color="#ECBD00"
+                    block
+                    dark
+                    class="widthoutupercase black--text"
+                    @click="dialog = true"
+                    >Print Bills</v-btn>
+            </Link>
         </div>
         <!-- start dialog box -->
         <template>
@@ -404,11 +407,13 @@
         </template>
         <!-- end dialog box -->
     </v-container>
+
 </template>
 
 <script>
     import axios from 'axios';
     import constant from "../../../constant";
+    import { Link } from '@inertiajs/inertia-vue'
     import {
             mapGetters,
             mapActions,
@@ -416,11 +421,14 @@
         } from "vuex";
 
     export default {
+        components: {
+            Link,
+        },
         data() {
             return {
                 drawer1: true,
                 total: "",
-                dialog: false,
+                dialog: true,
             };
         },
         computed: {
@@ -465,6 +473,9 @@
         },
         methods: {
             ...mapActions(["editItem", "removeItem"]),
+            back() {
+                window.history.back();
+            },
             numberWithCommas(value) {
                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             },
@@ -516,6 +527,7 @@
         }
     };
 </script>
+
 
 <style>
 .v-card.borderme {

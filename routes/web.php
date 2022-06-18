@@ -67,6 +67,7 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos/get_data_for_combobox', [HomeController::class, 'getDataForCombobox'])->name('pos.get_data_for_combobox');
     //Carts
     Route::get('/pos/cart', [CustomerOrderController::class, 'cart'])->name('pos.cart');
+    Route::get('/pos/print_all_from_cart', [CustomerOrderController::class, 'printAllFromCart'])->name('pos.print_all_from_cart');
 
 
 });

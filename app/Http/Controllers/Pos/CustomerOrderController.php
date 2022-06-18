@@ -262,4 +262,7 @@ class CustomerOrderController extends Controller
     public function cart(){
         return Inertia::render('PosPanel/Pos/Cart');
     }
+    public function printAllFromCart(){
+        return Inertia::render('PosPanel/Pos/PrintAllFromCart');
+    }
 }

@@ -1,11 +1,11 @@
 <template>
     <v-app :style="{background: $vuetify.theme.themes.dark.background}">
-        <v-row no-gutters>
+        <!-- <v-row no-gutters>
             <v-col
                 lg="1"
                 class="d-none d-lg-flex d-md-none"
             >
-                <SideBar :drawer="drawer" />
+                <SideBar/>
             </v-col>
             <v-col
                 lg="9"
@@ -22,16 +22,27 @@
             >
                 <RightSideBar />
             </v-col>
+        </v-row> -->
+        <v-row no-gutters>
+
+            <SideBar/>
+            <v-col
+                lg="9"
+                md="12"
+                xs="12"
+                sm="12"
+                class = "offset-xl-1"
+            >
+                <slot></slot>
+            </v-col>
+            <FAB class="d-lg-none d-sm-flex"/>
+            <v-col
+                lg="2"
+                class="d-none d-lg-flex d-md-none"
+            >
+                <RightSideBar />
+            </v-col>
         </v-row>
-
-        <!-- <RightSideBar /> -->
-
-        <!-- <SideBar /> -->
-        <!-- <SideBarRight /> -->
-        <!-- <v-container style="margin-left: 68px; padding: 39px;"> -->
-                  <!-- <slot></slot> -->
-
-        <!-- </v-container> -->
     </v-app>
 </template>
 
@@ -47,7 +58,7 @@
             FAB
         },
         data: () => ({
-            drawer: true
+
         }),
     }
 </script>

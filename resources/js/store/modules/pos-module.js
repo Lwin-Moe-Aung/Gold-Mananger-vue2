@@ -13,6 +13,7 @@ const state = {
     toast_message: "",
     toast_icon:"",
     customer: "",
+    drawer_side_bar:false,
 };
 const getters = {
     items: state => state.items,
@@ -26,6 +27,7 @@ const getters = {
     customer: state => state.customer,
     searched_Items_data: state => state.searched_Items_data,
     reset_voucher_form: state => state.reset_voucher_form,
+    drawer_side_bar: state => state.drawer_side_bar,
 
 };
 const actions = {
@@ -153,6 +155,9 @@ const actions = {
     async renewItemsArray({commit},data){
         await commit("renewItemsArray",data)
     },
+    async changeDrawerSideBar({commit},data){
+        await commit("changeDrawerSideBar",data)
+    },
 
 };
 const mutations = {
@@ -269,7 +274,10 @@ const mutations = {
         state.selectedItem = "";
         state.item_spe = "";
         state.reset_voucher_form = !state.reset_voucher_form;
-    }
+    },
+    changeDrawerSideBar: (state, data) => (
+        state.drawer_side_bar = !state.drawer_side_bar
+    ),
 };
 export default {
     state,

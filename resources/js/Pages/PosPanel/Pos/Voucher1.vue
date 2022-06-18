@@ -9,47 +9,60 @@
             >
             <v-form ref="form" lazy-validation>
                 <v-list-item three-line>
-                    <v-list-item-avatar
-                        rounded
-                        size="100"
-                        color="grey lighten-4"
-                        v-if="form.id"
-                    >
-                        <v-img :src="form.image"></v-img>
-                    </v-list-item-avatar>
-                    <!-- image upload -->
+                    <v-flex xs2 md2 sm2 lg2 >
+                        <v-list-item-avatar
+                            rounded
+                            size="100"
+                            color="grey lighten-4"
+                            v-if="form.id"
+                        >
+                            <v-img :src="form.image"></v-img>
+                        </v-list-item-avatar>
+                        <!-- image upload -->
 
-                    <v-card v-else rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
-                        <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
-                        <v-fade-transition mode="out-in">
-                            <v-img v-if="form.image" aspect-ratio="1" :src="form.image">
-                                <v-row class="fill-height" align="end" justify="center">
-                                <v-slide-y-reverse-transition>
-                                    <v-sheet v-if="mask" color="error" width="100%" height="100%" class="mask" />
-                                </v-slide-y-reverse-transition>
-                                    <v-btn
-                                        class="mb-3"
-                                        fab
-                                        x-small
-                                        color="error"
-                                        @click.stop="deleteImage"
-                                        @mouseenter="mask=true"
-                                        @mouseleave="mask=false"
-                                    >
-                                        <v-icon>mdi-delete</v-icon>
-                                    </v-btn>
+                        <v-card v-else rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
+                            <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
+                            <v-fade-transition mode="out-in">
+                                <v-img v-if="form.image" aspect-ratio="1" :src="form.image">
+                                    <v-row class="fill-height" align="end" justify="center">
+                                    <v-slide-y-reverse-transition>
+                                        <v-sheet v-if="mask" color="error" width="100%" height="100%" class="mask" />
+                                    </v-slide-y-reverse-transition>
+                                        <v-btn
+                                            class="mb-3"
+                                            fab
+                                            x-small
+                                            color="error"
+                                            @click.stop="deleteImage"
+                                            @mouseenter="mask=true"
+                                            @mouseleave="mask=false"
+                                        >
+                                            <v-icon>mdi-delete</v-icon>
+                                        </v-btn>
+                                    </v-row>
+                                </v-img>
+                                <v-row v-else class="d-flex flex-column align-center justify-center fill-height">
+                                    <v-icon>
+                                    mdi-paperclip
+                                    </v-icon>
+                                    <span class="mt-3">Select an Image</span>
                                 </v-row>
-                            </v-img>
-                            <v-row v-else class="d-flex flex-column align-center justify-center fill-height">
-                                <v-icon>
-                                mdi-paperclip
-                                </v-icon>
-                                <span class="mt-3">Select an Image</span>
-                            </v-row>
-                        </v-fade-transition>
-                    </v-card>
-                    <!-- end image upload -->
-                    <VoucherTitleBar/>
+                            </v-fade-transition>
+                        </v-card>
+                        <!-- end image upload -->
+                    </v-flex>
+                    <v-flex xs7 md7 sm7 lg7 >
+                        <VoucherTitleBar/>
+                    </v-flex>
+                    <v-flex xs3 md3 sm3 lg3 class="mb-16">
+                        <v-icon
+                            color="info"
+                            @click="addToCart()"
+                            v-text="'fas fa-shopping-cart'"
+                        ></v-icon>
+                    </v-flex>
+
+
 
                 </v-list-item>
                 <!-- <v-list-item>

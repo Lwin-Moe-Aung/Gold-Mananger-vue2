@@ -258,4 +258,8 @@ class CustomerOrderController extends Controller
                     ->toArray();
         dd($item);
     }
+
+    public function cart(){
+        return Inertia::render('PosPanel/Pos/Cart');
+    }
 }

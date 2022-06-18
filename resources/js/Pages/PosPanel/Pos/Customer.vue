@@ -1,5 +1,6 @@
 <template>
     <div>
+
         <v-hover v-slot="{ hover }" close-delay="200">
             <v-card
                 :elevation="hover ? 16 : 2"
@@ -7,54 +8,105 @@
                 flat
                 class="mx-auto rounded-lg mx-3 no-print"
             >
-                <div class="card card-primary card-outline">
-                    <div class="card-body box-profile">
-                        <div class="float-right">
-                            <v-icon
-                                color="info"
-                                @click="dialog = true"
-                                v-text="'fas fa-plus'"
-                            >
-                            </v-icon>
-                        </div>
-                        <div class="text-center">
-                            <img class="profile-user-img img-fluid img-circle" src="images/pos/customer.jpg" alt="User profile picture">
-                        </div>
-                        <!-- Multiselect -->
-                        <div class="text-center" >
-                            <multiselect
-                                v-model="selectedCustomer"
-                                id="customer_id"
-                                placeholder="Search customer"
-                                :options="customersList"
-                                name="name"
-                                label="search_name"
-                                track-by="id"
-                                @search-change="onSearchCustomersChange"
-                                @input="onSelectedCustomer"
-                                :show-labels="false"
-                                style="padding-left: 0px !important;"
-                            />
-                        </div>
-                        <!-- Multiselect -->
 
-                        <v-container v-if="customer != null">
-                            <p class="text-muted text-center" style="font-size: 13px !important;" >{{customer.address}}</p>
-                            <p class="text-muted text-center" style="font-size: 13px !important;">{{customer.mobile1}},{{customer.mobile2}}</p>
-                            <ul class="list-group list-group-unbordered mb-3">
-                            <li class="list-group-item">
-                                <b>ဝယ်ယူမှုများ</b> <a class="float-right">{{customer.total_amount}}</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>ကျန်ငွေ</b> <a class="float-right">500,000</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>နောက်ဆုံးပေးငွေ</b> <a class="float-right">15,000</a>
-                            </li>
-                            </ul>
-                            <a href="#" class="btn btn-primary btn-block" style="color: white !important;"><b>View Detail</b></a>
-                        </v-container>
-                    </div>
+                <div class="card card-primary card-outline">
+                    <v-expansion-panels>
+                        <v-expansion-panel>
+                            <v-expansion-panel-header>
+                                <template >
+                                    <v-row no-gutters>
+                                        <v-col cols="5">
+                                            Customer-
+                                        </v-col>
+                                        <v-col
+                                            cols="7"
+                                            class="text--secondary"
+                                        >
+                                        <v-fade-transition leave-absolute>
+                                            <b
+                                                v-if="typeof selectedCustomer === 'undefined'"
+                                                key="0"
+                                            >
+                                                Select Customer
+                                            </b>
+                                            <b
+                                            v-else
+                                            key="1"
+                                            >
+                                            {{ selectedCustomer.name }}
+                                            </b>
+                                        </v-fade-transition>
+                                        </v-col>
+                                    </v-row>
+                                </template>
+                            </v-expansion-panel-header>
+                            <v-expansion-panel-content>
+                                    <!-- <div class="float-right">
+                                        <v-icon
+                                            color="info"
+                                            @click="dialog = true"
+                                            v-text="'fas fa-plus'"
+                                        >
+                                        </v-icon>
+                                    </div> -->
+                                    <!-- <div class="text-center">
+                                        <img class="profile-user-img img-fluid img-circle" src="images/pos/customer.jpg" alt="User profile picture">
+                                    </div> -->
+                                    <!-- Multiselect -->
+
+                                        <multiselect
+                                            v-model="selectedCustomer"
+                                            id="customer_id"
+                                            placeholder="Search customer"
+                                            :options="customersList"
+                                            name="name"
+                                            label="search_name"
+                                            track-by="id"
+                                            @search-change="onSearchCustomersChange"
+                                            @input="onSelectedCustomer"
+                                            :show-labels="false"
+                                            style="padding-left: 0px !important;"
+                                        />
+                                    <!-- Multiselect -->
+
+                                    <v-container v-if="customer != null">
+                                        <p class="text-muted text-center" style="font-size: 13px !important;" >{{customer.address}}</p>
+                                        <p class="text-muted text-center" style="font-size: 13px !important;">{{customer.mobile1}},{{customer.mobile2}}</p>
+                                        <ul class="list-group list-group-unbordered mb-3">
+                                        <li class="list-group-item">
+                                            <b>ဝယ်ယူမှုများ</b> <a class="float-right">{{customer.total_amount}}</a>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>ကျန်ငွေ</b> <a class="float-right">500,000</a>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <b>နောက်ဆုံးပေးငွေ</b> <a class="float-right">15,000</a>
+                                        </li>
+                                        </ul>
+                                    </v-container>
+                                    <v-row row class="justify-center">
+
+                                            <v-btn
+                                                depressed
+                                                color="primary"
+                                                 class="mr-2"
+                                                >
+                                                View Detail
+                                                </v-btn>
+
+
+                                            <v-btn
+                                                depressed
+                                                color="success"
+                                                @click="dialog = true"
+                                                >
+                                                Add New
+                                            </v-btn>
+                                    </v-row>
+                            </v-expansion-panel-content>
+                        </v-expansion-panel>
+                    </v-expansion-panels>
+
                 <!-- /.card-body -->
                 </div>
             </v-card>
@@ -163,6 +215,12 @@
         },
         data() {
             return {
+                 trip: {
+                    name: '',
+                    location: null,
+                    start: null,
+                    end: null,
+                },
                 form: {
                     name: "",
                     address: "",

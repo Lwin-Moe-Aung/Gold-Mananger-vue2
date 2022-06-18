@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import {mapActions,mapGetters} from "vuex";
 export default {
     data: () => ({
             selectedItem: 0,
@@ -38,7 +39,26 @@ export default {
                 {icon: 'fas fa-list', text:'List'},
                 {icon: 'fas fa-cog', text:'Setting'},
             ],
-        })
+        }),
+        computed: {
+            ...mapGetters(['drawer_side_bar']),
+        },
+        created() {
+            this.unwatch1 = this.$store.watch(
+                (state, getters) => getters.drawer_side_bar,
+                (newValue, oldValue) => {
+                    this.drawer = newValue;
+                    // this.changeDrawerSideBar();
+                },
+            );
+        },
+        beforeDestroy() {
+            this.unwatch1();
+        },
+        methods: {
+            ...mapActions(["changeDrawerSideBar"]),
+
+        }
     }
 </script>
 

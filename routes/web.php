@@ -65,7 +65,8 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos/json_search', [CustomerOrderController::class, 'jsonSearch'])->name('pos.json_search');
     //get gold quality
     Route::get('/pos/get_data_for_combobox', [HomeController::class, 'getDataForCombobox'])->name('pos.get_data_for_combobox');
-
+    //Carts
+    Route::get('/pos/cart', [CustomerOrderController::class, 'cart'])->name('pos.cart');
 
 
 });

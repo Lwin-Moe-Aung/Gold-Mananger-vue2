@@ -1,61 +1,74 @@
 <template>
-    <v-list-item-content>
-        <v-list-item-title class="text-h5">
-            <v-row>
-            <!-- combo box -->
-                <v-col
-                    cols="2"
-                    sm="2"
-                >
-                    <v-combobox
-                        v-model="goldQuality"
-                        :items="goldQualitys"
-                        @change="onChangeQ"
-                        item-text="name"
-                        item-value="quality"
-                        return-object
-                        label="ပဲရည်"
-                    ></v-combobox>
-                </v-col>
-                <v-col
-                    cols="3"
-                    sm="3"
-                >
-                    <v-combobox
-                        v-model="type"
-                        :items="types"
-                        @change="onChangeT"
-                        item-text="name"
-                        item-value="key"
-                        return-object
-                        label="ရွှေ/ကျောက်"
-                    ></v-combobox>
-                </v-col>
-                <v-col
-                    cols="3"
-                    sm="3"
-                >
-                    <v-combobox
-                        v-model="item_name"
-                        :items="item_names"
-                        @change="onChangeItemName"
-                        item-text="name"
-                        item-value="key"
-                        return-object
-                        label="အမျိုးအမည်"
-                    ></v-combobox>
-                </v-col>
-            <!-- combo box -->
-            </v-row>
+    <v-container class="pa-5" >
 
-        </v-list-item-title>
-        <v-list-item-subtitle class="mt-1">
-            <!-- description -->
-        </v-list-item-subtitle>
+        <v-row>
+        <!-- combo box -->
+            <v-col
+                cols="12"
+                lg="3"
+                md="3"
+                sm="3"
+                xs="3"
+            >
+                <v-combobox
+                    v-model="goldQuality"
+                    :items="goldQualitys"
+                    @change="onChangeQ"
+                    item-text="name"
+                    item-value="quality"
+                    return-object
+                    label="ပဲရည်"
+                ></v-combobox>
+            </v-col>
+             <!-- <v-spacer class="d-lg-none d-xl-flex black--text"></v-spacer> -->
+
+            <v-col
+                cols="12"
+                lg="4"
+                md="4"
+                sm="4"
+                xs="4"
+            >
+                <v-combobox
+                    v-model="type"
+                    :items="types"
+                    @change="onChangeT"
+                    item-text="name"
+                    item-value="key"
+                    return-object
+                    label="ရွှေ/ကျောက်"
+                ></v-combobox>
+            </v-col>
+             <!-- <v-spacer class="d-lg-none d-xl-flex black--text"></v-spacer> -->
+
+            <v-col
+                cols="12"
+                lg="4"
+                md="4"
+                sm="4"
+                xs="4"
+            >
+                <v-combobox
+                    v-model="item_name"
+                    :items="item_names"
+                    @change="onChangeItemName"
+                    item-text="name"
+                    item-value="key"
+                    return-object
+                    label="အမျိုးအမည်"
+                ></v-combobox>
+            </v-col>
+        <!-- combo box -->
+        </v-row>
+
+
         <v-row>
             <v-col
-                cols="5"
-                sm="5"
+                cols="12"
+                lg="6"
+                sm="6"
+                md="6"
+                xs="6"
                 >
                 <v-text-field
                     v-model = "dailySetup.kyat"
@@ -77,9 +90,13 @@
                     </template>
                 </v-text-field>
             </v-col>
+             <v-spacer class="d-lg-none d-xl-flex black--text"></v-spacer>
             <v-col
-                cols="3"
-                sm="3"
+                cols="12"
+                lg=""
+                sm="4"
+                md="4"
+                xs="4"
                 >
                 <v-text-field
                     v-model = "item_sku"
@@ -103,7 +120,7 @@
             </v-col>
         </v-row>
 
-    </v-list-item-content>
+    </v-container>
 </template>
 
 <script>

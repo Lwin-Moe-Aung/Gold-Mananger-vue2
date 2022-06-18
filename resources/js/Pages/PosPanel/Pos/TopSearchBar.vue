@@ -1,43 +1,53 @@
 <template>
     <v-toolbar color="#ECBD00" flat >
-            <v-flex xs2 md2 sm2 class="text-left">
-                <v-autocomplete
-                    v-model="selectProductSku"
-                    :loading="loading"
-                    :items="productsku"
-                    :search-input.sync="searchProductSku"
-                    @change="onChange()"
-                    cache-items
-                    class="mx-4"
-                    flat
-                    hide-no-data
-                    hide-details
-                    label="sku?"
-                    solo-inverted
-                    ></v-autocomplete>
-            </v-flex>
-            <v-flex xs3 md3 sm3 class="mt-4">
+        <v-btn
+          icon
+          dark
+          class="d-lg-none d-sm-flex black--text"
+          @click="changeDrawerSideBar()"
+        >
+           <v-icon v-text="'fas fa-bars'"></v-icon>
+        </v-btn>
+        <v-spacer class="d-lg-none d-xl-flex black--text"></v-spacer>
 
-                    <!-- <v-otp-input
-                        v-model="searchValue"
-                        :length="length"
-                        type="text"
-                        plain
-                        @finish="textFieldChange"
-                    ></v-otp-input> -->
+        <v-flex xs4 md2 sm2 lg2 class="ml-8 text-left">
+            <v-autocomplete
+                v-model="selectProductSku"
+                :loading="loading"
+                :items="productsku"
+                :search-input.sync="searchProductSku"
+                @change="onChange()"
+                cache-items
+                class="mx-4"
+                flat
+                hide-no-data
+                hide-details
+                label="sku?"
+                solo-inverted
+                ></v-autocomplete>
+        </v-flex>
+        <v-flex xs3 md3 sm3 lg2 class="mt-4">
 
-                    <v-text-field
-                        v-model="searchValue"
-                        label="အလေးချိန်"
-                        placeholder="အလေးချိန်"
-                        outlined
-                        solo
-                        dense
-                        counter
-                        maxlength="5"
-                        @input="textFieldChange"
-                    ></v-text-field>
-            </v-flex>
+                <!-- <v-otp-input
+                    v-model="searchValue"
+                    :length="length"
+                    type="text"
+                    plain
+                    @finish="textFieldChange"
+                ></v-otp-input> -->
+
+                <v-text-field
+                    v-model="searchValue"
+                    label="အလေးချိန်"
+                    placeholder="အလေးချိန်"
+                    outlined
+                    solo
+                    dense
+                    counter
+                    maxlength="5"
+                    @input="textFieldChange"
+                ></v-text-field>
+        </v-flex>
     </v-toolbar>
 </template>
 
@@ -83,7 +93,7 @@
             },
         },
         methods: {
-            ...mapActions([ "searchItem", "searchItemByItemSpe","resetVoucherForm","renewItemsArray"]),
+            ...mapActions([ "searchItem", "searchItemByItemSpe","resetVoucherForm","renewItemsArray", "changeDrawerSideBar"]),
             querySelections (v) {
                 this.loading = true
                 // Simulated ajax query

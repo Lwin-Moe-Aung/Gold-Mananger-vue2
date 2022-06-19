@@ -1,67 +1,41 @@
 <template>
-    <v-sheet class="mx-auto" elevation="8" max-width="1090">
-        <v-slide-group
-            active-class="success"
-            show-arrows
-            v-model="model"
-            >
-            <v-slide-item
-                v-for="(item,index) in items"
-                :key="index"
-                v-slot:default="{ active }"
-            >
-                <v-card
-                    :color="active ? '#F6EFEF' : 'white'"
-                    :class="active ? 'borderme' : 'borderout'"
-                    class="d-flex align-center rounded-lg mx-2 mt-1 mb-1"
-                    dark
-                    height="130"
-                    @click="onCardClick(index)"
-                    flat
-                >
-                    <v-row @click="select(item)">
-                        <v-col cols="12" sm="12">
-                            <v-list-item
-                                two-line
-                                class="text-center"
-                            >
-                                <v-list-item-content>
-                                    <div
-                                        align="center"
-                                        justify="center"
-                                    >
-                                        <v-img
-                                            :src="item.image1"
-                                            max-height="90"
-                                            max-width="90"
-                                            contain
-                                        ></v-img>
-                                    </div>
-                                    <v-list-item-subtitle
-                                        :class="
-                                            active
-                                                ? 'brown--text'
-                                                : 'black--text'
-                                        "
-                                        class="caption mt-1"
-                                        >{{
-                                            item.name
-                                        }}</v-list-item-subtitle
-                                    >
-                                </v-list-item-content>
-                            </v-list-item>
-                        </v-col>
-                    </v-row>
-                </v-card>
-            </v-slide-item>
-        </v-slide-group>
-    </v-sheet>
+    <v-layout v-if="items.length > 0" class="mb-n6 mt-n4">
+        <carousel-3d
+        :controls-visible="true"
+        :clickable="true"
+        :key="items.length"
+        :listData="items"
+        :height="200"
+        >
+            <slide :index="i" :key="i" v-for="(item, i) in items">
+                <figure>
+                    <v-img
+                        max-height="166"
+                        :src="item.image1"
+                        ></v-img>
+                    <figcaption>
+                        <v-btn
+                            @click="select(item)"
+                            text color="white">
+                            {{ item.name }}
+                        </v-btn>
+                    </figcaption>
+                </figure>
+            </slide>
+        </carousel-3d>
+
+    </v-layout>
 </template>
 
 <script>
     import {mapGetters, mapActions} from "vuex";
+    import { Carousel3d, Slide } from "vue-carousel-3d";
 
     export default {
+        components: {
+            Carousel3d,
+            Slide,
+        },
         data() {
             return {
                 model:null,
@@ -85,7 +59,6 @@
             ...mapGetters(['items','toast_message','toast_icon','reset_voucher_form']),
         },
         created() {
-
             this.unwatch1 = this.$store.watch(
                 (state, getters) => getters.items,
                 (newValue, oldValue) => {

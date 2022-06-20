@@ -35,6 +35,8 @@ class Product extends Model
         'business_id',
         'created_by',
         'draft',
+        'gold_weight',
+        'gem_weight',
         'image'
     ];
 

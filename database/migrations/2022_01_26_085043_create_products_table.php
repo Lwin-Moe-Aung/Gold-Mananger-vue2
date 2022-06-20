@@ -25,6 +25,9 @@ class CreateProductsTable extends Migration
             $table->enum('is_active', ['0', '1'])->default('1');
             $table->string('image', 191)->nullable();
             $table->enum('draft', ['0', '1'])->default('0');
+            $table->enum('gold_weight', ['0', '1'])->default('0');
+            $table->enum('gem_weight', ['0', '1'])->default('0');
+
             $table->unsignedBigInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->unsignedBigInteger('created_by');

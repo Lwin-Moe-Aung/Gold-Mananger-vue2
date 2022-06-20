@@ -24,21 +24,9 @@ class ProductController extends Controller
     {
         $business_id = auth()->user()->business_id;
         $products = Product::where('business_id', $business_id)->with('user')->paginate(10);
-        $gold_qualities = GoldQuality::where('business_id', $business_id)->get();
-        $types = Type::where('business_id', $business_id)->get();
-        $item_names = ItemName::where('business_id', $business_id)->get();
-        $weight_kyats = WeightKyat::where('business_id', $business_id)->get();
-        $weight_pals = WeightPal::where('business_id', $business_id)->get();
-        $weight_yways = WeightYway::where('business_id', $business_id)->get();
 
         return Inertia::render('AdminPanel/ProductManagement/Products/Index', [
             'products' => $products,
-            'gold_qualities' => $gold_qualities,
-            'types' => $types,
-            'item_names' => $item_names,
-            'weight_kyats' => $weight_kyats,
-            'weight_pals' => $weight_pals,
-            'weight_yways' => $weight_yways,
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }
@@ -50,7 +38,22 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $business_id = auth()->user()->business_id;
+        $gold_qualities = GoldQuality::where('business_id', $business_id)->get();
+        $types = Type::where('business_id', $business_id)->get();
+        $item_names = ItemName::where('business_id', $business_id)->get();
+        $weight_kyats = WeightKyat::where('business_id', $business_id)->get();
+        $weight_pals = WeightPal::where('business_id', $business_id)->get();
+        $weight_yways = WeightYway::where('business_id', $business_id)->get();
+
+        return Inertia::render('AdminPanel/ProductManagement/Products/Create', [
+            'gold_qualities' => $gold_qualities,
+            'types' => $types,
+            'item_names' => $item_names,
+            'weight_kyats' => $weight_kyats,
+            'weight_pals' => $weight_pals,
+            'weight_yways' => $weight_yways,
+        ]);
     }
 
     /**

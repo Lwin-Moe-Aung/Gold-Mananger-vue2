@@ -40,7 +40,7 @@
 
         <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
-    <body class="bg-light sidebar-mini layout-fixed layout-footer-fixed">
+    <body >
         @inertia
     </body>
 </html>

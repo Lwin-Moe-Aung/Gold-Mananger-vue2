@@ -23,7 +23,10 @@ class ProductController extends Controller
     public function index()
     {
         $business_id = auth()->user()->business_id;
-        $products = Product::where('business_id', $business_id)->with('user')->paginate(10);
+        $products = Product::where('business_id', $business_id)
+            ->with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return Inertia::render('AdminPanel/ProductManagement/Products/Index', [
             'products' => $products,
@@ -42,17 +45,11 @@ class ProductController extends Controller
         $gold_qualities = GoldQuality::where('business_id', $business_id)->get();
         $types = Type::where('business_id', $business_id)->get();
         $item_names = ItemName::where('business_id', $business_id)->get();
-        $weight_kyats = WeightKyat::where('business_id', $business_id)->get();
-        $weight_pals = WeightPal::where('business_id', $business_id)->get();
-        $weight_yways = WeightYway::where('business_id', $business_id)->get();
 
         return Inertia::render('AdminPanel/ProductManagement/Products/Create', [
             'gold_qualities' => $gold_qualities,
             'types' => $types,
             'item_names' => $item_names,
-            'weight_kyats' => $weight_kyats,
-            'weight_pals' => $weight_pals,
-            'weight_yways' => $weight_yways,
         ]);
     }
 
@@ -64,15 +61,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->file('image'));
+
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
                 'name' => ['required', 'max:50'],
                 'quality' => ['required'],
                 'type' => ['required'],
                 'item_name' => ['required'],
-                'w_kyat' => ['required'],
-                'w_pal' => ['required'],
-                'w_yway' => ['required'],
             ]);
             // return $request;
             try {
@@ -84,16 +80,20 @@ class ProductController extends Controller
                 } else {
                     $image_name_path = null;
                 }
-                $product_sku = $request->quality["quality"] . $request->type["key"] . $request->item_name["key"] . $request->w_kyat["name"] . $request->w_pal["name"] . $request->w_yway["name"];
+                $product_sku = $request->quality["quality"] . $request->type["key"] . $request->item_name["key"];
                 Product::create([
                     'name' => $request->name,
+                    'quality' => $request->quality["quality"],
+                    'type_id' => $request->type["id"],
+                    'item_names_id' => $request->item_name["id"],
                     'product_sku' => $product_sku,
                     'description' => $request->description,
-                    'tax' => $request->tax,
                     'alert_quantity' => $request->alert_quantity,
+                    'image' => $image_name_path,
                     'business_id' => auth()->user()->business_id,
                     'created_by' => auth()->user()->id,
-                    'image' => $image_name_path,
+                    'gem_weight' => $request->gem_weight ? '1' : '0',
+
                 ]);
                 return back();
             } catch (\Exception $e) {
@@ -122,7 +122,18 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $business_id = auth()->user()->business_id;
+        $product = Product::find($id);
+        $gold_qualities = GoldQuality::where('business_id', $business_id)->get();
+        $types = Type::where('business_id', $business_id)->get();
+        $item_names = ItemName::where('business_id', $business_id)->get();
+
+        return Inertia::render('AdminPanel/ProductManagement/Products/Edit', [
+            'product' => $product,
+            'gold_qualities' => $gold_qualities,
+            'types' => $types,
+            'item_names' => $item_names,
+        ]);
     }
 
     /**
@@ -132,9 +143,43 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function ProductUpdate(Request $request)
     {
-        //
+        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+            $this->validate($request, [
+                'name' => ['required', 'max:150'],
+                'quality' => ['required'],
+                'type' => ['required'],
+                'item_name' => ['required'],
+            ]);
+            try {
+                $product_sku = $request->quality["quality"] . $request->type["key"] . $request->item_name["key"];
+
+                $product = Product::find($request->id);
+                $product->name = $request->name;
+                $product->quality = $request->quality["quality"];
+                $product->type_id = $request->type["id"];
+                $product->item_names_id = $request->item_name["id"];
+                $product->product_sku = $product_sku;
+                $product->description = $request->description;
+                $product->alert_quantity = $request->alert_quantity;
+                if ($file = $request->file('image')) {
+                    $image_name = uniqid() . str_replace(' ', '', $file->getClientOriginalName());
+                    $path = '/images/products/';
+                    $file->move(public_path($path), $image_name);
+                    $image_name_path = $path . $image_name;
+                    $product->image = $image_name_path;
+                }
+                $product->business_id = auth()->user()->business_id;
+                $product->created_by = auth()->user()->id;
+                $product->gem_weight = $request->gem_weight ? '1' : '0';
+                $product->save();
+                return back();
+            } catch (\Exception $e) {
+                return back()->with('fail', 'Fail to Create New Product Type');
+            }
+        }
+        return back()->with('fail', 'No permission');
     }
 
     /**

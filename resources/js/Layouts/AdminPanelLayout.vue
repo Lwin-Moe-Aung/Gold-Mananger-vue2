@@ -1,7 +1,7 @@
 <template>
-    <div class="dark-mode">
+    <!-- <div class="dark-mode"> -->
+    <div>
         <div class="wrapper" style="overflow: auto;">
-
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
             <img class="animation__wobble" :src="'/images/logo/logo.png'" alt="AdminLTELogo" height="60" width="60">

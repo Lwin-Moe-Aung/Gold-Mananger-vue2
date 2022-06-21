@@ -21,11 +21,11 @@ class CreateProductsTable extends Migration
             $table->text('description')->nullable();
             $table->string('tax', 100)->nullable();
             $table->integer('item_count')->default(0);
-            $table->integer('alert_quantity')->default(0);
+            $table->integer('alert_quantity')->nullable();
             $table->enum('is_active', ['0', '1'])->default('1');
             $table->string('image', 191)->nullable();
             $table->enum('draft', ['0', '1'])->default('0');
-            $table->enum('gold_weight', ['0', '1'])->default('0');
+            $table->enum('gold_and_gem_weight', ['0', '1'])->default('1');
             $table->enum('gem_weight', ['0', '1'])->default('0');
 
             $table->unsignedBigInteger('business_id');

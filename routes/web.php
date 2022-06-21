@@ -106,6 +106,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     //product management
     Route::resource('products', ProductController::class);
+    Route::post('/products/product_update', [ProductController::class, 'ProductUpdate'])->name('products.product_update');
     Route::resource('product_types', ProductTypeController::class)->except(['create', 'show', 'edit']);
     Route::resource('daily_setups', DailySetupController::class)->except(['create', 'show', 'edit']);
     Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');

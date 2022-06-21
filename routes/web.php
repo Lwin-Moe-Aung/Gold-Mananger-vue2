@@ -15,6 +15,8 @@ use App\Http\Controllers\Admins\ProductTypeController;
 use App\Http\Controllers\Admins\DailySetupController;
 use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Admins\OrderController;
+use App\Http\Controllers\Admins\PurchaseController;
+
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\CustomerOrderController;
 use App\Http\Controllers\Pos\ContactController;
@@ -119,8 +121,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::post('/orders/type_form_save', [OrderController::class, 'typeFormSave'])->name('orders.type_form_save');
     Route::post('/orders/itemname_form_save', [OrderController::class, 'itemNameFormSave'])->name('orders.itemname_form_save');
 
-
-
-
+    //Purchase management
+    Route::resource('purchases', PurchaseController::class);
 
 });

@@ -190,6 +190,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+            $product = Product::find($id);
+            $product->delete();
+            return back();
+        }
+        return back();
     }
 }

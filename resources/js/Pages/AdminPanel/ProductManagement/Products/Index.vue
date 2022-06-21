@@ -16,7 +16,7 @@
                                     <input type="search" v-model="params.search" aria-label="Search" placeholder="Search..." class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
                                     <div class="card-tools" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
                                         <Link :href="route('admin.products.create')">
-                                            <button type="button" class="btn btn-info text-uppercase" style="letter-spacing: 0.1em;">
+                                            <button type="button" class="btn btn-info text-white text-uppercase" style="letter-spacing: 0.1em;">
                                                 Create
                                             </button>
                                         </Link>
@@ -243,7 +243,7 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.form.delete(this.route('admin.types.destroy', id), {
+                        this.form.delete(this.route('admin.products.destroy', id), {
                             preserveScroll: true,
                             onSuccess: ()=> {
                                 Swal.fire(

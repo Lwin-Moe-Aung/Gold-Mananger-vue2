@@ -133,7 +133,7 @@
                                 <Link :href="route('admin.products.index')">
                                     <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
                                 </Link>
-                                <button type="submit" class="btn btn-info text-uppercase" style="letter-spacing: 0.1em;" :disabled="!form.name">Update</button>
+                                <button type="submit" class="btn btn-info text-white text-uppercase" style="letter-spacing: 0.1em;" :disabled="!form.name">Update</button>
                             </div>
                         </form>
                     </div>
@@ -150,6 +150,7 @@
     import moment from 'moment';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
+    import constant from "../../../../constant";
 
     export default {
         props: [
@@ -222,6 +223,8 @@
                     preserveScroll: true,
                     onSuccess:() => {
                         // window.history.back();
+                        window.location.href = constant.DOMAIN+"admin/products";
+                        // window.open( constant.DOMAIN+"generate_invoice/"+res.data.order_id, "_blank");
                         Toast.fire({
                             icon: 'success',
                             title: 'Product has been updated!'

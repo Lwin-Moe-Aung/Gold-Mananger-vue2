@@ -23,9 +23,11 @@ import vuetify from './plugins/vuetify'
 import Multiselect from 'vue-multiselect'
 import "vue-multiselect/dist/vue-multiselect.min.css";
 import { store } from './store/store';
+import Vuelidate from 'vuelidate';
 
 Vue.config.productionTip = false
 Vue.mixin({methods:{route:window.route}});
+Vue.use(Vuelidate);
 // Vue.use(VueToastr);
 // Vue.use(Vuetify);
 Vue.component('multiselect', Multiselect)

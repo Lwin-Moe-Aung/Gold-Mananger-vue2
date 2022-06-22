@@ -61,7 +61,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->file('image'));
+        // dd($request->file('image'));
 
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [

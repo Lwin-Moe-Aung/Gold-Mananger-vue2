@@ -1010,13 +1010,13 @@
 
                 return credit_money;
             },
-            nameErrors () {
-                const errors = []
-                if (!this.$v.quality.$dirty) return errors
-                !this.$v.quality.maxLength && errors.push('Name must be at most 10 characters long')
-                !this.$v.quality.required && errors.push('Name is required.')
-                return errors
-            },
+            // nameErrors () {
+            //     const errors = []
+            //     if (!this.$v.quality.$dirty) return errors
+            //     !this.$v.quality.maxLength && errors.push('Name must be at most 10 characters long')
+            //     !this.$v.quality.required && errors.push('Name is required.')
+            //     return errors
+            // },
 
         },
     };

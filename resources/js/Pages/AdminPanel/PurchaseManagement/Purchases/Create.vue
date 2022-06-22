@@ -16,19 +16,24 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-12 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input type="text" class="form-control" placeholder="Name" v-model="form.name" :class="{ 'is-invalid' : form.errors.name }" autofocus="autofocus" autocomplete="off">
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
-                                            {{ form.errors.name }}
-                                        </div>
+
+                                                <div class="form-group">
+                                                    <label for="name">Name</label>
+                                                    <!-- <input type="text" class="form-control" placeholder="Name" v-model="form.name" :class="{ 'is-invalid' : form.errors.name }" autofocus="autofocus" autocomplete="off"> -->
+                                                    <input type="text" v-model.trim="$v.form.name.$model" :class="{'is-invalid': validationStatus($v.form.name)}" class="form-control form-control-lg" autofocus="autofocus" autocomplete="off">
+                                                    <div v-if="!$v.form.name.required" class="invalid-feedback">The name field is required.</div>
+                                                </div>
+
+                                                <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
+                                                    {{ form.errors.name }}
+                                                </div>
+
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <div class="form-group">
                                             <label for="permissions">Supplier</label>
                                             <multiselect
-                                                v-model="supplier"
+                                                v-model.trim="$v.supplier.$model"
                                                 :options="suppliers"
                                                 :multiple="false"
                                                 :taggable="true"
@@ -36,7 +41,9 @@
                                                 label="name"
                                                 track-by="id"
                                                 @input="changeSupplier"
+                                                :class="{'is-invalid': validationStatus($v.supplier)}"
                                             ></multiselect>
+                                            <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
                                                 {{ form.errors.supplier }}
                                             </div>
@@ -73,18 +80,18 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="name">Description</label>
-                                            <textarea  class="form-control" placeholder="Description"
-                                                v-model="form.item_description" :class="{ 'is-invalid' : form.errors.item_description }"
-                                                autofocus="autofocus" autocomplete="off"
-                                                rows="4" cols="70"
-                                            >
-                                            </textarea>
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.item_description}">
-                                            {{ form.errors.item_description }}
-                                        </div>
+                                            <div class="form-group">
+                                                <label for="name">Description</label>
+                                                <textarea  class="form-control" placeholder="Description"
+                                                    v-model="form.item_description" :class="{ 'is-invalid' : form.errors.item_description }"
+                                                    autofocus="autofocus" autocomplete="off"
+                                                    rows="4" cols="70"
+                                                >
+                                                </textarea>
+                                            </div>
+                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.item_description}">
+                                                {{ form.errors.item_description }}
+                                            </div>
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <div class="form-group">
@@ -97,10 +104,11 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" v-if="product">
                             <div class="col-md-12">
                                 <div class="card card-success card-outline">
                                     <div class="card-header">
@@ -122,19 +130,37 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <label>ရွေး+ကျောက်ချိန်</label>
+                                                        <label>ရွှေ+ကျောက်ချိန်</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ကျပ်" style="min-width: 56px;">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.gold_plus_gem_weight.kyat.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.gold_plus_gem_weight.kyat)}"
+                                                            class="form-control" placeholder="ကျပ်" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.kyat.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.kyat.minValue" class="invalid-feedback">You must greater than {{ $v.form.gold_plus_gem_weight.kyat.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.kyat.maxValue" class="invalid-feedback">You must less than {{ $v.form.gold_plus_gem_weight.kyat.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ပဲ" style="min-width: 56px;">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.gold_plus_gem_weight.pal.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.gold_plus_gem_weight.pal)}"
+                                                            class="form-control" placeholder="ပဲ" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.pal.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.pal.minValue" class="invalid-feedback">You must greater than {{ $v.form.gold_plus_gem_weight.pal.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.pal.maxValue" class="invalid-feedback">You must less than {{ $v.form.gold_plus_gem_weight.pal.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ရွေး"  style="min-width: 56px;">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.gold_plus_gem_weight.yway.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.gold_plus_gem_weight.yway)}"
+                                                            class="form-control" placeholder="ရွေး" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.yway.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.yway.minValue" class="invalid-feedback">You must greater than {{ $v.form.gold_plus_gem_weight.yway.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.yway.maxValue" class="invalid-feedback">You must less than {{ $v.form.gold_plus_gem_weight.yway.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး" style="min-width: 120px;">
+                                                        <input type="number" :value="goldPrice" class="form-control" placeholder="တန်ဖိုး" style="min-width: 120px;" disabled>
                                                     </td>
                                                 </tr>
                                                  <tr>
@@ -142,16 +168,41 @@
                                                         <label>ကျောက်ချိန်</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ကျပ်">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.gem_weight.kyat.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.gem_weight.kyat)}"
+                                                            class="form-control" placeholder="ကျပ်" style="min-width: 56px;" :disabled="product.gem_weight == '0'">
+                                                        <div v-if="!$v.form.gem_weight.kyat.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.gem_weight.kyat.minValue" class="invalid-feedback">You must greater than {{ $v.form.gem_weight.kyat.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.gem_weight.kyat.maxValue" class="invalid-feedback">You must less than {{ $v.form.gem_weight.kyat.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ပဲ">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.gem_weight.pal.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.gem_weight.pal)}"
+                                                            class="form-control" placeholder="ပဲ" style="min-width: 56px;" :disabled="product.gem_weight == '0'">
+                                                        <div v-if="!$v.form.gem_weight.pal.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.gem_weight.pal.minValue" class="invalid-feedback">You must greater than {{ $v.form.gem_weight.pal.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.gem_weight.pal.maxValue" class="invalid-feedback">You must less than {{ $v.form.gem_weight.pal.$params.maxValue.max }}</div>
+
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ရွေး">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.gem_weight.yway.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.gem_weight.yway)}"
+                                                            class="form-control" placeholder="ရွေး" style="min-width: 56px;" :disabled="product.gem_weight == '0'">
+                                                        <div v-if="!$v.form.gem_weight.yway.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.gem_weight.yway.minValue" class="invalid-feedback">You must greater than {{ $v.form.gem_weight.yway.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.gem_weight.yway.maxValue" class="invalid-feedback">You must less than {{ $v.form.gem_weight.yway.$params.maxValue.max }}</div>
+
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.gem_price.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.gem_price)}"
+                                                            class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;" :disabled="product.gem_weight == '0'">
+                                                        <div v-if="!$v.form.gem_price.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.gem_price.minValue" class="invalid-feedback">You must greater than {{ $v.form.gem_price.$params.minValue.min }}.</div>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -159,16 +210,34 @@
                                                         <label>အလျော့တွက်</label>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ကျပ်">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.fee.kyat.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.fee.kyat)}"
+                                                            class="form-control" placeholder="ကျပ်" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.fee.kyat.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.fee.kyat.minValue" class="invalid-feedback">You must greater than {{ $v.form.fee.kyat.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.fee.kyat.maxValue" class="invalid-feedback">You must less than {{ $v.form.fee.kyat.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ပဲ">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.fee.pal.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.fee.pal)}"
+                                                            class="form-control" placeholder="ပဲ" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.fee.pal.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.fee.pal.minValue" class="invalid-feedback">You must greater than {{ $v.form.fee.pal.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.fee.pal.maxValue" class="invalid-feedback">You must less than {{ $v.form.fee.pal.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="ရွေး">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.fee.yway.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.fee.yway)}"
+                                                            class="form-control" placeholder="ရွေး" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.fee.yway.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.fee.yway.minValue" class="invalid-feedback">You must greater than {{ $v.form.fee.yway.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.fee.yway.maxValue" class="invalid-feedback">You must less than {{ $v.form.fee.yway.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                        <input type="number" :value="feePrice" class="form-control" placeholder="တန်ဖိုး" disabled>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -179,7 +248,12 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.fee_for_making.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.fee_for_making)}"
+                                                            class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.fee_for_making.required" class="invalid-feedback">required</div>
+                                                        <div v-if="!$v.form.fee_for_making.minValue" class="invalid-feedback">You must greater than {{ $v.form.fee_for_making.$params.minValue.min }}.</div>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -190,7 +264,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                        <input type="number" :value="totalBefore" class="form-control" placeholder="တန်ဖိုး" disabled>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -201,7 +275,11 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.item_discount.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.item_discount)}"
+                                                            class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.item_discount.minValue" class="invalid-feedback">You must greater than {{ $v.form.item_discount.$params.minValue.min }}.</div>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -212,7 +290,7 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td>
-                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                        <input type="number" :value="finalTotal" class="form-control" placeholder="တန်ဖိုး" disabled>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -222,7 +300,7 @@
                                         <Link :href="route('admin.products.index')">
                                             <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
                                         </Link>
-                                        <button type="submit" class="btn btn-info text-uppercase" style="letter-spacing: 0.1em;" :disabled="!form.name">Create</button>
+                                        <button type="submit" class="btn btn-info text-uppercase" style="letter-spacing: 0.1em;" >Create</button>
                                     </div>
                                 </div>
                             </div>
@@ -240,8 +318,8 @@
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import moment from 'moment';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
-    import { pickBy, throttle } from 'lodash';
     import { Link } from '@inertiajs/inertia-vue';
+    import { required, minValue, maxValue} from 'vuelidate/lib/validators'
 
     export default {
         props: [
@@ -256,18 +334,21 @@
         data() {
             return {
                 form: this.$inertia.form({
-                    name: '',
-                    product_id: '',
-                    supplier_id: '',
-                    gold_plus_gem_weight: '',
-                    gold_price: '',
-                    gem_weight: '',
-                    gem_price: '',
-                    fee: '',
-                    fee_price: '',
-                    fee_for_making: '',
-                    image: '',
-                    item_description: '',
+                    name: "",
+                    product_id: "",
+                    supplier_id: "",
+                    gold_plus_gem_weight: { kyat: "0", pal: "0", yway: "0" },
+                    gold_price: "0",
+                    gem_weight: { kyat: "0", pal: "0", yway: "0" },
+                    gem_price: "0",
+                    fee: { kyat: "0", pal: "0", yway: "0" },
+                    fee_price: "0",
+                    fee_for_making: "0",
+                    total_before: "0",
+                    item_discount: "0",
+                    final_total: "0",
+                    image: "",
+                    item_description: "",
                 }),
                 supplier: '',
                 product: '',
@@ -275,14 +356,39 @@
                 daily_price: '',
             }
         },
-        computed: {
+        validations: {
+            form: {
+                name: {required},
+                gold_plus_gem_weight:{
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
+                },
+                gem_weight:{
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
+                },
+                gem_price: {required, minValue: minValue(0)},
+                fee:{
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
+                },
+                fee_for_making:{required, minValue: minValue(0)},
+                item_discount:{minValue: minValue(0)}
 
+            },
+            supplier: {required},
         },
         watch: {
 
         },
 
         methods: {
+            validationStatus: function(validation) {
+                return typeof validation != "undefined" ? validation.$error : false;
+            },
             selectImage(e){
                 let file = e.target.files[0];
                 this.form.image = e.target.files[0];
@@ -290,9 +396,7 @@
                 if(file['size'] < 2111775)
                 {
                     reader.onloadend = (file) => {
-                        //console.log('RESULT', reader.result)
                         this.imageforui = reader.result;
-
                     }
                     reader.readAsDataURL(file);
                 }else{
@@ -300,6 +404,9 @@
                 }
             },
             createPurchases() {
+                this.$v.$touch();
+                if (this.$v.$pendding || this.$v.$error) return;
+
                 this.form.post(this.route('admin.purchases.store'), {
                     preserveScroll: true,
                     onSuccess:() => {
@@ -312,8 +419,14 @@
                 })
             },
             changeProductSku() {
-                this.form.product_id = this.product.id;
-                this.daily_price = this.$page.props.daily_setup[this.product.quality];
+                if(this.product == null){
+                    this.form.product_id = '';
+                    this.daily_price = '';
+                }else{
+                    this.form.product_id = this.product.id;
+                    this.daily_price = this.$page.props.daily_setup[this.product.quality];
+                }
+                this.resetVoucherForm();
             },
             changeSupplier() {
                 this.form.supplier_id = this.supplier.id;
@@ -323,6 +436,73 @@
                     return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 }
             },
-        }
+            resetVoucherForm () {
+                this.form.gold_plus_gem_weight = { kyat: "0", pal: "0", yway: "0" };
+                this.form.gold_price= "0";
+                this.form.gem_weight = { kyat: "0", pal: "0", yway: "0" };
+                this.form.gem_price = "0";
+                this.form.fee = { kyat: "0", pal: "0", yway: "0" };
+                this.form.fee_price = "0";
+                this.form.fee_for_making = "0";
+                this.form.total_before = "0";
+                this.form.item_discount = "0";
+                this.form.final_total = "0";
+            }
+        },
+        computed: {
+            goldPrice() {
+                if(this.product == "")return;
+                let price = this.$page.props.daily_setup[this.product.quality];
+                let kyat = parseInt(this.form.gold_plus_gem_weight.kyat) -  parseInt(this.form.gem_weight.kyat);
+                let pal = parseInt(this.form.gold_plus_gem_weight.pal) -  parseInt(this.form.gem_weight.pal);
+                let yway = parseInt(this.form.gold_plus_gem_weight.yway) -  parseInt(this.form.gem_weight.yway);
+
+                let kyat_p = kyat * parseInt(price.kyat);
+                let pal_p = pal * parseInt(price.pal);
+                let yway_p = yway * parseInt(price.yway);
+                let gold_price = kyat_p + pal_p + yway_p;
+
+                if (isNaN(gold_price)) gold_price = "";
+                this.form.gold_price = gold_price;
+                return gold_price;
+            },
+
+            feePrice() {
+                if(this.product == "")return;
+                let price = this.$page.props.daily_setup[this.product.quality];
+                let kyat_p = parseInt(this.form.fee.kyat) * parseInt(price.kyat);
+                let pal_p = parseInt(this.form.fee.pal) * parseInt(price.pal);
+                let yway_p = parseInt(this.form.fee.yway) * parseInt(price.yway);
+                let fee_price = kyat_p + pal_p + yway_p;
+
+                if (isNaN(fee_price)) fee_price = "";
+                this.form.fee_price = fee_price;
+
+                return fee_price;
+            },
+            totalBefore() {
+                if(this.product == "")return;
+                let total_before =
+                    parseInt(this.form.gold_price) +
+                    parseInt(this.form.gem_price) +
+                    parseInt(this.form.fee_price) +
+                    parseInt(this.form.fee_for_making);
+                if (isNaN(total_before)) total_before = "";
+                this.form.total_before = total_before;
+
+                return total_before;
+            },
+            finalTotal() {
+                if(this.product == "")return;
+                let final_total =
+                    parseInt(this.form.total_before) -
+                    parseInt(this.form.item_discount);
+                if (isNaN(final_total)) final_total = "";
+                this.form.final_total = final_total;
+                this.form.paid_money = final_total;
+                return final_total;
+            },
+
+        },
     }
 </script>

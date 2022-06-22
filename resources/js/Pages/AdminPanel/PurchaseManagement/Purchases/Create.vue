@@ -8,10 +8,10 @@
             </template>
             <section class="content">
                 <div class="container-fluid">
-                    <div class="card card-default">
-                        <form ref="productform" @submit.prevent="createPurchases">
+                    <form ref="productform" @submit.prevent="createPurchases">
+                        <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title">Product Create Form</h3>
+                                <h3 class="card-title">Purchase Create Form</h3>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -71,7 +71,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-12 col-sm-6">
                                         <div class="form-group">
@@ -98,27 +97,137 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12 col-sm-6">
-                                        <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input" type="checkbox" id="customCheckbox2" disabled  >
-                                            <label for="customCheckbox2" class="custom-control-label">ရွှေချိန်+ကျောက်ချိန်</label>
-                                        </div>
-                                        <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input custom-control-input-danger" type="checkbox" id="customCheckbox4" checked="">
-                                            <label for="customCheckbox4" class="custom-control-label">ကျောက်ချိန်</label>
-                                        </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-success card-outline">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                        <i class="fas fa-edit"></i>
+                                            Voucher form
+                                        </h3>
+                                    </div>
+                                    <div class="card-body pad table-responsive">
+                                        <!-- <p>Various types of buttons. Using the base class <code>.btn</code></p> -->
+                                        <table class="table table-bordered text-center">
+                                            <tbody>
+                                                <tr>
+                                                    <th width="30%"></th>
+                                                    <th width="15%"><code>ကျပ်</code></th>
+                                                    <th width="15%"><code>ပဲ</code></th>
+                                                    <th width="15%"><code>ရွေး</code></th>
+                                                    <th width="25%">ကျသင့်ငွေ</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>ရွေး+ကျောက်ချိန်</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ကျပ်" style="min-width: 56px;">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ပဲ" style="min-width: 56px;">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ရွေး"  style="min-width: 56px;">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး" style="min-width: 120px;">
+                                                    </td>
+                                                </tr>
+                                                 <tr>
+                                                    <td>
+                                                        <label>ကျောက်ချိန်</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ကျပ်">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ပဲ">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ရွေး">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>အလျော့တွက်</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ကျပ်">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ပဲ">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="ရွေး">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>လက်ခ</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>စုစုပေါင်း</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>လျော့ငွေ</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>ကျသင့်ငွေ</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="text" class="form-control" placeholder="တန်ဖိုး">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer justify-content-right">
+                                        <Link :href="route('admin.products.index')">
+                                            <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
+                                        </Link>
+                                        <button type="submit" class="btn btn-info text-uppercase" style="letter-spacing: 0.1em;" :disabled="!form.name">Create</button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer justify-content-right">
-                                <Link :href="route('admin.products.index')">
-                                    <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
-                                </Link>
-                                <button type="submit" class="btn btn-info text-uppercase" style="letter-spacing: 0.1em;" :disabled="!form.name">Create</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </section>
 

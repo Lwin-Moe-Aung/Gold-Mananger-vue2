@@ -58,7 +58,6 @@ class CustomerController extends Controller
             ]);
             try {
 
-                // dd(auth()->user()->business_location_id);
                 Contact::create([
                     'name' => $request->name,
                     'email' => $request->email,
@@ -70,11 +69,9 @@ class CustomerController extends Controller
                     'business_id' => auth()->user()->business_id,
                     'business_location_id' => auth()->user()->business_location_id,
                 ]);
-                // $request->session()->put('message', 'hello hello bar tone');
-                // // Session::put('message', 'hello bar tone');
+
                 return back();
             } catch (\Exception $e) {
-                // dd("hlelo");
                 return back()->with('fail', 'Fail to Create Customer');
             }
         }

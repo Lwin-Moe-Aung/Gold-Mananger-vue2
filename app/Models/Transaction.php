@@ -28,18 +28,12 @@ class Transaction extends Model
         'type',
         'status',
         'payment_status',
-        'contact_id',
         'invoice_no',
         'ref_no',
         'transaction_date',
-        'total_before',
-        'discount_type',
-        'discount_amount',
         'shipping_details',
         'shipping_charges',
         'additional_notes',
-        'staff_note',
-        'final_total',
         'created_by',
     ];
 
@@ -54,11 +48,14 @@ class Transaction extends Model
      * @return HasOne
      * @description get the order associated with the transaction
      */
-    public function order()
+    public function sell()
     {
-        return $this->hasOne(Order::class);
+        return $this->hasOne(Sell::class);
     }
-
+    public function purchase()
+    {
+        return $this->hasOne(Purchase::class);
+    }
     public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');

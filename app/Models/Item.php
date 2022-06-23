@@ -29,20 +29,16 @@ class Item extends Model
         'business_location_id',
         'created_by',
         'item_sku',
-        'gold_weight',
-        'gold_price',
+        'gold_plus_gem_weight',
         'gem_weight',
-        'gem_price',
         'fee',
-        'fee_price',
         'fee_for_making',
-        'item_discount',
-        'tax',
         'is_active',
-        'image1',
-        'image2',
+        'image',
         'draft',
         'sold_out',
+        'purchase_return',
+        'sell_return',
         'item_description'
     ];
 
@@ -62,8 +58,8 @@ class Item extends Model
      * @return HasOne
      * @description get the order associated with the transaction
      */
-    public function order()
+    public function sell()
     {
-        return $this->hasOne(Order::class);
+        return $this->hasOne(Sell::class);
     }
 }

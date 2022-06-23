@@ -66,7 +66,7 @@ class ProductTypeController extends Controller
 
             $this->validate($request, [
                 'name' => ['required', 'max:50'],
-                'key' => ['required', 'max:2'],
+                'key' => ['required', 'max:1'],
             ]);
             try {
                 Type::create([

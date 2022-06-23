@@ -25,20 +25,42 @@ class DailySetupController extends Controller
      */
     public function index()
     {
+        // $business_id = auth()->user()->business_id;
+        // $daily_setups = DailySetup::query();
+        // $daily_setups->where('business_id', '=', $business_id);
+        // if (request('date')) {
+        //     $daily_setups->whereDate('created_at', '=', request('date'));
+        // } else {
+        //     $daily_setups->whereDate('created_at', '=', date('Y-m-d'));
+        // }
+        // $daily_setups->orderBy('created_at', 'DESC');
+        // $product_types = Type::where('business_id', $business_id)
+        //     ->get();
+
+        // return Inertia::render('AdminPanel/ProductManagement/DailySetup/Index', [
+        //     'daily_setups' => $daily_setups->with('productType')->paginate()->withQueryString(),
+        //     'product_types' => $product_types
+        // ]);
+
+        request()->validate([
+            'direction' => ['in:asc,desc'],
+            'field' => ['in:name,city']
+        ]);
         $business_id = auth()->user()->business_id;
         $daily_setups = DailySetup::query();
         $daily_setups->where('business_id', '=', $business_id);
-        if (request('date')) {
-            $daily_setups->whereDate('created_at', '=', request('date'));
-        } else {
-            $daily_setups->whereDate('created_at', '=', date('Y-m-d'));
-        }
-        $product_types = Type::where('business_id', $business_id)
-            ->get();
 
+        if (request('search')) {
+            $daily_setups->where('daily_price', 'LIKE', '%' . request('search') . '%');
+        }
+
+        if (request()->has(['field', 'direction'])) {
+            $daily_setups->orderBy(request('field'), request('direction'));
+        }
+        $daily_setups->orderBy('created_at', 'DESC');
         return Inertia::render('AdminPanel/ProductManagement/DailySetup/Index', [
-            'daily_setups' => $daily_setups->with('productType')->paginate()->withQueryString(),
-            'product_types' => $product_types
+            'daily_setups' => $daily_setups->paginate()->withQueryString(),
+            'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }
 
@@ -61,17 +83,19 @@ class DailySetupController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+
+            $this->validate($request, [
+                'daily_price' => ['required'],
+            ]);
             try {
-                foreach ($request->daily_setups as $value) {
-                    DailySetup::create([
-                        'type_of_daily_setup' => $value["type_of_daily_setup"],
-                        'business_id' => $value["business_id"],
-                        'daily_price' => $value["daily_price"]
-                    ]);
-                }
+                DailySetup::create([
+                    'type' => "gold",
+                    'business_id' => auth()->user()->business_id,
+                    'daily_price' => $request->daily_price,
+                ]);
                 return back();
             } catch (\Exception $e) {
-                return back()->with('fail', 'Fail to Create New Product Type');
+                return back()->with('fail', 'Fail to Create New Daily Price');
             }
         }
         return back();
@@ -108,7 +132,19 @@ class DailySetupController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // return $contact;
+        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+            $this->validate($request, [
+                'daily_price' => ['required'],
+            ]);
+            try {
+                $daily_setup = DailySetup::find($id);
+                $daily_setup->daily_price = $request->daily_price;
+                $daily_setup->save();
+                return back();
+            } catch (\Exception $e) {
+                return back()->withErrors(['fail' => 'Fail to Update  Daily Price']);
+            }
+        }
         return back()->withErrors(['fail' => 'No permission']);
     }
     /**
@@ -118,24 +154,24 @@ class DailySetupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function editDailySetup(Request $request)
-    {
-        // return $request->daily_setups;
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+    // public function editDailySetup(Request $request)
+    // {
+    //     // return $request->daily_setups;
+    //     if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
 
-            try {
-                foreach ($request->daily_setups as $daily_setup) {
-                    $daily = DailySetup::find($daily_setup["id"]);
-                    $daily->daily_price = $daily_setup["daily_price"];
-                    $daily->save();
-                }
-                return redirect()->back();
-            } catch (\Exception $e) {
-                return back()->withErrors(['fail' => 'Fail to Update Product Type']);
-            }
-        }
-        return back()->withErrors(['fail' => 'No permission']);
-    }
+    //         try {
+    //             foreach ($request->daily_setups as $daily_setup) {
+    //                 $daily = DailySetup::find($daily_setup["id"]);
+    //                 $daily->daily_price = $daily_setup["daily_price"];
+    //                 $daily->save();
+    //             }
+    //             return redirect()->back();
+    //         } catch (\Exception $e) {
+    //             return back()->withErrors(['fail' => 'Fail to Update Product Type']);
+    //         }
+    //     }
+    //     return back()->withErrors(['fail' => 'No permission']);
+    // }
     /**
      * Remove the specified resource from storage.
      *
@@ -145,8 +181,8 @@ class DailySetupController extends Controller
     public function destroy($id)
     {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-            $product_type = Type::find($id);
-            $product_type->delete();
+            $daily_setup = DailySetup::find($id);
+            $daily_setup->delete();
             return back();
         }
         return back();

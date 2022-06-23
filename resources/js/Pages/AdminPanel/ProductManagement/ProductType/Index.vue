@@ -8,7 +8,7 @@
             </template>
             <section class="content">
                 <div class="container-fluid">
-                    
+
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -24,7 +24,7 @@
                                     <table class="table table-hover text-nowrap">
                                         <thead>
                                             <tr>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-white uppercase">
+                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-black uppercase">
                                                     <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('name')">Name
                                                         <svg v-if="params.field === 'name' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
                                                             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
@@ -34,7 +34,7 @@
                                                         </svg>
                                                     </span>
                                                 </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-white uppercase">
+                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-black uppercase">
                                                     <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('name')">Key
                                                         <svg v-if="params.field === 'name' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
                                                             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
@@ -44,7 +44,7 @@
                                                         </svg>
                                                     </span>
                                                 </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-white uppercase">
+                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left text-black uppercase">
                                                     <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Date
                                                         <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
                                                             <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
@@ -152,7 +152,7 @@
                     field: this.filters.field,
                     direction: this.filters.direction,
                 },
-               
+
             }
         },
         computed: {
@@ -175,7 +175,7 @@
                 deep: true,
             },
         },
-        
+
         methods: {
             sort(field) {
                 this.params.field = field;
@@ -184,7 +184,7 @@
             dateTime(value) {
                 return moment(value).format('YYYY-MM-DD');
             },
-           
+
             editModal(product_type) {
                 this.editMode = true
                 $('#modal-lg').modal('show')

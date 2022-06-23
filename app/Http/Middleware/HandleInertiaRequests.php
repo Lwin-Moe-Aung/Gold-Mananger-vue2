@@ -57,22 +57,26 @@ class HandleInertiaRequests extends Middleware
             ],
             'user' => Auth::user(),
             'daily_setup' => function () {
-                $daily_price =  DailySetup::with('dailySetupDetail')
-                    ->where('type', 1)
+                $daily_setup =  DailySetup::where('type', 'gold')
                     // ->where('business_id', Auth::user()->business_id)
                     ->where('business_id',1)
                     ->latest('created_at')
                     ->first();
+                $daily_price = $daily_setup->daily_price;
+                $daily_kyat =  $daily_price / 16;
                 $data = [];
-                foreach ($daily_price->dailySetupDetail as $value) {
-                    $data [$value->quality] = [
-                        'id' => $value->id,
-                        'daily_setup_id' => $value->daily_setup_id,
-                        'kyat' => $value->daily_price_kyat,
-                        'pal' => $value->daily_price_pal,
-                        'yway' => $value->daily_price_yway,
+                for ($x = 1; $x <= 16; $x++) {
+                    $kyat = $daily_price - ($daily_kyat * (16 - $x));
+                    $pal = $kyat / 16;
+                    $yway = $pal / 8;
+                    $data [$x] = [
+                        'daily_setup_id' => $daily_setup->id,
+                        'kyat' => $kyat,
+                        'pal' => $pal,
+                        'yway' => $yway,
                     ];
-                };
+
+                }
                 return $data;
             },
 

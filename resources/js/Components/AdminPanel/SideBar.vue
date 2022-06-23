@@ -129,6 +129,14 @@
                                 </Link>
                             </li>
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.item_names.index')" class="nav-link" :class="route().current('admin.item_names.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Item Name
+                                    </p>
+                                </Link>
+                            </li>
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
                                 <Link :href="route('admin.daily_setups.index')" class="nav-link" :class="route().current('admin.daily_setups.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>

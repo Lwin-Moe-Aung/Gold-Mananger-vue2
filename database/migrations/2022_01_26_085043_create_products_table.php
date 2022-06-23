@@ -18,6 +18,8 @@ class CreateProductsTable extends Migration
             $table->string('name', 100);
             $table->string('product_sku', 100);
             $table->string('quality', 100);
+            $table->unsignedBigInteger('type_id');
+            $table->unsignedBigInteger('item_names_id');
             $table->text('description')->nullable();
             $table->string('tax', 100)->nullable();
             $table->integer('item_count')->default(0);

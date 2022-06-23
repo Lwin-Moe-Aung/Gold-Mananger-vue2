@@ -81,8 +81,8 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-6">
                                             <div class="form-group">
-                                                <label for="name">Description</label>
-                                                <textarea  class="form-control" placeholder="Description"
+                                                <label for="name">Item Description</label>
+                                                <textarea  class="form-control" placeholder=" Item Description"
                                                     v-model="form.item_description" :class="{ 'is-invalid' : form.errors.item_description }"
                                                     autofocus="autofocus" autocomplete="off"
                                                     rows="4" cols="70"
@@ -95,6 +95,24 @@
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <div class="form-group">
+                                            <label for="name">Transaction Description</label>
+                                            <textarea  class="form-control" placeholder="Transaction Description"
+                                                v-model="form.tran_description" :class="{ 'is-invalid' : form.errors.tran_description }"
+                                                autofocus="autofocus" autocomplete="off"
+                                                rows="4" cols="70"
+                                            >
+                                            </textarea>
+                                        </div>
+                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.tran_description}">
+                                            {{ form.errors.tran_description }}
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-sm-6">
+                                       <div class="form-group">
                                             <label for="image">Choose Image</label>
                                             <input type="file" :class="['form-control',form.errors.image?'border border-danger':'']"  @change="selectImage">
                                             <img class="profile-user-img img-fluid" :src="imageforui" v-if="imageforui">
@@ -103,8 +121,10 @@
                                             {{ form.errors.image }}
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-12 col-sm-6">
 
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -337,6 +357,7 @@
                     name: "",
                     product_id: "",
                     supplier_id: "",
+                    daily_setup_id: "",
                     gold_plus_gem_weight: { kyat: "0", pal: "0", yway: "0" },
                     gold_price: "0",
                     gem_weight: { kyat: "0", pal: "0", yway: "0" },
@@ -344,11 +365,12 @@
                     fee: { kyat: "0", pal: "0", yway: "0" },
                     fee_price: "0",
                     fee_for_making: "0",
-                    total_before: "0",
+                    before_total: "0",
                     item_discount: "0",
                     final_total: "0",
                     image: "",
                     item_description: "",
+                    tran_description: "",
                 }),
                 supplier: '',
                 product: '',
@@ -406,14 +428,14 @@
             createPurchases() {
                 this.$v.$touch();
                 if (this.$v.$pendding || this.$v.$error) return;
-
+                this.form.daily_setup_id = this.daily_price.daily_setup_id;
                 this.form.post(this.route('admin.purchases.store'), {
                     preserveScroll: true,
                     onSuccess:() => {
                         Object.assign(this.$data, this.$options.data.call(this));
                         Toast.fire({
                             icon: 'success',
-                            title: 'New Product created!'
+                            title: 'New Item created!'
                         })
                     }
                 })
@@ -426,6 +448,7 @@
                     this.form.product_id = this.product.id;
                     this.daily_price = this.$page.props.daily_setup[this.product.quality];
                 }
+
                 this.resetVoucherForm();
             },
             changeSupplier() {
@@ -444,7 +467,7 @@
                 this.form.fee = { kyat: "0", pal: "0", yway: "0" };
                 this.form.fee_price = "0";
                 this.form.fee_for_making = "0";
-                this.form.total_before = "0";
+                this.form.before_total = "0";
                 this.form.item_discount = "0";
                 this.form.final_total = "0";
             }
@@ -482,20 +505,20 @@
             },
             totalBefore() {
                 if(this.product == "")return;
-                let total_before =
+                let before_total =
                     parseInt(this.form.gold_price) +
                     parseInt(this.form.gem_price) +
                     parseInt(this.form.fee_price) +
                     parseInt(this.form.fee_for_making);
-                if (isNaN(total_before)) total_before = "";
-                this.form.total_before = total_before;
+                if (isNaN(before_total)) before_total = "";
+                this.form.before_total = before_total;
 
-                return total_before;
+                return before_total;
             },
             finalTotal() {
                 if(this.product == "")return;
                 let final_total =
-                    parseInt(this.form.total_before) -
+                    parseInt(this.form.before_total) -
                     parseInt(this.form.item_discount);
                 if (isNaN(final_total)) final_total = "";
                 this.form.final_total = final_total;

@@ -61,8 +61,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
                 'name' => ['required', 'max:50'],
@@ -70,8 +68,7 @@ class ProductController extends Controller
                 'type' => ['required'],
                 'item_name' => ['required'],
             ]);
-            // return $request;
-            // try {
+            try {
                 if ($file = $request->file('image')) {
                     $image_name = uniqid() . str_replace(' ', '', $file->getClientOriginalName());
                     $path = '/images/products/';
@@ -95,10 +92,10 @@ class ProductController extends Controller
                     'gem_weight' => $request->gem_weight ? '1' : '0',
 
                 ]);
-            //     return back();
-            // } catch (\Exception $e) {
-            //     return back()->with('fail', 'Fail to Create New Product Type');
-            // }
+                return redirect()->route('admin.products.index');
+            } catch (\Exception $e) {
+                return back()->with('fail', 'Fail to Create New Product Type');
+            }
         }
         return back()->with('fail', 'No permission');
     }

@@ -60,6 +60,10 @@ class Item extends Model
      */
     public function sell()
     {
-        return $this->hasOne(Sell::class);
+        return $this->hasOne(Sell::class, 'item_id');
+    }
+    public function purchase()
+    {
+        return $this->hasOne(Purchase::class, 'item_id');
     }
 }

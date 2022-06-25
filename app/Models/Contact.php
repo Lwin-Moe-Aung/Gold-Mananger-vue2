@@ -53,4 +53,9 @@ class Contact extends Model
     {
         return $this->hasMany(Transaction::class, 'contact_id');
     }
+
+    public function purchase()
+    {
+        return $this->hasMany(Purchase::class, 'supplier_id');
+    }
 }

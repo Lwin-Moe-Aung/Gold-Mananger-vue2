@@ -51,7 +51,7 @@ class Purchase extends Model
      */
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class);
+        return $this->belongsTo(Transaction::class, 'transaction_id');
     }
 
     /**
@@ -60,6 +60,20 @@ class Purchase extends Model
     */
     public function item()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Item::class, 'item_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class, 'supplier_id');
+    }
+    public function dailysetup()
+    {
+        return $this->belongsTo(DailySetup::class, 'daily_setup_id');
     }
 }

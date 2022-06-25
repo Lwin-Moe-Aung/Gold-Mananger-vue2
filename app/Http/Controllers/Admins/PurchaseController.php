@@ -19,12 +19,34 @@ class PurchaseController extends Controller
 {
     public function index()
     {
-        // $business_id = auth()->user()->business_id;
-        // $items = Item::where('business_id', $business_id)
-        //     ->with('user')
+        request()->validate([
+            'direction' => ['in:asc,desc'],
+            'field' => ['in:name,city']
+        ]);
+
+        $business_id = auth()->user()->business_id;
+        // $transactions = Transaction::where('business_id', $business_id)
         //     ->orderBy('created_at', 'desc')
         //     ->paginate(10);
-        return Inertia::render('AdminPanel/PurchaseManagement/Purchases/Index');
+
+        $transactions = Transaction::query();
+        $transactions->where('business_id', $business_id);
+        if (request('search')) {
+            $transactions->where('name', 'LIKE', '%' . request('search') . '%');
+        }
+        if (request()->has(['field', 'direction'])) {
+            $transactions->orderBy(request('field'), request('direction'));
+        }
+        $transactions = $transactions->paginate(5)->withQueryString();
+        foreach ($transactions as $key=>$value) {
+            $transactions[$key]->purchase = $value->purchase;
+            $transactions[$key]->item = $value->purchase->item;
+            $transactions[$key]->product = $value->purchase->item->product;
+        }
+        return Inertia::render('AdminPanel/PurchaseManagement/Purchases/Index', [
+            'transactions' => $transactions,
+            'filters' => request()->all(['search', 'field', 'direction'])
+        ]);
     }
 
     public function create()

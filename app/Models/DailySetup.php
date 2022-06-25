@@ -39,4 +39,9 @@ class DailySetup extends Model
     {
         return $this->hasMany(DailySetupDetail::class, 'daily_setup_id');
     }
+
+    public function purchase()
+    {
+        return $this->hasMany(Purchase::class, 'daily_setup_id');
+    }
 }

@@ -54,7 +54,7 @@ class Transaction extends Model
     }
     public function purchase()
     {
-        return $this->hasOne(Purchase::class);
+        return $this->hasOne(Purchase::class, 'transaction_id');
     }
     public function business()
     {
@@ -69,4 +69,18 @@ class Transaction extends Model
     {
         return $this->belongsTo(Contact::class, 'contact_id');
     }
+
+    //  //has one through
+    //  public function item()
+    //  {
+    //      //(to_connect_model_name, through_model)
+    //      return $this->hasOneThrough(
+    //          Item::class,
+    //          Purchase::class,
+    //          'transaction_id', //foregin key on purchase table...
+    //          'id', //foregin key on item table ....
+    //          'id', // local key in Transaction table.....
+    //          'id', // local key in Purchase table.....
+    //      );
+    //  }
 }

@@ -125,5 +125,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     //Purchase management
     Route::resource('purchases', PurchaseController::class);
-
+    Route::post('/purchases/purchase_update', [PurchaseController::class, 'purchaseUpdate'])->name('purchases.purchase_update');
 });

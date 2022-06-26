@@ -171,7 +171,8 @@ class ProductController extends Controller
                 $product->created_by = auth()->user()->id;
                 $product->gem_weight = $request->gem_weight ? '1' : '0';
                 $product->save();
-                return back();
+                return redirect()->route('admin.products.index');
+
             } catch (\Exception $e) {
                 return back()->with('fail', 'Fail to Create New Product Type');
             }

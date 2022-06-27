@@ -53,6 +53,7 @@ const actions = {
                     }).then((result) => {
                         if (result.isConfirmed) {
                             commit("createNewItem")
+                            commit("resetVoucherForm")
                         }
                     });
                 }
@@ -187,7 +188,7 @@ const mutations = {
             image1: "/images/pos/new-default.jpg",
             quality: state.product_sku.length > 3 ? parseInt(String(state.product_sku.charAt(0))+String(state.product_sku.charAt(1))) :
                                                     state.product_sku.charAt(0),
-            gold_weight: {kyat:kyat, pal:pal, yway:yway},
+            gold_plus_gem_weight: {kyat:kyat, pal:pal, yway:yway},
             gem_weight: {kyat:0, pal:0, yway:0},
             fee: {kyat:0, pal:3, yway:0},
             fee_for_making: "5000"

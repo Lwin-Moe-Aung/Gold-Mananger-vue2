@@ -11,7 +11,7 @@
                 <figure>
                     <v-img
                         max-height="166"
-                        :src="item.image1"
+                        :src="item.image"
                         ></v-img>
                     <figcaption>
                         <v-btn

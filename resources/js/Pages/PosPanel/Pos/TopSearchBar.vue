@@ -131,7 +131,7 @@
             onChange() {
                 let data = { product_sku: this.selectProductSku}
                 this.searchItem(data);
-                this.resetVoucherForm();
+                // this.resetVoucherForm();
                 this.searchValue = "";
             },
 

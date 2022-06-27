@@ -25,9 +25,6 @@ class PurchaseController extends Controller
         ]);
 
         $business_id = auth()->user()->business_id;
-        // $transactions = Transaction::where('business_id', $business_id)
-        //     ->orderBy('created_at', 'desc')
-        //     ->paginate(10);
 
         $transactions = Transaction::query();
         $transactions->where('business_id', $business_id);
@@ -36,6 +33,8 @@ class PurchaseController extends Controller
         }
         if (request()->has(['field', 'direction'])) {
             $transactions->orderBy(request('field'), request('direction'));
+        }else{
+            $transactions->orderBy('created_at', 'desc');
         }
         $transactions = $transactions->paginate(5)->withQueryString();
         foreach ($transactions as $key=>$value) {

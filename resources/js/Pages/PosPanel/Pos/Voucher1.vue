@@ -7,74 +7,74 @@
                 flat
                 class="mx-auto rounded-lg mx-3 no-print"
             >
-            <v-form ref="form" lazy-validation>
-                <v-list-item three-line>
-                    <v-flex xs2 md2 sm2 lg2 >
-                        <v-list-item-avatar
-                            rounded
-                            size="100"
-                            color="grey lighten-4"
-                            v-if="form.id"
-                        >
-                            <v-img :src="form.image"></v-img>
-                        </v-list-item-avatar>
-                        <!-- image upload -->
+                <v-form ref="form" lazy-validation>
+                    <v-list-item three-line>
+                        <v-flex xs2 md2 sm2 lg2 >
+                            <v-list-item-avatar
+                                rounded
+                                size="100"
+                                color="grey lighten-4"
+                                v-if="form.id"
+                            >
+                                <v-img :src="form.image"></v-img>
+                            </v-list-item-avatar>
+                            <!-- image upload -->
 
-                        <v-card v-else rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
-                            <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
-                            <v-fade-transition mode="out-in">
-                                <v-img v-if="form.image" aspect-ratio="1" :src="form.image">
-                                    <v-row class="fill-height" align="end" justify="center">
-                                    <v-slide-y-reverse-transition>
-                                        <v-sheet v-if="mask" color="error" width="100%" height="100%" class="mask" />
-                                    </v-slide-y-reverse-transition>
-                                        <v-btn
-                                            class="mb-3"
-                                            fab
-                                            x-small
-                                            color="error"
-                                            @click.stop="deleteImage"
-                                            @mouseenter="mask=true"
-                                            @mouseleave="mask=false"
-                                        >
-                                            <v-icon>mdi-delete</v-icon>
-                                        </v-btn>
+                            <v-card v-else rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
+                                <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
+                                <v-fade-transition mode="out-in">
+                                    <v-img v-if="form.image" aspect-ratio="1" :src="form.image">
+                                        <v-row class="fill-height" align="end" justify="center">
+                                        <v-slide-y-reverse-transition>
+                                            <v-sheet v-if="mask" color="error" width="100%" height="100%" class="mask" />
+                                        </v-slide-y-reverse-transition>
+                                            <v-btn
+                                                class="mb-3"
+                                                fab
+                                                x-small
+                                                color="error"
+                                                @click.stop="deleteImage"
+                                                @mouseenter="mask=true"
+                                                @mouseleave="mask=false"
+                                            >
+                                                <v-icon>mdi-delete</v-icon>
+                                            </v-btn>
+                                        </v-row>
+                                    </v-img>
+                                    <v-row v-else class="d-flex flex-column align-center justify-center fill-height">
+                                        <v-icon>
+                                        mdi-paperclip
+                                        </v-icon>
+                                        <span class="mt-3">Select an Image</span>
                                     </v-row>
-                                </v-img>
-                                <v-row v-else class="d-flex flex-column align-center justify-center fill-height">
-                                    <v-icon>
-                                    mdi-paperclip
-                                    </v-icon>
-                                    <span class="mt-3">Select an Image</span>
-                                </v-row>
-                            </v-fade-transition>
-                        </v-card>
-                        <!-- end image upload -->
-                    </v-flex>
-                    <v-flex xs7 md7 sm7 lg7 >
-                        <VoucherTitleBar/>
-                    </v-flex>
-                    <v-flex xs3 md3 sm3 lg3 class="mb-16">
-                        <v-icon
-                            color="info"
-                            @click="addToCart()"
-                            v-text="'fas fa-shopping-cart'"
-                        ></v-icon>
-                    </v-flex>
+                                </v-fade-transition>
+                            </v-card>
+                            <!-- end image upload -->
+                        </v-flex>
+                        <v-flex xs7 md7 sm7 lg7 >
+                            <VoucherTitleBar/>
+                        </v-flex>
+                        <v-flex xs3 md3 sm3 lg3 class="mb-16">
+                            <v-icon
+                                color="info"
+                                @click="addToCart()"
+                                v-text="'fas fa-shopping-cart'"
+                            ></v-icon>
+                        </v-flex>
 
 
 
-                </v-list-item>
-                <!-- <v-list-item>
-                    <v-row>
-                        <v-icon
-                            color="info"
-                            @click="addToCart()"
-                            v-text="'fas fa-shopping-cart'"
-                        ></v-icon>
-                    </v-row>
-                </v-list-item> -->
-                <v-card-actions>
+                    </v-list-item>
+                    <!-- <v-list-item>
+                        <v-row>
+                            <v-icon
+                                color="info"
+                                @click="addToCart()"
+                                v-text="'fas fa-shopping-cart'"
+                            ></v-icon>
+                        </v-row>
+                    </v-list-item> -->
+                    <v-card-actions>
                     <!--new-->
                         <v-container>
                             <v-row>
@@ -82,12 +82,12 @@
                                     <v-card flat class="mr-2">
                                         <v-layout row wrap class="pl-4 textfield one">
                                             <v-flex xs3 md3 sm3 class="mt-5 text-left">
-                                                <div>ရွှေချိန်</div>
+                                                <div>ရွှေ+ကျောက်ချိန်</div>
                                             </v-flex>
                                             <v-flex xs2 sm2 md2>
                                                 <v-flex xs6 sm6 md6>
                                                     <v-text-field
-                                                        v-model = "form.gold_weight.kyat"
+                                                        v-model = "form.gold_plus_gem_weight.kyat"
                                                         label="ကျပ်"
                                                         placeholder="ကျပ်"
                                                         :rules="validationRules"
@@ -104,7 +104,7 @@
                                             <v-flex xs2 sm2 md2>
                                                 <v-flex xs6 sm6 md6>
                                                      <v-text-field
-                                                        v-model = "form.gold_weight.pal"
+                                                        v-model = "form.gold_plus_gem_weight.pal"
                                                         label="ပဲ"
                                                         placeholder="ပဲ"
                                                         :rules="validationRules"
@@ -120,7 +120,7 @@
                                             <v-flex xs2 sm2 md2>
                                                 <v-flex xs6 sm6 md6>
                                                    <v-text-field
-                                                        v-model = "form.gold_weight.yway"
+                                                        v-model = "form.gold_plus_gem_weight.yway"
                                                         label="ရွေး"
                                                         placeholder="ရွေး"
                                                         :rules="yway_validationRules"
@@ -197,7 +197,16 @@
                                             </v-flex>
                                             <v-flex xs3 sm3 md3>
                                                 <div class="right">
-                                                    <v-chip small class="one white--text my-6 caption">{{ gemPrice }}</v-chip>
+                                                    <v-flex xs7 sm7 md7>
+                                                        <v-text-field
+                                                            v-model="form.gem_price"
+                                                            label="ကျသင့်ငွေ"
+                                                            placeholder="ကျသင့်ငွေ"
+                                                            :rules="validationRules"
+                                                            required
+                                                            type="number"
+                                                        ></v-text-field>
+                                                    </v-flex>
                                                 </div>
                                             </v-flex>
                                         </v-layout>
@@ -476,7 +485,7 @@
                     image: undefined,
                     imageFile: undefined,
                     item_sku: "",
-                    gold_weight: { kyat: "", pal: "", yway: "" },
+                    gold_plus_gem_weight: { kyat: "", pal: "", yway: "" },
                     gold_price: "",
                     gem_weight: { kyat: "", pal: "", yway: "" },
                     gem_price: "",
@@ -497,13 +506,6 @@
                     credit_money: "",
                     note: "",
                 },
-                projects: [
-                        { title: 'ရွှေချိန်', person: '12', due: '12', status: 'ongoing', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                        { title: 'ကျောက်ချိန်', person: '22', due: '11', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                        { title: 'အလျော့တွက်', person: '11', due: '11', status: 'complete', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                        { title: 'လက်ခ', person: '11', due: '11', status: 'overdue', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                        { title: 'စုစုပေါင်း', person: '22', due: '22', status: 'overdue', content: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt consequuntur eos eligendi illum minima adipisci deleniti, dicta mollitia enim explicabo fugiat quidem ducimus praesentium voluptates porro molestias non sequi animi!'},
-                    ],
                 quality: '',
                 name: '',
                 email: '',
@@ -512,7 +514,7 @@
                 loading: false,
                 validationRules:[
                     v => !!v || 'Required',
-                    v => /^\d+$/.test(v) || 'limitation error',
+                    // v => /^\d+$/.test(v) || 'limitation error',
                 ],
                 yway_validationRules:[
                     v => !!v || 'Required',
@@ -577,10 +579,10 @@
             //     if(this.goldQuality == null && this.type == null  && this.item_name == null ) return;
             //     let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
             //     // var item_spe = null;
-            //     // if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != "" && this.form.gold_weight.yway != ""){
-            //     //     let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
-            //     //     let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
-            //     //     item_spe = kyat + pal+this.form.gold_weight.yway;
+            //     // if(this.form.gold_plus_gem_weight.kyat != "" && this.form.gold_plus_gem_weight.pal  != "" && this.form.gold_plus_gem_weight.yway != ""){
+            //     //     let kyat = this.form.gold_plus_gem_weight.kyat.length == 1 ? '0'+this.form.gold_plus_gem_weight.kyat : this.form.gold_plus_gem_weight.kyat;
+            //     //     let pal = this.form.gold_plus_gem_weight.pal.length == 1 ? '0'+this.form.gold_plus_gem_weight.pal : this.form.gold_plus_gem_weight.pal;
+            //     //     item_spe = kyat + pal+this.form.gold_plus_gem_weight.yway;
             //     // }
             //     // let data = { product_sku: product_sku, item_spe: item_spe}
             //     let data = { product_sku: product_sku}
@@ -588,15 +590,15 @@
             //     this.clearFormData();
             // },
             onChange(entry) {
-                if(this.form.gold_weight.kyat != "" && this.form.gold_weight.pal  != ""
-                     && this.form.gold_weight.yway != "" && this.goldQuality != null
+                if(this.form.gold_plus_gem_weight.kyat != "" && this.form.gold_plus_gem_weight.pal  != ""
+                     && this.form.gold_plus_gem_weight.yway != "" && this.goldQuality != null
                       && this.type != null  && this.item_name != null ){
 
                     let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
-                    let kyat = this.form.gold_weight.kyat.length == 1 ? '0'+this.form.gold_weight.kyat : this.form.gold_weight.kyat;
-                    let pal = this.form.gold_weight.pal.length == 1 ? '0'+this.form.gold_weight.pal : this.form.gold_weight.pal;
+                    let kyat = this.form.gold_plus_gem_weight.kyat.length == 1 ? '0'+this.form.gold_plus_gem_weight.kyat : this.form.gold_plus_gem_weight.kyat;
+                    let pal = this.form.gold_plus_gem_weight.pal.length == 1 ? '0'+this.form.gold_plus_gem_weight.pal : this.form.gold_plus_gem_weight.pal;
 
-                    let item_spe = kyat + pal+this.form.gold_weight.yway;
+                    let item_spe = kyat + pal+this.form.gold_plus_gem_weight.yway;
                     let data = { product_sku: product_sku, item_spe: item_spe}
                     this.searchItem(data);
                 }
@@ -622,9 +624,9 @@
                         id: this.form.id,
                         name: this.form.name,
                         product_sku: this.form.product_sku,
-                        image1: this.form.image,
+                        image: this.form.image,
                         item_sku: this.form.item_sku,
-                        gold_weight: this.form.gold_weight,
+                        gold_plus_gem_weight: this.form.gold_plus_gem_weight,
                         gold_price: this.form.gold_price,
                         gem_weight: this.form.gem_weight,
                         gem_price: this.form.gem_price,
@@ -645,7 +647,6 @@
                         note: this.form.note,
                         quality: this.quality,
                         customer:this.customer
-
                     };
                     if(this.item_from_cart){
                         //edit item from cart
@@ -671,6 +672,8 @@
                         this.selectItemReset();
 
                     }
+                }else{
+                    alert("what wrong");
                 }
             },
             // editDailySetup() {
@@ -713,7 +716,7 @@
                     data.append('image',this.form.image);
                     data.append('imageFile',this.form.imageFile);
                     data.append('item_sku',this.form.item_sku);
-                    data.append('gold_weight',JSON.stringify(this.form.gold_weight));
+                    data.append('gold_plus_gem_weight',JSON.stringify(this.form.gold_plus_gem_weight));
                     data.append('gold_price',this.form.gold_price);
                     data.append('gem_weight',JSON.stringify(this.form.gem_weight));
                     data.append('gem_price',this.form.gem_price);
@@ -780,7 +783,7 @@
                 this.form.image= undefined,
                 this.form.imageFile= undefined,
                 this.form.item_sku= "",
-                this.form.gold_weight= { kyat: "", pal: "", yway: "" },
+                this.form.gold_plus_gem_weight= { kyat: "", pal: "", yway: "" },
                 this.form.gold_price= "",
                 this.form.gem_weight= { kyat: "", pal: "", yway: "" },
                 this.form.gem_price= "",
@@ -817,17 +820,17 @@
                 this.form.id = value.id;
                 this.form.name = value.name;
                 this.form.product_sku = value.product_sku;
-                this.form.image = value.image1;
+                this.form.image = value.image;
                 this.form.imageFile = undefined;
                 this.form.item_sku = value.item_sku;
                 this.form.item_description = value.item_description;
-                this.form.gold_weight.kyat = String(value.gold_weight.kyat);
-                this.form.gold_weight.pal = String(value.gold_weight.pal);
-                this.form.gold_weight.yway = String(value.gold_weight.yway);
+                this.form.gold_plus_gem_weight.kyat = String(value.gold_plus_gem_weight.kyat);
+                this.form.gold_plus_gem_weight.pal = String(value.gold_plus_gem_weight.pal);
+                this.form.gold_plus_gem_weight.yway = String(value.gold_plus_gem_weight.yway);
                 this.form.gem_weight.kyat = String(value.gem_weight.kyat);
                 this.form.gem_weight.pal = String(value.gem_weight.pal);
                 this.form.gem_weight.yway = String(value.gem_weight.yway);
-                // this.form.gem_price = String(value.gem_price);
+                this.form.gem_price = String(value.gem_price);
                 this.form.fee.kyat = String(value.fee.kyat);
                 this.form.fee.pal = String(value.fee.pal);
                 this.form.fee.yway = String(value.fee.yway);
@@ -882,14 +885,16 @@
         computed: {
             ...mapGetters(['selectedItem', 'item_from_cart', 'carts','customer', 'reset_voucher_form']),
             goldPrice() {
+
                 if(this.form.product_sku == "")return;
                 let price = this.$page.props.daily_setup[this.quality];
-                let kyat_p =
-                    parseInt(this.form.gold_weight.kyat) * parseInt(price.kyat);
-                let pal_p =
-                    parseInt(this.form.gold_weight.pal) * parseInt(price.pal);
-                let yway_p =
-                    parseInt(this.form.gold_weight.yway) * parseInt(price.yway);
+                let kyat = parseInt(this.form.gold_plus_gem_weight.kyat) -  parseInt(this.form.gem_weight.kyat);
+                let pal = parseInt(this.form.gold_plus_gem_weight.pal) -  parseInt(this.form.gem_weight.pal);
+                let yway = parseInt(this.form.gold_plus_gem_weight.yway) -  parseInt(this.form.gem_weight.yway);
+
+                let kyat_p = kyat * parseInt(price.kyat);
+                let pal_p = pal * parseInt(price.pal);
+                let yway_p = yway * parseInt(price.yway);
                 let gold_price = kyat_p + pal_p + yway_p;
 
                 if (isNaN(gold_price)) gold_price = "";
@@ -897,23 +902,23 @@
 
                 return gold_price;
             },
-            gemPrice() {
-                if(this.form.product_sku == "")return;
-                let price = this.$page.props.daily_setup[this.quality];
-                let kyat_p =
-                    parseInt(this.form.gem_weight.kyat) * parseInt(price.kyat);
-                let pal_p =
-                    parseInt(this.form.gem_weight.pal) * parseInt(price.pal);
-                let yway_p =
-                    parseInt(this.form.gem_weight.yway) * parseInt(price.yway);
-                let gem_price = kyat_p + pal_p + yway_p;
+            // gemPrice() {
+            //     if(this.form.product_sku == "")return;
+            //     let price = this.$page.props.daily_setup[this.quality];
+            //     let kyat_p =
+            //         parseInt(this.form.gem_weight.kyat) * parseInt(price.kyat);
+            //     let pal_p =
+            //         parseInt(this.form.gem_weight.pal) * parseInt(price.pal);
+            //     let yway_p =
+            //         parseInt(this.form.gem_weight.yway) * parseInt(price.yway);
+            //     let gem_price = kyat_p + pal_p + yway_p;
 
-                if (isNaN(gem_price)) gem_price = "";
+            //     if (isNaN(gem_price)) gem_price = "";
 
-                this.form.gem_price = gem_price;
+            //     this.form.gem_price = gem_price;
 
-                return gem_price;
-            },
+            //     return gem_price;
+            // },
             feePrice() {
                 if(this.form.product_sku == "")return;
                 let price = this.$page.props.daily_setup[this.quality];
@@ -930,7 +935,7 @@
             // total_kyat() {
             //     if(this.form.product_sku == "")return;
             //     let total_kyat =
-            //         parseInt(this.form.gold_weight.kyat) +
+            //         parseInt(this.form.gold_plus_gem_weight.kyat) +
             //         parseInt(this.form.gem_weight.kyat) +
             //         parseInt(this.form.fee.kyat);
             //     if (isNaN(total_kyat)) total_kyat = "";
@@ -940,7 +945,7 @@
             // total_pal() {
             //     if(this.form.product_sku == "")return;
             //     let total_pal =
-            //         parseInt(this.form.gold_weight.pal) +
+            //         parseInt(this.form.gold_plus_gem_weight.pal) +
             //         parseInt(this.form.gem_weight.pal) +
             //         parseInt(this.form.fee.pal) +
             //         parseInt(this.form.exceed_pal_form_yway);
@@ -959,7 +964,7 @@
             // total_yway() {
             //     if(this.form.product_sku == "")return;
             //     let total_yway =
-            //         parseInt(this.form.gold_weight.yway) +
+            //         parseInt(this.form.gold_plus_gem_weight.yway) +
             //         parseInt(this.form.gem_weight.yway) +
             //         parseInt(this.form.fee.yway);
             //         console.log(total_yway);

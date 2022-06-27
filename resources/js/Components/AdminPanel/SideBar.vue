@@ -156,7 +156,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.orders.index')" class="nav-link" :class="route().current('admin.orders.*') ? 'active' : ' '">
+                                <Link :href="route('admin.sells.index')" class="nav-link" :class="route().current('admin.sells.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         Order Lists

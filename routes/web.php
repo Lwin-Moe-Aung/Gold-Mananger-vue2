@@ -15,7 +15,7 @@ use App\Http\Controllers\Admins\ProductTypeController;
 use App\Http\Controllers\Admins\ItemNameController;
 use App\Http\Controllers\Admins\DailySetupController;
 use App\Http\Controllers\Admins\ProductController;
-use App\Http\Controllers\Admins\OrderController;
+use App\Http\Controllers\Admins\SellController;
 use App\Http\Controllers\Admins\PurchaseController;
 
 use App\Http\Controllers\Pos\HomeController;
@@ -116,12 +116,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     // Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');
 
     //Order Management
-    Route::resource('orders', OrderController::class)->except(['create', 'show', 'edit']);
-    Route::get('/orders/detail/{id}', [OrderController::class, 'detail'])->name('orders.detail');
-    Route::post('/orders/product_form_save', [OrderController::class, 'productFormSave'])->name('orders.product_form_save');
-    Route::post('/orders/item_form_save', [OrderController::class, 'itemFormSave'])->name('orders.item_form_save');
-    Route::post('/orders/type_form_save', [OrderController::class, 'typeFormSave'])->name('orders.type_form_save');
-    Route::post('/orders/itemname_form_save', [OrderController::class, 'itemNameFormSave'])->name('orders.itemname_form_save');
+    Route::resource('sells', SellController::class)->except(['create', 'show', 'edit']);
+    Route::get('/sells/detail/{id}', [SellController::class, 'detail'])->name('sells.detail');
+    Route::post('/sells/product_form_save', [SellController::class, 'productFormSave'])->name('sells.product_form_save');
+    Route::post('/sells/item_form_save', [SellController::class, 'itemFormSave'])->name('sells.item_form_save');
+    Route::post('/sells/type_form_save', [SellController::class, 'typeFormSave'])->name('sells.type_form_save');
+    Route::post('/sells/itemname_form_save', [SellController::class, 'itemNameFormSave'])->name('sells.itemname_form_save');
 
     //Purchase management
     Route::resource('purchases', PurchaseController::class);

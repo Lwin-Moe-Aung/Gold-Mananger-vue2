@@ -9,9 +9,9 @@
     >
         <v-list subheader two-line class="mt-1">
             <v-list-item>
-                <v-list-item-avatar rounded>
+                <!-- <v-list-item-avatar rounded>
                     <v-img src="images/pos/cashier.jpg"></v-img>
-                </v-list-item-avatar>
+                </v-list-item-avatar> -->
                 <v-list-item-content>
                     <v-list-item-subtitle>I'm a Cashier</v-list-item-subtitle>
                     <v-list-item-title>Lwin Moe Aung</v-list-item-title>
@@ -33,9 +33,9 @@
             :index="index"
         >
             <v-list-item>
-                <v-list-item-avatar rounded color="grey lighten-4">
-                    <v-img :src="item.image1"></v-img>
-                </v-list-item-avatar>
+                <!-- <v-list-item-avatar rounded color="grey lighten-4">
+                    <v-img :src="item.image"></v-img>
+                </v-list-item-avatar> -->
                 <v-list-item-content>
                     <v-list-item-title class="subtitle-2">{{
                         item.name
@@ -311,14 +311,14 @@
                                         <td> {{item.product_sku}}</td>
                                         <td>
                                             <v-list-item-avatar rounded color="grey lighten-4">
-                                                <v-img :src="item.image1"></v-img>
+                                                <v-img :src="item.image"></v-img>
                                             </v-list-item-avatar>
                                             {{ item.name }}
                                         </td>
 
-                                        <td>{{ item.gold_weight.kyat }}</td>
-                                        <td>{{ item.gold_weight.pal }}</td>
-                                        <td>{{ item.gold_weight.yway }}</td>
+                                        <td>{{ item.gold_plus_gem_weight.kyat }}</td>
+                                        <td>{{ item.gold_plus_gem_weight.pal }}</td>
+                                        <td>{{ item.gold_plus_gem_weight.yway }}</td>
 
                                         <td>{{ item.gem_weight.kyat }}</td>
                                         <td>{{ item.gem_weight.pal }}</td>
@@ -482,7 +482,7 @@
                 data.append('image',item.image);
                 data.append('imageFile',item.imageFile);
                 data.append('item_sku',item.item_sku);
-                data.append('gold_weight',JSON.stringify(item.gold_weight));
+                data.append('gold_plus_gem_weight',JSON.stringify(item.gold_plus_gem_weight));
                 data.append('gold_price',item.gold_price);
                 data.append('gem_weight',JSON.stringify(item.gem_weight));
                 data.append('gem_price',item.gem_price);

@@ -1,12 +1,12 @@
 <template>
     <v-layout v-if="items.length > 0" class="mb-n6 mt-n4">
         <carousel-3d
-        :controls-visible="true"
-        :clickable="true"
-        :key="items.length"
-        :listData="items"
-        :height="200"
-        >
+            :controls-visible="true"
+            :clickable="true"
+            :key="items.length"
+            :listData="items"
+            :height="200"
+            >
             <slide :index="i" :key="i" v-for="(item, i) in items">
                 <figure>
                     <v-img

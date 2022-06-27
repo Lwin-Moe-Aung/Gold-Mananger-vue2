@@ -24,7 +24,7 @@
                                         >
                                         <v-fade-transition leave-absolute>
                                             <b
-                                                v-if="typeof selectedCustomer === 'undefined'"
+                                                v-if="selectedCustomer == ''"
                                                 key="0"
                                             >
                                                 Select Customer
@@ -247,15 +247,10 @@
             this.unwatch1 = this.$store.watch(
                 (state, getters) => getters.customer,
                 (newValue, oldValue) => {
-                    this.customersList = [];
-                    if(newValue == ""){
-                        this.selectedCustomer = "";
-                    }else{
-                        this.selectedCustomer = newValue;
-                        this.selectedCustomer.search_name = newValue.name;
-                    }
+                    this.fillCustomerForm(newValue)
                 },
             );
+            this.fillCustomerForm(this.customer);
         },
         methods: {
             ...mapActions(["setCustomer"]),
@@ -265,7 +260,15 @@
                         this.customersList = response.data.data;
                 });
             }, 300),
-
+            fillCustomerForm(newValue){
+                this.customersList = [];
+                if(newValue == ""){
+                    this.selectedCustomer = "";
+                }else{
+                    this.selectedCustomer = newValue;
+                    this.selectedCustomer.search_name = newValue.name;
+                }
+            },
             onSelectedCustomer(customer) {
                 console.log("hello");
                 console.log(customer);

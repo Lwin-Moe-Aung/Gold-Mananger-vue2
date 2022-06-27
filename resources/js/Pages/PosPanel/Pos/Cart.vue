@@ -30,7 +30,7 @@
         >
             <v-list-item>
                 <v-list-item-avatar rounded color="grey lighten-4">
-                    <v-img :src="item.imgae"></v-img>
+                    <v-img :src="item.image"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
                     <v-list-item-title class="subtitle-2">{{
@@ -38,11 +38,13 @@
                     }}</v-list-item-title>
                     <v-list-item-subtitle
                         >X1
-                        <v-btn plain color="#704232" small
-                            @click="editItem(item)"
-                            >Edit
+                        <Link :href="route('pos.index')">
+                            <v-btn plain color="#704232" small
+                                @click="editItem(item)"
+                                >Edit
+                            </v-btn>
+                        </Link>
 
-                        </v-btn>
 
                         <v-btn plain color="#704232" small
                             @click="removeItem(item.id)"

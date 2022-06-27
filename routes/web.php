@@ -72,6 +72,8 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos/cart', [CustomerOrderController::class, 'cart'])->name('pos.cart');
     Route::get('/pos/print_all_from_cart', [CustomerOrderController::class, 'printAllFromCart'])->name('pos.print_all_from_cart');
 
+    Route::get('/pos/daily_setup', [CustomerOrderController::class, 'daily_setup'])->name('pos.daily_setup');
+
 
 });
 

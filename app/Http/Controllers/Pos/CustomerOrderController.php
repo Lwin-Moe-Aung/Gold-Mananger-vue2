@@ -265,4 +265,7 @@ class CustomerOrderController extends Controller
     public function printAllFromCart(){
         return Inertia::render('PosPanel/Pos/PrintAllFromCart');
     }
+    public function daily_setup(){
+        return Inertia::render('PosPanel/Pos/DailySetup/DailySetupLists');
+    }
 }

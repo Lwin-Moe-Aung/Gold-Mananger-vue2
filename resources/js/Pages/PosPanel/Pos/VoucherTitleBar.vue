@@ -71,10 +71,12 @@
                 xs="6"
                 >
                 <v-text-field
-                    v-model = "dailySetup.kyat"
+                    v-model = "daily_Setup.kyat"
                     label="ပေါက်ဈေး"
-                    :hint="!isEditing ? 'Click the icon to edit' : 'Click the icon to save'"
-                    :readonly="!isEditing"
+                    placeholder="ကျပ်"
+                    :rules="validationRules"
+                    @change="editDailySetup"
+                    type="number"
                 >
                     <template v-slot:append-outer>
                         <v-slide-x-reverse-transition
@@ -82,10 +84,10 @@
                         >
                             <v-icon
                                 :key="`icon-${isEditing}`"
-                                :color="isEditing ? 'success' : 'info'"
-                                @click="editDailySetup"
-                                v-text="isEditing ? 'fas fa-check' : 'fas fa-edit'"
-                            ></v-icon>
+                                @click="restoreDailySetup"
+                                aria-hidden="true"
+                            >
+                            refresh</v-icon>
                         </v-slide-x-reverse-transition>
                     </template>
                 </v-text-field>
@@ -142,7 +144,11 @@
             isEditing: false,
             isEditingItemId: false,
             item_sku:'',
-            dailySetup:[],
+            daily_Setup: { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" },
+            validationRules:[
+                v => !!v || 'Required',
+                // v => /^\d+$/.test(v) || 'limitation error',
+            ],
         }),
         created() {
             this.getDataForCombobox();
@@ -158,7 +164,7 @@
                         var t = newValue.charAt(1);
                         var i_n = newValue.charAt(2);
                     }
-                    this.dailySetup = this.$page.props.daily_setup[q];
+                    this.setDailySetup(this.$page.props.daily_setup[q]);
                     let g_Quality  = this.goldQualitys.find(function(val) {
                         return val.quality == q;
                     });
@@ -184,10 +190,25 @@
             );
         },
         watch: {
-
+            daily_setup(value){
+                this.daily_Setup.daily_setup_id = value.daily_setup_id;
+                this.daily_Setup.kyat = value.kyat;
+                this.daily_Setup.pal = value.pal;
+                this.daily_Setup.yway = value.yway;
+            }
         },
         methods: {
-            ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList","resetCustomer"]),
+            ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList","resetCustomer", "dailySetup"]),
+            setDailySetup(value) {
+                // console.log(value.daily_setup_id);return;
+                this.daily_Setup.daily_setup_id = value.daily_setup_id;
+                this.daily_Setup.quality_16_pal = "";
+                this.daily_Setup.kyat = value.kyat;
+                this.daily_Setup.pal = value.pal;
+                this.daily_Setup.yway = value.yway;
+
+                this.dailySetup(this.daily_Setup);
+            },
             getDataForCombobox() {
                 axios.get(this.route("pos.get_data_for_combobox"))
                     .then((response) => {
@@ -199,7 +220,7 @@
                 this.types = this.goldQuality.types;
                 this.item_name = null;
                 this.item_names = [];
-                this.dailySetup = this.$page.props.daily_setup[this.goldQuality.quality];
+                this.setDailySetup(this.$page.props.daily_setup[this.goldQuality.quality]);
             },
             onChangeT (entry) {
                 this.item_name = null;
@@ -213,21 +234,43 @@
                 this.searchItem(data);
                 // this.clearFormData();
             },
+            // editDailySetupOld() {
+            //     this.isEditing = !this.isEditing
+            //     if(this.isEditing || this.goldQuality == null) return;
+
+            //     let data = { daily_Setup: this.daily_Setup, quality:this.goldQuality.quality}
+            //     axios.post('/pos/edit_daily_setup', data)
+            //     .then(res => {
+            //         this.daily_Setup.kyat = res.data.daily_price_kyat;
+            //         this.daily_Setup.pal = res.data.daily_price_pal;
+            //         this.daily_Setup.yway = res.data.daily_price_yway;
+            //     })
+            //     .catch(function (error) {
+            //         console.log(error);
+            //     });
+
+            // },
             editDailySetup() {
-                this.isEditing = !this.isEditing
-                if(this.isEditing || this.goldQuality == null) return;
+                if(this.goldQuality == null)return;
+                if(this.daily_Setup.kyat <= 1000 ){
+                    alert('daily price must be greater than "1000"');
+                    return;
+                };
+                let q = parseInt(this.goldQuality.quality);
+                let kyat = parseInt(this.daily_Setup.kyat);
+                let pal = kyat / q;
+                let yway = pal / 8;
+                this.daily_Setup.daily_setup_id = "";
+                this.daily_Setup.quality_16_pal = pal * (q+(16-q));
+                this.daily_Setup.kyat = kyat;
+                this.daily_Setup.pal = pal;
+                this.daily_Setup.yway = yway;
 
-                let data = { dailySetup: this.dailySetup, quality:this.goldQuality.quality}
-                axios.post('/pos/edit_daily_setup', data)
-                .then(res => {
-                    this.dailySetup.kyat = res.data.daily_price_kyat;
-                    this.dailySetup.pal = res.data.daily_price_pal;
-                    this.dailySetup.yway = res.data.daily_price_yway;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-
+                this.dailySetup(this.daily_Setup);
+            },
+            restoreDailySetup() {
+                this.isEditing = !this.isEditing;
+                this.setDailySetup(this.$page.props.daily_setup[this.goldQuality.quality]);
             },
             searchByItemId() {
                 this.isEditingItemId = !this.isEditingItemId
@@ -238,7 +281,7 @@
             },
         },
         computed: {
-            ...mapGetters(['product_sku','toast_message','toast_icon','selectedItem']),
+            ...mapGetters(['product_sku','toast_message','toast_icon','selectedItem','daily_setup']),
         },
         beforeDestroy() {
             this.unwatch1();

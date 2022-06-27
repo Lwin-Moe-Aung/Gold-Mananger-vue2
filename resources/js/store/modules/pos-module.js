@@ -14,6 +14,7 @@ const state = {
     toast_icon:"",
     customer: "",
     drawer_side_bar:false,
+    daily_setup: {},
 };
 const getters = {
     items: state => state.items,
@@ -28,11 +29,11 @@ const getters = {
     searched_Items_data: state => state.searched_Items_data,
     reset_voucher_form: state => state.reset_voucher_form,
     drawer_side_bar: state => state.drawer_side_bar,
+    daily_setup: state => state.daily_setup,
 
 };
 const actions = {
     async searchItem({commit}, data){
-        console.log(data);
         await axios.post(constant.URL+"search", data)
             .then((response) => {
                 if(response.data.message !== "newItem"){
@@ -159,6 +160,9 @@ const actions = {
     async changeDrawerSideBar({commit},data){
         await commit("changeDrawerSideBar",data)
     },
+    async dailySetup({commit},data){
+        await commit("dailySetup",data)
+    },
 
 };
 const mutations = {
@@ -279,6 +283,10 @@ const mutations = {
     changeDrawerSideBar: (state, data) => (
         state.drawer_side_bar = !state.drawer_side_bar
     ),
+    dailySetup: (state, data) => {
+        state.daily_setup = {};
+        Object.assign( state.daily_setup, data);
+    }
 };
 export default {
     state,

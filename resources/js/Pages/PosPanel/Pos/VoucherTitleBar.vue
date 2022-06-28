@@ -149,45 +149,46 @@
                 v => !!v || 'Required',
                 // v => /^\d+$/.test(v) || 'limitation error',
             ],
+            selectedItem_dailySetup: {},
         }),
         created() {
             this.getDataForCombobox();
-            this.unwatch1 = this.$store.watch(
-                (state, getters) => getters.product_sku,
-                (newValue, oldValue) => {
-                    if(newValue.length > 3){
-                        var q = newValue.charAt(0)+newValue.charAt(1);
-                        var t = newValue.charAt(2);
-                        var i_n = newValue.charAt(3);
-                    }else{
-                        var q = newValue.charAt(0);
-                        var t = newValue.charAt(1);
-                        var i_n = newValue.charAt(2);
-                    }
-                    this.setDailySetup(this.$page.props.daily_setup[q]);
-                    let g_Quality  = this.goldQualitys.find(function(val) {
-                        return val.quality == q;
-                    });
-                    this.goldQuality = g_Quality;
-                    this.types = this.goldQuality.types;
-                    let type_e = this.types.find(function(val) {
-                        return val.key == t;
-                    });
-                    this.type = type_e;
-                    this.item_names = this.type.item_names
-                    let item_n = this.item_names.find(function(val) {
-                        return val.key == i_n;
-                    });
-                    this.item_name = item_n;
+            // this.unwatch1 = this.$store.watch(
+            //     (state, getters) => getters.product_sku,
+            //     (newValue, oldValue) => {
+            //         if(newValue.length > 3){
+            //             var q = newValue.charAt(0)+newValue.charAt(1);
+            //             var t = newValue.charAt(2);
+            //             var i_n = newValue.charAt(3);
+            //         }else{
+            //             var q = newValue.charAt(0);
+            //             var t = newValue.charAt(1);
+            //             var i_n = newValue.charAt(2);
+            //         }
+            //         this.setDailySetup(this.$page.props.daily_setup[q]);
+            //         let g_Quality  = this.goldQualitys.find(function(val) {
+            //             return val.quality == q;
+            //         });
+            //         this.goldQuality = g_Quality;
+            //         this.types = this.goldQuality.types;
+            //         let type_e = this.types.find(function(val) {
+            //             return val.key == t;
+            //         });
+            //         this.type = type_e;
+            //         this.item_names = this.type.item_names
+            //         let item_n = this.item_names.find(function(val) {
+            //             return val.key == i_n;
+            //         });
+            //         this.item_name = item_n;
 
-                },
-            );
-            this.unwatch2 = this.$store.watch(
-                (state, getters) => getters.selectedItem,
-                (newValue, oldValue) => {
-                   this.item_sku = newValue.item_sku
-                },
-            );
+            //     },
+            // );
+            // this.unwatch2 = this.$store.watch(
+            //     (state, getters) => getters.selectedItem,
+            //     (newValue, oldValue) => {
+            //        this.item_sku = newValue.item_sku
+            //     },
+            // );
         },
         watch: {
             daily_setup(value){
@@ -195,19 +196,45 @@
                 this.daily_Setup.kyat = value.kyat;
                 this.daily_Setup.pal = value.pal;
                 this.daily_Setup.yway = value.yway;
+            },
+            selectedItem(value) {
+                this.item_sku = value.item_sku;
+                if(typeof value.daily_Setup !== 'undefined') Object.assign(this.daily_Setup, value.daily_Setup);
+                if(this.item_from_cart && value !== "") this.setDailySetup(value.product_sku);
+            },
+            product_sku(newValue) {
+                this.setDailySetup(newValue);
             }
+
         },
         methods: {
             ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList","resetCustomer", "dailySetup"]),
-            setDailySetup(value) {
-                // console.log(value.daily_setup_id);return;
-                this.daily_Setup.daily_setup_id = value.daily_setup_id;
-                this.daily_Setup.quality_16_pal = "";
-                this.daily_Setup.kyat = value.kyat;
-                this.daily_Setup.pal = value.pal;
-                this.daily_Setup.yway = value.yway;
-
-                this.dailySetup(this.daily_Setup);
+            setDailySetup(newValue) {
+                if(newValue.length > 3){
+                    var q = newValue.charAt(0)+newValue.charAt(1);
+                    var t = newValue.charAt(2);
+                    var i_n = newValue.charAt(3);
+                }else{
+                    var q = newValue.charAt(0);
+                    var t = newValue.charAt(1);
+                    var i_n = newValue.charAt(2);
+                }
+                let g_Quality  = this.goldQualitys.find(function(val) {
+                    return val.quality == q;
+                });
+                this.goldQuality = g_Quality;
+                this.types = this.goldQuality.types;
+                let type_e = this.types.find(function(val) {
+                    return val.key == t;
+                });
+                this.type = type_e;
+                this.item_names = this.type.item_names
+                let item_n = this.item_names.find(function(val) {
+                    return val.key == i_n;
+                });
+                this.item_name = item_n;
+                if(!this.item_from_cart)  this.dailySetup(this.$page.props.daily_setup[this.goldQuality.quality]);
+                else this.dailySetup(this.daily_Setup);
             },
             getDataForCombobox() {
                 axios.get(this.route("pos.get_data_for_combobox"))
@@ -220,7 +247,7 @@
                 this.types = this.goldQuality.types;
                 this.item_name = null;
                 this.item_names = [];
-                this.setDailySetup(this.$page.props.daily_setup[this.goldQuality.quality]);
+                this.dailySetup(this.$page.props.daily_setup[this.goldQuality.quality]);
             },
             onChangeT (entry) {
                 this.item_name = null;
@@ -270,7 +297,8 @@
             },
             restoreDailySetup() {
                 this.isEditing = !this.isEditing;
-                this.setDailySetup(this.$page.props.daily_setup[this.goldQuality.quality]);
+                if(this.goldQuality == null) return;
+                this.dailySetup(this.$page.props.daily_setup[this.goldQuality.quality]);
             },
             searchByItemId() {
                 this.isEditingItemId = !this.isEditingItemId
@@ -281,7 +309,7 @@
             },
         },
         computed: {
-            ...mapGetters(['product_sku','toast_message','toast_icon','selectedItem','daily_setup']),
+            ...mapGetters(['product_sku','toast_message','toast_icon','selectedItem','daily_setup','item_from_cart']),
         },
         beforeDestroy() {
             this.unwatch1();

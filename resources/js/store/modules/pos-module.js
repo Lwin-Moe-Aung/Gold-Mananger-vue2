@@ -131,6 +131,8 @@ const actions = {
     async editItem({commit}, data){
         await commit("editItem", data)
         await commit("setCustomer", data.customer)
+        await commit("dailySetup", data.daily_Setup)
+        await commit("setProductSku", data.product_sku)
 
     },
     async editItemFromCart({commit}, data){
@@ -207,9 +209,10 @@ const mutations = {
         state.toast_icon = "warning";
 
     },
-    setProductSku: (state, data) => (
-        state.product_sku = data
-    ),
+    setProductSku: (state, data) => {
+        state.product_sku = "";
+        state.product_sku = data;
+    },
     setItemSpe: (state, data) => (
         state.item_spe = data
     ),

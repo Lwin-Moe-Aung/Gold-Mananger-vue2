@@ -797,9 +797,7 @@
                 setTimeout(() => (this.loading = false), 2000)
             },
             selectedItem(value) {
-                alert("sdee");
                 this.fillFormData(value);
-
             },
             daily_setup(value) {
                 this.form.daily_Setup = {};

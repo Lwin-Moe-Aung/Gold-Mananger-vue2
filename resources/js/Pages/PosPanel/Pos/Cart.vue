@@ -1,13 +1,20 @@
 <template>
-    <v-container>
-
-        <v-icon @click="back">fas fa-long-arrow-alt-left</v-icon>
-        <!-- <i class="fa-solid fa-arrow-left-long"></i> -->
+    <v-container
+        v-model="drawer1"
+        app
+        color="white"
+        mini-variant
+        mini-variant-width="235"
+        right
+    >
+        <Link :href="route('pos.index')">
+            <v-icon>fas fa-long-arrow-alt-left</v-icon>
+        </Link>
         <v-list subheader two-line class="mt-1">
             <v-list-item>
-                <v-list-item-avatar rounded>
+                <!-- <v-list-item-avatar rounded>
                     <v-img src="images/pos/cashier.jpg"></v-img>
-                </v-list-item-avatar>
+                </v-list-item-avatar> -->
                 <v-list-item-content>
                     <v-list-item-subtitle>I'm a Cashier</v-list-item-subtitle>
                     <v-list-item-title>Lwin Moe Aung</v-list-item-title>
@@ -44,7 +51,6 @@
                                 >Edit
                             </v-btn>
                         </Link>
-
 
                         <v-btn plain color="#704232" small
                             @click="removeItem(item.id)"
@@ -264,7 +270,7 @@
                                 <tbody>
                                     <tr>
                                         <td rowspan="4" style="vertical-align : middle;text-align:center;">{{ index+1 }}#</td>
-                                        <td colspan="3">{{item.quality}}ပဲရည်&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ numberWithCommas($page.props.daily_setup[item.quality].kyat) }} ကျပ်</td>
+                                        <td colspan="3">{{item.quality}}ပဲရည်&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ numberWithCommas(item.daily_Setup.kyat) }} ကျပ်</td>
                                         <td colspan="3">ရွှေချိန်</td>
                                         <td colspan="3">ကျောက်ချိန်</td>
                                         <td colspan="3">အလျော့</td>
@@ -311,7 +317,7 @@
                                         <td> {{item.product_sku}}</td>
                                         <td>
                                             <v-list-item-avatar rounded color="grey lighten-4">
-                                                <v-img :src="item.imgae"></v-img>
+                                                <v-img :src="item.image"></v-img>
                                             </v-list-item-avatar>
                                             {{ item.name }}
                                         </td>
@@ -341,8 +347,8 @@
 
                                         <td colspan="3">{{ numberWithCommas(item.fee_price) }}</td>
                                         <td> {{ numberWithCommas(item.fee_for_making) }}</td>
-                                        <td colspan="3">{{ numberWithCommas(item.total_before) }}</td>
-                                        <td> {{ numberWithCommas(item.item_discount) }}</td>
+                                        <td colspan="3">{{ numberWithCommas(item.before_total) }}</td>
+                                        <td> {{ numberWithCommas(item.discount_amount) }}</td>
                                         <td> {{ numberWithCommas(item.final_total) }}</td>
                                     </tr>
                                 </tbody>
@@ -409,7 +415,6 @@
         </template>
         <!-- end dialog box -->
     </v-container>
-
 </template>
 
 <script>
@@ -428,9 +433,9 @@
         },
         data() {
             return {
-                drawer1: true,
+                drawer1: null,
                 total: "",
-                dialog: true,
+                dialog: false,
             };
         },
         computed: {
@@ -447,7 +452,7 @@
             discount() {
                 let discount = 0;
                 this.carts.forEach((item) => {
-                    discount = discount + parseInt(item.item_discount);
+                    discount = discount + parseInt(item.discount_amount);
                 });
                 return discount;
             },
@@ -474,10 +479,7 @@
             }
         },
         methods: {
-            ...mapActions(["editItem", "removeItem"]),
-            back() {
-                window.history.back();
-            },
+            ...mapActions(["editItem", "removeItem","removeItemFromSearchList"]),
             numberWithCommas(value) {
                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             },
@@ -497,23 +499,22 @@
                 data.append('fee',JSON.stringify(item.fee));
                 data.append('fee_price',item.fee_price);
                 data.append('fee_for_making',item.fee_for_making);
-                data.append('item_discount',item.item_discount);
-                data.append('total_kyat',item.total_kyat);
-                data.append('total_pal',item.total_pal);
-                data.append('total_yway',item.total_yway);
-                data.append('total_before',item.total_before);
+                data.append('discount_amount',item.discount_amount);
+                data.append('before_total',item.before_total);
                 data.append('final_total',item.final_total);
                 data.append('paid_money',item.paid_money);
                 data.append('credit_money',item.credit_money);
                 data.append('note',item.note);
                 data.append('customer_id',item.customer.id);
+                data.append('daily_Setup',JSON.stringify(item.daily_Setup));
 
-                axios.post('/pos/save_order', data)
+                axios.post('/pos/sell', data)
                     .then(res => {
                         if(res.data.status)
                         {
                             this.removeItem(item.id);
-                            window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
+                            this.removeItemFromSearchList(item.id);
+                            window.open( constant.URL+"generate_invoice/"+res.data.transaction_id, "_blank");
                             // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
                             Toast.fire({
                                 icon: 'success',
@@ -529,7 +530,6 @@
         }
     };
 </script>
-
 
 <style>
 .v-card.borderme {

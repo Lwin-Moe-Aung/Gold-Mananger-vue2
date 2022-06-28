@@ -22,7 +22,7 @@
                         <tbody>
                             <tr>
                                 <td rowspan="4" style="vertical-align : middle;text-align:center;">{{ index+1 }}#</td>
-                                <td colspan="3">{{item.quality}}ပဲရည်&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ numberWithCommas($page.props.daily_setup[item.quality].kyat) }} ကျပ်</td>
+                                <td colspan="3">{{item.quality}}ပဲရည်&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ numberWithCommas(item.daily_Setup.kyat) }} ကျပ်</td>
                                 <td colspan="3">ရွှေချိန်</td>
                                 <td colspan="3">ကျောက်ချိန်</td>
                                 <td colspan="3">အလျော့</td>
@@ -69,14 +69,14 @@
                                 <td> {{item.product_sku}}</td>
                                 <td>
                                     <v-list-item-avatar rounded color="grey lighten-4">
-                                        <v-img :src="item.image1"></v-img>
+                                        <v-img :src="item.image"></v-img>
                                     </v-list-item-avatar>
                                     {{ item.name }}
                                 </td>
 
-                                <td>{{ item.gold_weight.kyat }}</td>
-                                <td>{{ item.gold_weight.pal }}</td>
-                                <td>{{ item.gold_weight.yway }}</td>
+                                <td>{{ item.gold_plus_gem_weight.kyat }}</td>
+                                <td>{{ item.gold_plus_gem_weight.pal }}</td>
+                                <td>{{ item.gold_plus_gem_weight.yway }}</td>
 
                                 <td>{{ item.gem_weight.kyat }}</td>
                                 <td>{{ item.gem_weight.pal }}</td>
@@ -99,24 +99,15 @@
 
                                 <td colspan="3">{{ numberWithCommas(item.fee_price) }}</td>
                                 <td> {{ numberWithCommas(item.fee_for_making) }}</td>
-                                <td colspan="3">{{ numberWithCommas(item.total_before) }}</td>
-                                <td> {{ numberWithCommas(item.item_discount) }}</td>
+                                <td colspan="3">{{ numberWithCommas(item.before_total) }}</td>
+                                <td> {{ numberWithCommas(item.discount_amount) }}</td>
                                 <td> {{ numberWithCommas(item.final_total) }}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </v-list>
-            <!-- <v-list
-                three-line
-                subheader
 
-                >
-                <div class="text-right">
-
-
-                </div>
-            </v-list> -->
             <div>
                 <v-container class="grey lighten-5">
                     <v-row
@@ -224,7 +215,7 @@
             }
         },
         methods: {
-            ...mapActions(["editItem", "removeItem"]),
+            ...mapActions(["editItem", "removeItem","removeItemFromSearchList"]),
             back() {
                 window.history.back();
             },
@@ -240,30 +231,29 @@
                 data.append('image',item.image);
                 data.append('imageFile',item.imageFile);
                 data.append('item_sku',item.item_sku);
-                data.append('gold_weight',JSON.stringify(item.gold_weight));
+                data.append('gold_plus_gem_weight',JSON.stringify(item.gold_plus_gem_weight));
                 data.append('gold_price',item.gold_price);
                 data.append('gem_weight',JSON.stringify(item.gem_weight));
                 data.append('gem_price',item.gem_price);
                 data.append('fee',JSON.stringify(item.fee));
                 data.append('fee_price',item.fee_price);
                 data.append('fee_for_making',item.fee_for_making);
-                data.append('item_discount',item.item_discount);
-                data.append('total_kyat',item.total_kyat);
-                data.append('total_pal',item.total_pal);
-                data.append('total_yway',item.total_yway);
-                data.append('total_before',item.total_before);
+                data.append('discount_amount',item.discount_amount);
+                data.append('before_total',item.before_total);
                 data.append('final_total',item.final_total);
                 data.append('paid_money',item.paid_money);
                 data.append('credit_money',item.credit_money);
                 data.append('note',item.note);
                 data.append('customer_id',item.customer.id);
+                data.append('daily_Setup',JSON.stringify(item.daily_Setup));
 
-                axios.post('/pos/save_order', data)
+                axios.post('/pos/sell', data)
                     .then(res => {
                         if(res.data.status)
                         {
                             this.removeItem(item.id);
-                            window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
+                            this.removeItemFromSearchList(item.id);
+                            window.open( constant.URL+"generate_invoice/"+res.data.transaction_id, "_blank");
                             // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
                             Toast.fire({
                                 icon: 'success',

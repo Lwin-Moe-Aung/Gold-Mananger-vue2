@@ -151,8 +151,9 @@
             ],
             selectedItem_dailySetup: {},
         }),
-        created() {
-            this.getDataForCombobox();
+        async created() {
+            await this.getDataForCombobox();
+            await this.fillData();
             // this.unwatch1 = this.$store.watch(
             //     (state, getters) => getters.product_sku,
             //     (newValue, oldValue) => {
@@ -209,7 +210,14 @@
         },
         methods: {
             ...mapActions(["searchItem", "addItem", "editItemFromCart","selectItemReset","searchItemByItemId","removeItem","removeItemFromSearchList","resetCustomer", "dailySetup"]),
+            fillData() {
+                if(this.selectedItem == "" )return;
+                Object.assign(this.daily_Setup, this.selectedItem.daily_Setup);
+                this.setDailySetup(this.selectedItem.product_sku);
+                this.item_sku = this.selectedItem.item_sku;
+            },
             setDailySetup(newValue) {
+                console.log(newValue)
                 if(newValue.length > 3){
                     var q = newValue.charAt(0)+newValue.charAt(1);
                     var t = newValue.charAt(2);
@@ -222,6 +230,10 @@
                 let g_Quality  = this.goldQualitys.find(function(val) {
                     return val.quality == q;
                 });
+                console.log("ggq");
+                console.log(this.goldQualitys);
+                console.log(q);
+                console.log(g_Quality);
                 this.goldQuality = g_Quality;
                 this.types = this.goldQuality.types;
                 let type_e = this.types.find(function(val) {
@@ -236,8 +248,8 @@
                 if(!this.item_from_cart)  this.dailySetup(this.$page.props.daily_setup[this.goldQuality.quality]);
                 else this.dailySetup(this.daily_Setup);
             },
-            getDataForCombobox() {
-                axios.get(this.route("pos.get_data_for_combobox"))
+            async getDataForCombobox(){
+                await axios.get(this.route("pos.get_data_for_combobox"))
                     .then((response) => {
                         this.goldQualitys = response.data.goldQualitys;
                 });
@@ -310,9 +322,6 @@
         },
         computed: {
             ...mapGetters(['product_sku','toast_message','toast_icon','selectedItem','daily_setup','item_from_cart']),
-        },
-        beforeDestroy() {
-            this.unwatch1();
         },
     }
 </script>

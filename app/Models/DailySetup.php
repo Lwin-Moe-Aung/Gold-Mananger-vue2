@@ -26,6 +26,7 @@ class DailySetup extends Model
         'type',
         'daily_price',
         'business_id',
+        'customize',
     ];
 
     /**

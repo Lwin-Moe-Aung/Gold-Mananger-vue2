@@ -107,6 +107,7 @@ class PurchaseController extends Controller
                     'type' => "purchase",
                     'status' => "received",
                     'payment_status' => "paid",
+                    'contact_id' => $request->supplier_id,
                     'invoice_no' => $this->invoiceNumber(),
                     'transaction_date' => Carbon::now()->format('Y-m-d'),
                     'additional_notes' =>  $request->tran_description,

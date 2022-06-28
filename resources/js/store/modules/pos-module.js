@@ -251,6 +251,12 @@ const mutations = {
             if(typeof item  !== 'undefined' ){
                 state.items.splice( state.items.indexOf(item),1);
             }
+            let searched_data = state.searched_Items_data.find(function(val) {
+                return val.id == item_id;
+            });
+            if(typeof searched_data  !== 'undefined' ){
+                state.searched_Items_data.splice( state.searched_Items_data.indexOf(searched_data),1);
+            }
             // state.items.splice( state.items.findIndex(x => x.id == item_id),1)
         }else{
             state.items.splice(0,1)

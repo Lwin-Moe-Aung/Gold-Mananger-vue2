@@ -335,7 +335,7 @@
                                             <v-flex xs6 sm6 md6>
                                                 <div class="right">
                                                     <v-text-field
-                                                        v-model="form.item_discount"
+                                                        v-model="form.discount_amount"
                                                         label="kyats"
                                                         placeholder="kyats"
                                                         dense
@@ -492,15 +492,11 @@
                     fee: { kyat: "", pal: "", yway: "" },
                     fee_price: "",
                     fee_for_making: "",
-                    item_discount: "",
+                    discount_amount: "",
                     tax: "",
                     item_sku: "",
                     item_description: "",
-                    total_kyat: "",
-                    total_pal: "",
-                    exceed_pal_form_yway: "",
-                    total_yway: "",
-                    total_before: "",
+                    before_total: "",
                     final_total: "",
                     paid_money: "",
                     credit_money: "",
@@ -510,8 +506,6 @@
                 quality: '',
                 name: '',
                 email: '',
-                // dailyValue: '',
-                // dailySetup: [],
                 loading: false,
                 validationRules:[
                     v => !!v || 'Required',
@@ -524,19 +518,7 @@
 
                 //image upload
                 input: undefined,
-                // image: undefined,
                 mask: false,
-                // // combobox
-                // dataForCombobox:[],
-                // goldQuality: null,
-                // goldQualitys: [],
-                // type: null,
-                // types: [],
-                // item_name: null,
-                // item_names: [],
-                // // end combobox
-                // isEditing: false,
-                // isEditingItemId: false,
             };
         },
         mounted () {
@@ -602,14 +584,10 @@
                         fee: this.form.fee,
                         fee_price: this.form.fee_price,
                         fee_for_making: this.form.fee_for_making,
-                        item_discount: this.form.item_discount,
+                        discount_amount: this.form.discount_amount,
                         tax: this.form.tax,
                         item_description: this.form.item_description,
-                        total_kyat: this.form.total_kyat,
-                        total_pal: this.form.total_pal,
-                        exceed_pal_form_yway: this.form.exceed_pal_form_yway,
-                        total_yway: this.form.total_yway,
-                        total_before: this.form.total_before,
+                        before_total: this.form.before_total,
                         final_total: this.form.final_total,
                         paid_money: this.form.paid_money,
                         credit_money: this.form.credit_money,
@@ -640,16 +618,11 @@
                         }
                         this.clearFormData();
                         this.selectItemReset();
-
                     }
-                }else{
-                    alert("what wrong");
                 }
             },
 
             printbill() {
-                // this.removeItem(this.form.id);
-                // return;
                 if(this.$refs.form.validate()){
                     if(this.customer == ""){
                         this.toastMessage('warning', 'customer ထည့်သွင့်ရန်လိုအပ့်နေသည်')
@@ -670,35 +643,31 @@
                     data.append('fee',JSON.stringify(this.form.fee));
                     data.append('fee_price',this.form.fee_price);
                     data.append('fee_for_making',this.form.fee_for_making);
-                    data.append('item_discount',this.form.item_discount);
-                    data.append('total_kyat',this.form.total_kyat);
-                    data.append('total_pal',this.form.total_pal);
-                    data.append('total_yway',this.form.total_yway);
-                    data.append('total_before',this.form.total_before);
+                    data.append('discount_amount',this.form.discount_amount);
+                    data.append('before_total',this.form.before_total);
                     data.append('final_total',this.form.final_total);
                     data.append('paid_money',this.form.paid_money);
                     data.append('credit_money',this.form.credit_money);
                     data.append('note',this.form.note);
                     data.append('customer_id',this.customer.id);
+                    data.append('daily_Setup',JSON.stringify(this.form.daily_Setup));
 
-                    axios.post('/pos/save_order', data)
+                    axios.post('/pos/sell', data)
                         .then(res => {
                             if(res.data.status)
                             {
                                 this.removeItem(this.form.id);
                                 this.removeItemFromSearchList(this.form.id);
-                                window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
+                                window.open( constant.URL+"generate_invoice/"+res.data.transaction_id, "_blank");
                                 this.toastMessage('success', 'Order Success');
                                 this.clearFormData();
                                 this.selectItemReset();
                                 this.resetCustomer();
-
                             }
                         })
                         .catch(function (error) {
                             console.log(error);
                         });
-
                 }
             },
             selectImage () {
@@ -737,14 +706,10 @@
                 this.form.fee= { kyat: "", pal: "", yway: "" };
                 this.form.fee_price= "";
                 this.form.fee_for_making= "";
-                this.form.item_discount= "";
+                this.form.discount_amount= "";
                 this.form.tax= "";
                 this.form.item_description= "";
-                this.form.total_kyat= "";
-                this.form.total_pal= "";
-                this.form.exceed_pal_form_yway= "";
-                this.form.total_yway= "";
-                this.form.total_before= "";
+                this.form.before_total= "";
                 this.form.final_total= "";
                 this.form.paid_money= "";
                 this.form.credit_money= "";
@@ -777,8 +742,8 @@
                 this.form.item_sku = value.item_sku;
                 this.form.tax = value.tax;
                 this.quality = value.quality;
-                this.form.item_discount = value.item_discount;
-                this.form.total_before = value.total_before;
+                this.form.discount_amount = value.discount_amount;
+                this.form.before_total = value.before_total;
                 this.form.final_total = value.final_total;
 
                 this.form.paid_money = value.paid_money;
@@ -787,9 +752,7 @@
                     this.form.daily_Setup = {};
                     Object.assign( this.form.daily_Setup, value.daily_Setup);
                 }
-
             }
-
         },
         watch: {
             loading (val) {
@@ -803,9 +766,7 @@
                 this.form.daily_Setup = {};
                 Object.assign( this.form.daily_Setup, value);
             }
-
         },
-
         computed: {
             ...mapGetters(['selectedItem', 'item_from_cart', 'carts','customer', 'reset_voucher_form','daily_setup']),
             goldPrice() {
@@ -840,22 +801,22 @@
             },
             totalBefore() {
                 if(this.form.product_sku == "")return;
-                let total_before =
+                let before_total =
                     parseInt(this.form.gold_price) +
                     parseInt(this.form.gem_price) +
                     parseInt(this.form.fee_price) +
                     parseInt(this.form.fee_for_making);
 
-                if (isNaN(total_before)) total_before = "";
-                this.form.total_before = total_before;
+                if (isNaN(before_total)) before_total = "";
+                this.form.before_total = before_total;
 
-                return total_before;
+                return before_total;
             },
             finalTotal() {
                 if(this.form.product_sku == "")return;
                 let final_total =
-                    parseInt(this.form.total_before) -
-                    parseInt(this.form.item_discount);
+                    parseInt(this.form.before_total) -
+                    parseInt(this.form.discount_amount);
                 if (isNaN(final_total)) final_total = "";
                 this.form.final_total = final_total;
                 this.form.paid_money = final_total;

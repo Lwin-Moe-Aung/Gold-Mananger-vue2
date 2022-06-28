@@ -60,6 +60,7 @@ class HandleInertiaRequests extends Middleware
                 $daily_setup =  DailySetup::where('type', 'gold')
                     // ->where('business_id', Auth::user()->business_id)
                     ->where('business_id',1)
+                    ->where('customize','0')
                     ->latest('created_at')
                     ->first();
                 $daily_price = $daily_setup->daily_price;

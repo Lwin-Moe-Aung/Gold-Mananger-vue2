@@ -264,7 +264,7 @@
                                 <tbody>
                                     <tr>
                                         <td rowspan="4" style="vertical-align : middle;text-align:center;">{{ index+1 }}#</td>
-                                        <td colspan="3">{{item.quality}}ပဲရည်&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ numberWithCommas($page.props.daily_setup[item.quality].kyat) }} ကျပ်</td>
+                                        <td colspan="3">{{item.quality}}ပဲရည်&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ numberWithCommas(item.daily_Setup.kyat) }} ကျပ်</td>
                                         <td colspan="3">ရွှေချိန်</td>
                                         <td colspan="3">ကျောက်ချိန်</td>
                                         <td colspan="3">အလျော့</td>
@@ -341,8 +341,8 @@
 
                                         <td colspan="3">{{ numberWithCommas(item.fee_price) }}</td>
                                         <td> {{ numberWithCommas(item.fee_for_making) }}</td>
-                                        <td colspan="3">{{ numberWithCommas(item.total_before) }}</td>
-                                        <td> {{ numberWithCommas(item.item_discount) }}</td>
+                                        <td colspan="3">{{ numberWithCommas(item.before_total) }}</td>
+                                        <td> {{ numberWithCommas(item.discount_amount) }}</td>
                                         <td> {{ numberWithCommas(item.final_total) }}</td>
                                     </tr>
                                 </tbody>
@@ -442,7 +442,7 @@
             discount() {
                 let discount = 0;
                 this.carts.forEach((item) => {
-                    discount = discount + parseInt(item.item_discount);
+                    discount = discount + parseInt(item.discount_amount);
                 });
                 return discount;
             },
@@ -469,7 +469,7 @@
             }
         },
         methods: {
-            ...mapActions(["editItem", "removeItem"]),
+            ...mapActions(["editItem", "removeItem","removeItemFromSearchList"]),
             numberWithCommas(value) {
                 return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             },
@@ -489,23 +489,22 @@
                 data.append('fee',JSON.stringify(item.fee));
                 data.append('fee_price',item.fee_price);
                 data.append('fee_for_making',item.fee_for_making);
-                data.append('item_discount',item.item_discount);
-                data.append('total_kyat',item.total_kyat);
-                data.append('total_pal',item.total_pal);
-                data.append('total_yway',item.total_yway);
-                data.append('total_before',item.total_before);
+                data.append('discount_amount',item.discount_amount);
+                data.append('before_total',item.before_total);
                 data.append('final_total',item.final_total);
                 data.append('paid_money',item.paid_money);
                 data.append('credit_money',item.credit_money);
                 data.append('note',item.note);
                 data.append('customer_id',item.customer.id);
+                data.append('daily_Setup',JSON.stringify(item.daily_Setup));
 
-                axios.post('/pos/save_order', data)
+                axios.post('/pos/sell', data)
                     .then(res => {
                         if(res.data.status)
                         {
                             this.removeItem(item.id);
-                            window.open( constant.URL+"generate_invoice/"+res.data.order_id, "_blank");
+                            this.removeItemFromSearchList(item.id);
+                            window.open( constant.URL+"generate_invoice/"+res.data.transaction_id, "_blank");
                             // this.$inertia.get(`/pos/generate_invoice`,{ order_id: res.data.order_id });
                             Toast.fire({
                                 icon: 'success',

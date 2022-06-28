@@ -19,7 +19,7 @@ use App\Http\Controllers\Admins\SellController;
 use App\Http\Controllers\Admins\PurchaseController;
 
 use App\Http\Controllers\Pos\HomeController;
-use App\Http\Controllers\Pos\CustomerOrderController;
+use App\Http\Controllers\Pos\SellPosController;
 use App\Http\Controllers\Pos\ContactController;
 use App\Http\Controllers\Pos\DailySetupValueController;
 
@@ -59,20 +59,20 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
 
     Route::get('/pos/search_by_item_id', [HomeController::class, 'searchByItemId'])->name('pos.search_by_item_id');
     //customer order
-    Route::post('/pos/save_order', [CustomerOrderController::class, 'saveOrder'])->name('pos.save_order');
+    Route::post('/pos/sell', [SellPosController::class, 'sell'])->name('pos.save_order');
 
     //generate invoice
-    Route::get('/pos/generate_invoice/{id}', [CustomerOrderController::class, 'generateInvoice'])->name('pos.generate_invoice');
+    Route::get('/pos/generate_invoice/{id}', [SellPosController::class, 'generateInvoice'])->name('pos.generate_invoice');
 
     //test route
-    Route::get('/pos/json_search', [CustomerOrderController::class, 'jsonSearch'])->name('pos.json_search');
+    Route::get('/pos/json_search', [SellPosController::class, 'jsonSearch'])->name('pos.json_search');
     //get gold quality
     Route::get('/pos/get_data_for_combobox', [HomeController::class, 'getDataForCombobox'])->name('pos.get_data_for_combobox');
     //Carts
-    Route::get('/pos/cart', [CustomerOrderController::class, 'cart'])->name('pos.cart');
-    Route::get('/pos/print_all_from_cart', [CustomerOrderController::class, 'printAllFromCart'])->name('pos.print_all_from_cart');
+    Route::get('/pos/cart', [SellPosController::class, 'cart'])->name('pos.cart');
+    Route::get('/pos/print_all_from_cart', [SellPosController::class, 'printAllFromCart'])->name('pos.print_all_from_cart');
 
-    Route::get('/pos/daily_setup', [CustomerOrderController::class, 'daily_setup'])->name('pos.daily_setup');
+    Route::get('/pos/daily_setup', [SellPosController::class, 'daily_setup'])->name('pos.daily_setup');
 
 
 });

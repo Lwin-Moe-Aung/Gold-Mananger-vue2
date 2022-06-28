@@ -25,6 +25,7 @@ class Transaction extends Model
     protected $fillable = [
         'business_id',
         'business_location_id',
+        'contact_id',
         'type',
         'status',
         'payment_status',

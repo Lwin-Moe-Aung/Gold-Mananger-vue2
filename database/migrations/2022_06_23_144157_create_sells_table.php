@@ -29,6 +29,7 @@ class CreateSellsTable extends Migration
             $table->decimal('gem_price', 10, 2)->default(0);
             $table->string('fee', 100)->nullable();
             $table->decimal('fee_price', 10, 2)->default(0);
+            $table->decimal('fee_for_making', 10, 2)->default(0);
 
             $table->decimal('before_total', 10, 2)->default(0);
             $table->decimal('final_total', 10, 2)->default(0);

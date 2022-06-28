@@ -18,6 +18,7 @@ class CreateDailySetupsTable extends Migration
             $table->enum('type', ['gold', 'other']);
             $table->decimal('daily_price', 20, 2);
             $table->unsignedBigInteger('business_id');
+            $table->enum('customize', ['0', '1'])->default('0');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->timestamps();
         });

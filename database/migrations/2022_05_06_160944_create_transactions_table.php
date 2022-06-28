@@ -19,6 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->unsignedBigInteger('business_location_id');
             $table->foreign('business_location_id')->references('id')->on('business_locations')->onDelete('cascade');
+            $table->unsignedBigInteger('contact_id');
             $table->enum('type', ['purchase', 'sell', 'purchase_return', 'sell_return', 'expense']);
             $table->enum('status', ['received', 'pending', 'ordered', 'draft', 'final']);
             $table->enum('payment_status', ['paid', 'due']);

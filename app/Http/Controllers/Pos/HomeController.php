@@ -89,6 +89,7 @@ class HomeController extends Controller
                     ->first();
 
         $items_data = Item::where('product_id',$products->id)
+                ->where('sold_out','0')
                 ->inRandomOrder()
                 ->get();
 

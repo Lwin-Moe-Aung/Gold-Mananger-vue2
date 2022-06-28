@@ -30,6 +30,7 @@ class Sell extends Model
         'gem_price',
         'fee',
         'fee_price',
+        'fee_for_making',
         'before_total',
         'total_before',
         'final_total',

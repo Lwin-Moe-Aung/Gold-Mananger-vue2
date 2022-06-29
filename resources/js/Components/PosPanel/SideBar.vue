@@ -40,7 +40,7 @@ export default {
         drawer: null,
         items: [
             {icon: 'fas fa-home', text:'Home',link:route('pos.index')},
-            {icon: 'fas fa-save', text:'DailySetup',link:route('pos.daily_setup')},
+            {icon: 'fas fa-save', text:'DailySetup',link:route('pos.daily_setups.index')},
             {icon: 'fas fa-history', text:'History',link:''},
             {icon: 'fas fa-wallet', text:'Wallet',link:''},
             {icon: 'fas fa-list', text:'List',link:''},
@@ -70,7 +70,7 @@ export default {
     methods: {
         ...mapActions(["changeDrawerSideBar"]),
         click(i){
-            this.selected = integer(i);
+            // this.selected = integer(i);
         }
 
     }

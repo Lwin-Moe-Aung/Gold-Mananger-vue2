@@ -21,7 +21,8 @@ use App\Http\Controllers\Admins\PurchaseController;
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
 use App\Http\Controllers\Pos\ContactController;
-use App\Http\Controllers\Pos\DailySetupValueController;
+use App\Http\Controllers\Pos\DailySetupPosController;
+
 
 
 /*
@@ -51,7 +52,7 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     //product sku search
     Route::get('/pos/productsku_search/{sku}', [HomeController::class, 'productSkuSearch'])->name('pos.productsku_search');
 
-    Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
+    // Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
 
     //contact
     Route::get('/pos/customer_search', [ContactController::class, 'customerSearch'])->name('pos.customer_search');
@@ -72,11 +73,12 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::get('/pos/cart', [SellPosController::class, 'cart'])->name('pos.cart');
     Route::get('/pos/print_all_from_cart', [SellPosController::class, 'printAllFromCart'])->name('pos.print_all_from_cart');
 
-    Route::get('/pos/daily_setup', [SellPosController::class, 'daily_setup'])->name('pos.daily_setup');
-
+    Route::get('/pos/daily_setups', [DailySetupPosController::class, 'index'])->name('pos.daily_setups.index');
+    Route::post('/pos/daily_setups/store', [DailySetupPosController::class, 'store'])->name('pos.daily_setups.store');
+    Route::post('/pos/daily_setups/update', [DailySetupPosController::class, 'update'])->name('pos.daily_setups.update');
+    Route::post('/pos/daily_setups/delete', [DailySetupPosController::class, 'delete'])->name('pos.daily_setups.delete');
 
 });
-
 
 
 //login

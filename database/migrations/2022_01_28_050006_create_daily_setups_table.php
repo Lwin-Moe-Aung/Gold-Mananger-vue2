@@ -15,7 +15,7 @@ class CreateDailySetupsTable extends Migration
     {
         Schema::create('daily_setups', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['gold', 'other']);
+            $table->enum('type', ['gold', 'other'])->default('gold');
             $table->decimal('daily_price', 20, 2);
             $table->unsignedBigInteger('business_id');
             $table->enum('customize', ['0', '1'])->default('0');

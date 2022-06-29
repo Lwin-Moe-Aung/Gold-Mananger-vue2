@@ -27,7 +27,7 @@ class PurchaseController extends Controller
         $business_id = auth()->user()->business_id;
 
         $transactions = Transaction::query();
-        $transactions->where('business_id', $business_id);
+        $transactions->where('business_id', $business_id)->where('type','purchase');
         if (request('search')) {
             $transactions->where('name', 'LIKE', '%' . request('search') . '%');
         }

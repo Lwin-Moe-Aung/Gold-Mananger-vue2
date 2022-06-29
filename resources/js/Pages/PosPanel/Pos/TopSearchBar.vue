@@ -1,13 +1,18 @@
 <template>
     <v-toolbar color="#ECBD00" flat >
-        <v-btn
+        <!-- <v-btn
           icon
           dark
           class="d-lg-none d-sm-flex black--text"
           @click="changeDrawerSideBar()"
         >
            <v-icon v-text="'fas fa-bars'"></v-icon>
-        </v-btn>
+        </v-btn> -->
+        <v-app-bar-nav-icon
+            class="d-lg-none d-sm-flex black--text"
+            @click="changeDrawerSideBar()"
+            >
+        </v-app-bar-nav-icon>
         <v-spacer class="d-lg-none d-xl-flex black--text"></v-spacer>
 
         <v-flex xs4 md2 sm2 lg2 class="ml-8 text-left">

@@ -10,12 +10,15 @@
             <v-icon color="#704232">far fa-gem</v-icon>
         </v-avatar>
         <v-list flat class="mt-4">
-            <v-list-item-group v-model="selectedItem">
+            <v-list-item-group v-model="selected">
                 <v-list-item v-for="(item, i) in items" :key="i" active-class="border" :ripple="false">
-                    <v-list-item-content>
-                        <v-icon v-text="item.icon"></v-icon>
-                        <v-list-item-subtitle align="center" v-text="item.text" class="mt-3 caption"></v-list-item-subtitle>
-                    </v-list-item-content>
+
+                        <Link :href="item.link">
+                            <v-list-item-content @click="click(i)">
+                                <v-icon v-text="item.icon"></v-icon>
+                                <v-list-item-subtitle align="center" v-text="item.text" class="mt-3 caption"></v-list-item-subtitle>
+                            </v-list-item-content>
+                        </Link>
                 </v-list-item>
             </v-list-item-group>
         </v-list>
@@ -27,39 +30,51 @@
 
 <script>
 import {mapActions,mapGetters} from "vuex";
+import { Link } from '@inertiajs/inertia-vue';
 export default {
+    components: {
+        Link,
+    },
     data: () => ({
-            selectedItem: 0,
-            drawer: null,
-            items: [
-                {icon: 'fas fa-home', text:'Home'},
-                {icon: 'fas fa-save', text:'Save'},
-                {icon: 'fas fa-history', text:'History'},
-                {icon: 'fas fa-wallet', text:'Wallet'},
-                {icon: 'fas fa-list', text:'List'},
-                {icon: 'fas fa-cog', text:'Setting'},
-            ],
-        }),
-        computed: {
-            ...mapGetters(['drawer_side_bar']),
+        selected: 0,
+        drawer: null,
+        items: [
+            {icon: 'fas fa-home', text:'Home',link:route('pos.index')},
+            {icon: 'fas fa-save', text:'DailySetup',link:route('pos.daily_setup')},
+            {icon: 'fas fa-history', text:'History',link:''},
+            {icon: 'fas fa-wallet', text:'Wallet',link:''},
+            {icon: 'fas fa-list', text:'List',link:''},
+            {icon: 'fas fa-cog', text:'Setting',link:''},
+        ],
+    }),
+    computed: {
+        ...mapGetters(['drawer_side_bar']),
+    },
+    watch: {
+        drawer_side_bar (value) {
+            this.drawer = value;
         },
-        created() {
-            this.unwatch1 = this.$store.watch(
-                (state, getters) => getters.drawer_side_bar,
-                (newValue, oldValue) => {
-                    this.drawer = newValue;
-                    // this.changeDrawerSideBar();
-                },
-            );
-        },
-        beforeDestroy() {
-            this.unwatch1();
-        },
-        methods: {
-            ...mapActions(["changeDrawerSideBar"]),
-
+    },
+    created() {
+        // this.unwatch1 = this.$store.watch(
+        //     (state, getters) => getters.drawer_side_bar,
+        //     (newValue, oldValue) => {
+        //         this.drawer = newValue;
+        //         // this.changeDrawerSideBar();
+        //     },
+        // );
+    },
+    // beforeDestroy() {
+    //     this.unwatch1();
+    // },
+    methods: {
+        ...mapActions(["changeDrawerSideBar"]),
+        click(i){
+            this.selected = integer(i);
         }
+
     }
+}
 </script>
 
 <style>

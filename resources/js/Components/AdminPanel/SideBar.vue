@@ -182,6 +182,14 @@
                                     </p>
                                 </Link>
                             </li>
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.purchase_returns.index')" class="nav-link" :class="route().current('admin.purchase_returns.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Return Purchase
+                                    </p>
+                                </Link>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-header">MISCELLANEOUS</li>

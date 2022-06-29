@@ -17,6 +17,7 @@ use App\Http\Controllers\Admins\DailySetupController;
 use App\Http\Controllers\Admins\ProductController;
 use App\Http\Controllers\Admins\SellController;
 use App\Http\Controllers\Admins\PurchaseController;
+use App\Http\Controllers\Admins\PurchaseReturnController;
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -130,4 +131,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     //Purchase management
     Route::resource('purchases', PurchaseController::class);
     Route::post('/purchases/purchase_update', [PurchaseController::class, 'purchaseUpdate'])->name('purchases.purchase_update');
+    //Purchase return
+    Route::resource('purchase_returns', PurchaseReturnController::class);
+
 });

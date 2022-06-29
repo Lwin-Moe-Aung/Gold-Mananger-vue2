@@ -22,18 +22,32 @@ class SellController extends Controller
      */
     public function index()
     {
-        $business_id = Auth::user()->business_id;
-        $business_location_id = Auth::user()->business_location_id;
+        request()->validate([
+            'direction' => ['in:asc,desc'],
+            'field' => ['in:name,city']
+        ]);
 
-        $sells = Sell::where('business_id',$business_id)
-                ->where('business_location_id', $business_location_id)
-                ->with('item')
-                ->with('transaction')
-                ->orderBy('created_at', 'DESC')
-                ->paginate(5);
+        $business_id = auth()->user()->business_id;
 
+        $transactions = Transaction::query();
+        $transactions->where('business_id', $business_id)->where('type','sell');
+
+        if (request('search')) {
+            $transactions->where('invoice_no', 'LIKE', '%' . request('search') . '%');
+        }
+        if (request()->has(['field', 'direction'])) {
+            $transactions->orderBy(request('field'), request('direction'));
+        }else{
+            $transactions->orderBy('created_at', 'desc');
+        }
+        $transactions = $transactions->paginate(5)->withQueryString();
+        foreach ($transactions as $key=>$value) {
+            $transactions[$key]->sell = $value->sell;
+            $transactions[$key]->item = $value->sell->item;
+            $transactions[$key]->product = $value->sell->item->product;
+        }
         return Inertia::render('AdminPanel/SellManagement/SellList/Index', [
-            'sells' => $sells,
+            'transactions' => $transactions,
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
     }
@@ -139,7 +153,24 @@ class SellController extends Controller
      */
     public function show($id)
     {
-        //
+        $transaction = Transaction::find($id);
+        if(!$transaction) return false;
+        $item = $transaction->sell->item;
+        $item->gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);
+        $item->gem_weight = json_decode($item->gem_weight);
+        $item->fee = json_decode($item->fee);
+
+        $product = Product::find($item->product_id);
+        return Inertia::render('AdminPanel/SellManagement/SellDetail/Index', [
+            'transaction' => $transaction,
+            'sell' => $transaction->sell,
+            'item' => $item,
+            'product' => $transaction->sell->item->product,
+            'business' => $transaction->business,
+            'businessLocation' => $transaction->businessLocation,
+            'contact' => $transaction->contact,
+
+        ]);
     }
 
     /**
@@ -173,7 +204,7 @@ class SellController extends Controller
      */
     public function destroy($id)
     {
-        //
+        dd("dstroy");
     }
 
     /**

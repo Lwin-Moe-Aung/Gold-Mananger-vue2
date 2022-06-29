@@ -118,7 +118,7 @@
                                                     <Link :href="route('admin.purchases.edit', transaction.id)">
                                                         <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;">Edit</button>
                                                     </Link>
-                                                    <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteTransaction(transaction.id)">Delete</button>
+                                                    <!-- <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteTransaction(transaction.id)">Delete</button> -->
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -157,21 +157,6 @@
         },
         data() {
             return {
-                editedIndex: -1,
-                editMode: false,
-                form: this.$inertia.form({
-                    name: '',
-                    quality: '',
-                    type: '',
-                    item_name: '',
-                    w_kyat: '',
-                    w_pal: '',
-                    w_yway: '',
-                    description: '',
-                    tax: '',
-                    alert_quantity: '',
-                    image: ''
-                }),
                 params: {
                     search: this.filters.search,
                     field: this.filters.field,
@@ -181,18 +166,9 @@
             }
         },
         created(){
-            console.log(this.transactions.data[0].purchase.item)
         },
         computed: {
-            formTitle() {
-                return this.editedIndex === -1 ? 'Create New transaction Type' : 'Edit Current Product Type';
-            },
-            buttonTxt() {
-                return this.editedIndex === -1 ? 'Create' : 'Edit';
-            },
-            checkMode() {
-                return this.editMode === false ? this.createProduct : this.editProductType
-            }
+
         },
         watch: {
             params: {
@@ -215,73 +191,30 @@
             dateTime(value) {
                 return moment(value).format('YYYY-MM-DD');
             },
-
-            editModal(product) {
-                // console.log(product_type);
-                this.editMode = true
-                $('#modal-lg').modal('show')
-                this.editedIndex = this.products.data.indexOf(product_type)
-                this.form.id = product_type.id
-                this.form.name = product_type.name
-            },
-            openModal() {
-                this.editedIndex = -1
-                $('#modal-lg').modal('show')
-            },
-            closeModal() {
-                this.form.clearErrors()
-                this.editMode = false
-                this.form.reset()
-                $('#modal-lg').modal('hide')
-            },
-            createProduct() {
-                this.form.post(this.route('admin.products.store'), {
-                    preserveScroll: true,
-                    onSuccess:() => {
-                        this.closeModal()
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'New Product created!'
-                        })
-                    }
-                })
-            },
-            editProductType() {
-                this.form.patch(this.route('admin.types.update', this.form.id, this.form), {
-                    preserveScroll: true,
-                    onSuccess:() => {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Product Type has been updated!'
-                        })
-                        this.closeModal()
-                    }
-                })
-            },
-            deleteTransaction(id) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        this.form.delete(this.route('admin.products.destroy', id), {
-                            preserveScroll: true,
-                            onSuccess: ()=> {
-                                Swal.fire(
-                                    'Deleted!',
-                                    'Product Type has been deleted.',
-                                    'success'
-                                )
-                            }
-                        })
-                    }
-                })
-            }
+            // deleteTransaction(id) {
+            //     Swal.fire({
+            //         title: 'Are you sure?',
+            //         text: "You won't be able to revert this!",
+            //         icon: 'warning',
+            //         showCancelButton: true,
+            //         confirmButtonColor: '#3085d6',
+            //         cancelButtonColor: '#d33',
+            //         confirmButtonText: 'Yes, delete it!'
+            //     }).then((result) => {
+            //         if (result.isConfirmed) {
+            //             this.form.delete(this.route('admin.purchases.destroy', id), {
+            //                 preserveScroll: true,
+            //                 onSuccess: ()=> {
+            //                     Swal.fire(
+            //                         'Deleted!',
+            //                         'Purchase has been deleted.',
+            //                         'success'
+            //                     )
+            //                 }
+            //             })
+            //         }
+            //     })
+            // }
         }
     }
 </script>

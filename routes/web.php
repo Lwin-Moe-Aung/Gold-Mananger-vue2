@@ -120,8 +120,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     // Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');
 
     //Order Management
-    Route::resource('sells', SellController::class)->except(['create', 'show', 'edit']);
-    Route::get('/sells/detail/{id}', [SellController::class, 'detail'])->name('sells.detail');
+    Route::resource('sells', SellController::class);
+    // Route::get('/sells/detail/{id}', [SellController::class, 'detail'])->name('sells.detail');
     Route::post('/sells/product_form_save', [SellController::class, 'productFormSave'])->name('sells.product_form_save');
     Route::post('/sells/item_form_save', [SellController::class, 'itemFormSave'])->name('sells.item_form_save');
     Route::post('/sells/type_form_save', [SellController::class, 'typeFormSave'])->name('sells.type_form_save');

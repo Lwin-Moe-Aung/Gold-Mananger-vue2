@@ -7,20 +7,141 @@
                 </h2>
             </template>
             <section class="content">
-                <div class="container-fluid">
+                <div class="container-fluid" data-app>
                     <form ref="productform" @submit.prevent="checkMode">
-                        <div class="card card-primary card-outline">
+                        <div class="card card-primary card-outline" data-select2-id="32">
                             <div class="card-header">
                                 <Link :href="route('admin.purchases.index')">
                                     <button class="btn btn-primary float-left mr-3" style="h">
                                         <i class="fas fa-long-arrow-alt-left" aria-hidden="true" ></i>
                                     </button>
                                 </Link>
-                                <h3 class="card-title">Purchase Create Form</h3>
+                                <h3 class="card-title">Search Form Item Sku and Invoice No</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body" style="display: block;" data-select2-id="31">
                                 <div class="row">
-                                    <div class="col-12 col-sm-6">
+                                    <div class="col-12 col-sm-4 border-right">
+                                        <div class="form-group">
+                                            <label for="name">Item Sku</label>
+                                            <SearchItemSku
+                                                @update:data="selectItemSku"
+                                            />
+                                            <div v-if="!$v.form.name.required" class="invalid-feedback">The name field is required.</div>
+                                        </div>
+                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
+                                            {{ form.errors.name }}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-sm-4 border-right">
+                                        <div class="form-group">
+                                            <label for="permissions">Supplier</label>
+                                            <multiselect
+                                                v-model.trim="$v.supplier.$model"
+                                                :options="suppliers"
+                                                :multiple="false"
+                                                :taggable="true"
+                                                placeholder="Supplier name"
+                                                label="name"
+                                                track-by="id"
+                                                @input="changeSupplier"
+                                                :class="{'is-invalid': validationStatus($v.supplier)}"
+                                            ></multiselect>
+                                            <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
+                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
+                                                {{ form.errors.supplier }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-primary card-outline" data-select2-id="32">
+                            <div class="card-header">
+                                <h3 class="card-title">Select Form and Show Daily Setup</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body" style="display: block;" data-select2-id="31">
+                                <div class="row">
+                                    <div class="col-12 col-sm-3 border-right">
+                                        <div class="form-group">
+                                            <label for="permissions">Supplier</label>
+                                            <multiselect
+                                                v-model.trim="$v.supplier.$model"
+                                                :options="suppliers"
+                                                :multiple="false"
+                                                :taggable="true"
+                                                placeholder="Supplier name"
+                                                label="name"
+                                                track-by="id"
+                                                @input="changeSupplier"
+                                                :class="{'is-invalid': validationStatus($v.supplier)}"
+                                            ></multiselect>
+                                            <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
+
+                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
+                                                {{ form.errors.supplier }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-3 border-right">
+                                        <div class="form-group">
+                                            <label for="permissions">Supplier</label>
+                                            <multiselect
+                                                v-model.trim="$v.supplier.$model"
+                                                :options="suppliers"
+                                                :multiple="false"
+                                                :taggable="true"
+                                                placeholder="Supplier name"
+                                                label="name"
+                                                track-by="id"
+                                                @input="changeSupplier"
+                                                :class="{'is-invalid': validationStatus($v.supplier)}"
+                                            ></multiselect>
+                                            <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
+
+                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
+                                                {{ form.errors.supplier }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-3 border-right">
+                                        <div class="form-group">
+                                            <label for="permissions">Supplier</label>
+                                            <multiselect
+                                                v-model.trim="$v.supplier.$model"
+                                                :options="suppliers"
+                                                :multiple="false"
+                                                :taggable="true"
+                                                placeholder="Supplier name"
+                                                label="name"
+                                                track-by="id"
+                                                @input="changeSupplier"
+                                                :class="{'is-invalid': validationStatus($v.supplier)}"
+                                            ></multiselect>
+                                            <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
+
+                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
+                                                {{ form.errors.supplier }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-3 border-right">
                                         <div class="form-group">
                                             <label for="name">Name</label>
                                             <!-- <input type="text" class="form-control" placeholder="Name" v-model="form.name" :class="{ 'is-invalid' : form.errors.name }" autofocus="autofocus" autocomplete="off"> -->
@@ -30,6 +151,38 @@
                                         <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
                                             {{ form.errors.name }}
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-primary card-outline" data-select2-id="32">
+                            <div class="card-header">
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <h3 class="card-title">Information</h3>
+                            </div>
+                            <div class="card-body" style="display: block;" data-select2-id="31">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6">
+
+                                        <div class="form-group">
+                                            <label for="name">Name</label>
+                                            <!-- <input type="text" class="form-control" placeholder="Name" v-model="form.name" :class="{ 'is-invalid' : form.errors.name }" autofocus="autofocus" autocomplete="off"> -->
+                                            <input type="text" v-model.trim="$v.form.name.$model" :class="{'is-invalid': validationStatus($v.form.name)}" class="form-control form-control" autofocus="autofocus" autocomplete="off">
+                                            <div v-if="!$v.form.name.required" class="invalid-feedback">The name field is required.</div>
+                                        </div>
+
+                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
+                                            {{ form.errors.name }}
+                                        </div>
+
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <div class="form-group">
@@ -155,7 +308,7 @@
                             </div>
                         </div>
 
-                        <div class="row" v-if="product">
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="card card-success card-outline">
                                     <div class="card-header">
@@ -354,6 +507,7 @@
                     </form>
                 </div>
             </section>
+
         </admin-layout>
     </div>
 </template>
@@ -365,6 +519,10 @@
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
     import { required, minValue, maxValue} from 'vuelidate/lib/validators'
+    import SearchItemSku from '../../../../Components/AdminPanel/SearchItemSku';
+    import SearchInvoiceNo from '../../../../Components/AdminPanel/SearchInvoiceNo';
+    import searchProductSku from '../../../../Components/AdminPanel/searchProductSku';
+
 
     export default {
         props: [
@@ -380,11 +538,15 @@
         components: {
             AdminLayout,
             Pagination,
-            Link
+            Link,
+            SearchItemSku,
+            SearchInvoiceNo,
+            searchProductSku
         },
         data() {
             return {
                 form: this.$inertia.form({
+                    item_sku:"",
                     id: "",
                     name: "",
                     product_id: "",
@@ -468,6 +630,9 @@
             supplier: {required},
         },
         methods: {
+            selectItemSku(value){
+                this.form.item_sku = value;
+            },
             changeDailySetupOption(){
                 this.radio_old_daily_price = !this.radio_old_daily_price;
                 if(this.radio_old_daily_price) this.daily_setup = this.daily_setup_list;
@@ -617,3 +782,11 @@
         },
     }
 </script>
+<style>
+hr {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+</style>

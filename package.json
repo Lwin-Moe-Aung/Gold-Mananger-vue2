@@ -25,6 +25,7 @@
         "@inertiajs/inertia": "^0.10.1",
         "@inertiajs/inertia-vue": "^0.7.2",
         "@inertiajs/progress": "^0.2.6",
+        "@syncfusion/ej2-vue-dropdowns": "^20.2.36",
         "numeral": "^2.0.6",
         "print-js": "^1.6.0",
         "vue-carousel-3d": "^1.0.1",

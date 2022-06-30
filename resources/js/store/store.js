@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import PosModule from '../store/modules/pos-module'
+import PosModule from '../store/modules/pos/pos-module'
+import PurchaseReturn from '../store/modules/admin/purchase-return'
+
 Vue.use(Vuex);
 
 export const store = new Vuex.Store({
@@ -12,7 +14,8 @@ export const store = new Vuex.Store({
     actions: {
     },
     modules: {
-        PosModule
+        PosModule,
+        PurchaseReturn
     }
 });
 

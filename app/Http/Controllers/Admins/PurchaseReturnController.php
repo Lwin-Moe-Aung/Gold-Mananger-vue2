@@ -75,7 +75,7 @@ class PurchaseReturnController extends Controller
         return Inertia::render('AdminPanel/PurchaseManagement/PurchasesReturn/Create',[
             'products' => $products,
             'suppliers' => $suppliers,
-            'transactions' => null,
+            'transaction' => null,
             'purchase' => null,
             'item' => null,
             'product_for_sku' => null,

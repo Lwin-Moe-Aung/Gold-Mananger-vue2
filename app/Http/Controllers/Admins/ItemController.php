@@ -14,7 +14,7 @@ class ItemController extends Controller
                     ->where('purchase_return', '0')
                     ->when(request()->get('params')['term'], function ($query, $term) {
                         $query->where('item_sku', 'like', "%$term%");
-                    })->limit(2)->get();
+                    })->limit(10)->get();
 
         return response()->json(['data' => $item_skus]);
     }

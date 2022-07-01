@@ -12,6 +12,7 @@ use App\Models\WeightPal;
 use App\Models\WeightYway;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -194,5 +195,21 @@ class ProductController extends Controller
             return back();
         }
         return back();
+    }
+
+    /**
+     * Search Product Sku for autocomplete component.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function productSkuSearch(Request $request){
+
+        $product =  Product::where('business_id', Auth::user()->business_id)
+                    ->when(request()->get('params')['term'], function ($query, $term) {
+                        $query->where('product_sku', 'like', "%$term%");
+                    })->limit(10)->get();
+
+        return response()->json(['data' => $product]);
     }
 }

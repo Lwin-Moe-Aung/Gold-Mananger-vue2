@@ -16,6 +16,7 @@ class ContactController extends Controller
         $search_value = $request->search_value;
         $customerList =  Contact::where('business_id', Auth::user()->business_id)
             ->where('type', 'customer')
+            ->orWhere('type', 'both')
             ->where(function($q) use ($search_value) {
                 $q->where('name','like','%'.$search_value.'%')
                     ->orWhere('email','like','%'.$search_value.'%')

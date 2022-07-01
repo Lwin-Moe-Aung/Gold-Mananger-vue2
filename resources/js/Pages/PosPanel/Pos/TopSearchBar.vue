@@ -61,7 +61,7 @@
     import axios from "axios";
 
     export default {
-        name: 'ItemList',
+        name: 'TopSearchBar',
         data: () => ({
             searchValue: '',
             length: 5,

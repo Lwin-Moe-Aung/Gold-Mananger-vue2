@@ -21,9 +21,6 @@
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
                                     </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
-                                    </button>
                                 </div>
                             </div>
                             <div class="card-body" style="display: block;" data-select2-id="31">
@@ -31,8 +28,12 @@
                                     <div class="col-12 col-sm-4 border-right">
                                         <div class="form-group">
                                             <label for="name">Item Sku</label>
-                                            <SearchItemSku
+                                            <AutoCompleteSearchComponent
                                                 @update:data="selectItemSku"
+                                                route_name = "admin.item_sku_search"
+                                                v-model = "item"
+                                                label="item_sku"
+                                                placeholder="Search Item Sku"
                                             />
                                             <div v-if="!$v.form.name.required" class="invalid-feedback">The name field is required.</div>
                                         </div>
@@ -43,18 +44,14 @@
 
                                     <div class="col-12 col-sm-4 border-right">
                                         <div class="form-group">
-                                            <label for="permissions">Supplier</label>
-                                            <multiselect
-                                                v-model.trim="$v.supplier.$model"
-                                                :options="suppliers"
-                                                :multiple="false"
-                                                :taggable="true"
-                                                placeholder="Supplier name"
-                                                label="name"
-                                                track-by="id"
-                                                @input="changeSupplier"
-                                                :class="{'is-invalid': validationStatus($v.supplier)}"
-                                            ></multiselect>
+                                            <label for="permissions">Invoice No</label>
+                                            <AutoCompleteSearchComponent
+                                                @update:data="selectInvoiceNo"
+                                                route_name = "admin.invoice_no_search"
+                                                v-model = "transaction"
+                                                label="invoice_no"
+                                                placeholder="Search Invoice No"
+                                            />
                                             <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
                                                 {{ form.errors.supplier }}
@@ -64,6 +61,10 @@
                                 </div>
                             </div>
                         </div>
+                        <ThreeMultiSelectComponent
+                            @update:data="changeProductSku"
+                            v-model = "product.product_sku"
+                        />
                         <div class="card card-primary card-outline" data-select2-id="32">
                             <div class="card-header">
                                 <h3 class="card-title">Select Form and Show Daily Setup</h3>
@@ -78,80 +79,58 @@
                             </div>
                             <div class="card-body" style="display: block;" data-select2-id="31">
                                 <div class="row">
-                                    <div class="col-12 col-sm-3 border-right">
+                                    <div class="col-12 col-sm-4 border-right">
                                         <div class="form-group">
-                                            <label for="permissions">Supplier</label>
-                                            <multiselect
-                                                v-model.trim="$v.supplier.$model"
-                                                :options="suppliers"
-                                                :multiple="false"
-                                                :taggable="true"
-                                                placeholder="Supplier name"
-                                                label="name"
-                                                track-by="id"
-                                                @input="changeSupplier"
-                                                :class="{'is-invalid': validationStatus($v.supplier)}"
-                                            ></multiselect>
-                                            <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
-
+                                            <label for="permissions">Product Sku</label>
+                                            <div class="row">
+                                                <div class="col-sm-10 col-xs-10">
+                                                    <AutoCompleteSearchComponent
+                                                        @update:data="selectProductSku"
+                                                        route_name = "admin.product_sku_search"
+                                                        v-model = "product"
+                                                        label="product_sku"
+                                                        placeholder="Search Procut Sku"
+                                                    />
+                                                </div>
+                                                <div class="col-sm-2 col-xs-2">
+                                                    <button type="button" class="btn btn-block bg-gradient-success text-white"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
                                                 {{ form.errors.supplier }}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-3 border-right">
+                                    <div class="col-12 col-sm-4 border-right">
+                                        <DailySetupComponent
+                                            @update:data="editDailySetup"
+                                            :quality = "product != null ? `${product.quality}`:null"
+                                            placeholder="Daily Setup"
+                                        />
+                                    </div>
+                                    <div class="col-12 col-sm-4 border-right">
                                         <div class="form-group">
-                                            <label for="permissions">Supplier</label>
-                                            <multiselect
-                                                v-model.trim="$v.supplier.$model"
-                                                :options="suppliers"
-                                                :multiple="false"
-                                                :taggable="true"
-                                                placeholder="Supplier name"
-                                                label="name"
-                                                track-by="id"
-                                                @input="changeSupplier"
-                                                :class="{'is-invalid': validationStatus($v.supplier)}"
-                                            ></multiselect>
-                                            <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
-
+                                            <label for="permissions">Customer</label>
+                                            <div class="row">
+                                                <div class="col-sm-10 col-xs-10">
+                                                    <AutoCompleteSearchComponent
+                                                        @update:data="selectCustomer"
+                                                        route_name = "pos.customer_search"
+                                                        v-model = "customer"
+                                                        label="search_name"
+                                                        placeholder="Search Customer"
+                                                    />
+                                                </div>
+                                                <div class="col-sm-2 col-xs-2">
+                                                    <button type="button" class="btn btn-block bg-gradient-success text-white"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
                                                 {{ form.errors.supplier }}
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-3 border-right">
-                                        <div class="form-group">
-                                            <label for="permissions">Supplier</label>
-                                            <multiselect
-                                                v-model.trim="$v.supplier.$model"
-                                                :options="suppliers"
-                                                :multiple="false"
-                                                :taggable="true"
-                                                placeholder="Supplier name"
-                                                label="name"
-                                                track-by="id"
-                                                @input="changeSupplier"
-                                                :class="{'is-invalid': validationStatus($v.supplier)}"
-                                            ></multiselect>
-                                            <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
 
-                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
-                                                {{ form.errors.supplier }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-3 border-right">
-                                        <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <!-- <input type="text" class="form-control" placeholder="Name" v-model="form.name" :class="{ 'is-invalid' : form.errors.name }" autofocus="autofocus" autocomplete="off"> -->
-                                            <input type="text" v-model.trim="$v.form.name.$model" :class="{'is-invalid': validationStatus($v.form.name)}" class="form-control form-control" autofocus="autofocus" autocomplete="off">
-                                            <div v-if="!$v.form.name.required" class="invalid-feedback">The name field is required.</div>
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
-                                            {{ form.errors.name }}
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -161,9 +140,6 @@
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                         <i class="fas fa-minus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                        <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                                 <h3 class="card-title">Information</h3>
@@ -218,16 +194,7 @@
                                             <label for="permissions">Product Sku</label>
                                             <div class="row">
                                                 <div class="col-sm-11 col-xs-11">
-                                                    <multiselect
-                                                        v-model="product"
-                                                        :options="products"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="product sku"
-                                                        label="product_sku"
-                                                        track-by="id"
-                                                        @input="changeProductSku"
-                                                    ></multiselect>
+
                                                 </div>
                                                 <div class="col-sm-1 col-xs-1">
                                                     <button type="button" class="btn btn-success btn-flat text-white float-right"><i class="fas fa-plus"></i></button>
@@ -239,24 +206,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-6">
-                                        <div class="form-group" v-if="transactions !== null">
-                                            <div class="custom-control custom-radio">
-                                                <input class="custom-control-input" type="radio" id="customRadio1" :checked="radio_old_daily_price" @click="changeDailySetupOption()">
-                                                <label for="customRadio1" class="custom-control-label">အရင် purchase လုပ်တုန်းကပေါက်ဈေး({{ numberWithCommas(daily_setup_list[16].kyat) }} .ကျပ်)</label>
-                                            </div>
-                                            <div class="custom-control custom-radio">
-                                                <input class="custom-control-input" type="radio" id="customRadio2" :checked="!radio_old_daily_price" @click="changeDailySetupOption()">
-                                                <label for="customRadio2" class="custom-control-label">ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas($page.props.daily_setup[16].kyat) }}.ကျပ်) </label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" :value="numberWithCommas(daily_price.kyat)" disabled>
-                                                <span class="input-group-append">
-                                                    <button type="button" class="btn btn-success btn-flat text-white"><i class="fas fa-plus"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="row">
@@ -318,7 +268,7 @@
                                         </h3>
                                     </div>
                                     <div class="card-body pad table-responsive">
-                                        <table class="table table-bordered text-center">
+                                        <!-- <table class="table table-bordered text-center">
                                             <tbody>
                                                 <tr>
                                                     <th width="30%"></th>
@@ -493,7 +443,7 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                        </table>
+                                        </table> -->
                                     </div>
                                     <div class="modal-footer justify-content-right">
                                         <Link :href="route('admin.purchases.index')">
@@ -519,18 +469,17 @@
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
     import { required, minValue, maxValue} from 'vuelidate/lib/validators'
-    import SearchItemSku from '../../../../Components/AdminPanel/SearchItemSku';
-    import SearchInvoiceNo from '../../../../Components/AdminPanel/SearchInvoiceNo';
-    import searchProductSku from '../../../../Components/AdminPanel/searchProductSku';
-
+    import AutoCompleteSearchComponent from '../../../../Components/AdminPanel/AutoCompleteSearchComponent';
+    import ThreeMultiSelectComponent from '../../../../Components/AdminPanel/ThreeMultiSelectComponent';
+    import DailySetupComponent from '../../../../Components/AdminPanel/DailySetupComponent';
 
     export default {
         props: [
-            'products',
+            // 'products',
             'suppliers',
-            'transactions',
+            // 'transaction',
             'purchase',
-            'item',
+            // 'item',
             'product_for_sku',
             'contact',
             'daily_setup_list'
@@ -539,14 +488,15 @@
             AdminLayout,
             Pagination,
             Link,
-            SearchItemSku,
-            SearchInvoiceNo,
-            searchProductSku
+            AutoCompleteSearchComponent,
+            ThreeMultiSelectComponent,
+            DailySetupComponent
         },
         data() {
             return {
                 form: this.$inertia.form({
                     item_sku:"",
+                    invoice_no:"",
                     id: "",
                     name: "",
                     product_id: "",
@@ -565,79 +515,43 @@
                     image: "",
                     item_description: "",
                     tran_description: "",
+                    product_sku:"",
                 }),
                 supplier: '',
                 product: '',
                 imageforui: undefined,
-                daily_setup: '',
-                daily_price: '',
                 radio_old_daily_price: false,
+                //nn
+                item:[],
+                transaction:[],
+                product:[],
+                customer:[],
+                daily_setup:"",
             }
         },
         created() {
-            if(this.transactions !== null){
-                this.supplier = this.contact;
-                this.product = this.product_for_sku;
-                this.imageforui = this.item.image;
-                this.daily_setup = this.daily_setup_list;
-                this.daily_price = this.daily_setup_list[this.product_for_sku.quality];
-                this.radio_old_daily_price = true;
-                this.form.id = this.transactions.id;
-                this.form.name = this.item.name;
-                this.form.product_id = this.product_for_sku.id;
-                this.form.supplier_id = this.contact.id;
-                this.form.gold_plus_gem_weight = this.item.gold_plus_gem_weight;
-                this.form.gold_price = this.purchase.gold_price;
-                this.form.gem_weight = this.item.gem_weight;
-                this.form.gem_price = this.purchase.gem_price;
-                this.form.fee = this.purchase.fee;
-                this.form.fee_price = this.purchase.fee_price;
-                this.form.fee_for_making = this.purchase.fee_for_making;
 
-                this.form.before_total = this.purchase.before_total;
-                this.form.item_discount = this.purchase.item_discount;
-                this.form.final_total = this.purchase.final_total;
-                this.form.item_description = this.item.item_description;
-                this.form.tran_description = this.transactions.additional_notes;
-            }else{
-                this.daily_setup = this.$page.props.daily_setup;
-                // this.daily_price = this.daily_setup_list[this.product_for_sku.quality];
-            }
         },
-        validations: {
-            form: {
-                name: {required},
-                gold_plus_gem_weight:{
-                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
-                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
-                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
-                },
-                gem_weight:{
-                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
-                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
-                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
-                },
-                gem_price: {required, minValue: minValue(0)},
-                fee:{
-                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
-                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
-                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
-                },
-                fee_for_making:{required, minValue: minValue(0)},
-                item_discount:{minValue: minValue(0)}
 
-            },
-            supplier: {required},
-        },
         methods: {
             selectItemSku(value){
-                this.form.item_sku = value;
+                this.item = value;
             },
-            changeDailySetupOption(){
-                this.radio_old_daily_price = !this.radio_old_daily_price;
-                if(this.radio_old_daily_price) this.daily_setup = this.daily_setup_list;
-                else this.daily_setup = this.$page.props.daily_setup;
-                this.daily_price = this.daily_setup[this.product.quality];
+            selectInvoiceNo(value) {
+                this.transaction = value;
+            },
+            changeProductSku(value) {
+                this.form.product_sku = value;
+            },
+            selectProductSku(value) {
+                this.product = value;
+                this.daily_setup = this.$page.props.daily_setup[this.product.quality];
+            },
+            selectCustomer(value) {
+                this.customer = value;
+            },
+            editDailySetup(value){
+                this.daily_setup = value;
             },
             validationStatus: function(validation) {
                 return typeof validation != "undefined" ? validation.$error : false;
@@ -685,20 +599,8 @@
                     }
                 })
             },
-            changeProductSku() {
-                if(this.product == null){
-                    this.form.product_id = '';
-                    this.daily_price = '';
-                    this.resetVoucherForm();
 
-                }else{
-                    this.form.product_id = this.product.id;
-                    this.daily_price = this.daily_setup[this.product.quality];
-                }
-
-            },
             changeSupplier() {
-                this.form.supplier_id = this.supplier.id;
             },
             numberWithCommas(value) {
                 if(typeof value !== "undefined"){
@@ -720,13 +622,13 @@
         },
         computed: {
             formTitle() {
-                return this.transactions == null ? 'Create New Purchase' : 'Edit Current Purchase';
+                return this.transaction == null ? 'Create New Purchase' : 'Edit Current Purchase';
             },
             buttonTxt() {
-                return this.transactions == null ? 'Create' : 'Update';
+                return this.transaction == null ? 'Create' : 'Update';
             },
             checkMode() {
-                return this.transactions == null ? this.createPurchases : this.editPurchases
+                return this.transaction == null ? this.createPurchases : this.editPurchases
             },
             goldPrice() {
                 if(this.product == "")return;
@@ -780,6 +682,31 @@
                 return final_total;
             },
         },
+        validations: {
+            form: {
+                name: {required},
+                gold_plus_gem_weight:{
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
+                },
+                gem_weight:{
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
+                },
+                gem_price: {required, minValue: minValue(0)},
+                fee:{
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
+                },
+                fee_for_making:{required, minValue: minValue(0)},
+                item_discount:{minValue: minValue(0)}
+
+            },
+            supplier: {required},
+        },
     }
 </script>
 <style>
@@ -788,5 +715,11 @@ hr {
   margin-bottom: 1rem;
   border: 0;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.fas.fa-plus{
+    margin-left: -4px;
+}
+.btn.btn-block.bg-gradient-success {
+    margin-left: -11px;
 }
 </style>

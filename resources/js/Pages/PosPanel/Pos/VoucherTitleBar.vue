@@ -217,7 +217,6 @@
                 this.item_sku = this.selectedItem.item_sku;
             },
             setDailySetup(newValue) {
-                console.log(newValue)
                 if(newValue.length > 3){
                     var q = newValue.charAt(0)+newValue.charAt(1);
                     var t = newValue.charAt(2);
@@ -230,10 +229,7 @@
                 let g_Quality  = this.goldQualitys.find(function(val) {
                     return val.quality == q;
                 });
-                console.log("ggq");
-                console.log(this.goldQualitys);
-                console.log(q);
-                console.log(g_Quality);
+
                 this.goldQuality = g_Quality;
                 this.types = this.goldQuality.types;
                 let type_e = this.types.find(function(val) {

@@ -64,4 +64,18 @@ class Sell extends Model
     {
         return $this->belongsTo(Item::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class, 'supplier_id');
+    }
+    public function dailysetup()
+    {
+        return $this->belongsTo(DailySetup::class, 'daily_setup_id');
+    }
 }

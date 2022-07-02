@@ -59,8 +59,8 @@ class HandleInertiaRequests extends Middleware
             'user' => Auth::user(),
             'daily_setup' => function () {
                 $daily_setup =  DailySetup::where('type', 'gold')
-                    ->where('business_id', Auth::user()->business_id)
-                    // ->where('business_id',1)
+                    // ->where('business_id', Auth::user()->business_id)
+                    ->where('business_id',1)
                     ->where('customize','0')
                     ->latest('created_at')
                     ->first();
@@ -83,7 +83,8 @@ class HandleInertiaRequests extends Middleware
             },
             'limitation_price' => function() {
                 return LimitationPrice::where('customize','0')
-                            ->where('business_id', Auth::user()->business_id)
+                            // ->where('business_id', Auth::user()->business_id)
+                            ->where('business_id',1)
                             ->orderBy('created_at', 'DESC')
                             ->first();
             }

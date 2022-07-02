@@ -138,7 +138,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::resource('purchase_returns', PurchaseReturnController::class);
 
     Route::get('/item_sku_search', [ItemController::class, 'searchItemSku'])->name('item_sku_search');
+    Route::get('/search_by_item_sku/{item_sku}', [ItemController::class, 'searchByItemSku'])->name('search_by_item_sku');
+
     Route::get('/invoice_no_search', [TransactionController::class, 'invoiceNoSearch'])->name('invoice_no_search');
+    Route::get('/search_by_invoice_no/{invoice_no}', [TransactionController::class, 'searchByInvoiceNo'])->name('search_by_invoice_no');
+
     Route::get('/product_sku_search', [ProductController::class, 'productSkuSearch'])->name('product_sku_search');
 
     //limitation Price

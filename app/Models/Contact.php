@@ -58,4 +58,8 @@ class Contact extends Model
     {
         return $this->hasMany(Purchase::class, 'supplier_id');
     }
+    public function sell()
+    {
+        return $this->hasMany(Sell::class, 'customer_id');
+    }
 }

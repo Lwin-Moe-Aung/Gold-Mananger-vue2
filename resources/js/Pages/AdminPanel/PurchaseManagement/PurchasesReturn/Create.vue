@@ -217,7 +217,7 @@
                                         </h3>
                                     </div>
                                     <div class="card-body pad table-responsive">
-                                        <!-- <table class="table table-bordered text-center">
+                                        <table class="table table-bordered text-center">
                                             <tbody>
                                                 <tr>
                                                     <th width="30%"></th>
@@ -392,7 +392,7 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                        </table> -->
+                                        </table>
                                     </div>
                                     <div class="modal-footer justify-content-right">
                                         <Link :href="route('admin.purchases.index')">
@@ -414,7 +414,6 @@
 
 <script>
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
-    import moment from 'moment';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
     import { required, minValue, maxValue} from 'vuelidate/lib/validators'
@@ -422,6 +421,7 @@
     import ThreeMultiSelectComponent from '../../../../Components/AdminPanel/ThreeMultiSelectComponent';
     import DailySetupComponent from '../../../../Components/AdminPanel/DailySetupComponent';
     import InfoForm from './InfoForm';
+    import axios from "axios";
 
 
     export default {
@@ -487,10 +487,18 @@
 
         methods: {
             selectItemSku(value){
-                this.item = value;
+                // this.item = value;
+                axios.get(this.route('admin.search_by_item_sku', value.item_sku))
+                        .then((response) => {
+                            this.data = response.data.data;
+                    });
             },
             selectInvoiceNo(value) {
-                this.transaction = value;
+                // this.transaction = value;
+                axios.get(this.route('admin.search_by_invoice_no', value.invoice_no))
+                    .then((response) => {
+                        this.data = response.data.data;
+                });
             },
             changeProductSku(value) {
                 if(value == 'onChangeQ' || value == 'onChangeT') {
@@ -557,28 +565,6 @@
                         })
                     }
                 })
-            },
-            editPurchases() {
-                this.$v.$touch();
-                if (this.$v.$pendding || this.$v.$error) return;
-                this.form.daily_setup_id = this.daily_price.daily_setup_id;
-                this.form.post(this.route('admin.purchases.purchase_update', this.form), {
-                    preserveScroll: true,
-                    onSuccess:() => {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Purchase has been updated!'
-                        })
-                    }
-                })
-            },
-
-            changeSupplier() {
-            },
-            numberWithCommas(value) {
-                if(typeof value !== "undefined"){
-                    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                }
             },
             resetVoucherForm () {
                 this.form.gold_plus_gem_weight = { kyat: "0", pal: "0", yway: "0" };

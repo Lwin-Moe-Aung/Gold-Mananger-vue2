@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
+use App\Models\Sell;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
@@ -17,5 +19,20 @@ class ItemController extends Controller
                     })->limit(10)->get();
 
         return response()->json(['data' => $item_skus]);
+    }
+
+    public function searchByItemSku($item_sku){
+        $item =  Item::where('item_sku', $item_sku)->first();
+        $sell = $item->sell;
+        $data = [
+            'item' => $item,
+            'sell' => $sell,
+            'transaction' => $item->sell->transaction,
+            'product' => $item->product,
+            'created_by' => $sell->user,
+            'customer' => $sell->contact,
+            'daily_setup' => $sell->dailysetup,
+        ];
+        return response()->json(['data' => $data]);
     }
 }

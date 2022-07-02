@@ -63,7 +63,7 @@
                         </div>
                         <ThreeMultiSelectComponent
                             @update:data="changeProductSku"
-                            v-model = "product.product_sku"
+                            v-model = "form.product_sku"
                         />
                         <div class="card card-primary card-outline" data-select2-id="32">
                             <div class="card-header">
@@ -104,7 +104,7 @@
                                     <div class="col-12 col-sm-4 border-right">
                                         <DailySetupComponent
                                             @update:data="editDailySetup"
-                                            :quality = "product != null ? `${product.quality}`:null"
+                                            :quality = "product.quality"
                                             placeholder="Daily Setup"
                                         />
                                     </div>
@@ -161,54 +161,17 @@
 
                                     </div>
                                     <div class="col-12 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="permissions">Supplier</label>
-                                            <div class="row">
-                                                <div class="col-sm-11 col-xs-11">
-                                                    <multiselect
-                                                        v-model.trim="$v.supplier.$model"
-                                                        :options="suppliers"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="Supplier name"
-                                                        label="name"
-                                                        track-by="id"
-                                                        @input="changeSupplier"
-                                                        :class="{'is-invalid': validationStatus($v.supplier)}"
-                                                    ></multiselect>
-                                                    <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
-                                                </div>
-                                                <div class="col-sm-1 col-xs-1">
-                                                    <button type="button" class="btn btn-success btn-flat text-white float-right"><i class="fas fa-plus"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
-                                                {{ form.errors.supplier }}
-                                            </div>
+                                       <div class="form-group">
+                                            <label for="image">Choose Image</label>
+                                            <input type="file" :class="['form-control',form.errors.image?'border border-danger':'']"  @change="selectImage">
+                                            <img class="profile-user-img img-fluid" :src="imageforui" v-if="imageforui">
+                                        </div>
+                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.image}">
+                                            {{ form.errors.image }}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12 col-sm-6">
-                                        <div class="form-group">
-                                            <label for="permissions">Product Sku</label>
-                                            <div class="row">
-                                                <div class="col-sm-11 col-xs-11">
 
-                                                </div>
-                                                <div class="col-sm-1 col-xs-1">
-                                                    <button type="button" class="btn btn-success btn-flat text-white float-right"><i class="fas fa-plus"></i></button>
-                                                </div>
-                                            </div>
-                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.item_name}">
-                                                {{ form.errors.item_name }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
-
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col-12 col-sm-6">
                                         <div class="form-group">
@@ -226,7 +189,7 @@
                                     </div>
                                     <div class="col-12 col-sm-6">
                                         <div class="form-group">
-                                            <label for="name">Transaction Description</label>
+                                            <label for="name">Additional Note</label>
                                             <textarea  class="form-control" placeholder="Transaction Description"
                                                 v-model="form.tran_description" :class="{ 'is-invalid' : form.errors.tran_description }"
                                                 autofocus="autofocus" autocomplete="off"
@@ -240,21 +203,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-12 col-sm-6">
-                                       <div class="form-group">
-                                            <label for="image">Choose Image</label>
-                                            <input type="file" :class="['form-control',form.errors.image?'border border-danger':'']"  @change="selectImage">
-                                            <img class="profile-user-img img-fluid" :src="imageforui" v-if="imageforui">
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.image}">
-                                            {{ form.errors.image }}
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-6">
 
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -472,6 +421,8 @@
     import AutoCompleteSearchComponent from '../../../../Components/AdminPanel/AutoCompleteSearchComponent';
     import ThreeMultiSelectComponent from '../../../../Components/AdminPanel/ThreeMultiSelectComponent';
     import DailySetupComponent from '../../../../Components/AdminPanel/DailySetupComponent';
+    import InfoForm from './InfoForm';
+
 
     export default {
         props: [
@@ -490,7 +441,8 @@
             Link,
             AutoCompleteSearchComponent,
             ThreeMultiSelectComponent,
-            DailySetupComponent
+            DailySetupComponent,
+            InfoForm
         },
         data() {
             return {
@@ -518,7 +470,7 @@
                     product_sku:"",
                 }),
                 supplier: '',
-                product: '',
+                // product: '',
                 imageforui: undefined,
                 radio_old_daily_price: false,
                 //nn
@@ -526,7 +478,7 @@
                 transaction:[],
                 product:[],
                 customer:[],
-                daily_setup:"",
+                daily_setup:[],
             }
         },
         created() {
@@ -541,11 +493,24 @@
                 this.transaction = value;
             },
             changeProductSku(value) {
-                this.form.product_sku = value;
+                if(value == 'onChangeQ' || value == 'onChangeT') {
+                    this.product = [];
+                }else{
+                    this.product = value;
+                    this.form.product_sku = value.product_sku;
+                }
+
             },
             selectProductSku(value) {
-                this.product = value;
-                this.daily_setup = this.$page.props.daily_setup[this.product.quality];
+                if(value == null){
+                    this.product = [];
+                    this.form.product_sku = "";
+                    this.daily_setup = "";
+                }else{
+                    this.product = value;
+                    this.form.product_sku = value.product_sku;
+                    this.daily_setup = this.$page.props.daily_setup[this.product.quality];
+                }
             },
             selectCustomer(value) {
                 this.customer = value;

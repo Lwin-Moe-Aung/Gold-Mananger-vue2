@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\DailySetup;
+use App\Models\LimitationPrice;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,8 +59,8 @@ class HandleInertiaRequests extends Middleware
             'user' => Auth::user(),
             'daily_setup' => function () {
                 $daily_setup =  DailySetup::where('type', 'gold')
-                    // ->where('business_id', Auth::user()->business_id)
-                    ->where('business_id',1)
+                    ->where('business_id', Auth::user()->business_id)
+                    // ->where('business_id',1)
                     ->where('customize','0')
                     ->latest('created_at')
                     ->first();
@@ -80,6 +81,12 @@ class HandleInertiaRequests extends Middleware
                 }
                 return $data;
             },
+            'limitation_price' => function() {
+                return LimitationPrice::where('customize','0')
+                            ->where('business_id', Auth::user()->business_id)
+                            ->latest('created_at')
+                            ->first();
+            }
 
             // 'success' => session()->has('success') ? session()->get('success') : "",
             // 'fail' => session()->has('fail') ? session()->get('fail') : "",

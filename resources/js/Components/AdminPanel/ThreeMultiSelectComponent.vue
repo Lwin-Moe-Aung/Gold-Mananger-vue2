@@ -86,7 +86,20 @@
         },
         watch: {
             value(val){
-                this.setDailySetup(val);
+                // if(typeof val !== 'undefined')this.setDailySetup(val);
+                if(val !== "" && typeof val !== 'undefined'){
+                    this.setDailySetup(val);
+                }else if(val == "onChangeQ"){
+                    this.type = null;
+                    this.item_name = null;
+                }else if(val == "onChangeT"){
+                    this.item_name = null;
+                }else{
+                    this.goldQuality = null;
+                    this.type = null;
+                    this.item_name = null;
+                }
+
             }
         },
         methods: {
@@ -123,7 +136,7 @@
                 this.item_name = item_n;
             },
             onChangeQ (entry) {
-                this.$emit('update:data', "");
+                this.$emit('update:data', 'onChangeQ');
                 if(this.goldQuality == null){
                     this.type = null;
                     this.item_name = null;
@@ -135,7 +148,7 @@
                 this.item_names = [];
             },
             onChangeT (entry) {
-                this.$emit('update:data', "");
+                this.$emit('update:data', 'onChangeT');
                 if(this.type == null){
                     this.item_name = null;
                     return;
@@ -143,10 +156,17 @@
                 this.item_name = null;
                 this.item_names = this.type.item_names;
             },
-            onChangeItemName (entry) {
-                if(this.goldQuality == null && this.type == null  && this.item_name == null ) return;
+            async onChangeItemName (entry) {
+
+                if(this.goldQuality == null || this.type == null  || this.item_name == null ){
+                    this.$emit('update:data', 'onChangeT');
+                    return;
+                }
                 let product_sku = this.goldQuality.quality+this.type.key+this.item_name.key;
-                this.$emit('update:data', product_sku);
+                await axios.get(this.route('admin.product_sku_search', { params: { term: product_sku }}))
+                    .then((response) => {
+                        this.$emit('update:data',  response.data.data[0]);
+                });
             },
         }
     }

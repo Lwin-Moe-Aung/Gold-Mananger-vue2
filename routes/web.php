@@ -20,6 +20,7 @@ use App\Http\Controllers\Admins\PurchaseController;
 use App\Http\Controllers\Admins\PurchaseReturnController;
 use App\Http\Controllers\Admins\ItemController;
 use App\Http\Controllers\Admins\TransactionController;
+use App\Http\Controllers\Admins\LimitationPriceController;
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -139,5 +140,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::get('/item_sku_search', [ItemController::class, 'searchItemSku'])->name('item_sku_search');
     Route::get('/invoice_no_search', [TransactionController::class, 'invoiceNoSearch'])->name('invoice_no_search');
     Route::get('/product_sku_search', [ProductController::class, 'productSkuSearch'])->name('product_sku_search');
+
+    //limitation Price
+    Route::resource('limitation_prices', LimitationPriceController::class);
+
 
 });

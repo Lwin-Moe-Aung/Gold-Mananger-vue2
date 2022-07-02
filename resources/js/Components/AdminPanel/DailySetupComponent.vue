@@ -8,7 +8,7 @@
             <div class="custom-control custom-radio">
                 <!-- <input class="custom-control-input" type="radio" id="customRadio2" :checked="!radio_old_daily_Setup" @click="changeDailySetupOption()">
                 <label for="customRadio2" class="custom-control-label">ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas($page.props.daily_setup[16].kyat) }}.ကျပ်) </label> -->
-                <label>ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas($page.props.daily_setup[16].kyat) }}.ကျပ်) </label>
+                <label>ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas(showingDailySetup) }}.ကျပ်) </label>
             </div>
         </div>
         <div class="form-group">
@@ -37,7 +37,8 @@ export default {
     watch: {
         quality (val) {
             if(val != null){
-                this.daily_Setup = this.$page.props.daily_setup[val];
+                // this.daily_Setup = this.$page.props.daily_setup[val];
+                this.daily_Setup.kyat = parseInt(this.$page.props.daily_setup[val].kyat) - parseInt(this.$page.props.limitation_price.price);
             }else{
                 this.daily_Setup = { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" };
             }
@@ -66,6 +67,11 @@ export default {
 
             this.$emit('update:data', this.daily_Setup);
         },
+    },
+    computed: {
+        showingDailySetup (){
+            return this.$page.props.daily_setup[16].kyat-this.$page.props.limitation_price.price;
+        }
     }
 }
 </script>

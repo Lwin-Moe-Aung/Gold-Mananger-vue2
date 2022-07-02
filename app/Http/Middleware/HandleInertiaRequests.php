@@ -84,7 +84,7 @@ class HandleInertiaRequests extends Middleware
             'limitation_price' => function() {
                 return LimitationPrice::where('customize','0')
                             ->where('business_id', Auth::user()->business_id)
-                            ->latest('created_at')
+                            ->orderBy('created_at', 'DESC')
                             ->first();
             }
 

@@ -478,7 +478,7 @@
                 transaction:[],
                 product:[],
                 customer:[],
-                daily_setup:[],
+                daily_setup: { daily_setup_id: "", kyat: "", pal: "", yway: "" },
             }
         },
         created() {
@@ -505,11 +505,12 @@
                 if(value == null){
                     this.product = [];
                     this.form.product_sku = "";
-                    this.daily_setup = "";
+                    this.daily_setup = { daily_setup_id: "", kyat: "", pal: "", yway: "" };
                 }else{
                     this.product = value;
                     this.form.product_sku = value.product_sku;
-                    this.daily_setup = this.$page.props.daily_setup[this.product.quality];
+                    this.settingDailySetup();
+                    // this.daily_setup = this.$page.props.daily_setup[this.product.quality];
                 }
             },
             selectCustomer(value) {
@@ -517,6 +518,13 @@
             },
             editDailySetup(value){
                 this.daily_setup = value;
+            },
+            settingDailySetup() {
+                let daily_value = parseInt(this.$page.props.daily_setup[this.product.quality].kyat) - parseInt(this.$page.props.limitation_price.price);
+                this.daily_setup.daily_setup_id = this.$page.props.daily_setup[this.product.quality].daily_setup_id;
+                this.daily_setup.kyat = daily_value;
+                this.daily_setup.pal = daily_value / 16;
+                this.daily_setup.yway = daily_value / 128;
             },
             validationStatus: function(validation) {
                 return typeof validation != "undefined" ? validation.$error : false;

@@ -23,14 +23,21 @@ class ItemController extends Controller
 
     public function searchByItemSku($item_sku){
         $item =  Item::where('item_sku', $item_sku)->first();
+        $item->gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);
+        $item->gem_weight = json_decode($item->gem_weight);
+        $item->fee = json_decode($item->fee);
+
         $sell = $item->sell;
+
+        $customer = $sell->contact;
+        $customer->search_name = $customer->name.'( email -'.$customer->email.') (ph-'.$customer->mobile1.','.$customer->mobile2.') (address- '.$customer->address.' )';
         $data = [
             'item' => $item,
             'sell' => $sell,
             'transaction' => $item->sell->transaction,
             'product' => $item->product,
             'created_by' => $sell->user,
-            'customer' => $sell->contact,
+            'customer' => $customer,
             'daily_setup' => $sell->dailysetup,
         ];
         return response()->json(['data' => $data]);

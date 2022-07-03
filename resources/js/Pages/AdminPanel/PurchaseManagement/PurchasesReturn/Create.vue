@@ -217,7 +217,7 @@
                                         </h3>
                                     </div>
                                     <div class="card-body pad table-responsive">
-                                        <table class="table table-bordered text-center">
+                                        <!-- <table class="table table-bordered text-center">
                                             <tbody>
                                                 <tr>
                                                     <th width="30%"></th>
@@ -392,7 +392,7 @@
                                                     </td>
                                                 </tr>
                                             </tbody>
-                                        </table>
+                                        </table> -->
                                     </div>
                                     <div class="modal-footer justify-content-right">
                                         <Link :href="route('admin.purchases.index')">
@@ -452,7 +452,7 @@
                     id: "",
                     name: "",
                     product_id: "",
-                    supplier_id: "",
+                    customer_id: "",
                     daily_setup_id: "",
                     gold_plus_gem_weight: { kyat: "0", pal: "0", yway: "0" },
                     gold_price: "0",
@@ -466,13 +466,11 @@
                     final_total: "0",
                     image: "",
                     item_description: "",
-                    tran_description: "",
+                    additional_note: "",
                     product_sku:"",
                 }),
                 supplier: '',
-                // product: '',
                 imageforui: undefined,
-                radio_old_daily_price: false,
                 //nn
                 item:[],
                 transaction:[],
@@ -484,21 +482,47 @@
         created() {
 
         },
-
         methods: {
             selectItemSku(value){
+                if(value == null){
+                    this.resetData();
+                    return;
+                }
                 // this.item = value;
                 axios.get(this.route('admin.search_by_item_sku', value.item_sku))
-                        .then((response) => {
-                            this.data = response.data.data;
-                    });
+                    .then((response) => {
+                        this.item = response.data.data.item;
+                        this.transaction = response.data.data.transaction;
+                        this.product = response.data.data.product;
+                        this.daily_setup = response.data.data.daily_setup;
+                        this.customer = response.data.data.customer;
+                        this.form.product_sku = this.product.product_sku;
+
+                });
             },
             selectInvoiceNo(value) {
+                if(value == null){
+                    this.resetData();
+                    return;
+                }
                 // this.transaction = value;
                 axios.get(this.route('admin.search_by_invoice_no', value.invoice_no))
                     .then((response) => {
-                        this.data = response.data.data;
+                        this.item = response.data.data.item;
+                        this.transaction = response.data.data.transaction;
+                        this.product = response.data.data.product;
+                        this.daily_setup = response.data.data.daily_setup;
+                        this.customer = response.data.data.customer;
+                        this.form.product_sku = this.product.product_sku;
                 });
+            },
+            resetData(){
+                this.item = [];
+                this.transaction = [];
+                this.product = [];
+                this.daily_setup = [];
+                this.customer = [];
+                this.form.product_sku = "";
             },
             changeProductSku(value) {
                 if(value == 'onChangeQ' || value == 'onChangeT') {
@@ -507,7 +531,6 @@
                     this.product = value;
                     this.form.product_sku = value.product_sku;
                 }
-
             },
             selectProductSku(value) {
                 if(value == null){

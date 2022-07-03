@@ -72,7 +72,7 @@ class Sell extends Model
 
     public function contact()
     {
-        return $this->belongsTo(Contact::class, 'supplier_id');
+        return $this->belongsTo(Contact::class, 'customer_id');
     }
     public function dailysetup()
     {

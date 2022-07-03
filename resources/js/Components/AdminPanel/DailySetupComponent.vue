@@ -26,7 +26,7 @@
 <script>
 
 export default {
-    props: ["quality","placeholder"],
+    props: ["daily_setup","quality", "placeholder"],
     created() {
     },
     data() {
@@ -35,10 +35,10 @@ export default {
         }
     },
     watch: {
-        quality (val) {
-            if(val != null){
+        daily_setup (val) {
+            if(val.length != 0){
                 // this.daily_Setup = this.$page.props.daily_setup[val];
-                this.daily_Setup.kyat = parseInt(this.$page.props.daily_setup[val].kyat) - parseInt(this.$page.props.limitation_price.price);
+                Object.assign( this.daily_Setup, val);
             }else{
                 this.daily_Setup = { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" };
             }

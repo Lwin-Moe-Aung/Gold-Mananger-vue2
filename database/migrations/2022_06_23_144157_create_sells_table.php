@@ -25,7 +25,9 @@ class CreateSellsTable extends Migration
             $table->unsignedBigInteger('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('contacts')->onDelete('cascade');
 
+            $table->string('gold_plus_gem_weight', 100)->nullable();
             $table->decimal('gold_price', 10, 2)->default(0);
+            $table->string('gem_weight', 100)->nullable();
             $table->decimal('gem_price', 10, 2)->default(0);
             $table->string('fee', 100)->nullable();
             $table->decimal('fee_price', 10, 2)->default(0);
@@ -37,7 +39,7 @@ class CreateSellsTable extends Migration
             $table->decimal('credit_money', 10, 2)->default(0);
             $table->decimal('discount_amount', 10, 2)->default(0);
 
-            $table->enum('sell_return', ['0', '1'])->default('0');
+            $table->enum('purchase_return', ['0', '1'])->default('0');
             $table->text('additional_notes')->nullable();
             $table->softDeletes();
             $table->timestamps();

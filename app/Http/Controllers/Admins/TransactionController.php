@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Models\LimitationPrice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,14 +35,31 @@ class TransactionController extends Controller
         $customer = $sell->contact;
         $customer->search_name = $customer->name.'( email -'.$customer->email.') (ph-'.$customer->mobile1.','.$customer->mobile2.') (address- '.$customer->address.' )';
 
+        $product = $sell->item->product;
+        //setting daily setup
+        $limitation_price = LimitationPrice::where('customize','0')
+                        ->where('business_id', Auth::user()->business_id)
+                        ->orderBy('created_at', 'DESC')
+                        ->first();
+        $daily_setup = $sell->dailysetup;
+        $kyat =  ($daily_setup->daily_price/16 * $product->quality) - $limitation_price->price;
+        $pal = $kyat / 16;
+        $yway = $pal / 8;
+        $daily_setup_data  = [
+            'daily_setup_id' => $daily_setup->id,
+            'kyat' => $kyat,
+            'pal' => $pal,
+            'yway' => $yway,
+        ];
+
         $data = [
             'item' => $item,
             'sell' => $sell,
             'transaction' => $transaction,
-            'product' => $sell->item->product,
+            'product' => $product,
             'created_by' => $sell->user,
             'customer' => $customer,
-            'daily_setup' => $sell->dailysetup,
+            'daily_setup' => $daily_setup_data,
         ];
         return response()->json(['data' => $data]);
     }

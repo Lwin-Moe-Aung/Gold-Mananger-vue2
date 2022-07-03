@@ -24,7 +24,10 @@ class CreatePurchasesTable extends Migration
             $table->unsignedBigInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->unsignedBigInteger('daily_setup_id');
+
+            $table->string('gold_plus_gem_weight', 100)->nullable();
             $table->decimal('gold_price', 10, 2)->default(0);
+            $table->string('gem_weight', 100)->nullable();
             $table->decimal('gem_price', 10, 2)->default(0);
             $table->string('fee', 100)->nullable();
             $table->decimal('fee_price', 10, 2)->default(0);
@@ -33,7 +36,6 @@ class CreatePurchasesTable extends Migration
             $table->decimal('item_discount', 10, 2)->default(0);
             $table->decimal('before_total', 10, 2)->default(0);
             $table->decimal('final_total', 10, 2)->default(0);
-            $table->enum('purchase_return', ['0', '1'])->default('0');
             $table->text('additional_notes')->nullable();
             $table->timestamps();
         });

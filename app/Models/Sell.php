@@ -26,7 +26,9 @@ class Sell extends Model
         'created_by',
         'daily_setup_id',
         'customer_id',
+        'gold_plus_gem_weight',
         'gold_price',
+        'gem_weight',
         'gem_price',
         'fee',
         'fee_price',
@@ -37,7 +39,7 @@ class Sell extends Model
         'paid_money',
         'credit_money',
         'discount_amount',
-        'sell_return',
+        'purchase_return',
         'additional_notes',
     ];
 

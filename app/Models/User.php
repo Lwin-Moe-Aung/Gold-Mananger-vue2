@@ -84,4 +84,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Sell::class, 'created_by');
     }
+    public function purchase_return()
+    {
+        return $this->hasMany(PurchaseReturn::class, 'created_by');
+    }
 }

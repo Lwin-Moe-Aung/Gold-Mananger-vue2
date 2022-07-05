@@ -66,8 +66,4 @@ class Item extends Model
     {
         return $this->hasOne(Purchase::class, 'item_id');
     }
-    public function purchase_return()
-    {
-        return $this->hasOne(PurchaseReturn::class, 'item_id');
-    }
 }

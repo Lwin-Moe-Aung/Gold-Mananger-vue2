@@ -26,7 +26,7 @@
 <script>
 
 export default {
-    props: ["daily_setup","quality", "placeholder"],
+    props: ["value","quality", "placeholder"],
     created() {
     },
     data() {
@@ -35,13 +35,15 @@ export default {
         }
     },
     watch: {
-        daily_setup (val) {
-            if(val.length != 0){
-                // this.daily_Setup = this.$page.props.daily_setup[val];
-                Object.assign( this.daily_Setup, val);
-            }else{
-                this.daily_Setup = { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" };
-            }
+        value (val) {
+            console.log(val);
+            Object.assign( this.daily_Setup, val);
+            // if(val.length != 0){
+            //     // this.daily_Setup = this.$page.props.daily_setup[val];
+            //     Object.assign( this.daily_Setup, val);
+            // }else{
+            //     this.daily_Setup = { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" };
+            // }
         },
     },
     methods: {
@@ -70,7 +72,7 @@ export default {
     },
     computed: {
         showingDailySetup (){
-            return this.$page.props.daily_setup[16].kyat-this.$page.props.limitation_price.price;
+            return this.$page.props.daily_setup_purchase_return[16].kyat;
         }
     }
 }

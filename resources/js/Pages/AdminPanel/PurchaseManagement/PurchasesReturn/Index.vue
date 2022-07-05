@@ -112,7 +112,7 @@
                                                 <td>{{ transaction.product.product_sku }}</td>
                                                 <td>{{ transaction.invoice_no }}</td>
                                                 <td>{{ transaction.status }}</td>
-                                                <td>{{ transaction.purchaseReturn.final_total }}</td>
+                                                <td>{{ transaction.purchase.final_total }}</td>
                                                 <td>{{ dateTime(transaction.created_at) }}</td>
                                                 <td class="text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
                                                     <Link :href="route('admin.purchases.edit', transaction.id)">

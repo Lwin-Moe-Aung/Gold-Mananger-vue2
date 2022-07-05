@@ -42,7 +42,7 @@ class ItemController extends Controller
                         ->orderBy('created_at', 'DESC')
                         ->first();
         $daily_setup = $sell->dailysetup;
-        $kyat =  ($daily_setup->daily_price/16 * $product->quality) - $limitation_price->price;
+        $kyat =  ($daily_setup->daily_price - $limitation_price->price)/16 * $product->quality;
         $pal = $kyat / 16;
         $yway = $pal / 8;
         $daily_setup_data  = [

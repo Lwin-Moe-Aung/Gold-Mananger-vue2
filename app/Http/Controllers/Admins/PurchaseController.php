@@ -113,7 +113,7 @@ class PurchaseController extends Controller
                     'additional_notes' =>  $request->tran_description,
                     'created_by' =>  auth()->user()->id,
                 ]);
-                $purchase = Purchase::create([
+                Purchase::create([
                     'transaction_id' => $transaction->id,
                     'item_id' => $item->id,
                     'created_by' => auth()->user()->id,
@@ -124,7 +124,7 @@ class PurchaseController extends Controller
                     'fee' =>  json_encode($request->fee),
                     'fee_price' =>  $request->fee_price,
                     'fee_for_making' =>  $request->fee_for_making,
-                    'item_discount' => $request->item_discount,
+                    'discount_amount' => $request->item_discount,
                     'before_total' =>  $request->before_total,
                     'final_total' => $request->final_total,
                 ]);
@@ -217,7 +217,7 @@ class PurchaseController extends Controller
                 $purchase->fee = json_encode($request->fee);
                 $purchase->fee_price = $request->fee_price;
                 $purchase->fee_for_making = $request->fee_for_making;
-                $purchase->item_discount = $request->item_discount;
+                $purchase->discount_amount = $request->item_discount;
                 $purchase->before_total = $request->before_total;
                 $purchase->final_total = $request->final_total;
                 $purchase->save();

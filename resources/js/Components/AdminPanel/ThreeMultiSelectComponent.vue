@@ -1,13 +1,10 @@
 <template>
     <div class="card card-primary card-outline" data-select2-id="32">
         <div class="card-header">
-            <h3 class="card-title">Select Form and Show Daily Setup</h3>
+            <h3 class="card-title">(ပဲရည်) (ရွှေ/ကျောက်) (အမျိုးအစား)</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
                 </button>
             </div>
         </div>
@@ -21,7 +18,7 @@
                             :options="goldQualitys"
                             :multiple="false"
                             :taggable="true"
-                            placeholder="Supplier name"
+                            placeholder="ပဲရည်"
                             label="name"
                             track-by="quality"
                             @input="onChangeQ"

@@ -70,10 +70,6 @@ class Transaction extends Model
     {
         return $this->belongsTo(Contact::class, 'contact_id');
     }
-    public function purchaseReturn()
-    {
-        return $this->hasOne(PurchaseReturn::class);
-    }
 
     //  //has one through
     //  public function item()

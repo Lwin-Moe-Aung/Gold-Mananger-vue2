@@ -62,8 +62,4 @@ class Contact extends Model
     {
         return $this->hasMany(Sell::class, 'customer_id');
     }
-    public function purchase_return()
-    {
-        return $this->hasMany(PurchaseReturn::class, 'customer_id');
-    }
 }

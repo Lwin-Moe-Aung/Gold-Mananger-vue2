@@ -36,11 +36,11 @@ class PurchaseReturnController extends Controller
 
         $transactions = Transaction::query();
         $transactions->where('business_id', $business_id)
-                    ->where('type','purchase_return');
-                    // ->with('purchaseReturn');
-                    // ->whereHas("purchase",function($q){
-                    //     $q->where("purchase_return",'1');
-                    // });
+                    ->where('type','purchase_return')
+                    ->with('purchase')
+                    ->whereHas("purchase",function($q){
+                        $q->where("purchase_return",'1');
+                    });
         if (request('search')) {
             $transactions->where('invoice_no', 'LIKE', '%' . request('search') . '%');
         }
@@ -51,9 +51,9 @@ class PurchaseReturnController extends Controller
         }
         $transactions = $transactions->paginate(5)->withQueryString();
         foreach ($transactions as $key=>$value) {
-            $transactions[$key]->purchaseReturn = $value->purchaseReturn;
-            $transactions[$key]->item = $value->purchaseReturn->item;
-            $transactions[$key]->product = $value->purchaseReturn->item->product;
+            $transactions[$key]->purchase = $value->purchase;
+            $transactions[$key]->item = $value->purchase->item;
+            $transactions[$key]->product = $value->purchase->item->product;
         }
         // dd($transactions);
         return Inertia::render('AdminPanel/PurchaseManagement/PurchasesReturn/Index', [
@@ -95,26 +95,62 @@ class PurchaseReturnController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
             $this->validate($request, [
+                'product_id' => ['required'],
                 'daily_setup' => ['required'],
-                'gold_plus_gem_weight' => ['required'],
-                'gold_price' => ['required'],
-                'gem_weight' => ['required'],
-                'gem_price' => ['required'],
-                'fee' => ['required'],
-                'fee_price' => ['required'],
-                'fee_for_making' => ['required'],
-                'before_total' => ['required'],
-                'final_total' => ['required'],
                 'customer_id' => ['required'],
-
+                'name' => ['required'],
+                // 'gold_plus_gem_weight' => ['required'],
+                // 'gold_price' => ['required'],
+                // 'gem_weight' => ['required'],
+                // 'gem_price' => ['required'],
+                // 'fee' => ['required'],
+                // 'fee_price' => ['required'],
+                // 'fee_for_making' => ['required'],
+                // 'before_total' => ['required'],
+                // 'final_total' => ['required'],
             ]);
             DB::beginTransaction();
             try {
                 $business_id = Auth::user()->business_id;
                 $business_location_id = Auth::user()->business_location_id;
                 $created_by = Auth::user()->id;
+
+                if ($file = $request->file('image')) {
+                    $image_name = uniqid() . str_replace(' ', '', $file->getClientOriginalName());
+                    $path = '/images/items/';
+                    $file->move(public_path($path), $image_name);
+                    $image_name_path = $path . $image_name;
+                }
+
+                if($request->item_id == null ){
+                    $item = Item::create([
+                        'name' => $request->name,
+                        'product_id' => $request->product_id,
+                        'business_id' => $business_id,
+                        'business_location_id' => $business_location_id,
+                        'created_by' => $created_by,
+                        'item_sku' => rand(10000,100000),
+                        'gold_plus_gem_weight' => json_encode($request->gold_plus_gem_weight),
+                        'gem_weight' => json_encode($request->gem_weight),
+                        'fee' =>  json_encode($request->fee),
+                        'fee_for_making' =>  $request->fee_for_making,
+                        'image' => $image_name_path,
+                        'item_description' =>  $request->item_description,
+                    ]);
+                }else{
+                    $item = Item::find($request->item_id);
+                    $item->gold_plus_gem_weight = json_encode($request->gold_plus_gem_weight);
+                    $item->gem_weight = json_encode($request->gem_weight);
+                    $item->fee = json_encode($request->fee);
+                    $item->fee_for_making = $request->fee_for_making;
+                    $item->sold_out = '0';
+                    $item->item_description = $request->item_description;
+                    $item->image = $request->file('image') ? $image_name_path : $item->image;
+                    $item->save();
+                }
 
                 $transaction = new Transaction;
                 $transaction->business_id =  $business_id;
@@ -129,28 +165,13 @@ class PurchaseReturnController extends Controller
                 $transaction->created_by = $created_by;
                 $transaction->save();
 
-                if($request->sell_id != null ){
-                    Sell::where('id', $request->sell_id)
-                        ->update([
-                            'purchase_return' => '1'
-                        ]);
-                }
-                $item = Item::find($request->item_id);
-                $item->gold_plus_gem_weight = json_encode($request->gold_plus_gem_weight);
-                $item->gem_weight = json_encode($request->gem_weight);
-                $item->fee = json_encode($request->fee);
-                $item->fee_for_making = $request->fee_for_making;
-                $item->sold_out = '0';
-                $item->purchase_return = '1';
-                $item->item_description = $request->item_description;
-                if ($file = $request->file('image')) {
-                    $image_name = uniqid() . str_replace(' ', '', $file->getClientOriginalName());
-                    $path = '/images/items/';
-                    $file->move(public_path($path), $image_name);
-                    $image_name_path = $path . $image_name;
-                    $item->image = $image_name_path;
-                }
-                $item->save();
+                // if($request->sell_id != null ){
+                //     Sell::where('id', $request->sell_id)
+                //         ->update([
+                //             'purchase_return' => '1'
+                //         ]);
+                // }
+
 
 
                 if($request->daily_setup["daily_setup_id"] == null){
@@ -163,24 +184,25 @@ class PurchaseReturnController extends Controller
                     $daily_setup_id = $daily->id;
                 }else $daily_setup_id = $request->daily_setup["daily_setup_id"];
 
-                $purchase_return = new PurchaseReturn;
-                $purchase_return->item_id = $request->item_id;
-                $purchase_return->transaction_id = $transaction->id;
-                $purchase_return->created_by = $created_by;
-                $purchase_return->daily_setup_id = $daily_setup_id;
-                $purchase_return->customer_id = $request->customer_id;
-                $purchase_return->gold_plus_gem_weight = json_encode($request->gold_plus_gem_weight);
-                $purchase_return->gold_price = $request->gold_price;
-                $purchase_return->gem_weight = json_encode($request->gem_weight);
-                $purchase_return->gem_price = $request->gem_price;
-                $purchase_return->fee = json_encode($request->fee);
-                $purchase_return->fee_price = $request->fee_price;
-                $purchase_return->fee_for_making = $request->fee_for_making;
-                $purchase_return->before_total = $request->before_total;
-                $purchase_return->final_total = $request->final_total;
-                $purchase_return->credit_money = $request->credit_money;
-                $purchase_return->discount_amount = $request->discount_amount;
-                $purchase_return->save();
+                $purchase = new Purchase;
+                $purchase->item_id = $item->id;
+                $purchase->transaction_id = $transaction->id;
+                $purchase->created_by = $created_by;
+                $purchase->daily_setup_id = $daily_setup_id;
+                $purchase->supplier_id = $request->customer_id;
+                $purchase->gold_plus_gem_weight = json_encode($request->gold_plus_gem_weight);
+                $purchase->gold_price = $request->gold_price;
+                $purchase->gem_weight = json_encode($request->gem_weight);
+                $purchase->gem_price = $request->gem_price;
+                $purchase->fee = json_encode($request->fee);
+                $purchase->fee_price = $request->fee_price;
+                $purchase->fee_for_making = $request->fee_for_making;
+                $purchase->before_total = $request->before_total;
+                $purchase->final_total = $request->final_total;
+                $purchase->discount_amount = $request->discount_amount;
+                $purchase->purchase_return = "1";
+                $purchase->save();
+
                 DB::commit();
                 return redirect()->route('admin.purchase_returns.index');
             } catch (\Exception $e) {
@@ -188,7 +210,6 @@ class PurchaseReturnController extends Controller
             }
         }
         return back()->with('fail', 'No permission');
-
     }
 
      /**

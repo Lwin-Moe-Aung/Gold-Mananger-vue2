@@ -409,7 +409,7 @@
                                         <Link :href="route('admin.purchases.index')">
                                             <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
                                         </Link>
-                                        <button type="submit" class="btn btn-primary text-uppercase text-white" style="letter-spacing: 0.1em;" >{{ buttonTxt }}</button>
+                                        <button type="submit" class="btn btn-primary text-uppercase text-white" style="letter-spacing: 0.1em;" >Save</button>
                                     </div>
                                 </div>
                             </div>

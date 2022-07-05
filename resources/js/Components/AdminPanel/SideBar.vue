@@ -186,7 +186,7 @@
                                 <Link :href="route('admin.purchase_returns.index')" class="nav-link" :class="route().current('admin.purchase_returns.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
-                                        Return Purchase
+                                        Purchase Return
                                     </p>
                                 </Link>
                             </li>

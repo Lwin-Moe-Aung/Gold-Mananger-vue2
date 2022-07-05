@@ -1,6 +1,6 @@
-const URL = "http://54.92.8.141/pos/";
-const IMAGE_URL = "http://54.92.8.141/";
-const DOMAIN = "http://54.92.8.141/";
+const URL = "http://52.199.187.88/pos/";
+const IMAGE_URL = "http://52.199.187.88/";
+const DOMAIN = "http://52.199.187.88/";
 
 
 // const URL = "http://localhost:8000/pos/";

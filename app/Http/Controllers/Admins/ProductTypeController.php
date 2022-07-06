@@ -69,13 +69,15 @@ class ProductTypeController extends Controller
                 'key' => ['required', 'max:1'],
             ]);
             try {
-                Type::create([
+                $type = Type::create([
                     'name' => $request->name,
                     'key' => $request->key,
                     'business_id' => auth()->user()->business_id,
                     'is_active' => 1,
                 ]);
-                return back();
+                return response()->json([
+                    'data' => $type,
+                ]);
             } catch (\Exception $e) {
                 return back()->with('fail', 'Fail to Create New Product Type');
             }

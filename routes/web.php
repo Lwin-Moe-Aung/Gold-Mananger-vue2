@@ -11,6 +11,7 @@ use App\Http\Controllers\Admins\AdminDashboardController;
 use App\Http\Controllers\Admins\AuthController;
 use App\Http\Controllers\Admins\CustomerController;
 use App\Http\Controllers\Admins\SupplierController;
+use App\Http\Controllers\Admins\GoldQualityController;
 use App\Http\Controllers\Admins\ProductTypeController;
 use App\Http\Controllers\Admins\ItemNameController;
 use App\Http\Controllers\Admins\DailySetupController;
@@ -118,6 +119,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     //product management
     Route::resource('products', ProductController::class);
     Route::post('/products/product_update', [ProductController::class, 'ProductUpdate'])->name('products.product_update');
+    Route::resource('gold_qualities', GoldQualityController::class);
     Route::resource('product_types', ProductTypeController::class)->except(['create', 'show', 'edit']);
     Route::resource('item_names', ItemNameController::class);
     Route::resource('daily_setups', DailySetupController::class)->except(['create', 'show', 'edit']);

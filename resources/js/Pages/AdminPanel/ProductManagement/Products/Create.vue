@@ -7,7 +7,7 @@
                 </h2>
             </template>
             <section class="content">
-                <div class="container-fluid">
+                <div class="container-fluid" data-app>
                     <div class="card card-default">
                         <form ref="productform" @submit.prevent="createProduct">
                             <div class="card-header">
@@ -18,15 +18,22 @@
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="permissions">Quality</label>
-                                            <multiselect
-                                                v-model="form.quality"
-                                                :options="gold_qualities"
-                                                :multiple="false"
-                                                :taggable="true"
-                                                placeholder="Quality"
-                                                label="quality"
-                                                track-by="id"
-                                            ></multiselect>
+                                            <div class="row">
+                                                <div class="col-sm-10 col-xs-10 col-md-10">
+                                                    <multiselect
+                                                        v-model="form.quality"
+                                                        :options="gold_qualities"
+                                                        :multiple="false"
+                                                        :taggable="true"
+                                                        placeholder="Quality"
+                                                        label="quality"
+                                                        track-by="id"
+                                                    ></multiselect>
+                                                </div>
+                                                <div class="col-sm-2 col-xs-2 col-md-2  ">
+                                                    <button type="button" class="btn btn-success text-white ml-n3" @click="addQualityDialog = true"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.quality}">
                                                 {{ form.errors.quality }}
                                             </div>
@@ -34,16 +41,23 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="permissions">Type</label>
-                                            <multiselect
-                                                v-model="form.type"
-                                                :options="types"
-                                                :multiple="false"
-                                                :taggable="true"
-                                                placeholder="Type"
-                                                label="name"
-                                                track-by="key"
-                                            ></multiselect>
+                                            <label for="type">Type</label>
+                                            <div class="row">
+                                                <div class="col-sm-10 col-xs-10 col-md-10">
+                                                   <multiselect
+                                                        v-model="form.type"
+                                                        :options="types"
+                                                        :multiple="false"
+                                                        :taggable="true"
+                                                        placeholder="Type"
+                                                        label="name"
+                                                        track-by="key"
+                                                    ></multiselect>
+                                                </div>
+                                                <div class="col-sm-2 col-xs-2 col-md-2  ">
+                                                    <button type="button" class="btn btn-success text-white ml-n3" @click="addTypeDialog = true"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.type}">
                                                 {{ form.errors.type }}
                                             </div>
@@ -51,16 +65,23 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="permissions">Name</label>
-                                            <multiselect
-                                                v-model="form.item_name"
-                                                :options="item_names"
-                                                :multiple="false"
-                                                :taggable="true"
-                                                placeholder="Name"
-                                                label="name"
-                                                track-by="id"
-                                            ></multiselect>
+                                            <label for="type">Name</label>
+                                            <div class="row">
+                                                <div class="col-sm-10 col-xs-10 col-md-10">
+                                                    <multiselect
+                                                        v-model="form.item_name"
+                                                        :options="item_names"
+                                                        :multiple="false"
+                                                        :taggable="true"
+                                                        placeholder="Name"
+                                                        label="name"
+                                                        track-by="id"
+                                                    ></multiselect>
+                                                </div>
+                                                <div class="col-sm-2 col-xs-2 col-md-2  ">
+                                                    <button type="button" class="btn btn-success text-white ml-n3" @click="addItemNameDialog = true"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.item_name}">
                                                 {{ form.errors.item_name }}
                                             </div>
@@ -137,7 +158,20 @@
                     </div>
                 </div>
             </section>
-
+            <AddQualityDialogComponent
+                @update:data="eventQualityDialog"
+                v-model = "addQualityDialog"
+            />
+            <AddDialogComponent
+                @update:data="eventTypeDialog"
+                v-model = "addTypeDialog"
+                route_name = "admin.product_types.store"
+            />
+            <AddDialogComponent
+                @update:data="eventItemNameDialog"
+                v-model = "addItemNameDialog"
+                route_name = "admin.item_names.store"
+            />
         </admin-layout>
     </div>
 </template>
@@ -149,6 +183,8 @@
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { pickBy, throttle } from 'lodash';
     import { Link } from '@inertiajs/inertia-vue';
+    import AddQualityDialogComponent from '../../../../Components/AdminPanel/AddQualityDialogComponent';
+    import AddDialogComponent from '../../../../Components/AdminPanel/AddDialogComponent';
 
     export default {
         props: [
@@ -159,7 +195,9 @@
         components: {
             AdminLayout,
             Pagination,
-            Link
+            Link,
+            AddQualityDialogComponent,
+            AddDialogComponent
         },
         data() {
             return {
@@ -175,6 +213,10 @@
                     gem_weight: false
                 }),
                 imageforui: undefined,
+                addQualityDialog: false,
+                addTypeDialog: false,
+                addItemNameDialog: false,
+
             }
         },
         computed: {
@@ -215,6 +257,27 @@
                     }
                 })
             },
+            eventQualityDialog(value) {
+                if(value != null){
+                    this.form.quality = value;
+                    this.gold_qualities.push(value);
+                }
+                this.addQualityDialog = false;
+            },
+            eventTypeDialog(value) {
+                this.addTypeDialog = false;
+                if(value != null){
+                    this.form.type = value;
+                    this.types.push(value);
+                }
+            },
+            eventItemNameDialog(value) {
+                this.addItemNameDialog = false;
+                if(value != null){
+                    this.form.item_name = value;
+                    this.item_names.push(value);
+                }
+            }
         }
     }
 </script>

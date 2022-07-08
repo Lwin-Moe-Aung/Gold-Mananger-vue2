@@ -52,4 +52,34 @@ class ContactController extends Controller
             return response()->json(['data'=>[], 'status'=>false]);
         }
     }
+
+    public function saveContact(Request $request){
+
+        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+            $this->validate($request, [
+                'name' => ['required'],
+                'address' => ['required'],
+                'mobile1' => ['required'],
+            ]);
+            try {
+                $customer = Contact::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'type' => $request->type,
+                    'mobile1' => $request->mobile1,
+                    'mobile2' => $request->mobile2,
+                    'address' => $request->address,
+                    'supplier_business_name' => $request->type == 'supplier' ? $request->supplier_business_name : null,
+                    'created_by' => Auth::user()->id,
+                    'business_id' => Auth::user()->business_id,
+                    'business_location_id' => Auth::user()->business_location_id,
+                ]);
+                $customer->search_name = $customer->name.'( email -'.$customer->email.') (ph-'.$customer->mobile1.','.$customer->mobile2.') (address- '.$customer->address.' )';
+                return response()->json(['data'=>$customer, 'status'=>true]);
+            } catch (\Exception $e) {
+                return response()->json(['data'=>[], 'status'=>false]);
+            }
+        }
+        return back()->with('fail', 'No permission');
+    }
 }

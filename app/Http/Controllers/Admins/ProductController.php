@@ -102,6 +102,58 @@ class ProductController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDialog(Request $request)
+    {
+        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+            $this->validate($request, [
+                'name' => ['required', 'max:50'],
+                'quality' => ['required'],
+                'type' => ['required'],
+                'item_name' => ['required'],
+            ]);
+            try {
+                if ($file = $request->file('image')) {
+                    $image_name = uniqid() . str_replace(' ', '', $file->getClientOriginalName());
+                    $path = '/images/products/';
+                    $file->move(public_path($path), $image_name);
+                    $image_name_path = $path . $image_name;
+                } else {
+                    $image_name_path = null;
+                }
+                $quality = json_decode($request->quality);
+                $type = json_decode($request->type);
+                $item_name = json_decode($request->item_name);
+                $product_sku = $quality->quality . $type->key . $item_name->key;
+                $product = Product::create([
+                    'name' => $request->name,
+                    'quality' => $quality->quality,
+                    'type_id' => $type->id,
+                    'item_names_id' => $item_name->id,
+                    'product_sku' => $product_sku,
+                    'description' => $request->description,
+                    'alert_quantity' => $request->alert_quantity,
+                    'image' => $image_name_path,
+                    'business_id' => auth()->user()->business_id,
+                    'created_by' => auth()->user()->id,
+                    'gem_weight' => $request->gem_weight == '1' ? '1' : '0',
+
+                ]);
+                return response()->json([
+                    'data' => $product,
+                ]);
+            } catch (\Exception $e) {
+                return back()->with('fail', 'Fail to Create New Product Type');
+            }
+        }
+        return back()->with('fail', 'No permission');
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id

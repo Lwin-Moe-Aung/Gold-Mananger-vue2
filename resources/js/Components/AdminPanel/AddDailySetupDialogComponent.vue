@@ -14,18 +14,10 @@
                         <v-row>
                             <v-col cols="12">
                                 <v-text-field
-                                    v-model = "name"
-                                    label="name*"
+                                    v-model = "daily_price"
+                                    label="16 ပဲရည်တန်ဖိုး*"
                                     required
                                     :rules="validationRules"
-                                ></v-text-field>
-                            </v-col>
-                            <v-col cols="12">
-                                <v-text-field
-                                    v-model = "key"
-                                    label="key*"
-                                    required
-                                    :rules="keyValidationRules"
                                 ></v-text-field>
                             </v-col>
                         </v-row>
@@ -59,15 +51,11 @@
         name: "AddDialogComponent",
         props: ["value",'route_name','title'],
         data: () => ({
-            name:'',
-            key: '',
+            daily_price:'',
             dialog: false,
-            keyValidationRules:[
-                v => !!v || 'Required',
-                v => (v || '' ).length <= 1 || 'only one key allow'
-            ],
             validationRules:[
                 v => !!v || 'Required',
+                v => /^\d+$/.test(v) || 'Must be a number',
             ],
         }),
         watch: {
@@ -78,19 +66,15 @@
         methods: {
             close(){
                 this.$emit('update:data', null);
-                this.name = '';
-                this.key = '';
             },
             save(){
                 if(this.$refs.form.validate()){
                     let data = new FormData();
-                    data.append('name',this.name);
-                    data.append('key',this.key);
+                    data.append('daily_price',this.daily_price);
                     axios.post(this.route(this.route_name), data)
                         .then(res => {
                             this.$emit('update:data', res.data.data);
-                            this.name = '';
-                            this.key = '';
+                            this.daily_price = '';
                         })
                         .catch(function (error) {
                             console.log(error);

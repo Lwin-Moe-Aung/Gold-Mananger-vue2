@@ -140,4 +140,12 @@ class GoldQualityController extends Controller
         }
         return back();
     }
+
+    public function getList()
+    {
+        $gold_quality = GoldQuality::where('business_id',auth()->user()->business_id)->get()->toArray();
+        return response()->json([
+            'data' => $gold_quality,
+        ]);
+    }
 }

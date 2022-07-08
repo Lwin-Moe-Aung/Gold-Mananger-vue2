@@ -62,6 +62,7 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     //contact
     Route::get('/pos/customer_search', [ContactController::class, 'customerSearch'])->name('pos.customer_search');
     Route::post('/pos/save_customer', [ContactController::class, 'saveCustomer'])->name('pos.save_customer');
+    Route::post('/pos/save_contact', [ContactController::class, 'saveContact'])->name('pos.save_contact');
 
     Route::get('/pos/search_by_item_id', [HomeController::class, 'searchByItemId'])->name('pos.search_by_item_id');
     //customer order
@@ -118,11 +119,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     //product management
     Route::resource('products', ProductController::class);
+    Route::post('products/storeDialog', [ProductController::class, 'storeDialog'])->name('products.storeDialog');
+
     Route::post('/products/product_update', [ProductController::class, 'ProductUpdate'])->name('products.product_update');
+
+    Route::get('gold_qualities/get_list', [GoldQualityController::class, 'getList'])->name('gold_qualities.get_list');
     Route::resource('gold_qualities', GoldQualityController::class);
+
+    Route::get('product_types/get_list', [ProductTypeController::class, 'getList'])->name('product_types.get_list');
     Route::resource('product_types', ProductTypeController::class)->except(['create', 'show', 'edit']);
+
+    Route::post('product_types/storeDialog', [ProductTypeController::class, 'storeDialog'])->name('product_types.storeDialog');
+
+    Route::get('item_names/get_list', [ItemNameController::class, 'getList'])->name('item_names.get_list');
+    Route::post('item_names/storeDialog', [ItemNameController::class, 'storeDialog'])->name('item_names.storeDialog');
     Route::resource('item_names', ItemNameController::class);
+
+
     Route::resource('daily_setups', DailySetupController::class)->except(['create', 'show', 'edit']);
+    Route::post('daily_setups/storeDialog', [DailySetupController::class, 'storeDialog'])->name('daily_setups.storeDialog');
+
     // Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');
 
     //Order Management

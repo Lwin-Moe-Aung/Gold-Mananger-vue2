@@ -69,6 +69,36 @@ class ProductTypeController extends Controller
                 'key' => ['required', 'max:1'],
             ]);
             try {
+                Type::create([
+                    'name' => $request->name,
+                    'key' => $request->key,
+                    'business_id' => auth()->user()->business_id,
+                    'is_active' => 1,
+                ]);
+                return back();
+            } catch (\Exception $e) {
+                return back()->with('fail', 'Fail to Create New Product Type');
+            }
+        }
+        return back();
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDialog(Request $request)
+    {
+        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+
+            $this->validate($request, [
+                'name' => ['required', 'max:50'],
+                'key' => ['required', 'max:1'],
+            ]);
+            try {
                 $type = Type::create([
                     'name' => $request->name,
                     'key' => $request->key,
@@ -149,5 +179,18 @@ class ProductTypeController extends Controller
             return back();
         }
         return back();
+    }
+    /**
+     * Get all Item name.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getList()
+    {
+        $type = Type::where('business_id',auth()->user()->business_id)->get();
+        return response()->json([
+            'data' => $type,
+        ]);
     }
 }

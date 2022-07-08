@@ -7,7 +7,7 @@
                 </h2>
             </template>
             <section class="content">
-                <div class="container-fluid">
+                <div class="container-fluid" data-app>
                     <form ref="productform" @submit.prevent="checkMode">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
@@ -54,7 +54,7 @@
                                                     <div v-if="!$v.supplier.required" class="invalid-feedback">The Supplier field is required.</div>
                                                 </div>
                                                 <div class="col-sm-1 col-xs-1">
-                                                    <button type="button" class="btn btn-success btn-flat text-white float-right"><i class="fas fa-plus"></i></button>
+                                                    <button type="button" class="btn btn-success btn-flat text-white float-right" @click="addSupplierDialog = true"><i class="fas fa-plus"></i></button>
                                                 </div>
                                             </div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
@@ -81,7 +81,7 @@
                                                     ></multiselect>
                                                 </div>
                                                 <div class="col-sm-1 col-xs-1">
-                                                    <button type="button" class="btn btn-success btn-flat text-white float-right"><i class="fas fa-plus"></i></button>
+                                                    <button type="button" class="btn btn-success btn-flat text-white float-right" @click="addProductDialog = true"><i class="fas fa-plus"></i></button>
                                                 </div>
                                             </div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.item_name}">
@@ -104,7 +104,7 @@
                                             <div class="input-group">
                                                 <input type="text" class="form-control" :value="numberWithCommas(daily_price.kyat)" disabled>
                                                 <span class="input-group-append">
-                                                    <button type="button" class="btn btn-success btn-flat text-white"><i class="fas fa-plus"></i></button>
+                                                    <button type="button" class="btn btn-success btn-flat text-white" v-if="form.product_id !== ''" @click="addDailySetupDialog = true"><i class="fas fa-plus"></i></button>
                                                 </span>
                                             </div>
                                         </div>
@@ -358,7 +358,26 @@
                     </form>
                 </div>
             </section>
-
+            <AddProductDialogComponent
+                @update:data="eventProductDialog"
+                v-model = "addProductDialog"
+                title="Add Product"
+                route_name="admin.products.storeDialog"
+            />
+            <AddContactDialogComponent
+                @update:data="eventSupplierDialog"
+                v-model = "addSupplierDialog"
+                title="Add Supplier"
+                route_name="pos.save_contact"
+                type="supplier"
+            />
+            <AddDailySetupDialogComponent
+                @update:data="eventDailySetupDialog"
+                v-model = "addDailySetupDialog"
+                title="Add Daily Setup"
+                route_name="admin.daily_setups.storeDialog"
+                type="supplier"
+            />
         </admin-layout>
     </div>
 </template>
@@ -370,6 +389,10 @@
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
     import { required, minValue, maxValue} from 'vuelidate/lib/validators'
+    import AddProductDialogComponent from '../../../../Components/AdminPanel/AddProductDialogComponent';
+    import AddContactDialogComponent from '../../../../Components/AdminPanel/AddContactDialogComponent';
+    import AddDailySetupDialogComponent from '../../../../Components/AdminPanel/AddDailySetupDialogComponent';
+
 
     export default {
         props: [
@@ -385,7 +408,10 @@
         components: {
             AdminLayout,
             Pagination,
-            Link
+            Link,
+            AddProductDialogComponent,
+            AddContactDialogComponent,
+            AddDailySetupDialogComponent
         },
         data() {
             return {
@@ -415,6 +441,9 @@
                 daily_setup: '',
                 daily_price: '',
                 radio_old_daily_price: false,
+                addProductDialog: false,
+                addSupplierDialog: false,
+                addDailySetupDialog: false,
             }
         },
         created() {
@@ -473,6 +502,31 @@
             supplier: {required},
         },
         methods: {
+            eventSupplierDialog(value) {
+                this.addSupplierDialog = false;
+                if(value != null){
+                    this.supplier = value;
+                    this.suppliers.push(value);
+                    this.changeSupplier();
+                }
+            },
+            eventProductDialog(value){
+                this.addProductDialog = false;
+                if(value != null){
+                    this.form.product_id = value.id;
+                    this.product = value;
+                    this.products.push(value);
+                    this.changeProductSku()
+                }
+            },
+            eventDailySetupDialog(value){
+                this.addDailySetupDialog = false;
+                if(value != null){
+                    console.log(value);
+                    this.daily_setup = value;
+                    this.changeProductSku()
+                }
+            },
             changeDailySetupOption(){
                 this.radio_old_daily_price = !this.radio_old_daily_price;
                 if(this.radio_old_daily_price) this.daily_setup = this.daily_setup_list;

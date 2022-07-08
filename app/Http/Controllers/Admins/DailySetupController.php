@@ -100,6 +100,48 @@ class DailySetupController extends Controller
         }
         return back();
     }
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDialog(Request $request)
+    {
+        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+
+            $this->validate($request, [
+                'daily_price' => ['required'],
+            ]);
+            try {
+                $daily_setup = DailySetup::create([
+                    'type' => "gold",
+                    'business_id' => auth()->user()->business_id,
+                    'daily_price' => $request->daily_price,
+                ]);
+
+                $daily_price = $daily_setup->daily_price;
+                $daily_kyat =  $daily_price / 16;
+                $data = [];
+                for ($x = 1; $x <= 16; $x++) {
+                    $kyat = $daily_price - ($daily_kyat * (16 - $x));
+                    $pal = $kyat / 16;
+                    $yway = $pal / 8;
+                    $data [$x] = [
+                        'daily_setup_id' => $daily_setup->id,
+                        'kyat' => $kyat,
+                        'pal' => $pal,
+                        'yway' => $yway,
+                    ];
+
+                }
+                return response()->json(['data'=>$data]);
+            } catch (\Exception $e) {
+                return back()->with('fail', 'Fail to Create Daily Setup');
+            }
+        }
+        return back();
+    }
 
     /**
      * Display the specified resource.

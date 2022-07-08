@@ -215,12 +215,12 @@
         },
         data() {
             return {
-                 trip: {
-                    name: '',
-                    location: null,
-                    start: null,
-                    end: null,
-                },
+                //  trip: {
+                //     name: '',
+                //     location: null,
+                //     start: null,
+                //     end: null,
+                // },
                 form: {
                     name: "",
                     address: "",

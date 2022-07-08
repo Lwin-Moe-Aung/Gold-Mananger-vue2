@@ -165,12 +165,14 @@
             <AddDialogComponent
                 @update:data="eventTypeDialog"
                 v-model = "addTypeDialog"
-                route_name = "admin.product_types.store"
+                route_name = "admin.product_types.storeDialog"
+                title = "Add Type"
             />
             <AddDialogComponent
                 @update:data="eventItemNameDialog"
                 v-model = "addItemNameDialog"
-                route_name = "admin.item_names.store"
+                route_name = "admin.item_names.storeDialog"
+                title="Add Name"
             />
         </admin-layout>
     </div>

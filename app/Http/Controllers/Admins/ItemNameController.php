@@ -85,6 +85,37 @@ class ItemNameController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeDialog(Request $request)
+    {
+        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
+
+            $this->validate($request, [
+                'name' => ['required', 'max:50'],
+                'key' => ['required', 'max:1'],
+            ]);
+            try {
+                $item_name = ItemName::create([
+                    'name' => $request->name,
+                    'key' => $request->key,
+                    'business_id' => auth()->user()->business_id,
+                    'is_active' => 1,
+                ]);
+                return response()->json([
+                    'data' => $item_name,
+                ]);
+            } catch (\Exception $e) {
+                return back()->with('fail', 'Fail to Create New Item Name');
+            }
+        }
+        return back();
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -147,5 +178,19 @@ class ItemNameController extends Controller
             return back();
         }
         return back();
+    }
+
+    /**
+     * Get all Item name.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getList()
+    {
+        $item_name = ItemName::where('business_id',auth()->user()->business_id)->get();
+        return response()->json([
+            'data' => $item_name,
+        ]);
     }
 }

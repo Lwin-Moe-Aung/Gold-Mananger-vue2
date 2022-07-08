@@ -79,10 +79,11 @@
             // end combobox
         }),
         async created() {
-            await this.getDataForCombobox();
+            // await this.getDataForCombobox();
         },
         watch: {
-            value(val){
+            async value(val){
+                await this.getDataForCombobox();
                 // if(typeof val !== 'undefined')this.setDailySetup(val);
                 if(val !== "" && typeof val !== 'undefined'){
                     this.setDailySetup(val);

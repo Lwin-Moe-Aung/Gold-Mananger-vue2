@@ -80,20 +80,13 @@
                                     <div class="col-12 col-sm-4 border-right">
                                         <div class="form-group">
                                             <label for="permissions">Product Sku</label>
-                                            <div class="row">
-                                                <div class="col-sm-10 col-xs-10">
-                                                    <AutoCompleteSearchComponent
-                                                        @update:data="selectProductSku"
-                                                        route_name = "admin.product_sku_search"
-                                                        v-model = "product"
-                                                        label="product_sku"
-                                                        placeholder="Search Procut Sku"
-                                                    />
-                                                </div>
-                                                <div class="col-sm-2 col-xs-2">
-                                                    <button type="button" class="btn btn-block bg-gradient-success text-white"><i class="fas fa-plus"></i></button>
-                                                </div>
-                                            </div>
+                                            <AutoCompleteSearchComponent
+                                                @update:data="selectProductSku"
+                                                route_name = "admin.product_sku_search"
+                                                v-model = "product"
+                                                label="product_sku"
+                                                placeholder="Search Procut Sku"
+                                            />
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.product_id}">
                                                 Product ရွေးဖို့လိုအပ့်ပါသည်
                                             </div>
@@ -113,20 +106,13 @@
                                     <div class="col-12 col-sm-4 border-right">
                                         <div class="form-group">
                                             <label for="permissions">Customer</label>
-                                            <div class="row">
-                                                <div class="col-sm-10 col-xs-10">
-                                                    <AutoCompleteSearchComponent
-                                                        @update:data="selectCustomer"
-                                                        route_name = "pos.customer_search"
-                                                        v-model = "customer"
-                                                        label="search_name"
-                                                        placeholder="Search Customer"
-                                                    />
-                                                </div>
-                                                <div class="col-sm-2 col-xs-2">
-                                                    <button type="button" class="btn btn-block bg-gradient-success text-white"><i class="fas fa-plus"></i></button>
-                                                </div>
-                                            </div>
+                                            <AutoCompleteSearchComponent
+                                                @update:data="selectCustomer"
+                                                route_name = "pos.customer_search"
+                                                v-model = "customer"
+                                                label="search_name"
+                                                placeholder="Search Customer"
+                                            />
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.customer_id}">
                                                 Customer ရွေးပေးပါ။
                                             </div>
@@ -333,6 +319,7 @@
                                                     </td>
                                                     <td>
                                                         <input type="number"
+                                                            step=any
                                                             v-model.trim="$v.form.fee.yway.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.fee.yway)}"
                                                             class="form-control" placeholder="ရွေး" style="min-width: 56px;">

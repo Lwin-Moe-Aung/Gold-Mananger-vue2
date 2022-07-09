@@ -49,7 +49,7 @@
 
     export default {
         name: "AddDialogComponent",
-        props: ["value",'route_name','title'],
+        props: ["value",'route_name','title','type'],
         data: () => ({
             daily_price:'',
             dialog: false,
@@ -71,6 +71,7 @@
                 if(this.$refs.form.validate()){
                     let data = new FormData();
                     data.append('daily_price',this.daily_price);
+                    data.append('type',this.type);
                     axios.post(this.route(this.route_name), data)
                         .then(res => {
                             this.$emit('update:data', res.data.data);

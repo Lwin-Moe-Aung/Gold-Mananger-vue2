@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\Contact;
 use App\Models\DailySetup;
 use App\Models\ProductType;
+use App\Models\LimitationPrice;
 use App\Models\Type;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
@@ -119,8 +120,16 @@ class DailySetupController extends Controller
                     'business_id' => auth()->user()->business_id,
                     'daily_price' => $request->daily_price,
                 ]);
-
-                $daily_price = $daily_setup->daily_price;
+                if($request->type == "purchase_return"){
+                    $limitation_price = LimitationPrice::where('customize','0')
+                        // ->where('business_id', Auth::user()->business_id)
+                        ->where('business_id',1)
+                        ->orderBy('created_at', 'DESC')
+                        ->first();
+                    $daily_price = $daily_setup->daily_price - $limitation_price->price;
+                }else{
+                    $daily_price = $daily_setup->daily_price;
+                }
                 $daily_kyat =  $daily_price / 16;
                 $data = [];
                 for ($x = 1; $x <= 16; $x++) {

@@ -62,7 +62,6 @@
 </template>
 <script>
     import axios from 'axios';
-    import {mapGetters, mapActions} from "vuex";
 
     export default {
         name: 'ThreeMultiSelectComponent',
@@ -101,6 +100,7 @@
             }
         },
         methods: {
+
             async getDataForCombobox(){
                 await axios.get(this.route("pos.get_data_for_combobox"))
                     .then((response) => {

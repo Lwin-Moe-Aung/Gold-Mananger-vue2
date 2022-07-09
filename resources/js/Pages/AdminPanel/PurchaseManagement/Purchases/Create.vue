@@ -100,6 +100,7 @@
                                                 <label for="customRadio2" class="custom-control-label">ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas($page.props.daily_setup[16].kyat) }}.ကျပ်) </label>
                                             </div>
                                         </div>
+                                        <label v-else>ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas(showingDailySetup) }}.ကျပ်) </label>
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <input type="text" class="form-control" :value="numberWithCommas(daily_price.kyat)" disabled>
@@ -376,7 +377,7 @@
                 v-model = "addDailySetupDialog"
                 title="Add Daily Setup"
                 route_name="admin.daily_setups.storeDialog"
-                type="supplier"
+                type="purchase"
             />
         </admin-layout>
     </div>
@@ -613,6 +614,9 @@
             }
         },
         computed: {
+            showingDailySetup (){
+                return this.daily_setup[16].kyat;
+            },
             formTitle() {
                 return this.transactions == null ? 'Create New Purchase' : 'Edit Current Purchase';
             },

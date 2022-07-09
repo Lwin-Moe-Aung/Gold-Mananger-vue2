@@ -93,6 +93,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4 border-right">
+                                        <label>ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas(showingDailySetup) }}.ကျပ်) </label>
                                         <DailySetupComponent
                                             @update:data="editDailySetup"
                                             v-model = "form.daily_setup"
@@ -431,7 +432,7 @@
             // 'item',
             'product_for_sku',
             'contact',
-            'daily_setup_list',
+            // 'daily_setup_list',
             'errors'
         ],
         components: {
@@ -471,6 +472,7 @@
                 }),
                 supplier: '',
                 imageforui: undefined,
+                daily_setup_purchase_return:[],
                 //nn
                 item:[],
                 transaction:[],
@@ -482,9 +484,15 @@
             }
         },
         created() {
-            console.log(this.form.errors);
+            // console.log(this.form.errors);
+            this.daily_setup_purchase_return = this.$page.props.daily_setup_purchase_return;
         },
         methods: {
+            numberWithCommas(value) {
+                if(typeof value !== "undefined"){
+                    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+            },
             validationStatus: function(validation) {
                 return typeof validation != "undefined" ? validation.$error : false;
             },
@@ -546,7 +554,8 @@
             changeProductSku(value) {
                 if(value == 'onChangeQ' || value == 'onChangeT') {
                     this.product = [];
-                    this.form.daily_setup = { daily_setup_id: "", kyat: "", pal: "", yway: "" };
+                    this.form.reset('daily_setup');
+                    // this.form.daily_setup = { daily_setup_id: "", kyat: "", pal: "", yway: "" };
                     // this.settingDailySetup();
                 }else{
                     this.product = value;
@@ -557,9 +566,10 @@
             selectProductSku(value) {
                 if(value == null){
                     this.product = [];
-                    this.form.product_sku = "";
-                    this.form.product_id = "";
-                    this.form.daily_setup = { daily_setup_id: "", kyat: "", pal: "", yway: "" };
+                    this.form.reset('product_sku','product_id','daily_setup');
+                    // this.form.product_sku = "";
+                    // this.form.product_id = "";
+                    // this.form.daily_setup = { daily_setup_id: "", kyat: "", pal: "", yway: "" };
                 }else{
                     this.product = value;
                     this.form.product_sku = value.product_sku;
@@ -572,20 +582,16 @@
                 this.form.customer_id = value.id;
             },
             editDailySetup(value){
-                this.form.daily_setup = value;
+                if(Object.keys(value).length > 5){
+                    this.daily_setup_purchase_return = value;
+                    this.settingDailySetup();
+                }else{
+                    this.form.daily_setup = value;
+                }
             },
             settingDailySetup() {
                 if(this.product.gem_weight == '0')this.form.reset('gem_weight','gem_price');
-
-                let daily_value = this.$page.props.daily_setup_purchase_return[this.product.quality].kyat;
-
-                let value = {
-                    daily_setup_id : this.$page.props.daily_setup_purchase_return[this.product.quality].daily_setup_id,
-                    kyat : daily_value,
-                    pal : daily_value / 16,
-                    yway :  daily_value / 128,
-                }
-                this.form.daily_setup = value;
+                this.form.daily_setup = this.daily_setup_purchase_return[this.product.quality];
             },
             selectImage(e){
                 let file = e.target.files[0];
@@ -608,11 +614,6 @@
                     this.snackbar = true;
                     return;
                 }
-
-                // if(this.form.product_id == "" || this.form.customer_id == "" || this.form.name == ""){
-                //     this.alertbox = true;
-                //     return;
-                // }
                 this.form.post(this.route('admin.purchase_returns.store'), {
                     preserveScroll: true,
                     onSuccess:() => {
@@ -626,7 +627,9 @@
             },
         },
         computed: {
-
+            showingDailySetup (){
+                return this.daily_setup_purchase_return[16].kyat;
+            },
             formTitle() {
                 return this.transaction == null ? 'Create New Purchase' : 'Edit Current Purchase';
             },

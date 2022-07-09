@@ -8,72 +8,91 @@
             <div class="custom-control custom-radio">
                 <!-- <input class="custom-control-input" type="radio" id="customRadio2" :checked="!radio_old_daily_Setup" @click="changeDailySetupOption()">
                 <label for="customRadio2" class="custom-control-label">ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas($page.props.daily_setup[16].kyat) }}.ကျပ်) </label> -->
-                <label>ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas(showingDailySetup) }}.ကျပ်) </label>
+                <!-- <label>ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas(showingDailySetup) }}.ကျပ်) </label> -->
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
                 <input type="text" class="form-control" v-model="daily_Setup.kyat" @change="editDailySetup" :disabled="daily_Setup.kyat == ''">
                 <span class="input-group-append">
-                    <button type="button" class="btn btn-success btn-flat text-white"><i class="fas fa-plus"></i></button>
+                    <button type="button" class="btn btn-success btn-flat text-white" v-if="daily_Setup.kyat !== ''" @click="addDailySetupDialog = true"><i class="fas fa-plus"></i></button>
                 </span>
             </div>
         </div>
+        <AddDailySetupDialogComponent
+            @update:data="eventDailySetupDialog"
+            v-model = "addDailySetupDialog"
+            title="Add Daily Setup"
+            route_name="admin.daily_setups.storeDialog"
+            type = "purchase_return"
+        />
     </div>
 
 </template>
 
 <script>
+    import AddDailySetupDialogComponent from './AddDailySetupDialogComponent';
 
-export default {
-    props: ["value","quality", "placeholder"],
-    created() {
-    },
-    data() {
-        return {
-            daily_Setup: { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" },
-        }
-    },
-    watch: {
-        value (val) {
-            console.log(val);
-            Object.assign( this.daily_Setup, val);
-            // if(val.length != 0){
-            //     // this.daily_Setup = this.$page.props.daily_setup[val];
-            //     Object.assign( this.daily_Setup, val);
-            // }else{
-            //     this.daily_Setup = { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" };
-            // }
+    export default {
+        name: 'DailySetupComponent',
+        props: ["value","quality", "placeholder"],
+        components: {
+            AddDailySetupDialogComponent
         },
-    },
-    methods: {
-        numberWithCommas(value) {
-            if(typeof value !== "undefined"){
-                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        created() {
+        },
+        data() {
+            return {
+                daily_Setup: { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" },
+                addDailySetupDialog: false,
             }
         },
-        editDailySetup() {
-            if(this.daily_Setup.kyat <= 1000 ){
-                alert('daily price must be greater than "1000"');
-                return;
-            };
-            let q = parseInt(this.quality);
-            let kyat = parseInt(this.daily_Setup.kyat);
-            let pal = kyat / q;
-            let yway = pal / 8;
-            this.daily_Setup.daily_setup_id = "";
-            this.daily_Setup.quality_16_pal = pal * (q+(16-q));
-            this.daily_Setup.kyat = kyat;
-            this.daily_Setup.pal = pal;
-            this.daily_Setup.yway = yway;
-
-            this.$emit('update:data', this.daily_Setup);
+        watch: {
+            value (val) {
+                // console.log(val);
+                Object.assign( this.daily_Setup, val);
+                // if(val.length != 0){
+                //     // this.daily_Setup = this.$page.props.daily_setup[val];
+                //     Object.assign( this.daily_Setup, val);
+                // }else{
+                //     this.daily_Setup = { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" };
+                // }
+            },
         },
-    },
-    computed: {
-        showingDailySetup (){
-            return this.$page.props.daily_setup_purchase_return[16].kyat;
+        methods: {
+            eventDailySetupDialog(value){
+                this.addDailySetupDialog = false;
+                if(value != null){
+                    this.$emit('update:data', value);
+                }
+            },
+            // numberWithCommas(value) {
+            //     if(typeof value !== "undefined"){
+            //         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            //     }
+            // },
+            editDailySetup() {
+                if(this.daily_Setup.kyat <= 1000 ){
+                    alert('daily price must be greater than "1000"');
+                    return;
+                };
+                let q = parseInt(this.quality);
+                let kyat = parseInt(this.daily_Setup.kyat);
+                let pal = kyat / q;
+                let yway = pal / 8;
+                this.daily_Setup.daily_setup_id = "";
+                this.daily_Setup.quality_16_pal = pal * (q+(16-q));
+                this.daily_Setup.kyat = kyat;
+                this.daily_Setup.pal = pal;
+                this.daily_Setup.yway = yway;
+
+                this.$emit('update:data', this.daily_Setup);
+            },
+        },
+        computed: {
+            // showingDailySetup (){
+            //     return this.$page.props.daily_setup_purchase_return[16].kyat;
+            // }
         }
     }
-}
 </script>

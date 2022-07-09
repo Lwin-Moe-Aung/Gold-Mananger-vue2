@@ -37,6 +37,7 @@ class CreatePurchasesTable extends Migration
             $table->decimal('before_total', 10, 2)->default(0);
             $table->decimal('final_total', 10, 2)->default(0);
             $table->text('additional_notes')->nullable();
+            $table->enum('purchase_return', ['0', '1'])->default('0');
             $table->timestamps();
         });
     }

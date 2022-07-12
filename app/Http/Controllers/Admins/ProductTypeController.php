@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Http\Controllers\Controller;
-use App\Models\Business;
-use App\Models\Contact;
-use App\Models\ProductType;
 use App\Models\Type;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use App\Models\Contact;
+use App\Models\Business;
+use App\Models\ProductType;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\Admins\ProductTypeRequest;
 
 class ProductTypeController extends Controller
 {
@@ -60,27 +61,19 @@ class ProductTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductTypeRequest $request)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-
-            $this->validate($request, [
-                'name' => ['required', 'max:50'],
-                'key' => ['required', 'max:1'],
+        try {
+            Type::create([
+                'name' => $request->name,
+                'key' => $request->key,
+                'business_id' => auth()->user()->business_id,
+                'is_active' => 1,
             ]);
-            try {
-                Type::create([
-                    'name' => $request->name,
-                    'key' => $request->key,
-                    'business_id' => auth()->user()->business_id,
-                    'is_active' => 1,
-                ]);
-                return back();
-            } catch (\Exception $e) {
-                return back()->with('fail', 'Fail to Create New Product Type');
-            }
+            return back();
+        } catch (\Exception $e) {
+            return back()->with('fail', 'Fail to Create New Product Type');
         }
-        return back();
     }
 
 
@@ -90,29 +83,21 @@ class ProductTypeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeDialog(Request $request)
+    public function storeDialog(ProductTypeRequest $request)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-
-            $this->validate($request, [
-                'name' => ['required', 'max:50'],
-                'key' => ['required', 'max:1'],
+        try {
+            $type = Type::create([
+                'name' => $request->name,
+                'key' => $request->key,
+                'business_id' => auth()->user()->business_id,
+                'is_active' => 1,
             ]);
-            try {
-                $type = Type::create([
-                    'name' => $request->name,
-                    'key' => $request->key,
-                    'business_id' => auth()->user()->business_id,
-                    'is_active' => 1,
-                ]);
-                return response()->json([
-                    'data' => $type,
-                ]);
-            } catch (\Exception $e) {
-                return back()->with('fail', 'Fail to Create New Product Type');
-            }
+            return response()->json([
+                'data' => $type,
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('fail', 'Fail to Create New Product Type');
         }
-        return back();
     }
 
     /**
@@ -144,26 +129,18 @@ class ProductTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductTypeRequest $request, $id)
     {
-        // return $contact;
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-            $this->validate($request, [
-                'name' => ['required', 'max:50'],
-                'key' => ['required', 'max:1'],
-            ]);
-            try {
-                $product_type = Type::find($id);
-                $product_type->name = $request->name;
-                $product_type->key = $request->key;
-                $product_type->save();
+        try {
+            $product_type = Type::find($id);
+            $product_type->name = $request->name;
+            $product_type->key = $request->key;
+            $product_type->save();
 
-                return back();
-            } catch (\Exception $e) {
-                return back()->withErrors(['fail' => 'Fail to Update Product Type']);
-            }
+            return back();
+        } catch (\Exception $e) {
+            return back()->withErrors(['fail' => 'Fail to Update Product Type']);
         }
-        return back()->withErrors(['fail' => 'No permission']);
     }
     /**
      * Remove the specified resource from storage.

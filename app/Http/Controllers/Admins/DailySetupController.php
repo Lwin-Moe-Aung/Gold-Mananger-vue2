@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use DB;
 
 class DailySetupController extends Controller
 {
@@ -81,7 +82,7 @@ class DailySetupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DailySetupRequest $request)
     {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
 
@@ -107,49 +108,45 @@ class DailySetupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeDialog(Request $request)
+    public function storeDialog(DailySetupRequest $request)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-
-            $this->validate($request, [
-                'daily_price' => ['required'],
+        try {
+            DB::beginTransaction();
+            $daily_setup = DailySetup::create([
+                'type' => "gold",
+                'business_id' => auth()->user()->business_id,
+                'daily_price' => $request->daily_price,
             ]);
-            try {
-                $daily_setup = DailySetup::create([
-                    'type' => "gold",
-                    'business_id' => auth()->user()->business_id,
-                    'daily_price' => $request->daily_price,
-                ]);
-                if($request->type == "purchase_return"){
-                    $limitation_price = LimitationPrice::where('customize','0')
-                        // ->where('business_id', Auth::user()->business_id)
-                        ->where('business_id',1)
-                        ->orderBy('created_at', 'DESC')
-                        ->first();
-                    $daily_price = $daily_setup->daily_price - $limitation_price->price;
-                }else{
-                    $daily_price = $daily_setup->daily_price;
-                }
-                $daily_kyat =  $daily_price / 16;
-                $data = [];
-                for ($x = 1; $x <= 16; $x++) {
-                    $kyat = $daily_price - ($daily_kyat * (16 - $x));
-                    $pal = $kyat / 16;
-                    $yway = $pal / 8;
-                    $data [$x] = [
-                        'daily_setup_id' => $daily_setup->id,
-                        'kyat' => $kyat,
-                        'pal' => $pal,
-                        'yway' => $yway,
-                    ];
-
-                }
-                return response()->json(['data'=>$data]);
-            } catch (\Exception $e) {
-                return back()->with('fail', 'Fail to Create Daily Setup');
+            if($request->type == "purchase_return"){
+                $limitation_price = LimitationPrice::where('customize','0')
+                    // ->where('business_id', Auth::user()->business_id)
+                    ->where('business_id',1)
+                    ->orderBy('created_at', 'DESC')
+                    ->first();
+                $daily_price = $daily_setup->daily_price - $limitation_price->price;
+            }else{
+                $daily_price = $daily_setup->daily_price;
             }
+            $daily_kyat =  $daily_price / 16;
+            $data = [];
+            for ($x = 1; $x <= 16; $x++) {
+                $kyat = $daily_price - ($daily_kyat * (16 - $x));
+                $pal = $kyat / 16;
+                $yway = $pal / 8;
+                $data [$x] = [
+                    'daily_setup_id' => $daily_setup->id,
+                    'kyat' => $kyat,
+                    'pal' => $pal,
+                    'yway' => $yway,
+                ];
+
+            }
+            DB::commit();
+            return response()->json(['data'=>$data]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('fail', 'Fail to Create Daily Setup');
         }
-        return back();
     }
 
     /**
@@ -181,22 +178,16 @@ class DailySetupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(DailySetupRequest $request, $id)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-            $this->validate($request, [
-                'daily_price' => ['required'],
-            ]);
-            try {
-                $daily_setup = DailySetup::find($id);
-                $daily_setup->daily_price = $request->daily_price;
-                $daily_setup->save();
-                return back();
-            } catch (\Exception $e) {
-                return back()->withErrors(['fail' => 'Fail to Update  Daily Price']);
-            }
+        try {
+            $daily_setup = DailySetup::find($id);
+            $daily_setup->daily_price = $request->daily_price;
+            $daily_setup->save();
+            return back();
+        } catch (\Exception $e) {
+            return back()->withErrors(['fail' => 'Fail to Update  Daily Price']);
         }
-        return back()->withErrors(['fail' => 'No permission']);
     }
     /**
      * Update the specified resource in storage.

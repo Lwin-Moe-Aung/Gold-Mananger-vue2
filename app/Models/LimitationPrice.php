@@ -15,4 +15,8 @@ class LimitationPrice extends Model
         'business_id',
         'customize',
     ];
+
+    public const VALIDATION_RULES = [
+        'price' => ['required'],
+    ];
 }

@@ -40,6 +40,13 @@ class Product extends Model
         'image'
     ];
 
+    public const VALIDATION_RULES = [
+        'name' => ['required', 'max:50'],
+        'quality' => ['required'],
+        'type' => ['required'],
+        'item_name' => ['required'],
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *

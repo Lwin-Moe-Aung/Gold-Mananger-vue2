@@ -29,6 +29,11 @@ class ItemName extends Model
         'draft'
     ];
 
+    public const VALIDATION_RULES = [
+        'name' => ['required', 'max:50'],
+        'key' => ['required', 'max:1'],
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *

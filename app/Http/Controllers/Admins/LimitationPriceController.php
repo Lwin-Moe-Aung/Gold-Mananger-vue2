@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Http\Controllers\Controller;
-use App\Models\Business;
-use App\Models\Contact;
-use App\Models\LimitationPrice;
-use App\Models\ProductType;
-use App\Models\Type;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
-use Inertia\Inertia;
 use Carbon\Carbon;
+use Inertia\Inertia;
+use App\Models\Business;
+use App\Models\LimitationPrice;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\Admins\LimitationPriceRequest;
+use Illuminate\Http\Request;
+
 
 class LimitationPriceController extends Controller
 {
@@ -63,24 +62,17 @@ class LimitationPriceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(LimitationPriceRequest $request)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-
-            $this->validate($request, [
-                'price' => ['required'],
+        try {
+            LimitationPrice::create([
+                'business_id' => auth()->user()->business_id,
+                'price' => $request->price,
             ]);
-            try {
-                LimitationPrice::create([
-                    'business_id' => auth()->user()->business_id,
-                    'price' => $request->price,
-                ]);
-                return back();
-            } catch (\Exception $e) {
-                return back()->with('fail', 'Fail to Create Limitation Price');
-            }
+            return back();
+        } catch (\Exception $e) {
+            return back()->with('fail', 'Fail to Create Limitation Price');
         }
-        return back();
     }
 
     /**

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Http\Controllers\Controller;
-use App\Models\Business;
-use App\Models\Contact;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use App\Models\Contact;
+use App\Models\Business;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\Admins\ContactRequest;
 
 class CustomerController extends Controller
 {
@@ -47,35 +48,25 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-
-            $this->validate($request, [
-                'name' => ['required', 'max:50'],
-                'email' => ['required', 'string', 'email', 'max:50', 'unique:users'],
-                'mobile1' => ['required'],
+        try {
+            Contact::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'type' => 'customer',
+                'mobile1' => $request->mobile1,
+                'mobile2' => $request->mobile2,
+                'address' => $request->address,
+                'created_by' => auth()->user()->id,
+                'business_id' => auth()->user()->business_id,
+                'business_location_id' => auth()->user()->business_location_id,
             ]);
-            try {
 
-                Contact::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'type' => 'customer',
-                    'mobile1' => $request->mobile1,
-                    'mobile2' => $request->mobile2,
-                    'address' => $request->address,
-                    'created_by' => auth()->user()->id,
-                    'business_id' => auth()->user()->business_id,
-                    'business_location_id' => auth()->user()->business_location_id,
-                ]);
-
-                return back();
-            } catch (\Exception $e) {
-                return back()->with('fail', 'Fail to Create Customer');
-            }
+            return back();
+        } catch (\Exception $e) {
+            return back()->with('fail', 'Fail to Create Customer');
         }
-        return back();
     }
 
     /**
@@ -107,32 +98,23 @@ class CustomerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ContactRequest $request, $id)
     {
-        // return $contact;
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-            $this->validate($request, [
-                'name' => ['required', 'max:50'],
-                'email' => 'required|unique:contacts,email,' . $id,
-                'mobile1' => ['required'],
-            ]);
-            try {
-                $contact = Contact::find($id);
-                $contact->name = $request->name;
-                $contact->email = $request->email;
-                $contact->address = $request->address;
-                $contact->mobile1 = $request->mobile1;
-                $contact->mobile2 = $request->mobile2;
-                $contact->created_by = auth()->user()->id;
-                $contact->business_id = auth()->user()->business_id;
-                $contact->business_location_id = auth()->user()->business_location_id;
-                $contact->save();
-                return back();
-            } catch (\Exception $e) {
-                return back()->withErrors(['fail' => 'Fail to Create Customer']);
-            }
+        try {
+            $contact = Contact::find($id);
+            $contact->name = $request->name;
+            $contact->email = $request->email;
+            $contact->address = $request->address;
+            $contact->mobile1 = $request->mobile1;
+            $contact->mobile2 = $request->mobile2;
+            $contact->created_by = auth()->user()->id;
+            $contact->business_id = auth()->user()->business_id;
+            $contact->business_location_id = auth()->user()->business_location_id;
+            $contact->save();
+            return back();
+        } catch (\Exception $e) {
+            return back()->withErrors(['fail' => 'Fail to Create Customer']);
         }
-        return back()->withErrors(['fail' => 'No permission']);
     }
     /**
      * Remove the specified resource from storage.

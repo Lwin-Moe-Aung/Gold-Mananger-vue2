@@ -61,27 +61,19 @@ class ItemNameController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ItemNameRequest $request)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-
-            $this->validate($request, [
-                'name' => ['required', 'max:50'],
-                'key' => ['required', 'max:1'],
+        try {
+            ItemName::create([
+                'name' => $request->name,
+                'key' => $request->key,
+                'business_id' => auth()->user()->business_id,
+                'is_active' => 1,
             ]);
-            try {
-                ItemName::create([
-                    'name' => $request->name,
-                    'key' => $request->key,
-                    'business_id' => auth()->user()->business_id,
-                    'is_active' => 1,
-                ]);
-                return back();
-            } catch (\Exception $e) {
-                return back()->with('fail', 'Fail to Create New Item Name');
-            }
+            return back();
+        } catch (\Exception $e) {
+            return back()->with('fail', 'Fail to Create New Item Name');
         }
-        return back();
     }
 
     /**
@@ -90,29 +82,21 @@ class ItemNameController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function storeDialog(Request $request)
+    public function storeDialog(ItemNameRequest $request)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-
-            $this->validate($request, [
-                'name' => ['required', 'max:50'],
-                'key' => ['required', 'max:1'],
+        try {
+            $item_name = ItemName::create([
+                'name' => $request->name,
+                'key' => $request->key,
+                'business_id' => auth()->user()->business_id,
+                'is_active' => 1,
             ]);
-            try {
-                $item_name = ItemName::create([
-                    'name' => $request->name,
-                    'key' => $request->key,
-                    'business_id' => auth()->user()->business_id,
-                    'is_active' => 1,
-                ]);
-                return response()->json([
-                    'data' => $item_name,
-                ]);
-            } catch (\Exception $e) {
-                return back()->with('fail', 'Fail to Create New Item Name');
-            }
+            return response()->json([
+                'data' => $item_name,
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('fail', 'Fail to Create New Item Name');
         }
-        return back();
     }
 
     /**
@@ -144,25 +128,19 @@ class ItemNameController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ItemNameRequest $request, $id)
     {
-        if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
-            $this->validate($request, [
-                'name' => ['required', 'max:50'],
-                'key' => ['required', 'max:1'],
-            ]);
-            try {
-                $item_name = ItemName::find($id);
-                $item_name->name = $request->name;
-                $item_name->key = $request->key;
-                $item_name->save();
+        try {
+            $item_name = ItemName::find($id);
+            $item_name->name = $request->name;
+            $item_name->key = $request->key;
+            $item_name->save();
 
-                return back();
-            } catch (\Exception $e) {
-                return back()->withErrors(['fail' => 'Fail to Update Item Name']);
-            }
+            return back();
+        } catch (\Exception $e) {
+            return back()->withErrors(['fail' => 'Fail to Update Item Name']);
         }
-        return back()->withErrors(['fail' => 'No permission']);
+
     }
     /**
      * Remove the specified resource from storage.

@@ -29,6 +29,10 @@ class DailySetup extends Model
         'customize',
     ];
 
+    public const VALIDATION_RULES = [
+        'daily_price' => ['required'],
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *

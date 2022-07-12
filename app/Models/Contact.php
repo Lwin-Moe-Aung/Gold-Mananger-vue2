@@ -37,6 +37,12 @@ class Contact extends Model
         'customer_group_id'
     ];
 
+    public const VALIDATION_RULES = [
+        'name' => ['required', 'max:50'],
+        'email' => ['required', 'string', 'email', 'max:50', 'unique:users'],
+        'mobile1' => ['required'],
+    ];
+
     /**
      * The attributes that should be hidden for arrays.
      *

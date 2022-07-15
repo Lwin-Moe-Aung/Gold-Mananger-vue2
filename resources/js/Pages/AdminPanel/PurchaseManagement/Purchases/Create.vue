@@ -386,7 +386,6 @@
 
 <script>
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
-    import moment from 'moment';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
     import { required, minValue, maxValue} from 'vuelidate/lib/validators'

@@ -57,6 +57,11 @@ class Transaction extends Model
     {
         return $this->hasOne(Purchase::class, 'transaction_id');
     }
+    public function expense()
+    {
+        return $this->hasOne(Expense::class, 'transaction_id');
+    }
+
     public function business()
     {
         return $this->belongsTo(Business::class, 'business_id');

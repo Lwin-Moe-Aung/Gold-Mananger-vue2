@@ -69,6 +69,19 @@ class ExpenseCategoryController extends Controller
         }
     }
 
+
+    public function storeDialog(ExpenseCategoryRequest $request)
+    {
+        try {
+            $expense_category = ExpenseCategory::create([
+                'business_id' => auth()->user()->business_id,
+                'name' => $request->name,
+            ]);
+            return response()->json(['data'=>$expense_category]);
+        } catch (\Exception $e) {
+            return back()->with('fail', 'Fail to Create Expense Category');
+        }
+    }
     /**
      * Display the specified resource.
      *

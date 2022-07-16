@@ -76,8 +76,8 @@ class ExpenseController extends Controller
      */
     public function store(ExpenseRequest $request)
     {
-        // try {
-        //     DB::beginTransaction();
+        try {
+            DB::beginTransaction();
             $transaction = Transaction::create([
                 'business_id' => auth()->user()->business_id,
                 'business_location_id' => auth()->user()->business_location_id,
@@ -85,7 +85,7 @@ class ExpenseController extends Controller
                 'status' => "received",
                 'payment_status' => "paid",
                 'ref_no' => $request->ref_no,
-                'transaction_date' =>  Carbon::parse($request->date)->addDays(1)->format('Y-m-d'),
+                'transaction_date' =>  Carbon::parse($request->date)->format('Y-m-d'),
                 'created_by' =>  auth()->user()->id,
             ]);
              if ($file = $request->file('image')) {
@@ -104,12 +104,12 @@ class ExpenseController extends Controller
                 'additional_notes' =>  $request->additional_notes,
                 'image' => $image_name_path,
             ]);
-        //     DB::commit();
-        //     return redirect()->route('admin.expenses.index');
-        // } catch (\Exception $e) {
-        //     DB::rollback();
-        //     return back()->with('fail', 'Fail to Create New Daily Price');
-        // }
+            DB::commit();
+            return redirect()->route('admin.expenses.index');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('fail', 'Fail to Create New Daily Price');
+        }
     }
 
     /**
@@ -152,11 +152,14 @@ class ExpenseController extends Controller
      */
     public function expensesUpdate(ExpenseRequest $request)
     {
+        // dd(Carbon::now()->toDayDateTimeString());
+        // dd($request->all());
+        // dd(Carbon::parse($request->date)->toDateString());
         try {
             DB::beginTransaction();
             $transaction = Transaction::find($request->id);
             $transaction->ref_no = $request->ref_no;
-            $transaction->transaction_date = Carbon::parse($request->date)->addDays(1)->format('Y-m-d');
+            $transaction->transaction_date = Carbon::parse($request->date)->format('Y-m-d');
             $transaction->save();
 
             $expense = Expense::where('transaction_id', $request->id)->first();
@@ -180,6 +183,8 @@ class ExpenseController extends Controller
             return back()->with('fail', 'Fail to Create New Daily Price');
         }
     }
+
+
 
     /**
      * Remove the specified resource from storage.

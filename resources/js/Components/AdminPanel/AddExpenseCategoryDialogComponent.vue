@@ -7,15 +7,15 @@
         <v-card>
             <v-form ref="form" lazy-validation>
                 <v-card-title>
-                    <span class="text-h5">{{ title }}</span>
+                    <span class="text-h5">Add Expense Category</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
                         <v-row>
                             <v-col cols="12">
                                 <v-text-field
-                                    v-model = "daily_price"
-                                    label="16 ပဲရည်တန်ဖိုး*"
+                                    v-model = "name"
+                                    label="name*"
                                     required
                                     :rules="validationRules"
                                 ></v-text-field>
@@ -48,14 +48,13 @@
     import axios from "axios";
 
     export default {
-        name: "AddDailySetupDialogComponent",
-        props: ["value",'route_name','title','type'],
+        name: "AddExpenseCategoryDialogComponent",
+        props: ["value",'route_name'],
         data: () => ({
-            daily_price:'',
+            name:'',
             dialog: false,
             validationRules:[
                 v => !!v || 'Required',
-                v => /^\d+$/.test(v) || 'Must be a number',
             ],
         }),
         watch: {
@@ -70,12 +69,11 @@
             save(){
                 if(this.$refs.form.validate()){
                     let data = new FormData();
-                    data.append('daily_price',this.daily_price);
-                    data.append('type',this.type);
+                    data.append('name',this.name);
                     axios.post(this.route(this.route_name), data)
                         .then(res => {
                             this.$emit('update:data', res.data.data);
-                            this.daily_price = '';
+                            this.name = '';
                         })
                         .catch(function (error) {
                             console.log(error);

@@ -11,7 +11,7 @@
                     <form ref="productform" @submit.prevent="checkMode">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <Link :href="route('admin.purchases.index')">
+                                <Link :href="route('admin.expenses.index')">
                                     <button class="btn btn-primary float-left mr-3" style="h">
                                         <i class="fas fa-long-arrow-alt-left" aria-hidden="true" ></i>
                                     </button>
@@ -25,7 +25,7 @@
                                         <div class="form-group">
                                             <label for="permissions">Expense Category</label>
                                             <div class="row">
-                                                <div class="col-sm-11 col-xs-11">
+                                                <div class="col-sm-10 col-xs-10">
                                                     <multiselect
                                                         v-model.trim="$v.expense_category.$model"
                                                         :options="expense_categories"
@@ -39,8 +39,8 @@
                                                     ></multiselect>
                                                     <div v-if="!$v.expense_category.required" class="invalid-feedback">The Expense Category is required.</div>
                                                 </div>
-                                                <div class="col-sm-1 col-xs-1">
-                                                    <button type="button" class="btn btn-success btn-flat text-white float-right" @click="addSupplierDialog = true"><i class="fas fa-plus"></i></button>
+                                                <div class="col-sm-2 col-xs-2">
+                                                    <button type="button" class="btn btn-success btn-flat text-white float-right" @click="addExpenseCategoryDialog = true"><i class="fas fa-plus"></i></button>
                                                 </div>
                                             </div>
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.supplier}">
@@ -63,25 +63,21 @@
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group">
                                             <label for="permissions">Expense For</label>
-                                            <div class="row">
-                                                <div class="col-sm-11 col-xs-11">
-                                                    <multiselect
-                                                        v-model.trim="$v.expense_user.$model"
-                                                        :options="expense_users"
-                                                        :multiple="false"
-                                                        :taggable="true"
-                                                        placeholder="Expense For"
-                                                        label="name"
-                                                        track-by="id"
-                                                        @input="changeExpenseUser"
-                                                        :class="{'is-invalid': validationStatus($v.expense_user)}"
-                                                    ></multiselect>
-                                                    <div v-if="!$v.expense_user.required" class="invalid-feedback">The Expense For is required.</div>
-                                                </div>
-                                                <div class="col-sm-1 col-xs-1">
+                                                <multiselect
+                                                    v-model.trim="$v.expense_user.$model"
+                                                    :options="expense_users"
+                                                    :multiple="false"
+                                                    :taggable="true"
+                                                    placeholder="Expense For"
+                                                    label="name"
+                                                    track-by="id"
+                                                    @input="changeExpenseUser"
+                                                    :class="{'is-invalid': validationStatus($v.expense_user)}"
+                                                ></multiselect>
+                                                <div v-if="!$v.expense_user.required" class="invalid-feedback">The Expense For is required.</div>
+                                                <!-- <div class="col-sm-2 col-xs-2">
                                                     <button type="button" class="btn btn-success btn-flat text-white float-right" @click="addSupplierDialog = true"><i class="fas fa-plus"></i></button>
-                                                </div>
-                                            </div>
+                                                </div> -->
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.expense_for}">
                                                 {{ form.errors.expense_for }}
                                             </div>
@@ -107,18 +103,19 @@
 
                                             <div class="input-group">
                                                 <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="far fa-calendar-alt"></i>
-                                                </span>
+                                                    <span class="input-group-text">
+                                                        <i class="far fa-calendar-alt"></i>
+                                                    </span>
+                                                    <datepicker
+                                                        :value="form.date"
+                                                        name="uniquename"
+                                                        @selected="selectDate"
+                                                        >
+                                                    </datepicker>
                                                 </div>
-                                                <datepicker v-model="form.date" format="yyyy-MM-dd" name="uniquename"></datepicker>
                                             </div>
                                             <!-- /.input group -->
                                         </div>
-                                        <!-- <div class="form-group">
-                                            <label>Date and time:</label>
-
-                                        </div> -->
                                         <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.date}">
                                             {{ form.errors.date }}
                                         </div>
@@ -165,16 +162,19 @@
                 </div>
             </section>
         </admin-layout>
+        <AddExpenseCategoryDialogComponent
+            @update:data="eventExpenseCategoryDialog"
+            v-model = "addExpenseCategoryDialog"
+            route_name="admin.expense_categories.storeDialog"
+        />
     </div>
 </template>
-
-
 <script>
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
     import { required, minValue, maxValue} from 'vuelidate/lib/validators'
-    import AutoCompleteSearchComponent from '../../../../Components/AdminPanel/AutoCompleteSearchComponent';
+    import AddExpenseCategoryDialogComponent from '../../../../Components/AdminPanel/AddExpenseCategoryDialogComponent';
     import Datepicker from 'vuejs-datepicker';
     import moment from 'moment';
 
@@ -189,7 +189,7 @@
             AdminLayout,
             Pagination,
             Link,
-            AutoCompleteSearchComponent,
+            AddExpenseCategoryDialogComponent,
         },
         data() {
             return {
@@ -199,17 +199,22 @@
                     ref_no: "",
                     expense_for: null,
                     total_amount: "",
-                    date: new Date(),
+                    date: "",
                     image: undefined,
                     additional_notes: "",
                 }),
                 imageforui: undefined,
                 expense_category: null,
                 expense_user: null,
+                addExpenseCategoryDialog: false,
             }
         },
         created() {
             if(this.transaction != null) this.fillData();
+            else {
+                let date = new Date();
+                this.form.date = moment(date).format('YYYY-MM-DD');
+            }
         },
         validations: {
             form: {
@@ -221,9 +226,15 @@
             expense_user:{required},
         },
         methods: {
-            // customFormatter(date) {
-            //     return moment(date).format('yyyy-MM-dd');
-            // },
+            eventExpenseCategoryDialog(value) {
+                this.addExpenseCategoryDialog = false;
+                this.expense_category = value;
+                this.expense_categories.push(value);
+
+            },
+            selectDate(date) {
+                this.form.date = moment(date).format('YYYY-MM-DD');
+            },
             fillData(){
                 this.form.id = this.transaction.id;
                 this.form.expense_category_id = this.transaction.expense.expense_category_id;
@@ -260,7 +271,7 @@
                 }
             },
             createExpense() {
-                alert("hello");
+                // alert("hello");
                 this.$v.$touch();
                 if (this.$v.$pendding || this.$v.$error) return;
                 this.form.post(this.route('admin.expenses.store'), {

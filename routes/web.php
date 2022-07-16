@@ -172,7 +172,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::post('/expenses/expenses_update', [ExpenseController::class, 'expensesUpdate'])->name('expenses.expenses_update');
 
     Route::resource('expense_categories', ExpenseCategoryController::class);
-
-
+    Route::post('expense_categories/storeDialog', [ExpenseCategoryController::class, 'storeDialog'])->name('expense_categories.storeDialog');
 
 });

@@ -33,9 +33,13 @@ class CreatePurchasesTable extends Migration
             $table->decimal('fee_price', 10, 2)->default(0);
 
             $table->string('fee_for_making', 100)->nullable();
-            $table->decimal('item_discount', 10, 2)->default(0);
+
             $table->decimal('before_total', 10, 2)->default(0);
             $table->decimal('final_total', 10, 2)->default(0);
+            $table->decimal('paid_money', 10, 2)->default(0);
+            $table->decimal('credit_money', 10, 2)->default(0);
+            $table->decimal('discount_amount', 10, 2)->default(0);
+
             $table->text('additional_notes')->nullable();
             $table->enum('purchase_return', ['0', '1'])->default('0');
             $table->timestamps();

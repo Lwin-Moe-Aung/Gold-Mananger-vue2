@@ -32,9 +32,11 @@ class Purchase extends Model
         'fee',
         'fee_price',
         'fee_for_making',
-        'discount_amount',
         'before_total',
         'final_total',
+        'paid_money',
+        'credit_money',
+        'discount_amount',
         'purchase_return',
         'additional_notes',
     ];

@@ -35,6 +35,11 @@ class Transaction extends Model
         'shipping_details',
         'shipping_charges',
         'additional_notes',
+        'before_total',
+        'discount_amount',
+        'final_total',
+        'paid_money',
+        'credit_money',
         'created_by',
     ];
 

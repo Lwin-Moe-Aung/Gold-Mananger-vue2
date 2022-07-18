@@ -134,6 +134,7 @@ class PurchaseController extends Controller
     public function invoiceNumber()
     {
         $transactionLatest = Transaction::where('business_id',Auth::user()->business_id)
+                            ->where('type','purchase')
                             ->latest()
                             ->first();
         if (! $transactionLatest) {

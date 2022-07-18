@@ -200,7 +200,7 @@
                             </li>
                         </ul>
                     </li>
-                     <li class="nav-item">
+                    <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fab fa-product-hunt"></i>
                             <p>
@@ -222,6 +222,49 @@
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         Expense Categories
+                                    </p>
+                                </Link>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fab fa-product-hunt"></i>
+                            <p>
+                                ငွေအဝင်/အထွက်
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.expenses.index')" class="nav-link" :class="route().current('admin.expenses.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        အကြွေးဆပ်(customer)
+                                    </p>
+                                </Link>
+                            </li>
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.expenses.index')" class="nav-link" :class="route().current('admin.expenses.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        အကြွေးဆပ်(supplier)
+                                    </p>
+                                </Link>
+                            </li>
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.expenses.index')" class="nav-link" :class="route().current('admin.expenses.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Cash In
+                                    </p>
+                                </Link>
+                            </li>
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.expense_categories.index')" class="nav-link" :class="route().current('admin.expense_categories.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Cash Out
                                     </p>
                                 </Link>
                             </li>

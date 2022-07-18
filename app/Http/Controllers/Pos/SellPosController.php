@@ -45,8 +45,9 @@ class SellPosController extends Controller
         //check id
         //id is equal null , assume it is new
         //id not equql null, assume that it is the old one and update this.
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
+
             $business_id = Auth::user()->business_id;
             $business_location_id = Auth::user()->business_location_id;
             $created_by = Auth::user()->id;
@@ -156,8 +157,9 @@ class SellPosController extends Controller
     */
     public function sellingItem(Request $request)
     {
-        DB::beginTransaction();
+
         try {
+            DB::beginTransaction();
             $business_id = Auth::user()->business_id;
             $business_location_id = Auth::user()->business_location_id;
             $created_by = Auth::user()->id;
@@ -253,6 +255,7 @@ class SellPosController extends Controller
     public function invoiceNumber()
     {
         $transactionLatest = Transaction::where('business_id',Auth::user()->business_id)
+                            ->where('type','sell')
                             ->latest()
                             ->first();
         if (! $transactionLatest) {

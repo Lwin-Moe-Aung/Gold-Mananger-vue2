@@ -255,7 +255,7 @@
         methods: {
             ...mapActions(["setCustomer"]),
             onSearchCustomersChange: throttle(function (search_value) {
-                axios.get(this.route("pos.customer_search"),{params: {search_value: search_value}})
+                axios.get(this.route("pos.contact_search"),{params: {term: search_value, type: 'customer'}})
                     .then(response => {
                         this.customersList = response.data.data;
                 });

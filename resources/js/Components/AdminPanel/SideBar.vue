@@ -231,7 +231,7 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fab fa-product-hunt"></i>
                             <p>
-                                ငွေအဝင်/အထွက်
+                                Cash Management
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
@@ -253,7 +253,7 @@
                                 </Link>
                             </li>
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.expenses.index')" class="nav-link" :class="route().current('admin.expenses.*') ? 'active' : ' '">
+                                <Link :href="route('admin.cash_ins.index')" class="nav-link" :class="route().current('admin.cash_ins.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         Cash In
@@ -261,7 +261,7 @@
                                 </Link>
                             </li>
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.expense_categories.index')" class="nav-link" :class="route().current('admin.expense_categories.*') ? 'active' : ' '">
+                                <Link :href="route('admin.cash_outs.index')" class="nav-link" :class="route().current('admin.cash_outs.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         Cash Out

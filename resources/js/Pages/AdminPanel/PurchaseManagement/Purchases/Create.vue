@@ -327,10 +327,10 @@
                                                     <td></td>
                                                     <td>
                                                         <input type="number"
-                                                            v-model.trim="$v.form.item_discount.$model"
-                                                            :class="{'is-invalid': validationStatus($v.form.item_discount)}"
+                                                            v-model.trim="$v.form.discount_amount.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.discount_amount)}"
                                                             class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;">
-                                                        <div v-if="!$v.form.item_discount.minValue" class="invalid-feedback">You must greater than {{ $v.form.item_discount.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.discount_amount.minValue" class="invalid-feedback">You must greater than {{ $v.form.discount_amount.$params.minValue.min }}.</div>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -342,6 +342,32 @@
                                                     <td></td>
                                                     <td>
                                                         <input type="number" :value="finalTotal" class="form-control" placeholder="တန်ဖိုး" disabled>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>ပေးငွေ</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="number"
+                                                            v-model.trim="$v.form.paid_money.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.paid_money)}"
+                                                            class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;">
+                                                        <div v-if="!$v.form.paid_money.minValue" class="invalid-feedback">You must greater than {{ $v.form.paid_money.$params.minValue.min }}.</div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label>ကျန်ငွေ</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="number" :value="creditMoney" class="form-control" placeholder="တန်ဖိုး" disabled>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -429,8 +455,10 @@
                     fee_price: "0",
                     fee_for_making: "0",
                     before_total: "0",
-                    item_discount: "0",
+                    discount_amount: "0",
                     final_total: "0",
+                    paid_money: "0",
+                    credit_money: "0",
                     image: "",
                     item_description: "",
                     tran_description: "",
@@ -467,8 +495,10 @@
                 this.form.fee_for_making = this.purchase.fee_for_making;
 
                 this.form.before_total = this.purchase.before_total;
-                this.form.item_discount = this.purchase.item_discount;
+                this.form.discount_amount = this.purchase.discount_amount;
                 this.form.final_total = this.purchase.final_total;
+                this.form.paid_money = this.purchase.paid_money;
+                this.form.credit_money = this.purchase.credit_money;
                 this.form.item_description = this.item.item_description;
                 this.form.tran_description = this.transactions.additional_notes;
             }else{
@@ -496,7 +526,8 @@
                     yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
                 },
                 fee_for_making:{required, minValue: minValue(0)},
-                item_discount:{minValue: minValue(0)}
+                discount_amount:{minValue: minValue(0)},
+                paid_money:{minValue: minValue(0)}
 
             },
             supplier: {required},
@@ -608,8 +639,10 @@
                 this.form.fee_price = "0";
                 this.form.fee_for_making = "0";
                 this.form.before_total = "0";
-                this.form.item_discount = "0";
+                this.form.discount_amount = "0";
                 this.form.final_total = "0";
+                this.form.paid_money = "0";
+                this.form.credit_money = "0";
             }
         },
         computed: {
@@ -670,11 +703,21 @@
                 if(this.product == "")return;
                 let final_total =
                     parseInt(this.form.before_total) -
-                    parseInt(this.form.item_discount);
+                    parseInt(this.form.discount_amount);
                 if (isNaN(final_total)) final_total = "";
                 this.form.final_total = final_total;
                 this.form.paid_money = final_total;
                 return final_total;
+            },
+            creditMoney() {
+                if(this.form.product_sku == "")return;
+                let credit_money =
+                    parseInt(this.form.final_total) -
+                    parseInt(this.form.paid_money);
+                if (isNaN(credit_money)) credit_money = "";
+                this.form.credit_money = credit_money;
+
+                return credit_money;
             },
         },
     }

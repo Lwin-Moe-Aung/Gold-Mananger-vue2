@@ -16,7 +16,7 @@ class ItemController extends Controller
 
         $item_skus =  Item::where('sold_out', '1')
                     ->where('purchase_return', '0')
-                    ->when(request()->get('params')['term'], function ($query, $term) {
+                    ->when($request->term, function ($query, $term) {
                         $query->where('item_sku', 'like', "%$term%");
                     })->limit(10)->get();
 

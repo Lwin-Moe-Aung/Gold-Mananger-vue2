@@ -109,10 +109,11 @@
                                             <label for="permissions">Customer</label>
                                             <AutoCompleteSearchComponent
                                                 @update:data="selectCustomer"
-                                                route_name = "pos.customer_search"
+                                                route_name = "pos.contact_search"
                                                 v-model = "customer"
                                                 label="search_name"
                                                 placeholder="Search Customer"
+                                                type="customer"
                                             />
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.customer_id}">
                                                 Customer ရွေးပေးပါ။

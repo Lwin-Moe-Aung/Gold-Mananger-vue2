@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Admins;
 
-use App\Http\Controllers\Controller;
-use App\Models\Business;
-use App\Models\Contact;
-use App\Models\ProductType;
 use App\Models\Type;
-use App\Models\ItemName;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use App\Models\Contact;
+use App\Models\Business;
+use App\Models\ItemName;
+use App\Models\ProductType;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\Admins\ItemNameRequest;
 
 class ItemNameController extends Controller
 {

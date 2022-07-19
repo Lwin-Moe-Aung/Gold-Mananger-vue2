@@ -173,6 +173,11 @@ class SellPosController extends Controller
             $transaction->contact_id = $request->customer_id;
             $transaction->invoice_no = $this->invoiceNumber();
             $transaction->transaction_date = Carbon::now()->format('Y-m-d');
+            $transaction->before_total = $request->before_total;
+            $transaction->final_total = $request->final_total;
+            $transaction->paid_money = $request->paid_money;
+            $transaction->credit_money = $request->credit_money;
+            $transaction->discount_amount = $request->discount_amount;
             // $transaction->additional_notes = $request->note;
             $transaction->created_by = $created_by;
             $transaction->save();

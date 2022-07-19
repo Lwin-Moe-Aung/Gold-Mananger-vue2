@@ -232,7 +232,7 @@ class ProductController extends Controller
     public function productSkuSearch(Request $request){
 
         $product =  Product::where('business_id', Auth::user()->business_id)
-                    ->when(request()->get('params')['term'], function ($query, $term) {
+                    ->when($request->term, function ($query, $term) {
                         $query->where('product_sku', 'like', "%$term%");
                     })->limit(10)->get();
 

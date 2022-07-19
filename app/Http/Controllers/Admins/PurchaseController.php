@@ -106,6 +106,11 @@ class PurchaseController extends Controller
                 'transaction_date' => Carbon::now()->format('Y-m-d'),
                 'additional_notes' =>  $request->tran_description,
                 'created_by' =>  auth()->user()->id,
+                'before_total' =>  $request->before_total,
+                'final_total' => $request->final_total,
+                'paid_money' => $request->paid_money,
+                'credit_money' => $request->credit_money,
+                'discount_amount' => $request->discount_amount,
             ]);
             Purchase::create([
                 'transaction_id' => $transaction->id,
@@ -118,9 +123,11 @@ class PurchaseController extends Controller
                 'fee' =>  json_encode($request->fee),
                 'fee_price' =>  $request->fee_price,
                 'fee_for_making' =>  $request->fee_for_making,
-                'discount_amount' => $request->item_discount,
                 'before_total' =>  $request->before_total,
                 'final_total' => $request->final_total,
+                'paid_money' => $request->paid_money,
+                'credit_money' => $request->credit_money,
+                'discount_amount' => $request->discount_amount,
             ]);
             DB::commit();
             return redirect()->route('admin.purchases.index');

@@ -24,6 +24,8 @@ use App\Http\Controllers\Admins\TransactionController;
 use App\Http\Controllers\Admins\LimitationPriceController;
 use App\Http\Controllers\Admins\ExpenseController;
 use App\Http\Controllers\Admins\ExpenseCategoryController;
+use App\Http\Controllers\Admins\CashInController;
+use App\Http\Controllers\Admins\CashOutController;
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -62,7 +64,8 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     // Route::post('/pos/edit_daily_setup', [DailySetupValueController::class, 'editDailySetup'])->name('pos.edit_daily_setup');
 
     //contact
-    Route::get('/pos/customer_search', [ContactController::class, 'customerSearch'])->name('pos.customer_search');
+    // Route::get('/pos/customer_search', [ContactController::class, 'customerSearch'])->name('pos.customer_search');
+    Route::get('/pos/contact_search', [ContactController::class, 'contactSearch'])->name('pos.contact_search');
     Route::post('/pos/save_customer', [ContactController::class, 'saveCustomer'])->name('pos.save_customer');
     Route::post('/pos/save_contact', [ContactController::class, 'saveContact'])->name('pos.save_contact');
 
@@ -173,5 +176,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     Route::resource('expense_categories', ExpenseCategoryController::class);
     Route::post('expense_categories/storeDialog', [ExpenseCategoryController::class, 'storeDialog'])->name('expense_categories.storeDialog');
+
+    Route::resource('cash_ins', CashInController::class);
+    Route::resource('cash_outs', CashOutController::class);
+
 
 });

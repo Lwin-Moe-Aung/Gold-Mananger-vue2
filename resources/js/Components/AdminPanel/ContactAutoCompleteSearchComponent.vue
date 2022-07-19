@@ -13,18 +13,10 @@
             >
             </multiselect>
         </div>
-        <div class="col-sm-2 col-xs-2" v-if="label == 'product_sku' || label == 'search_name'">
+        <div class="col-sm-2 col-xs-2">
             <button type="button" class="btn btn-success btn-flat text-white float-right" @click="addDialog = true"><i class="fas fa-plus"></i></button>
         </div>
-        <AddProductDialogComponent
-            v-if="label == 'product_sku'"
-            @update:data="eventDialog"
-            v-model = "addDialog"
-            title="Add Product"
-            route_name="admin.products.storeDialog"
-        />
         <AddContactDialogComponent
-            v-if="label == 'search_name'"
             @update:data="eventDialog"
             v-model = "addDialog"
             title="Add Customer"
@@ -39,13 +31,11 @@
 import {throttle} from "lodash";
 import axios from "axios";
 import AddContactDialogComponent from './AddContactDialogComponent';
-import AddProductDialogComponent from './AddProductDialogComponent';
 
 export default {
-    name: "AutoCompleteSearchComponent",
-    props: ["value","route_name","label","placeholder"],
+    name: "ContactAutoCompleteSearchComponent",
+    props: ["value","route_name","label","placeholder","type"],
     components: {
-        AddProductDialogComponent,
         AddContactDialogComponent
     },
     created() {
@@ -71,15 +61,6 @@ export default {
                 this.onSelectedData(value);
             }
         },
-        // eventProductDialog(value){
-        //     this.addProductDialog = false;
-        //     if(value != null){
-        //         this.form.product_id = value.id;
-        //         this.product = value;
-        //         this.products.push(value);
-        //         this.changeProductSku()
-        //     }
-        // },
         loadData(){
             axios.get(this.route(this.route_name))
                 .then((response) => {
@@ -87,7 +68,7 @@ export default {
             });
         },
         onSearchDataChange: throttle(function (term) {
-            axios.get(this.route(this.route_name), { params: { term: term }})
+            axios.get(this.route(this.route_name), { params: { term: term ,type: this.type}})
                         .then((response) => {
                             this.data = response.data.data;
                     });

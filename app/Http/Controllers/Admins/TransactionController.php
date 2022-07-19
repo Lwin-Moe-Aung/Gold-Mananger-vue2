@@ -11,11 +11,10 @@ use Illuminate\Support\Facades\Auth;
 class TransactionController extends Controller
 {
     public function invoiceNoSearch(Request $request){
-
         $transactions =  Transaction::where('type', 'sell')
                     ->where('business_id',auth()->user()->business_id)
                     ->where('business_location_id',auth()->user()->business_location_id)
-                    ->when(request()->get('params')['term'], function ($query, $term) {
+                    ->when($request->term, function ($query, $term) {
                         $query->where('invoice_no', 'like', "%$term%");
                     })->limit(3)->get();
 

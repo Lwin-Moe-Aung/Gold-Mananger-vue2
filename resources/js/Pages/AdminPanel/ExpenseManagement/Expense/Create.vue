@@ -228,6 +228,7 @@
         methods: {
             eventExpenseCategoryDialog(value) {
                 this.addExpenseCategoryDialog = false;
+                this.form.expense_category_id = value.id;
                 this.expense_category = value;
                 this.expense_categories.push(value);
 

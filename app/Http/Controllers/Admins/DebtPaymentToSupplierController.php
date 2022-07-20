@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Transaction;
 
-class CashOutController extends Controller
+class DebtPaymentToSupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -24,7 +24,7 @@ class CashOutController extends Controller
         $business_id = auth()->user()->business_id;
 
         $transactions = Transaction::query();
-        $transactions->where('business_id', $business_id)->where('type','purchase');
+        $transactions->where('business_id', $business_id)->where('type','sell');
 
         if (request('search')) {
             $transactions->where('invoice_no', 'LIKE', '%' . request('search') . '%');
@@ -36,11 +36,11 @@ class CashOutController extends Controller
         }
         $transactions = $transactions->paginate(5)->withQueryString();
         foreach ($transactions as $key=>$value) {
-            $transactions[$key]->purchase = $value->purchase;
-            $transactions[$key]->item = $value->purchase->item;
-            $transactions[$key]->product = $value->purchase->item->product;
+            $transactions[$key]->sell = $value->sell;
+            $transactions[$key]->item = $value->sell->item;
+            $transactions[$key]->product = $value->sell->item->product;
         }
-        return Inertia::render('AdminPanel/CashManagement/CashOut/Index', [
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Index', [
             'transactions' => $transactions,
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);

@@ -35,11 +35,10 @@
                                     <div class="form-group">
                                         <label>Cash In Types</label>
                                         <select class="form-control">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
+                                            <option>All</option>
+                                            <option>Sell</option>
+                                            <option>customer ဆပ်ငွေ</option>
+                                            <option>supplierကိုပေးရန်အကြွေး</option>
                                         </select>
                                     </div>
                                 </div>
@@ -53,6 +52,7 @@
                                             label="search_name"
                                             placeholder="Search Customer"
                                             type="customer"
+                                            button="false"
                                         />
                                     </div>
                                 </div>
@@ -66,6 +66,7 @@
                                             label="search_name"
                                             placeholder="Search Supplier"
                                             type="supplier"
+                                            button="false"
                                         />
                                     </div>
                                 </div>

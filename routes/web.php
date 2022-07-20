@@ -26,6 +26,8 @@ use App\Http\Controllers\Admins\ExpenseController;
 use App\Http\Controllers\Admins\ExpenseCategoryController;
 use App\Http\Controllers\Admins\CashInController;
 use App\Http\Controllers\Admins\CashOutController;
+use App\Http\Controllers\Admins\DebtPaymentFromCustomerController;
+use App\Http\Controllers\Admins\DebtPaymentToSupplierController;
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -179,6 +181,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     Route::resource('cash_ins', CashInController::class);
     Route::resource('cash_outs', CashOutController::class);
+    Route::resource('debt_payment_from_customers', DebtPaymentFromCustomerController::class);
+    Route::resource('debt_payment_to_suppliers', DebtPaymentToSupplierController::class);
+
 
 
 });

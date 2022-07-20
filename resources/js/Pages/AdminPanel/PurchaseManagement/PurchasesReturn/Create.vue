@@ -107,13 +107,14 @@
                                     <div class="col-12 col-sm-4 border-right">
                                         <div class="form-group">
                                             <label for="permissions">Customer</label>
-                                            <AutoCompleteSearchComponent
+                                            <ContactAutoCompleteSearchComponent
                                                 @update:data="selectCustomer"
                                                 route_name = "pos.contact_search"
                                                 v-model = "customer"
                                                 label="search_name"
                                                 placeholder="Search Customer"
                                                 type="customer"
+                                                button="true"
                                             />
                                             <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.customer_id}">
                                                 Customer ရွေးပေးပါ။
@@ -416,8 +417,9 @@
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
-    import { required, minValue, maxValue} from 'vuelidate/lib/validators'
+    import { required, minValue, maxValue} from 'vuelidate/lib/validators';
     import AutoCompleteSearchComponent from '../../../../Components/AdminPanel/AutoCompleteSearchComponent';
+    import ContactAutoCompleteSearchComponent from '../../../../Components/AdminPanel/ContactAutoCompleteSearchComponent';
     import ThreeMultiSelectComponent from '../../../../Components/AdminPanel/ThreeMultiSelectComponent';
     import DailySetupComponent from '../../../../Components/AdminPanel/DailySetupComponent';
     import InfoForm from './InfoForm';
@@ -441,6 +443,7 @@
             Pagination,
             Link,
             AutoCompleteSearchComponent,
+            ContactAutoCompleteSearchComponent,
             ThreeMultiSelectComponent,
             DailySetupComponent,
             InfoForm

@@ -39,7 +39,7 @@ class ContactController extends Controller
 
         $dataList =  Contact::where('business_id', Auth::user()->business_id)
             ->where('type', $request->type)
-            ->orWhere('type', 'both')
+            // ->orWhere('type', 'both')
             ->when($request->term, function ($query, $search_value) {
                 $query->orWhere('name','like','%'.$search_value.'%')
                     ->orWhere('email','like','%'.$search_value.'%')

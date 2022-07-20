@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div class="row" v-if="button == 'true'">
         <div class="col-sm-10 col-xs-10">
             <multiselect
                 v-model="selectedData"
@@ -24,6 +24,21 @@
             type="customer"
         />
     </div>
+    <div class="row" v-else>
+        <div class="col-sm-12 col-xs-12">
+            <multiselect
+                v-model="selectedData"
+                :options="data"
+                @search-change="onSearchDataChange"
+                @input="onSelectedData"
+                :label="label"
+                track-by="id"
+                id="id"
+                :placeholder="placeholder"
+            >
+            </multiselect>
+        </div>
+    </div>
 
 </template>
 
@@ -34,7 +49,7 @@ import AddContactDialogComponent from './AddContactDialogComponent';
 
 export default {
     name: "ContactAutoCompleteSearchComponent",
-    props: ["value","route_name","label","placeholder","type"],
+    props: ["value","route_name","label","placeholder","type","button"],
     components: {
         AddContactDialogComponent
     },

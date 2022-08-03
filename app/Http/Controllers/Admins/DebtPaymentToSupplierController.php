@@ -53,7 +53,7 @@ class DebtPaymentToSupplierController extends Controller
      */
     public function create()
     {
-        //
+        dd("hello sout yu");
     }
 
     /**

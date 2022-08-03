@@ -13,13 +13,13 @@
                             <div class="card">
                                 <div class="card-header">
                                     <input type="search" v-model="params.search" aria-label="Search" placeholder="Search..." class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                                    <!-- <div class="card-tools" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                        <Link :href="route('admin.sells.create')">
+                                    <div class="card-tools" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
+                                        <Link :href="route('admin.debt_payment_from_customers.create')">
                                             <button type="button" class="btn btn-info text-white text-uppercase" style="letter-spacing: 0.1em;">
                                                 Create
                                             </button>
                                         </Link>
-                                    </div> -->
+                                    </div>
                                 </div>
                                 <div class="card-body table-responsive p-0">
                                     <table class="table table-hover text-nowrap">

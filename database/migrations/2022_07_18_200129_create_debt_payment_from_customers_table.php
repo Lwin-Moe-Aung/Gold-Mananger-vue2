@@ -23,9 +23,9 @@ class CreateDebtPaymentFromCustomersTable extends Migration
             $table->unsignedBigInteger('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('contacts')->onDelete('cascade');
 
-            $table->decimal('before_total', 10, 2)->default(0);
-            $table->decimal('discount_amount', 10, 2)->default(0);
-            $table->decimal('final_total', 10, 2)->default(0);
+            // $table->decimal('before_total', 10, 2)->default(0);
+            // $table->decimal('discount_amount', 10, 2)->default(0);
+            // $table->decimal('final_total', 10, 2)->default(0);
             $table->decimal('paid_money', 10, 2)->default(0);
             $table->decimal('credit_money', 10, 2)->default(0);
             $table->decimal('debt_payment', 10, 2)->default(0);

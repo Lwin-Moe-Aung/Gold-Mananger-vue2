@@ -15,9 +15,9 @@ class DebtPaymentFromCustomer extends Model
         'transaction_id',
         'parent_id',
         'customer_id',
-        'before_total',
-        'discount_amount',
-        'final_total',
+        // 'before_total',
+        // 'discount_amount',
+        // 'final_total',
         'paid_money',
         'credit_money',
         'debt_payment'

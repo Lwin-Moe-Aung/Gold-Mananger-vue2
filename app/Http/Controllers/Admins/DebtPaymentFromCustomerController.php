@@ -53,7 +53,36 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function create()
     {
-        //
+
+        // $transactions = Transaction::where('business_id', auth()->user()->business_id)
+        //             ->where('type','sell')
+        //             ->where('credit_money','!=', 0)
+        //             ->get();
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentFromCustomer/Create');
+    }
+
+    /**
+     * get total credit value for customer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getTotalCredit(Request $request)
+    {
+        $transactions = Transaction::where('business_id', auth()->user()->business_id)
+                    ->where('contact_id',$request->customer_id)
+                    ->where('type','sell')
+                    ->where('credit_money','!=', 0)
+                    ->get();
+        $total_credits = 0;
+        foreach ($transactions as $key=>$value) {
+            $total_credits = $total_credits + $value->credit_money;
+            $transactions[$key]->item = $value->sell->item;
+        }
+        return response()->json([
+            'data' => $transactions,
+            'total_credits' => $total_credits,
+        ]);
     }
 
     /**

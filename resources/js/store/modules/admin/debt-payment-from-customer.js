@@ -47,9 +47,6 @@ const actions = {
         };
         await commit("setCheckedVoucherLists", checkData)
     },
-    // async removeFromCheckedVoucherLists({commit}, data){
-    //     await commit("removeFromCheckedVoucherLists", data)
-    // },
     async setVoucherLists({commit}, data){
         await commit("setVoucherLists", data)
     },

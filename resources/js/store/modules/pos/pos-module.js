@@ -34,7 +34,7 @@ const getters = {
 };
 const actions = {
     async searchItem({commit}, data){
-        await axios.post(constant.URL+"search", data)
+        await axios.post(constant.ROUTE_URL_POS+"search", data)
             .then((response) => {
                 if(response.data.message !== "newItem"){
                     commit("selectItemReset");
@@ -66,7 +66,7 @@ const actions = {
     },
     async searchItemByItemId({commit}, item_id){
 
-        await axios.get(constant.URL+"search_by_item_id",   { params: { item_id }})
+        await axios.get(constant.ROUTE_URL_POS+"search_by_item_id",   { params: { item_id }})
             .then((response) => {
                 if(response.data.message == "success"){
                     let item_lists = response.data.items;

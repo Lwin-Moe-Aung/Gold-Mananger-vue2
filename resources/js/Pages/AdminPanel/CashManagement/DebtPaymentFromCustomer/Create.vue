@@ -62,7 +62,10 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="callout callout-info">
+                                    <h5><i class="fas fa-info"></i> Note: {{ numberWithCommas(total_debt_payment_amount_for_cal) }}</h5>
+                                    This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
+                                </div>
                                 <ShowDebtVoucherComponent v-model="customer_id"/>
 
                                 <div class="modal-footer justify-content-right">
@@ -125,7 +128,7 @@
 
         },
         computed: {
-            ...mapGetters(['total_credits']),
+            ...mapGetters(['total_credits', 'total_debt_payment_amount_for_cal']),
             formTitle() {
                 return this.form.id == null ? 'Create New Payment' : 'Edit Current Payment';
             },
@@ -141,7 +144,10 @@
         },
         methods: {
             ...mapActions(["setTotalDebtPaymentAmount"]),
-
+            numberWithCommas(x) {
+                let v = parseInt(x);
+                return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            },
             selectCustomer(value) {
                 if(value !== null){
                     this.customer = value;

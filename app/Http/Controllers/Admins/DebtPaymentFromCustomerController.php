@@ -67,7 +67,7 @@ class DebtPaymentFromCustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getTotalCredit(Request $request)
+    public function getCreditDataLists(Request $request)
     {
         $transactions = Transaction::where('business_id', auth()->user()->business_id)
                     ->where('contact_id',$request->customer_id)

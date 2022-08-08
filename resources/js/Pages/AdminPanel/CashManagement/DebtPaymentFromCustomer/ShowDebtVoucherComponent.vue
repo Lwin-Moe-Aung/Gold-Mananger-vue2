@@ -71,17 +71,18 @@
         <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column" v-for="(voucher_list, index) in voucher_lists" :key="index">
               <div class="card bg-light d-flex flex-fill">
                 <div class="card-header text-muted border-bottom-0">
-                    Invoce Number-<span class="badge bg-primary"><a href="">{{ voucher_list.invoice_no }}</a></span>
+                    Invoce Number-<a href="" class="badge-pill badge-dark">{{ voucher_list.invoice_no }}</a>
                     <input
                         class="custom-control-input-tool float-right"
                         type="checkbox"
                         :value="voucher_list.id"
                         :id="voucher_list.id"
+                        v-model="checkBoxLists"
                         @click="onChangeCheckBox($event)"
                         v-if="total_debt_payment_amount != null"
                         style="width:30px; height:30px;"
+                        :disabled = "total_debt_payment_amount_for_cal == 0 && checkBoxLists.indexOf(voucher_list.id) == -1"
                     >
-                    <span title="3 New Messages" class="badge bg-danger float-right">{{ showIndexNumber(voucher_list) }}</span>
                 </div>
                 <div class="card-body pt-0">
                     <div class="row">
@@ -93,28 +94,29 @@
                             <ul class="ml-4 mb-0 fa-ul text-muted">
                                 <li class="small">
                                     <b>စုစုပေါင်း : </b>
-                                    <span class="badge bg-warning">{{ numberWithCommas(voucher_list.before_total) }}</span>
+                                    <span class="badge badge-pill bg-warning">{{ numberWithCommas(voucher_list.before_total) }}</span>
                                 </li>
                                 <li class="small">
                                     <b>လျော့ငွေ : </b>
-                                    <span class="badge bg-warning">{{ numberWithCommas(voucher_list.discount_amount) }}</span>
+                                    <span class="badge badge-pill bg-warning">{{ numberWithCommas(voucher_list.discount_amount) }}</span>
                                 </li>
                                 <li class="small">
                                     <b>ကျသင့်ငွေ : </b>
-                                    <span class="badge bg-warning">{{ numberWithCommas(voucher_list.final_total) }}</span>
+                                    <span class="badge badge-pill bg-warning">{{ numberWithCommas(voucher_list.final_total) }}</span>
                                 </li>
                                 <li class="small">
                                     <b>ပေးငွေ : </b>
-                                    <span class="badge bg-warning">{{ numberWithCommas(voucher_list.paid_money) }}</span>
+                                    <span class="badge badge-pill bg-warning">{{ numberWithCommas(voucher_list.paid_money) }}</span>
                                 </li>
                                 <li class="small">
                                     <b>ကျန်ငွေ : </b>
-                                    <span class="badge bg-warning">{{ numberWithCommas(voucher_list.credit_money) }}</span>
+                                    <span class="badge badge-pill bg-warning">{{ numberWithCommas(voucher_list.credit_money) }}</span>
                                 </li>
                             </ul>
 
                         </div>
                         <div class="col-5 text-center">
+                            <h2><span class="badge badge-pill badge-dark">{{ showIndexNumber(voucher_list) }}</span></h2>
                             <img :src="voucher_list.item.image" alt="user-avatar" class="img-circle img-fluid">
                         </div>
                     </div>
@@ -126,7 +128,7 @@
                             <span class="badge bg-warning">{{ numberWithCommas2(checkRemainingCredit(voucher_list)) }}</span>
                         </p>
                         <a href="#" class="btn btn-sm btn-primary">
-                            <i class="fas fa-user"></i> View Voucher
+                            <i class="fas fa-eye"></i> View Voucher
                         </a>
                     </div>
                 </div>
@@ -145,13 +147,14 @@
         data() {
             return {
                 // voucherLists:[],
+                checkBoxLists:[],
             };
         },
         created() {
 
         },
         computed: {
-            ...mapGetters(['voucher_lists', 'total_debt_payment_amount','checked_voucher_lists']),
+            ...mapGetters(['voucher_lists', 'total_debt_payment_amount', 'total_debt_payment_amount_for_cal', 'checked_voucher_lists']),
         },
         watch: {
             value (val) {
@@ -162,6 +165,9 @@
                     this.setTotalCredit(null);
                 }
             },
+            total_debt_payment_amount(value){
+                this.checkBoxLists = [];
+            }
         },
         methods: {
             ...mapActions(["setTotalCredit", "setCheckedVoucherLists","getCreditDataLists","setVoucherLists"]),

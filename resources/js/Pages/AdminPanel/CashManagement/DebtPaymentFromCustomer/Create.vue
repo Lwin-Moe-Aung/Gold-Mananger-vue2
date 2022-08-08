@@ -63,8 +63,9 @@
                                     </div>
                                 </div>
                                 <div class="callout callout-info">
-                                    <h5><i class="fas fa-info"></i> Note: {{ numberWithCommas(total_debt_payment_amount_for_cal) }}</h5>
-                                    This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
+                                    <h5><i class="fas fa-info"></i> Price:<span class="badge badge-pill bg-warning" v-if="total_debt_payment_amount != null">{{ numberWithCommas(total_debt_payment_amount_for_cal) }}</span> </h5>
+                                    <p v-if="total_debt_payment_amount_for_cal != 0">အောက်တွင်ဖော်ပြထားသော voucher များကို ရွေးချယ်၍ ဆပ်နိုင်သည်။</p>
+                                    <p v-else>စုစုပေါင်း amount ကုန်ဆုံးသွား၍ ထပ်ရွေးလို့မရတော့ပါ။</p>
                                 </div>
                                 <ShowDebtVoucherComponent v-model="customer_id"/>
 
@@ -128,7 +129,7 @@
 
         },
         computed: {
-            ...mapGetters(['total_credits', 'total_debt_payment_amount_for_cal']),
+            ...mapGetters(['total_credits', 'total_debt_payment_amount_for_cal', 'total_debt_payment_amount']),
             formTitle() {
                 return this.form.id == null ? 'Create New Payment' : 'Edit Current Payment';
             },
@@ -143,7 +144,7 @@
             debt_payment_amount:{required},
         },
         methods: {
-            ...mapActions(["setTotalDebtPaymentAmount"]),
+            ...mapActions(["setTotalDebtPaymentAmount","resetCartState"]),
             numberWithCommas(x) {
                 let v = parseInt(x);
                 return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -163,7 +164,10 @@
             customerDebtPayment(){
                 if(this.debt_payment_amount > this.total_credits){
                     alert("debt payment is exceed than total credits");
-                    return;
+                    this.debt_payment_amount = null;
+                }
+                if(this.debt_payment_amount == ""){
+                    this.debt_payment_amount = null;
                 }
                 this.setTotalDebtPaymentAmount(this.debt_payment_amount);
             },
@@ -195,6 +199,8 @@
                 })
             },
         },
-
+        beforeDestroy() {
+            this.resetCartState();
+        }
     }
 </script>

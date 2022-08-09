@@ -52,28 +52,52 @@
                                             <label for="name">Pay Amount: </label>
                                             <input
                                                 type="text"
-                                                v-model.trim="$v.debt_payment_amount.$model"
+                                                v-model.trim="$v.total_payment.$model"
                                                 class="form-control form-control"
                                                 autofocus="autofocus"
                                                 autocomplete="off"
                                                 @change="customerDebtPayment"
                                             >
-                                            <div v-if="!$v.debt_payment_amount.required" class="invalid-feedback">The debt payment amount field is required.</div>
+                                            <div v-if="!$v.total_payment.required" class="invalid-feedback">The debt payment amount field is required.</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="callout callout-info">
+
+                                <div class="callout callout-info" v-if="total_payment != null">
                                     <h5><i class="fas fa-info"></i> Price:<span class="badge badge-pill bg-warning" v-if="total_debt_payment_amount != null">{{ numberWithCommas(total_debt_payment_amount_for_cal) }}</span> </h5>
                                     <p v-if="total_debt_payment_amount_for_cal != 0">အောက်တွင်ဖော်ပြထားသော voucher များကို ရွေးချယ်၍ ဆပ်နိုင်သည်။</p>
                                     <p v-else>စုစုပေါင်း amount ကုန်ဆုံးသွား၍ ထပ်ရွေးလို့မရတော့ပါ။</p>
                                 </div>
                                 <ShowDebtVoucherComponent v-model="customer_id"/>
 
+                                <div class="row">
+                                    <div class="col-12 col-sm-4">
+                                        <div class="form-group">
+                                            <label for="name">Note:</label>
+                                            <textarea
+                                                class="form-control"
+                                                placeholder="Description"
+                                                v-model="additional_note"
+                                                autocomplete="off"
+                                                rows="4"
+                                                cols="70"
+                                            >
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="modal-footer justify-content-right">
                                     <Link :href="route('admin.expenses.index')">
                                         <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
                                     </Link>
-                                    <button type="submit" class="btn btn-primary text-uppercase text-white" style="letter-spacing: 0.1em;" >{{ buttonTxt }}</button>
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary text-uppercase text-white"
+                                        style="letter-spacing: 0.1em;"
+                                        >
+                                        {{ buttonTxt }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +116,7 @@
     import moment from 'moment';
     import ContactAutoCompleteSearchComponent from '../../../../Components/AdminPanel/ContactAutoCompleteSearchComponent';
     import ShowDebtVoucherComponent from './ShowDebtVoucherComponent';
-    // import axios from 'axios';
+    import axios from 'axios';
     import {mapGetters, mapActions} from "vuex";
 
     export default {
@@ -110,11 +134,12 @@
         data() {
             return {
                 form: this.$inertia.form({
-                    id: '',
+                    id: null,
                 }),
                 customer:[],
                 customer_id:null,
-                debt_payment_amount:null,
+                total_payment:null,
+                additional_note:null,
             }
         },
         created() {
@@ -129,7 +154,7 @@
 
         },
         computed: {
-            ...mapGetters(['total_credits', 'total_debt_payment_amount_for_cal', 'total_debt_payment_amount']),
+            ...mapGetters(['total_credits', 'total_debt_payment_amount_for_cal', 'total_debt_payment_amount', 'checked_voucher_lists']),
             formTitle() {
                 return this.form.id == null ? 'Create New Payment' : 'Edit Current Payment';
             },
@@ -137,11 +162,11 @@
                 return this.form.id == null ? 'Create' : 'Update';
             },
             checkMode() {
-                return this.form.id == null ? this.createExpense : this.editExpense
+                return this.form.id == null ? this.createDebtPaymentFromCustomer : this.editDebtPaymentFromCustomer
             },
         },
         validations: {
-            debt_payment_amount:{required},
+            total_payment:{required},
         },
         methods: {
             ...mapActions(["setTotalDebtPaymentAmount","resetCartState"]),
@@ -162,42 +187,42 @@
                 return typeof validation != "undefined" ? validation.$error : false;
             },
             customerDebtPayment(){
-                if(this.debt_payment_amount > this.total_credits){
+                if(this.total_payment > this.total_credits){
                     alert("debt payment is exceed than total credits");
-                    this.debt_payment_amount = null;
+                    this.total_payment = null;
                 }
-                if(this.debt_payment_amount == ""){
-                    this.debt_payment_amount = null;
+                if(this.total_payment == ""){
+                    this.total_payment = null;
                 }
-                this.setTotalDebtPaymentAmount(this.debt_payment_amount);
+                this.setTotalDebtPaymentAmount(this.total_payment);
             },
-            createExpense() {
+            createDebtPaymentFromCustomer() {
                 this.$v.$touch();
                 if (this.$v.$pendding || this.$v.$error) return;
-                this.form.post(this.route('admin.expenses.store'), {
-                    preserveScroll: true,
-                    onSuccess:() => {
-                        Object.assign(this.$data, this.$options.data.call(this));
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'New Expense!'
-                        })
-                    }
-                })
+                let data = new FormData();
+                data.append('customer_id',this.customer_id);
+                data.append('total_payment',this.total_payment);
+                data.append('additional_note',this.additional_note);
+                data.append('checked_voucher_lists',JSON.stringify(this.checked_voucher_lists));
+                axios.post(this.route('admin.debt-payment-from-customers.store'), data)
+                    .then(res => {
+                        if(res.data.status){
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Payment Success'
+                            })
+                            this.resetCartState();
+                            this.customer = [];
+                            this.customer_id = null;
+                            this.total_payment = null;
+                            this.additional_note = null;
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             },
-            editExpense() {
-                this.$v.$touch();
-                if (this.$v.$pendding || this.$v.$error) return;
-                this.form.post(this.route('admin.expenses.expenses_update', this.form), {
-                    preserveScroll: true,
-                    onSuccess:() => {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Expense has been updated!'
-                        })
-                    }
-                })
-            },
+
         },
         beforeDestroy() {
             this.resetCartState();

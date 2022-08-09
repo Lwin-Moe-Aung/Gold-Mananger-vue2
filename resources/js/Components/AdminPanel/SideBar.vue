@@ -237,7 +237,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.debt_payment_from_customers.index')" class="nav-link" :class="route().current('admin.debt_payment_from_customers.*') ? 'active' : ' '">
+                                <Link :href="route('admin.debt-payment-from-customers.index')" class="nav-link" :class="route().current('admin.debt-payment-from-customers.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         အကြွေးဆပ်(customer)
@@ -245,7 +245,7 @@
                                 </Link>
                             </li>
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.debt_payment_to_suppliers.index')" class="nav-link" :class="route().current('admin.debt_payment_to_suppliers.*') ? 'active' : ' '">
+                                <Link :href="route('admin.debt-payment-to-suppliers.index')" class="nav-link" :class="route().current('admin.debt-payment-to-suppliers.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         အကြွေးဆပ်(supplier)

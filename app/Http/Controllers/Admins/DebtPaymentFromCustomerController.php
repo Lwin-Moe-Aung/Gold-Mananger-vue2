@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Transaction;
+use App\Models\DebtPaymentFromCustomer;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use DB;
+use Facade\FlareClient\Http\Response;
 
 class DebtPaymentFromCustomerController extends Controller
 {
@@ -93,7 +98,41 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $transaction = Transaction::create([
+                'business_id' => auth()->user()->business_id,
+                'business_location_id' => auth()->user()->business_location_id,
+                'type' => "debt_payment_from_customer",
+                'status' => "received",
+                'payment_status' => "paid",
+                'contact_id' => $request->customer_id,
+                'transaction_date' => Carbon::now()->format('Y-m-d'),
+                'additional_notes' =>  $request->additional_note,
+                'created_by' =>  auth()->user()->id,
+                'paid_money' => $request->total_payment,
+            ]);
+            foreach (json_decode($request->checked_voucher_lists) as $data){
+                $trans = Transaction::find($data->parent_transaction_id);
+                $trans->paid_money = (int)$trans->paid_money + (int)$data->debt_payment_amount;
+                $trans->credit_money = (int)$trans->credit_money - (int)$data->debt_payment_amount;
+                $trans->save();
+
+                DebtPaymentFromCustomer::create([
+                    'transaction_id' => $transaction->id,
+                    'parent_id' => $data->parent_transaction_id,
+                    'customer_id' => $request->customer_id,
+                    'paid_money' => $data->old_paid_money,
+                    'credit_money' => $data->old_credit_money,
+                    'debt_payment' => $data->debt_payment_amount,
+                ]);
+            }
+            DB::commit();
+            return response()->json(['status' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('fail', 'Fail to Create New Debt pyment from customer');
+        }
     }
 
     /**

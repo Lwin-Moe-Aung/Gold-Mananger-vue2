@@ -29,14 +29,17 @@ class CreateTransactionsTable extends Migration
             $table->dateTime('transaction_date');
 
             $table->string('shipping_details')->nullable();
-            $table->decimal('shipping_charges', 8, 2)->default(0);
+            $table->decimal('shipping_charges', 8, 2)->nullable();
             $table->text('additional_notes')->nullable();
 
-            $table->decimal('before_total', 10, 2)->default(0);
-            $table->decimal('discount_amount', 10, 2)->default(0);
-            $table->decimal('final_total', 10, 2)->default(0);
-            $table->decimal('paid_money', 10, 2)->default(0);
-            $table->decimal('credit_money', 10, 2)->default(0);
+            $table->decimal('before_total', 10, 2)->nullable();
+            $table->decimal('discount_amount', 10, 2)->nullable();
+            $table->decimal('final_total', 10, 2)->nullable();
+            $table->decimal('paid_money', 10, 2)->nullable();
+            $table->decimal('credit_money', 10, 2)->nullable();
+
+            $table->decimal('debt_paid_money', 10, 2)->nullable();
+            $table->decimal('remaining_credit_money', 10, 2)->nullable();
 
             $table->unsignedBigInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');

@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+// use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class DebtPaymentListsResource extends ResourceCollection
+
+class DebtPaymentListsResource extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -16,12 +18,10 @@ class DebtPaymentListsResource extends ResourceCollection
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'address' => $this->address,
-            'phone_number' => $this->phone_number,
-            'section' => $this->section->name,
-            'class' => $this->class->name,
+            'name' => $this->contact->name,
+            'mobile' => $this->contact->mobile2 != null? $this->contact->mobile1.','.$this->contact->mobile2 : $this->contact->mobile1,
+            'debt_paid_money' => $this->debt_paid_money,
+            'remaining_credit_money' => $this->remaining_credit_money,
             'created_at' => $this->created_at->toFormattedDateString()
         ];
     }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use DB;
 use Facade\FlareClient\Http\Response;
+use App\Http\Resources\DebtPaymentListsResource;
 
 class DebtPaymentFromCustomerController extends Controller
 {
@@ -31,16 +32,13 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function getDebtPaymentLists()
     {
-
         $paginate = request('paginate');
-
         if (isset($paginate)) {
             $transactions = Transaction::transactionsQuery()->paginate($paginate);
         } else {
             $transactions = Transaction::transactionsQuery()->get();
         }
-
-        return StudentResource::collection($transactions);
+        return DebtPaymentListsResource::collection($transactions);
     }
 
     /**
@@ -102,7 +100,8 @@ class DebtPaymentFromCustomerController extends Controller
                 'transaction_date' => Carbon::now()->format('Y-m-d'),
                 'additional_notes' =>  $request->additional_note,
                 'created_by' =>  auth()->user()->id,
-                'paid_money' => $request->total_payment,
+                'debt_paid_money' => $request->total_payment,
+                'remaining_credit_money' => $request->remaining_credit_money,
             ]);
             foreach (json_decode($request->checked_voucher_lists) as $data){
                 $trans = Transaction::find($data->parent_transaction_id);

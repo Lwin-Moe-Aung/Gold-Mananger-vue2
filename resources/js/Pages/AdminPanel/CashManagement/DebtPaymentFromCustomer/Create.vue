@@ -11,7 +11,7 @@
                     <form ref="productform" @submit.prevent="checkMode">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <Link :href="route('admin.expenses.index')">
+                                <Link :href="route('admin.debt-payment-from-customers.index')">
                                     <button class="btn btn-primary float-left mr-3" style="h">
                                         <i class="fas fa-long-arrow-alt-left" aria-hidden="true" ></i>
                                     </button>
@@ -64,9 +64,18 @@
                                 </div>
 
                                 <div class="callout callout-info" v-if="total_payment != null">
-                                    <h5><i class="fas fa-info"></i> Price:<span class="badge badge-pill bg-warning" v-if="total_debt_payment_amount != null">{{ numberWithCommas(total_debt_payment_amount_for_cal) }}</span> </h5>
-                                    <p v-if="total_debt_payment_amount_for_cal != 0">အောက်တွင်ဖော်ပြထားသော voucher များကို ရွေးချယ်၍ ဆပ်နိုင်သည်။</p>
-                                    <p v-else>စုစုပေါင်း amount ကုန်ဆုံးသွား၍ ထပ်ရွေးလို့မရတော့ပါ။</p>
+                                    <div class="row">
+                                        <div class="col-md-6 text-left">
+                                            <h5><i class="fas fa-info"></i> Price:<span class="badge badge-pill bg-warning" v-if="total_debt_payment_amount != null">{{ numberWithCommas(total_debt_payment_amount_for_cal) }}</span> </h5>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <h5><i class="fas fa-info"></i> ဆပ်ရန်ကျန်ရှိငွေ:<span class="badge badge-pill bg-warning" v-if="total_debt_payment_amount != null">{{ numberWithCommas(remaining_credit_money) }}</span> </h5>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <p v-if="total_debt_payment_amount_for_cal != 0">အောက်တွင်ဖော်ပြထားသော voucher များကို ရွေးချယ်၍ ဆပ်နိုင်သည်။</p>
+                                        <p v-else>စုစုပေါင်း amount ကုန်ဆုံးသွား၍ ထပ်ရွေးလို့မရတော့ပါ။</p>
+                                    </div>
                                 </div>
                                 <ShowDebtVoucherComponent v-model="customer_id"/>
 
@@ -140,6 +149,7 @@
                 customer_id:null,
                 total_payment:null,
                 additional_note:null,
+                remaining_credit_money:null,
             }
         },
         created() {
@@ -151,12 +161,14 @@
             }
         },
         watch: {
-
+            total_debt_payment_amount_for_cal(value){
+                this.remaining_credit_money = this.total_credits - (this.total_payment - value);
+            }
         },
         computed: {
             ...mapGetters(['total_credits', 'total_debt_payment_amount_for_cal', 'total_debt_payment_amount', 'checked_voucher_lists']),
             formTitle() {
-                return this.form.id == null ? 'Create New Payment' : 'Edit Current Payment';
+                return this.form.id == null ? 'Create New Debt Payment' : 'Edit Current Debt Payment';
             },
             buttonTxt() {
                 return this.form.id == null ? 'Create' : 'Update';
@@ -202,6 +214,7 @@
                 let data = new FormData();
                 data.append('customer_id',this.customer_id);
                 data.append('total_payment',this.total_payment);
+                data.append('remaining_credit_money',this.remaining_credit_money);
                 data.append('additional_note',this.additional_note);
                 data.append('checked_voucher_lists',JSON.stringify(this.checked_voucher_lists));
                 axios.post(this.route('admin.debt-payment-from-customers.store'), data)

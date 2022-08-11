@@ -40,6 +40,8 @@ class Transaction extends Model
         'final_total',
         'paid_money',
         'credit_money',
+        'debt_paid_money',
+        'remaining_credit_money',
         'created_by',
     ];
 
@@ -86,33 +88,16 @@ class Transaction extends Model
         return $this->hasMany(DebtPaymentFromCustomer::class, 'transaction_id');
     }
 
-    //  //has one through
-    //  public function item()
-    //  {
-    //      //(to_connect_model_name, through_model)
-    //      return $this->hasOneThrough(
-    //          Item::class,
-    //          Purchase::class,
-    //          'transaction_id', //foregin key on purchase table...
-    //          'id', //foregin key on item table ....
-    //          'id', // local key in Transaction table.....
-    //          'id', // local key in Purchase table.....
-    //      );
-    //  }
-
     public function scopeSearch($query, $term)
     {
         $term = "%$term%";
         $query->where(function ($query) use ($term) {
-            $query->where('name', 'like', $term)
-                ->orWhere('email', 'like', $term)
-                ->orWhere('address', 'like', $term)
-                ->orWhere('phone_number', 'like', $term)
-                ->orWhereHas('class', function ($query) use ($term) {
+            $query->where('paid_money', 'like', $term)
+                ->orWhere('credit_money', 'like', $term)
+                ->orWhereHas('contact', function ($query) use ($term) {
                     $query->where('name', 'like', $term);
-                })
-                ->orWhereHas('section', function ($query) use ($term) {
-                    $query->where('name', 'like', $term);
+                    $query->where('mobile1', 'like', $term);
+                    $query->where('mobile2', 'like', $term);
                 });
         });
     }
@@ -120,9 +105,7 @@ class Transaction extends Model
     public function scopeTransactionsQuery($query)
     {
         $search_term = request('q', '');
-
-        $selectedClass = request('selectedClass');
-
+        $selectedCustomer = request('selectedCustomer');
         $sort_direction = request('sort_direction', 'desc');
 
         if (!in_array($sort_direction, ['asc', 'desc'])) {
@@ -133,10 +116,10 @@ class Transaction extends Model
         if (!in_array($sort_field, ['name', 'total_debt_payment', 'remaining_credit', 'invoice_no', 'created_at'])) {
             $sort_field = 'created_at';
         }
-
-        $query->with(['contact'])
-            ->when($selectedClass, function ($query) use ($selectedClass) {
-                $query->where('class_id', $selectedClass);
+        $query->where('type','debt_payment_from_customer')
+            ->with(['contact'])
+            ->when($selectedCustomer, function ($query) use ($selectedCustomer) {
+                $query->where('contact_id', $selectedCustomer);
             })
             ->orderBy($sort_field, $sort_direction)
             ->search(trim($search_term));

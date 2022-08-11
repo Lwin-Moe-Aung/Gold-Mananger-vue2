@@ -8,6 +8,13 @@
             </template>
             <section class="content">
                 <div class="container-fluid">
+                    <div class="card-tools float-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
+                        <Link :href="route('admin.debt-payment-from-customers.create')">
+                            <button type="button" class="btn btn-info text-white text-uppercase" style="letter-spacing: 0.1em;">
+                                Create
+                            </button>
+                        </Link>
+                    </div>
                     <div class="d-flex justify-content-between align-content-center mb-2">
                         <div class="d-flex">
                             <div>
@@ -35,13 +42,13 @@
                                         class="form-control form-control-sm"
                                     >
                                         <option value="">All Customer</option>
-                                        <option
+                                        <!-- <option
                                             v-for="item in classes"
                                             :key="item.id"
                                             :value="item.id"
                                         >
                                             {{ item.name }}
-                                        </option>
+                                        </option> -->
                                     </select>
                                 </div>
                             </div>
@@ -75,6 +82,25 @@
                                             v-if="
                                                 sort_direction == 'asc' &&
                                                     sort_field == 'name'
+                                            "
+                                            >&darr;</span
+                                        >
+                                    </th>
+                                    <th>
+                                        <a href="#" @click.prevent="change_sort('mobile')"
+                                            >Mobile</a
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'desc' &&
+                                                    sort_field == 'mobile'
+                                            "
+                                            >&uarr;</span
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'asc' &&
+                                                    sort_field == 'mobile'
                                             "
                                             >&darr;</span
                                         >
@@ -142,19 +168,20 @@
                                 </tr>
 
                                 <tr
-                                    v-for="(student, index) in debtPaymentLists.data"
+                                    v-for="(debtPaymentList, index) in debtPaymentLists.data"
                                     :key="index"
                                 >
                                     <td>{{ index + 1 }}</td>
-                                    <td>{{ student.name }}</td>
-                                    <td>{{ student.total_debt_payment }}</td>
-                                    <td>{{ student.remaining_credit }}</td>
-                                    <td>{{ student.created_at }}</td>
+                                    <td>{{ debtPaymentList.name }}</td>
+                                    <td>{{ debtPaymentList.mobile }}</td>
+                                    <td>{{ debtPaymentList.debt_paid_money }}</td>
+                                    <td>{{ debtPaymentList.remaining_credit_money }}</td>
+                                    <td>{{ debtPaymentList.created_at }}</td>
                                     <td>
                                         <button
                                             onclick="confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
                                             class="btn btn-danger btn-sm"
-                                            @click="deleteSingleRecord(student.id)"
+                                            @click="deleteSingleRecord(debtPaymentList.id)"
                                         >
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
@@ -205,18 +232,12 @@
                 debtPaymentLists: {},
                 paginate: 10,
                 search: "",
-                classes: {},
                 selectedCustomer: "",
-                selectedSection: "",
-                sections: {},
-                checked: [],
-                selectPage: false,
-                selectAll: false,
                 sort_direction: "desc",
                 sort_field: "created_at",
                 url: "",
-                getStudentsUrl: "",
-                getStudentsUrlWithoutPaginate: ""
+                getDataUrl: "",
+                getDataUrlWithoutPadination: ""
             };
         },
 
@@ -227,45 +248,10 @@
             search: function(value) {
                 this.getData();
             },
-            selectedCustomer: function(value) {
-                this.selectedSection = "";
-                axios
-                    .get("/api/sections?class_id=" + this.selectedCustomer)
-                    .then(response => {
-                        this.sections = response.data.data;
-                    });
-                this.getData();
-            },
-            selectedSection: function(value) {
-                this.getData();
-            },
-            selectPage: function(value) {
-                this.checked = [];
-                if (value) {
-                    this.students.data.forEach(student => {
-                        this.checked.push(student.id);
-                    });
-                } else {
-                    this.checked = [];
-                    this.selectAll = false;
-                }
-            },
-            checked: function(value) {
-                this.url = "/api/students/export/" + this.checked;
-            }
         },
 
         methods: {
-            selectAllRecords() {
-                axios.get(this.getStudentsUrlWithoutPaginate).then(response => {
-                    // console.log(response.data);
-                    this.checked = [];
-                    response.data.data.forEach(student => {
-                        this.checked.push(student.id);
-                    });
-                    this.selectAll = true;
-                });
-            },
+
             change_sort(field) {
                 if (this.sort_field == field) {
                     this.sort_direction =
@@ -299,7 +285,7 @@
                 return this.checked.includes(student_id);
             },
             getData(page = 1) {
-                this.getStudentsUrlWithoutPaginate =
+                this.getDataUrlWithoutPadination =
                     "/admin/get-debt-payment-lists?" +
                     "q=" +
                     this.search +
@@ -310,11 +296,11 @@
                     "&selectedCustomer=" +
                     this.selectedCustomer;
 
-                this.getStudentsUrl = this.getStudentsUrlWithoutPaginate.concat(
+                this.getDataUrl = this.getDataUrlWithoutPadination.concat(
                     "&paginate=" + this.paginate + "&page=" + page
                 );
-                axios.get(this.getStudentsUrl).then(response => {
-                    this.debtPaymentLists = response.data.data;
+                axios.get(this.getDataUrl).then(response => {
+                    this.debtPaymentLists = response.data;
                 });
             }
         },

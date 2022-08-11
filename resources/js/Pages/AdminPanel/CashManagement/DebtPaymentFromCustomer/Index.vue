@@ -8,127 +8,167 @@
             </template>
             <section class="content">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <input type="search" v-model="params.search" aria-label="Search" placeholder="Search..." class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                                    <div class="card-tools" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                        <Link :href="route('admin.debt-payment-from-customers.create')">
-                                            <button type="button" class="btn btn-info text-white text-uppercase" style="letter-spacing: 0.1em;">
-                                                Create
-                                            </button>
-                                        </Link>
-                                    </div>
+                    <div class="d-flex justify-content-between align-content-center mb-2">
+                        <div class="d-flex">
+                            <div>
+                                <div class="d-flex align-items-center ml-4">
+                                    <label for="paginate" class="text-nowrap mr-2 mb-0"
+                                        >Per Page</label
+                                    >
+                                    <select
+                                        v-model="paginate"
+                                        class="form-control form-control-sm"
+                                    >
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                    </select>
                                 </div>
-                                <div class="card-body table-responsive p-0">
-                                    <table class="table table-hover text-nowrap">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('name')">Image
-                                                        <svg v-if="params.field === 'name' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'name' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Item Sku
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Product Sku
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Invoce No
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Status
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Total
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Date
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th class="text-capitalize text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(transaction, index) in transactions.data" :key="index">
-                                                <td>
-                                                    <img class="w-10 h-10 rounded-full" :src="transaction.item.image" alt="" style="width:60px;"/>
-                                                    {{ transaction.item.name }}
-                                                    <i class="fa fa-undo text-red" aria-hidden="true" v-if="transaction.sell.sell_return == '1'"></i>
-                                                </td>
-                                                <td>{{ transaction.item.item_sku }}</td>
-                                                <td>{{ transaction.product.product_sku }}</td>
-                                                <td>{{ transaction.invoice_no }}</td>
-                                                <td>{{ transaction.status }}</td>
-                                                <td>{{ transaction.sell.final_total }}</td>
-                                                <td>{{ dateTime(transaction.created_at) }}</td>
-                                                <td class="text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                                    <Link :href="route('admin.sells.show', transaction.id)">
-                                                        <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;">Detail</button>
-                                                    </Link>
-
-                                                    <!-- <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteTransaction(transaction.id)">Delete</button> -->
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="card-footer clearfix">
-                                    <pagination :links="transactions.links"></pagination>
-                                </div>
-
                             </div>
+                            <div>
+                                <div class="d-flex align-items-center ml-4">
+                                    <label for="paginate" class="text-nowrap mr-2 mb-0"
+                                        >FilterBy Customer</label
+                                    >
+                                    <select
+                                        v-model="selectedCustomer"
+                                        class="form-control form-control-sm"
+                                    >
+                                        <option value="">All Customer</option>
+                                        <option
+                                            v-for="item in classes"
+                                            :key="item.id"
+                                            :value="item.id"
+                                        >
+                                            {{ item.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <input
+                                v-model.lazy="search"
+                                type="search"
+                                class="form-control"
+                                placeholder="Search by name,total_debt_payment,phone,or remaining_credit..."
+                            />
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>#</th>
+                                    <th>
+                                        <a href="#" @click.prevent="change_sort('name')"
+                                            >Name</a
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'desc' &&
+                                                    sort_field == 'name'
+                                            "
+                                            >&uarr;</span
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'asc' &&
+                                                    sort_field == 'name'
+                                            "
+                                            >&darr;</span
+                                        >
+                                    </th>
+                                    <th>
+                                        <a href="#" @click.prevent="change_sort('total_debt_payment')"
+                                            >စုစုပေါင်းဆပ့်ငွေ</a
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'desc' &&
+                                                    sort_field == 'total_debt_payment'
+                                            "
+                                            >&uarr;</span
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'asc' &&
+                                                    sort_field == 'total_debt_payment'
+                                            "
+                                            >&darr;</span
+                                        >
+                                    </th>
+                                    <th>
+                                        <a href="#" @click.prevent="change_sort('remaining_credit')"
+                                            >ဆပ့်ရန်ကျန်ငွေ</a
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'desc' &&
+                                                    sort_field == 'remaining_credit'
+                                            "
+                                            >&uarr;</span
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'asc' &&
+                                                    sort_field == 'remaining_credit'
+                                            "
+                                            >&darr;</span
+                                        >
+                                    </th>
+                                    <th>
+                                        <a
+                                            href="#"
+                                            @click.prevent="change_sort('created_at')"
+                                            >Created At</a
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'desc' &&
+                                                    sort_field == 'created_at'
+                                            "
+                                            >&uarr;</span
+                                        >
+                                        <span
+                                            v-if="
+                                                sort_direction == 'asc' &&
+                                                    sort_field == 'created_at'
+                                            "
+                                            >&darr;</span
+                                        >
+                                    </th>
+                                    <th>Action</th>
+                                </tr>
+
+                                <tr
+                                    v-for="(student, index) in debtPaymentLists.data"
+                                    :key="index"
+                                >
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ student.name }}</td>
+                                    <td>{{ student.total_debt_payment }}</td>
+                                    <td>{{ student.remaining_credit }}</td>
+                                    <td>{{ student.created_at }}</td>
+                                    <td>
+                                        <button
+                                            onclick="confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
+                                            class="btn btn-danger btn-sm"
+                                            @click="deleteSingleRecord(student.id)"
+                                        >
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-sm-6 offset-5">
+                            <pagination
+                                :data="debtPaymentLists"
+                                @pagination-change-page="getData"
+                            ></pagination>
                         </div>
                     </div>
                 </div>
@@ -146,6 +186,7 @@
     import { pickBy, throttle } from 'lodash';
     import { Link } from '@inertiajs/inertia-vue';
     import Datepicker from 'vuejs-datepicker';
+    import axios from "axios";
 
     export default {
         props: [
@@ -161,75 +202,128 @@
         },
         data() {
             return {
-                customer_id:null,
-                supplier_id:null,
-                date: null,
-                customer:null,
-                supplier:null,
-                params: {
-                    search: this.filters.search,
-                    field: this.filters.field,
-                    direction: this.filters.direction,
-                },
+                debtPaymentLists: {},
+                paginate: 10,
+                search: "",
+                classes: {},
+                selectedCustomer: "",
+                selectedSection: "",
+                sections: {},
+                checked: [],
+                selectPage: false,
+                selectAll: false,
+                sort_direction: "desc",
+                sort_field: "created_at",
+                url: "",
+                getStudentsUrl: "",
+                getStudentsUrlWithoutPaginate: ""
+            };
+        },
+
+        watch: {
+            paginate: function(value) {
+                this.getData();
+            },
+            search: function(value) {
+                this.getData();
+            },
+            selectedCustomer: function(value) {
+                this.selectedSection = "";
+                axios
+                    .get("/api/sections?class_id=" + this.selectedCustomer)
+                    .then(response => {
+                        this.sections = response.data.data;
+                    });
+                this.getData();
+            },
+            selectedSection: function(value) {
+                this.getData();
+            },
+            selectPage: function(value) {
+                this.checked = [];
+                if (value) {
+                    this.students.data.forEach(student => {
+                        this.checked.push(student.id);
+                    });
+                } else {
+                    this.checked = [];
+                    this.selectAll = false;
+                }
+            },
+            checked: function(value) {
+                this.url = "/api/students/export/" + this.checked;
             }
         },
-        created(){
-        },
-        computed: {
-        },
-        watch: {
-            params: {
-                handler: throttle(function () {
-                    let params = pickBy(this.params);
-                    this.$inertia.get(this.route('admin.sells.index'), params, { replace: true, preserveState: true });
-                }, 150),
-                deep: true,
-            },
-        },
+
         methods: {
-            selectCustomer(value){
+            selectAllRecords() {
+                axios.get(this.getStudentsUrlWithoutPaginate).then(response => {
+                    // console.log(response.data);
+                    this.checked = [];
+                    response.data.data.forEach(student => {
+                        this.checked.push(student.id);
+                    });
+                    this.selectAll = true;
+                });
+            },
+            change_sort(field) {
+                if (this.sort_field == field) {
+                    this.sort_direction =
+                        this.sort_direction == "asc" ? "desc" : "asc";
+                } else {
+                    this.sort_field = field;
+                }
+                this.getData();
+            },
+            deleteSingleRecord(student_id) {
+                axios.delete("/api/student/delete/" + student_id).then(response => {
+                    this.checked = this.checked.filter(id => id != student_id);
+                    this.$toast.success("Student Deleted Successfully");
+                    this.getData();
+                });
+            },
+            deleteRecords() {
+                axios
+                    .delete("/api/students/massDestroy/" + this.checked)
+                    .then(response => {
+                        if (response.status == 204) {
+                            this.$toast.success(
+                                "Selected Students were Deleted Successfully"
+                            );
+                            this.checked = [];
+                            this.getData();
+                        }
+                    });
+            },
+            isChecked(student_id) {
+                return this.checked.includes(student_id);
+            },
+            getData(page = 1) {
+                this.getStudentsUrlWithoutPaginate =
+                    "/admin/get-debt-payment-lists?" +
+                    "q=" +
+                    this.search +
+                    "&sort_direction=" +
+                    this.sort_direction +
+                    "&sort_field=" +
+                    this.sort_field +
+                    "&selectedCustomer=" +
+                    this.selectedCustomer;
 
-            },
-            selectSupplier(value){
+                this.getStudentsUrl = this.getStudentsUrlWithoutPaginate.concat(
+                    "&paginate=" + this.paginate + "&page=" + page
+                );
+                axios.get(this.getStudentsUrl).then(response => {
+                    this.debtPaymentLists = response.data.data;
+                });
+            }
+        },
 
-            },
-            selectDate(){
-
-            },
-            selectImage(e){
-                this.form.image = e.target.files[0];
-            },
-            sort(field) {
-                this.params.field = field;
-                this.params.direction = this.params.direction === 'asc' ? 'desc' : 'asc';
-            },
-            dateTime(value) {
-                return moment(value).format('YYYY-MM-DD');
-            },
-            // deleteTransaction(id) {
-            //     Swal.fire({
-            //         title: 'Are you sure?',
-            //         text: "You won't be able to revert this!",
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         confirmButtonColor: '#3085d6',
-            //         cancelButtonColor: '#d33',
-            //         confirmButtonText: 'Yes, delete it!'
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             this.form.delete(this.route('admin.sells.destroy', id), {
-            //                 preserveScroll: true,
-            //                 onSuccess: ()=> {
-            //                     Swal.fire(
-            //                         'Deleted!',
-            //                         'Sell has been deleted.',
-            //                         'success'
-            //                     )
-            //                 }
-            //             })
-            //         }
-            //     })
-            // }
+        mounted() {
+            // axios.get("/api/classes").then(response => {
+            //     this.classes = response.data.data;
+            // });
+            this.getData();
         }
-    }
+    };
 </script>

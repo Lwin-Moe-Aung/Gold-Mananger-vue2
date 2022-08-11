@@ -81,6 +81,11 @@ class Transaction extends Model
         return $this->belongsTo(Contact::class, 'contact_id');
     }
 
+    public function debtPaymentFromCustomer()
+    {
+        return $this->hasMany(DebtPaymentFromCustomer::class, 'transaction_id');
+    }
+
     //  //has one through
     //  public function item()
     //  {
@@ -94,4 +99,46 @@ class Transaction extends Model
     //          'id', // local key in Purchase table.....
     //      );
     //  }
+
+    public function scopeSearch($query, $term)
+    {
+        $term = "%$term%";
+        $query->where(function ($query) use ($term) {
+            $query->where('name', 'like', $term)
+                ->orWhere('email', 'like', $term)
+                ->orWhere('address', 'like', $term)
+                ->orWhere('phone_number', 'like', $term)
+                ->orWhereHas('class', function ($query) use ($term) {
+                    $query->where('name', 'like', $term);
+                })
+                ->orWhereHas('section', function ($query) use ($term) {
+                    $query->where('name', 'like', $term);
+                });
+        });
+    }
+
+    public function scopeTransactionsQuery($query)
+    {
+        $search_term = request('q', '');
+
+        $selectedClass = request('selectedClass');
+
+        $sort_direction = request('sort_direction', 'desc');
+
+        if (!in_array($sort_direction, ['asc', 'desc'])) {
+            $sort_direction = 'desc';
+        }
+
+        $sort_field = request('sort_field', 'created_at');
+        if (!in_array($sort_field, ['name', 'total_debt_payment', 'remaining_credit', 'invoice_no', 'created_at'])) {
+            $sort_field = 'created_at';
+        }
+
+        $query->with(['contact'])
+            ->when($selectedClass, function ($query) use ($selectedClass) {
+                $query->where('class_id', $selectedClass);
+            })
+            ->orderBy($sort_field, $sort_direction)
+            ->search(trim($search_term));
+    }
 }

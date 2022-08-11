@@ -21,34 +21,26 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function index()
     {
-        request()->validate([
-            'direction' => ['in:asc,desc'],
-            'field' => ['in:name,city']
-        ]);
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentFromCustomer/Index');
+    }
 
-        $business_id = auth()->user()->business_id;
+    /**
+     * Geting debt payment from customer lists
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getDebtPaymentLists()
+    {
 
-        $transactions = Transaction::query();
-        $transactions->where('business_id', $business_id)->where('type','sell');
+        $paginate = request('paginate');
 
-        if (request('search')) {
-            $transactions->where('invoice_no', 'LIKE', '%' . request('search') . '%');
+        if (isset($paginate)) {
+            $transactions = Transaction::transactionsQuery()->paginate($paginate);
+        } else {
+            $transactions = Transaction::transactionsQuery()->get();
         }
-        if (request()->has(['field', 'direction'])) {
-            $transactions->orderBy(request('field'), request('direction'));
-        }else{
-            $transactions->orderBy('created_at', 'desc');
-        }
-        $transactions = $transactions->paginate(5)->withQueryString();
-        foreach ($transactions as $key=>$value) {
-            $transactions[$key]->sell = $value->sell;
-            $transactions[$key]->item = $value->sell->item;
-            $transactions[$key]->product = $value->sell->item->product;
-        }
-        return Inertia::render('AdminPanel/CashManagement/DebtPaymentFromCustomer/Index', [
-            'transactions' => $transactions,
-            'filters' => request()->all(['search', 'field', 'direction'])
-        ]);
+
+        return StudentResource::collection($transactions);
     }
 
     /**

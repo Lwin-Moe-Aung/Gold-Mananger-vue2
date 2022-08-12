@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Transaction;
+use App\Models\Contact;
 use App\Models\DebtPaymentFromCustomer;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -88,7 +89,6 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
             $transaction = Transaction::create([
@@ -125,6 +125,23 @@ class DebtPaymentFromCustomerController extends Controller
             DB::rollback();
             return back()->with('fail', 'Fail to Create New Debt pyment from customer');
         }
+    }
+
+    /**
+     * Get Customer list who have credit / Debt to pay
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCustomerLists()
+    {
+        $customers = Contact::whereIn('id', function($query) {
+                $query->select('contact_id')
+                    ->from('transactions')
+                    ->where('type','debt_payment_from_customer')
+                    ->groupBy('contact_id')
+                    ->pluck('contact_id');
+                })->get();
+        return response()->json(['data' => $customers]);
     }
 
     /**

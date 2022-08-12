@@ -11,7 +11,7 @@
                     </button>
                 </Link>
             </div>
-            <section class="content">
+            <section class="content" data-app>
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -31,13 +31,20 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="ml-2 p-2">
-                                    <select
-                                        v-model="selectedCustomer"
-                                        class="form-control form-control-sm"
-                                    >
-                                        <option value="">All Customer</option>
-                                    </select>
+                                <div class="ml-2 p-1">
+                                    <v-combobox
+                                        v-model="customer"
+                                        :items="customers"
+                                        @change="onChangeCustomer"
+                                        item-text="name"
+                                        item-value="id"
+                                        return-object
+                                        label="Select Customer"
+                                        clearable
+                                        dense
+                                        hide-selected
+                                        solo
+                                    ></v-combobox>
                                 </div>
                                 <div class="ml-2 p-2">
                                     <Datepicker
@@ -47,7 +54,7 @@
                                         format="YYYY-MM-DD"
                                         width="350"
                                         placeholder ="Select date"
-                                    ></Datepicker >
+                                    ></Datepicker>
                                 </div>
                                 <div class="ml-auto p-2">
                                     <input
@@ -187,7 +194,7 @@
                                 </table>
                             </div>
                             <div class="row mt-4">
-                                <div class="col-sm-6 offset-5">
+                                <div class="col-sm-6 offset-5 float-right">
                                     <pagination
                                         :data="debtPaymentLists"
                                         @pagination-change-page="getData"
@@ -206,8 +213,6 @@
 <script>
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import moment from 'moment';
-    import Pagination from '../../../../Components/AdminPanel/Pagination';
-    import ContactAutoCompleteSearchComponent from '../../../../Components/AdminPanel/ContactAutoCompleteSearchComponent';
     import { Link } from '@inertiajs/inertia-vue';
     import 'vue2-datepicker/index.css';
     import Datepicker from 'vue2-datepicker';
@@ -222,9 +227,7 @@
             ],
         components: {
             AdminLayout,
-            Pagination,
             Link,
-            ContactAutoCompleteSearchComponent,
             Datepicker
         },
         data() {
@@ -232,7 +235,9 @@
                 debtPaymentLists: {},
                 paginate: 10,
                 search: '',
-                selectedCustomer: '',
+                customer:null,
+                customer_id:'',
+                customers: [],
                 sort_direction: "desc",
                 sort_field: "created_at",
                 url: '',
@@ -249,10 +254,19 @@
             search: function(value) {
                 this.getData();
             },
+            model (val) {
+                if (val.length > 5) {
+                this.$nextTick(() => this.model.pop())
+                }
+            },
         },
 
         methods: {
-
+            onChangeCustomer() {
+                if(this.customer != null)this.customer_id = this.customer.id;
+                else this.customer_id = '';
+                this.getData();
+            },
             change_sort(field) {
                 if (this.sort_field == field) {
                     this.sort_direction =
@@ -295,7 +309,7 @@
                     "&sort_field=" +
                     this.sort_field +
                     "&selectedCustomer=" +
-                    this.selectedCustomer;
+                    this.customer_id;
 
                 this.getDataUrl = this.getDataUrlWithoutPadination.concat(
                     "&paginate=" + this.paginate + "&page=" + page
@@ -307,9 +321,11 @@
         },
 
         mounted() {
-            // axios.get("/api/classes").then(response => {
-            //     this.classes = response.data.data;
-            // });
+            axios.get(this.route("admin.getCustomerLists"))
+                .then((response) => {
+                    console.log(response.data);
+                    this.customers = response.data.data;
+            });
             this.getData();
         }
     };

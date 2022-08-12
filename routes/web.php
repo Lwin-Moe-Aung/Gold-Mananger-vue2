@@ -184,6 +184,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::resource('debt-payment-from-customers', DebtPaymentFromCustomerController::class);
     Route::get('get-debt-payment-lists', [DebtPaymentFromCustomerController::class, 'getDebtPaymentLists'])->name('getDebtPaymentLists');
     Route::get('customer/get-credit-data-lists', [DebtPaymentFromCustomerController::class, 'getCreditDataLists'])->name('getCreditDataLists');
+    Route::get('credit/get-customer-lists', [DebtPaymentFromCustomerController::class, 'getCustomerLists'])->name('getCustomerLists');
+
     Route::resource('debt-payment-to-suppliers', DebtPaymentToSupplierController::class);
 
 

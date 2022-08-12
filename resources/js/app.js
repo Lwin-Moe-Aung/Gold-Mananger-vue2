@@ -32,6 +32,7 @@ Vue.use(Vuelidate);
 // Vue.use(Vuetify);
 Vue.component('multiselect', Multiselect)
 InertiaProgress.init();
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 var numeral = require("numeral");
 Vue.filter("formatNumber", function (value) {

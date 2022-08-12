@@ -88,6 +88,7 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
             $transaction = Transaction::create([
@@ -98,7 +99,7 @@ class DebtPaymentFromCustomerController extends Controller
                 'payment_status' => "paid",
                 'contact_id' => $request->customer_id,
                 'transaction_date' => Carbon::now()->format('Y-m-d'),
-                'additional_notes' =>  $request->additional_note,
+                'additional_notes' =>  $request->additional_note != "" ? $request->additional_note : null,
                 'created_by' =>  auth()->user()->id,
                 'debt_paid_money' => $request->total_payment,
                 'remaining_credit_money' => $request->remaining_credit_money,

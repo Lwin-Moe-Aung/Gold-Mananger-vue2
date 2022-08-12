@@ -92,12 +92,12 @@ class Transaction extends Model
     {
         $term = "%$term%";
         $query->where(function ($query) use ($term) {
-            $query->where('paid_money', 'like', $term)
-                ->orWhere('credit_money', 'like', $term)
+            $query->where('debt_paid_money', 'like', $term)
+                ->orWhere('remaining_credit_money', 'like', $term)
                 ->orWhereHas('contact', function ($query) use ($term) {
-                    $query->where('name', 'like', $term);
-                    $query->where('mobile1', 'like', $term);
-                    $query->where('mobile2', 'like', $term);
+                    $query->where('name', 'like', $term)
+                        ->orWhere('mobile1', 'like', $term)
+                        ->orWhere('mobile2', 'like', $term);
                 });
         });
     }
@@ -113,11 +113,11 @@ class Transaction extends Model
         }
 
         $sort_field = request('sort_field', 'created_at');
-        if (!in_array($sort_field, ['name', 'total_debt_payment', 'remaining_credit', 'invoice_no', 'created_at'])) {
+        if (!in_array($sort_field, ['name','mobile', 'debt_paid_money', 'remaining_credit_money', 'created_at'])) {
             $sort_field = 'created_at';
         }
         $query->where('type','debt_payment_from_customer')
-            ->with(['contact'])
+            ->with('contact')
             ->when($selectedCustomer, function ($query) use ($selectedCustomer) {
                 $query->where('contact_id', $selectedCustomer);
             })

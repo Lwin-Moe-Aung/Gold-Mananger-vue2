@@ -104,6 +104,7 @@
                                         type="submit"
                                         class="btn btn-primary text-uppercase text-white"
                                         style="letter-spacing: 0.1em;"
+                                        :disabled="isDisabled"
                                         >
                                         {{ buttonTxt }}
                                     </button>
@@ -148,8 +149,9 @@
                 customer:[],
                 customer_id:null,
                 total_payment:null,
-                additional_note:null,
+                additional_note:"",
                 remaining_credit_money:null,
+                isDisabled:true,
             }
         },
         created() {
@@ -190,9 +192,14 @@
                 if(value !== null){
                     this.customer = value;
                     this.customer_id = value.id;
+                    this.total_payment = null;
+                    this.isDisabled = false;
                 }else{
                     this.customer = [];
                     this.customer_id = null;
+                    this.total_payment = null;
+                    this.isDisabled = true;
+                    this.resetCartState();
                 }
             },
             validationStatus: function(validation) {
@@ -209,6 +216,7 @@
                 this.setTotalDebtPaymentAmount(this.total_payment);
             },
             createDebtPaymentFromCustomer() {
+                this.isDisabled = true;
                 this.$v.$touch();
                 if (this.$v.$pendding || this.$v.$error) return;
                 let data = new FormData();
@@ -229,6 +237,7 @@
                             this.customer_id = null;
                             this.total_payment = null;
                             this.additional_note = null;
+
                         }
                     })
                     .catch(function (error) {

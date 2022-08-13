@@ -111,12 +111,12 @@ class Transaction extends Model
         $startDate = request('startDate');
         $endDate = request('endDate');
 
-        if($startDate != null){
-            $startDate = Carbon::createFromFormat('YYYY-MM-DD', $startDate);
-            $endDate = Carbon::createFromFormat('YYYY-MM-DD', $endDate);
+        // if($startDate != null){
+        //     $startDate = Carbon::createFromFormat('YYYY-MM-DD', $startDate);
+        //     $endDate = Carbon::createFromFormat('YYYY-MM-DD', $endDate);
 
-        }
-        dd($startDate);
+        // }
+        // dd($startDate);
 
         if (!in_array($sort_direction, ['asc', 'desc'])) {
             $sort_direction = 'desc';
@@ -132,7 +132,7 @@ class Transaction extends Model
                 $query->where('contact_id', $selectedCustomer);
             })
             ->when($startDate, function ($query) use ($startDate, $endDate) {
-                $query->whereBetween('created_at', [$startDate,$endDate]);
+                $query->whereBetween('created_at', [$startDate, $endDate]);
             })
             ->orderBy($sort_field, $sort_direction)
             ->search(trim($search_term));

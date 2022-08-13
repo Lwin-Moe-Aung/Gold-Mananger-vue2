@@ -152,7 +152,15 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function show($id)
     {
-        //
+        $transaction = Transaction::where('id',$id)
+                    ->with(['contact', 'debtPaymentFromCustomer'])
+                    // ->whereHas('debtPaymentFromCustomer', function ($query) use(parent_id){
+                    //     $query->select('parent_id', function ($query){
+                    //         $query->
+                    //     });
+                    // });
+                    ->first();
+        dd($transaction);
     }
 
     /**

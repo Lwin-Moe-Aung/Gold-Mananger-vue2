@@ -97,9 +97,10 @@
                                 </div>
 
                                 <div class="modal-footer justify-content-right">
-                                    <Link :href="route('admin.expenses.index')">
+                                    <Link :href="route('admin.debt-payment-from-customers.index')">
                                         <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
                                     </Link>
+
                                     <button
                                         type="submit"
                                         class="btn btn-primary text-uppercase text-white"

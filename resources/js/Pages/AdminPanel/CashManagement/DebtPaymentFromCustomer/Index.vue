@@ -157,11 +157,23 @@
                                             <td>
                                                 <button
                                                     onclick="confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
-                                                    class="btn btn-danger btn-sm"
-                                                    @click="deleteSingleRecord(debtPaymentList.id)"
+                                                    class="btn btn-sm"
+                                                    @click="deleteRecord(debtPaymentList.id)"
                                                 >
                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                 </button>
+                                                <button
+                                                    class="btn btn-warrning btn-sm"
+                                                    @click="editRecord(debtPaymentList.id)"
+                                                >
+                                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                                </button>
+
+                                                <Link :href="route('admin.debt-payment-from-customers.show',debtPaymentList.id)">
+                                                    <button class="btn btn-warrning btn-sm">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </Link>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -242,8 +254,8 @@
             },
             inputDatepicker() {
                 if(this.dateRange[0] != null){
-                    this.startDate = this.dateRange[0];
-                    this.endDate = this.dateRange[1];
+                    this.startDate = moment(this.dateRange[0]).format('YYYY-MM-DD');
+                    this.endDate = moment(this.dateRange[1]).format('YYYY-MM-DD');
                 }else{
                     this.startDate = '';
                     this.endDate = '';
@@ -260,7 +272,21 @@
                 }
                 this.getData();
             },
-            deleteSingleRecord(student_id) {
+            deleteRecord(student_id) {
+                axios.delete("/api/student/delete/" + student_id).then(response => {
+                    this.checked = this.checked.filter(id => id != student_id);
+                    this.$toast.success("Student Deleted Successfully");
+                    this.getData();
+                });
+            },
+            editRecord(student_id) {
+                axios.delete("/api/student/delete/" + student_id).then(response => {
+                    this.checked = this.checked.filter(id => id != student_id);
+                    this.$toast.success("Student Deleted Successfully");
+                    this.getData();
+                });
+            },
+            detailRecord(student_id) {
                 axios.delete("/api/student/delete/" + student_id).then(response => {
                     this.checked = this.checked.filter(id => id != student_id);
                     this.$toast.success("Student Deleted Successfully");

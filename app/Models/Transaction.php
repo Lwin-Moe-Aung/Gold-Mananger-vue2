@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-
+use Carbon\Carbon;
 
 class Transaction extends Model
 {
@@ -108,18 +108,31 @@ class Transaction extends Model
         $selectedCustomer = request('selectedCustomer');
         $sort_direction = request('sort_direction', 'desc');
 
+        $startDate = request('startDate');
+        $endDate = request('endDate');
+
+        if($startDate != null){
+            $startDate = Carbon::createFromFormat('YYYY-MM-DD', $startDate);
+            $endDate = Carbon::createFromFormat('YYYY-MM-DD', $endDate);
+
+        }
+        dd($startDate);
+
         if (!in_array($sort_direction, ['asc', 'desc'])) {
             $sort_direction = 'desc';
         }
 
         $sort_field = request('sort_field', 'created_at');
-        if (!in_array($sort_field, ['name','mobile', 'debt_paid_money', 'remaining_credit_money', 'created_at'])) {
+        if (!in_array($sort_field, ['debt_paid_money', 'remaining_credit_money', 'created_at'])) {
             $sort_field = 'created_at';
         }
         $query->where('type','debt_payment_from_customer')
             ->with('contact')
             ->when($selectedCustomer, function ($query) use ($selectedCustomer) {
                 $query->where('contact_id', $selectedCustomer);
+            })
+            ->when($startDate, function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate,$endDate]);
             })
             ->orderBy($sort_field, $sort_direction)
             ->search(trim($search_term));

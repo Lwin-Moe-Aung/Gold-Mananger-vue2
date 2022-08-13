@@ -48,12 +48,14 @@
                                 </div>
                                 <div class="ml-2 p-2">
                                     <Datepicker
-                                        v-model="range"
+                                        v-model="dateRange"
                                         lang="en"
                                         range type="date"
+                                        @input="inputDatepicker"
                                         format="YYYY-MM-DD"
                                         width="350"
                                         placeholder ="Select date"
+                                        confirm
                                     ></Datepicker>
                                 </div>
                                 <div class="ml-auto p-2">
@@ -71,41 +73,13 @@
                                         <tr>
                                             <th>#</th>
                                             <th>
-                                                <a href="#" @click.prevent="change_sort('name')"
+                                                <a href="#"
                                                     >Name</a
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'desc' &&
-                                                            sort_field == 'name'
-                                                    "
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'asc' &&
-                                                            sort_field == 'name'
-                                                    "
-                                                    >&darr;</span
                                                 >
                                             </th>
                                             <th>
                                                 <a href="#" @click.prevent="change_sort('mobile')"
                                                     >Mobile</a
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'desc' &&
-                                                            sort_field == 'mobile'
-                                                    "
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'asc' &&
-                                                            sort_field == 'mobile'
-                                                    "
-                                                    >&darr;</span
                                                 >
                                             </th>
                                             <th>
@@ -240,10 +214,9 @@
                 customers: [],
                 sort_direction: "desc",
                 sort_field: "created_at",
-                url: '',
-                getDataUrl: '',
-                getDataUrlWithoutPadination: '',
-                range:'',
+                dateRange:'',
+                startDate:'',
+                endDate:'',
             };
         },
 
@@ -266,6 +239,17 @@
                 if(this.customer != null)this.customer_id = this.customer.id;
                 else this.customer_id = '';
                 this.getData();
+            },
+            inputDatepicker() {
+                if(this.dateRange[0] != null){
+                    this.startDate = this.dateRange[0];
+                    this.endDate = this.dateRange[1];
+                }else{
+                    this.startDate = '';
+                    this.endDate = '';
+                }
+                this.getData();
+
             },
             change_sort(field) {
                 if (this.sort_field == field) {
@@ -300,7 +284,7 @@
                 return this.checked.includes(student_id);
             },
             getData(page = 1) {
-                this.getDataUrlWithoutPadination =
+                let getDataUrlWithoutPagination =
                     "/admin/get-debt-payment-lists?" +
                     "q=" +
                     this.search +
@@ -309,12 +293,16 @@
                     "&sort_field=" +
                     this.sort_field +
                     "&selectedCustomer=" +
-                    this.customer_id;
+                    this.customer_id +
+                    "&startDate=" +
+                    this.startDate +
+                    "&endDate=" +
+                    this.endDate;
 
-                this.getDataUrl = this.getDataUrlWithoutPadination.concat(
+                let getDataUrl = getDataUrlWithoutPagination.concat(
                     "&paginate=" + this.paginate + "&page=" + page
                 );
-                axios.get(this.getDataUrl).then(response => {
+                axios.get(getDataUrl).then(response => {
                     this.debtPaymentLists = response.data;
                 });
             }

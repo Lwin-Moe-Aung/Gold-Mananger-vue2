@@ -25,7 +25,7 @@ class DebtPaymentFromCustomer extends Model
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class, 'transaction_id');
+        return $this->belongsTo(Transaction::class, 'parent_id');
     }
 
 }

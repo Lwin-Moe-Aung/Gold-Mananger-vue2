@@ -28,6 +28,7 @@ use App\Http\Controllers\Admins\CashInController;
 use App\Http\Controllers\Admins\CashOutController;
 use App\Http\Controllers\Admins\DebtPaymentFromCustomerController;
 use App\Http\Controllers\Admins\DebtPaymentToSupplierController;
+use App\Http\Controllers\Admins\CreditInfoController;
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -188,5 +189,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     Route::resource('debt-payment-to-suppliers', DebtPaymentToSupplierController::class);
     Route::get('supplier/get-credit-data-lists', [DebtPaymentToSupplierController::class, 'getSupplierCreditDataLists'])->name('getSupplierCreditDataLists');
+
+    Route::get('customers-who-have-credit', [CreditInfoController::class, 'getCustomersWhoHaveCredit'])->name('getCustomersWhoHaveCredit');
 
 });

@@ -77,7 +77,7 @@ export default {
             }
         },
         loadData(){
-            axios.get(this.route(this.route_name))
+            axios.get(this.route(this.route_name), { params: {type: this.type}})
                 .then((response) => {
                     this.data = response.data.data;
             });

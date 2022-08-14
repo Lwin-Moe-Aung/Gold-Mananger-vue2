@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import PosModule from '../store/modules/pos/pos-module'
 import PurchaseReturn from '../store/modules/admin/purchase-return'
-import DebtPaymentFromCustomer from '../store/modules/admin/debt-payment-from-customer'
+import DebtPayment from './modules/admin/debt-payment'
 
 Vue.use(Vuex);
 
@@ -17,7 +17,7 @@ export const store = new Vuex.Store({
     modules: {
         PosModule,
         PurchaseReturn,
-        DebtPaymentFromCustomer
+        DebtPayment
     }
 });
 

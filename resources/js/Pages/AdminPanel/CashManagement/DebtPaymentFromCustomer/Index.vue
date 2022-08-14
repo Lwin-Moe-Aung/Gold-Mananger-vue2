@@ -272,44 +272,8 @@
                 }
                 this.getData();
             },
-            deleteRecord(student_id) {
-                axios.delete("/api/student/delete/" + student_id).then(response => {
-                    this.checked = this.checked.filter(id => id != student_id);
-                    this.$toast.success("Student Deleted Successfully");
-                    this.getData();
-                });
-            },
-            editRecord(student_id) {
-                axios.delete("/api/student/delete/" + student_id).then(response => {
-                    this.checked = this.checked.filter(id => id != student_id);
-                    this.$toast.success("Student Deleted Successfully");
-                    this.getData();
-                });
-            },
-            detailRecord(student_id) {
-                axios.delete("/api/student/delete/" + student_id).then(response => {
-                    this.checked = this.checked.filter(id => id != student_id);
-                    this.$toast.success("Student Deleted Successfully");
-                    this.getData();
-                });
-            },
-            deleteRecords() {
-                axios
-                    .delete("/api/students/massDestroy/" + this.checked)
-                    .then(response => {
-                        if (response.status == 204) {
-                            this.$toast.success(
-                                "Selected Students were Deleted Successfully"
-                            );
-                            this.checked = [];
-                            this.getData();
-                        }
-                    });
-            },
-            isChecked(student_id) {
-                return this.checked.includes(student_id);
-            },
             getData(page = 1) {
+                const type = "debt_payment_from_customer";
                 let getDataUrlWithoutPagination =
                     "/admin/get-debt-payment-lists?" +
                     "q=" +
@@ -318,14 +282,16 @@
                     this.sort_direction +
                     "&sort_field=" +
                     this.sort_field +
-                    "&selectedCustomer=" +
+                    "&selectedContact=" +
                     this.customer_id +
                     "&startDate=" +
                     this.startDate +
                     "&endDate=" +
-                    this.endDate;
+                    this.endDate +
+                    "&type=" +
+                    type;
 
-                let getDataUrl = getDataUrlWithoutPagination.concat(
+                const getDataUrl = getDataUrlWithoutPagination.concat(
                     "&paginate=" + this.paginate + "&page=" + page
                 );
                 axios.get(getDataUrl).then(response => {
@@ -335,7 +301,8 @@
         },
 
         mounted() {
-            axios.get(this.route("admin.getCustomerLists"))
+            let type = "debt_payment_from_customer";
+            axios.get(this.route("admin.getCustomerLists"), { params: {type: type}})
                 .then((response) => {
                     console.log(response.data);
                     this.customers = response.data.data;

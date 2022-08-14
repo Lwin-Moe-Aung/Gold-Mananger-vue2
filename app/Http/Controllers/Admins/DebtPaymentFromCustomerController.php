@@ -39,6 +39,7 @@ class DebtPaymentFromCustomerController extends Controller
         } else {
             $transactions = Transaction::transactionsQuery()->get();
         }
+        // dd($transactions);
         return DebtPaymentListsResource::collection($transactions);
     }
 
@@ -63,10 +64,10 @@ class DebtPaymentFromCustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getCreditDataLists(Request $request)
+    public function getCustomerCreditDataLists(Request $request)
     {
         $transactions = Transaction::where('business_id', auth()->user()->business_id)
-                    ->where('contact_id',$request->customer_id)
+                    ->where('contact_id',$request->contact_id)
                     ->where('type','sell')
                     ->where('credit_money','!=', 0)
                     ->get();
@@ -114,8 +115,8 @@ class DebtPaymentFromCustomerController extends Controller
                     'transaction_id' => $transaction->id,
                     'parent_id' => $data->parent_transaction_id,
                     'customer_id' => $request->customer_id,
-                    'paid_money' => $data->old_paid_money,
-                    'credit_money' => $data->old_credit_money,
+                    'old_paid_money' => $data->old_paid_money,
+                    'old_credit_money' => $data->old_credit_money,
                     'debt_payment' => $data->debt_payment_amount,
                 ]);
             }
@@ -134,10 +135,11 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function getCustomerLists()
     {
-        $customers = Contact::whereIn('id', function($query) {
+        $type = request('type');
+        $customers = Contact::whereIn('id', function($query) use($type){
                 $query->select('contact_id')
                     ->from('transactions')
-                    ->where('type','debt_payment_from_customer')
+                    ->where('type', $type)
                     ->groupBy('contact_id')
                     ->pluck('contact_id');
                 })->get();
@@ -159,7 +161,8 @@ class DebtPaymentFromCustomerController extends Controller
                     //         $query->
                     //     });
                     // });
-                    ->first();
+                    ->first()
+                    ->toArray();
         dd($transaction);
     }
 

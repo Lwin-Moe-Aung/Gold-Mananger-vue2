@@ -11,7 +11,7 @@
                     <form ref="productform" @submit.prevent="checkMode">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <Link :href="route('admin.debt-payment-from-customers.index')">
+                                <Link :href="route('admin.debt-payment-to-suppliers.index')">
                                     <button class="btn btn-primary float-left mr-3" style="h">
                                         <i class="fas fa-long-arrow-alt-left" aria-hidden="true" ></i>
                                     </button>
@@ -23,14 +23,14 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group">
-                                            <label for="permissions">Customer</label>
+                                            <label for="permissions">Supplier</label>
                                             <ContactAutoCompleteSearchComponent
-                                                @update:data="selectCustomer"
+                                                @update:data="selectSupplier"
                                                 route_name = "pos.contact_search"
-                                                v-model = "customer"
+                                                v-model = "supplier"
                                                 label="search_name"
-                                                placeholder="Search Customer"
-                                                type="customer"
+                                                placeholder="Search Supplier"
+                                                type="supplier"
                                                 button="false"
                                             />
                                         </div>
@@ -56,7 +56,7 @@
                                                 class="form-control form-control"
                                                 autofocus="autofocus"
                                                 autocomplete="off"
-                                                @change="customerDebtPayment"
+                                                @change="onChangeDebtPayment"
                                             >
                                             <div v-if="!$v.total_payment.required" class="invalid-feedback">The debt payment amount field is required.</div>
                                         </div>
@@ -78,8 +78,8 @@
                                     </div>
                                 </div>
                                 <CreditVoucherListsComponent
-                                    v-model="customer_id"
-                                    url="customer/get-credit-data-lists"
+                                    v-model="supplier_id"
+                                    url="supplier/get-credit-data-lists"
                                     />
 
                                 <div class="row">
@@ -100,7 +100,7 @@
                                 </div>
 
                                 <div class="modal-footer justify-content-right">
-                                    <Link :href="route('admin.debt-payment-from-customers.index')">
+                                    <Link :href="route('admin.debt-payment-to-suppliers.index')">
                                         <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
                                     </Link>
 
@@ -150,8 +150,8 @@
                 form: this.$inertia.form({
                     id: null,
                 }),
-                customer:[],
-                customer_id:null,
+                supplier:[],
+                supplier_id:null,
                 total_payment:null,
                 additional_note:"",
                 remaining_credit_money:null,
@@ -174,13 +174,13 @@
         computed: {
             ...mapGetters(['total_credits', 'total_debt_payment_amount_for_cal', 'total_debt_payment_amount', 'checked_voucher_lists']),
             formTitle() {
-                return this.form.id == null ? 'Create New Debt Payment' : 'Edit Current Debt Payment';
+                return this.form.id == null ? 'Create New Debt Payment To Supplier' : 'Edit Current Debt Payment To Supplier';
             },
             buttonTxt() {
                 return this.form.id == null ? 'Create' : 'Update';
             },
             checkMode() {
-                return this.form.id == null ? this.createDebtPaymentFromCustomer : this.editDebtPaymentFromCustomer
+                return this.form.id == null ? this.createDebtPaymentToSupplier : this.editDebtPaymentToSupplier
             },
         },
         validations: {
@@ -192,15 +192,15 @@
                 let v = parseInt(x);
                 return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             },
-            selectCustomer(value) {
+            selectSupplier(value) {
                 if(value !== null){
-                    this.customer = value;
-                    this.customer_id = value.id;
+                    this.supplier = value;
+                    this.supplier_id = value.id;
                     this.total_payment = null;
                     this.isDisabled = false;
                 }else{
-                    this.customer = [];
-                    this.customer_id = null;
+                    this.supplier = [];
+                    this.supplier_id = null;
                     this.total_payment = null;
                     this.isDisabled = true;
                     this.resetCartState();
@@ -209,7 +209,7 @@
             validationStatus: function(validation) {
                 return typeof validation != "undefined" ? validation.$error : false;
             },
-            customerDebtPayment(){
+            onChangeDebtPayment(){
                 if(this.total_payment > this.total_credits){
                     alert("debt payment is exceed than total credits");
                     this.total_payment = null;
@@ -219,17 +219,17 @@
                 }
                 this.setTotalDebtPaymentAmount(this.total_payment);
             },
-            createDebtPaymentFromCustomer() {
+            createDebtPaymentToSupplier() {
                 this.isDisabled = true;
                 this.$v.$touch();
                 if (this.$v.$pendding || this.$v.$error) return;
                 let data = new FormData();
-                data.append('customer_id',this.customer_id);
+                data.append('supplier_id',this.supplier_id);
                 data.append('total_payment',this.total_payment);
                 data.append('remaining_credit_money',this.remaining_credit_money);
                 data.append('additional_note',this.additional_note);
                 data.append('checked_voucher_lists',JSON.stringify(this.checked_voucher_lists));
-                axios.post(this.route('admin.debt-payment-from-customers.store'), data)
+                axios.post(this.route('admin.debt-payment-to-suppliers.store'), data)
                     .then(res => {
                         if(res.data.status){
                             Toast.fire({
@@ -237,8 +237,8 @@
                                 title: 'Payment Success'
                             })
                             this.resetCartState();
-                            this.customer = [];
-                            this.customer_id = null;
+                            this.supplier = [];
+                            this.supplier_id = null;
                             this.total_payment = null;
                             this.additional_note = null;
 

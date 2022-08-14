@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Transaction;
+use App\Models\DebtPaymentToSupplier;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use DB;
 
 class DebtPaymentToSupplierController extends Controller
 {
@@ -16,34 +20,7 @@ class DebtPaymentToSupplierController extends Controller
      */
     public function index()
     {
-        request()->validate([
-            'direction' => ['in:asc,desc'],
-            'field' => ['in:name,city']
-        ]);
-
-        $business_id = auth()->user()->business_id;
-
-        $transactions = Transaction::query();
-        $transactions->where('business_id', $business_id)->where('type','sell');
-
-        if (request('search')) {
-            $transactions->where('invoice_no', 'LIKE', '%' . request('search') . '%');
-        }
-        if (request()->has(['field', 'direction'])) {
-            $transactions->orderBy(request('field'), request('direction'));
-        }else{
-            $transactions->orderBy('created_at', 'desc');
-        }
-        $transactions = $transactions->paginate(5)->withQueryString();
-        foreach ($transactions as $key=>$value) {
-            $transactions[$key]->sell = $value->sell;
-            $transactions[$key]->item = $value->sell->item;
-            $transactions[$key]->product = $value->sell->item->product;
-        }
-        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Index', [
-            'transactions' => $transactions,
-            'filters' => request()->all(['search', 'field', 'direction'])
-        ]);
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Index');
     }
 
     /**
@@ -53,7 +30,7 @@ class DebtPaymentToSupplierController extends Controller
      */
     public function create()
     {
-        dd("hello sout yu");
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Create');
     }
 
     /**
@@ -64,7 +41,42 @@ class DebtPaymentToSupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $transaction = Transaction::create([
+                'business_id' => auth()->user()->business_id,
+                'business_location_id' => auth()->user()->business_location_id,
+                'type' => "debt_payment_to_supplier",
+                'status' => "received",
+                'payment_status' => "paid",
+                'contact_id' => $request->supplier_id,
+                'transaction_date' => Carbon::now()->format('Y-m-d'),
+                'additional_notes' =>  $request->additional_note != "" ? $request->additional_note : null,
+                'created_by' =>  auth()->user()->id,
+                'debt_paid_money' => $request->total_payment,
+                'remaining_credit_money' => $request->remaining_credit_money,
+            ]);
+            foreach (json_decode($request->checked_voucher_lists) as $data){
+                $trans = Transaction::find($data->parent_transaction_id);
+                $trans->paid_money = (int)$trans->paid_money + (int)$data->debt_payment_amount;
+                $trans->credit_money = (int)$trans->credit_money - (int)$data->debt_payment_amount;
+                $trans->save();
+
+                DebtPaymentToSupplier::create([
+                    'transaction_id' => $transaction->id,
+                    'parent_id' => $data->parent_transaction_id,
+                    'supplier_id' => $request->supplier_id,
+                    'old_paid_money' => $data->old_paid_money,
+                    'old_credit_money' => $data->old_credit_money,
+                    'debt_payment' => $data->debt_payment_amount,
+                ]);
+            }
+            DB::commit();
+            return response()->json(['status' => true]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('fail', 'Fail to Create New Debt pyment from customer');
+        }
     }
 
     /**
@@ -110,5 +122,30 @@ class DebtPaymentToSupplierController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    /**
+     * get total credit value for customer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getSupplierCreditDataLists(Request $request)
+    {
+        $transactions = Transaction::where('business_id', auth()->user()->business_id)
+                    ->where('contact_id',$request->contact_id)
+                    ->where('type','purchase')
+                    ->where('credit_money','!=', 0)
+                    ->get();
+        $total_credits = 0;
+        foreach ($transactions as $key=>$value) {
+            $total_credits = $total_credits + $value->credit_money;
+            $transactions[$key]->item = $value->purchase->item;
+        }
+        return response()->json([
+            'data' => $transactions,
+            'total_credits' => $total_credits,
+        ]);
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class Contact extends Model
 {
@@ -67,5 +68,22 @@ class Contact extends Model
     public function sell()
     {
         return $this->hasMany(Sell::class, 'customer_id');
+    }
+
+    public function scopeSearchQuery($query)
+    {
+        $search_value = request('term');
+        $search_value = "%$search_value%";
+        $query->where('business_id', Auth::user()->business_id)
+            ->where('type', request('type'))
+            ->when(request('term'), function ($query) use($search_value) {
+                $query->where(function ($query) use ($search_value) {
+                    $query->where('name','like',$search_value)
+                        ->orWhere('email','like',$search_value)
+                        ->orWhere('mobile1','like',$search_value)
+                        ->orWhere('mobile2','like',$search_value)
+                        ->orWhere('address','like',$search_value);
+                });
+            });
     }
 }

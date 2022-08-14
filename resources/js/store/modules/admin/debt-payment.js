@@ -60,7 +60,7 @@ const actions = {
     },
     async getCreditDataLists({commit}, data){
         await commit('resetState');
-        await axios.get(constant.ROUTE_URL_ADMIN+"customer/get-credit-data-lists", { params: { customer_id: data }})
+        await axios.get(constant.ROUTE_URL_ADMIN+ data.url, { params: { contact_id: data.contact_id }})
             .then((response) => {
                 commit("setVoucherLists", response.data.data);
                 commit("setTotalCredit", response.data.total_credits);

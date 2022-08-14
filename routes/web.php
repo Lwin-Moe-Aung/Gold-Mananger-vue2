@@ -183,11 +183,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::resource('cash_outs', CashOutController::class);
     Route::resource('debt-payment-from-customers', DebtPaymentFromCustomerController::class);
     Route::get('get-debt-payment-lists', [DebtPaymentFromCustomerController::class, 'getDebtPaymentLists'])->name('getDebtPaymentLists');
-    Route::get('customer/get-credit-data-lists', [DebtPaymentFromCustomerController::class, 'getCreditDataLists'])->name('getCreditDataLists');
+    Route::get('customer/get-credit-data-lists', [DebtPaymentFromCustomerController::class, 'getCustomerCreditDataLists'])->name('getCustomerCreditDataLists');
     Route::get('credit/get-customer-lists', [DebtPaymentFromCustomerController::class, 'getCustomerLists'])->name('getCustomerLists');
 
     Route::resource('debt-payment-to-suppliers', DebtPaymentToSupplierController::class);
-
-
+    Route::get('supplier/get-credit-data-lists', [DebtPaymentToSupplierController::class, 'getSupplierCreditDataLists'])->name('getSupplierCreditDataLists');
 
 });

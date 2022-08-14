@@ -104,19 +104,13 @@ class Transaction extends Model
 
     public function scopeTransactionsQuery($query)
     {
+        $type = request('type');
         $search_term = request('q', '');
-        $selectedCustomer = request('selectedCustomer');
+        $selectedContact = request('selectedContact');
         $sort_direction = request('sort_direction', 'desc');
 
         $startDate = request('startDate');
         $endDate = request('endDate');
-
-        // if($startDate != null){
-        //     $startDate = Carbon::createFromFormat('YYYY-MM-DD', $startDate);
-        //     $endDate = Carbon::createFromFormat('YYYY-MM-DD', $endDate);
-
-        // }
-        // dd($startDate);
 
         if (!in_array($sort_direction, ['asc', 'desc'])) {
             $sort_direction = 'desc';
@@ -126,10 +120,10 @@ class Transaction extends Model
         if (!in_array($sort_field, ['debt_paid_money', 'remaining_credit_money', 'created_at'])) {
             $sort_field = 'created_at';
         }
-        $query->where('type','debt_payment_from_customer')
+        $query->where('type', $type)
             ->with('contact')
-            ->when($selectedCustomer, function ($query) use ($selectedCustomer) {
-                $query->where('contact_id', $selectedCustomer);
+            ->when($selectedContact, function ($query) use ($selectedContact) {
+                $query->where('contact_id', $selectedContact);
             })
             ->when($startDate, function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate]);

@@ -1,73 +1,5 @@
 <template>
     <div class="row">
-        <!-- <div class="col-md-3 col-sm-6" v-for="(voucher_list, index) in voucher_lists" :key="index">
-
-            <div class="card card-primary card-outline direct-chat direct-chat-primary">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        Invoce Number-<span class="badge bg-primary"><a href="">{{ voucher_list.invoice_no }}</a></span>
-                    </h3>
-
-                    <div class="card-tools">
-                        <span title="3 New Messages" class="badge bg-danger">3</span>
-
-                        <input
-                            class="custom-control-input-tool"
-                            type="checkbox"
-                            :value="voucher_list.id"
-                            :id="voucher_list.id"
-                            @click="onChangeCheckBox($event)"
-                            v-if="total_debt_payment_amount_for_cal != 0"
-                            style="width:30px; height:30px;"
-                        >
-                    </div>
-                </div>
-
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <td>1.</td>
-                                <td>ပစ္စည်း</td>
-                                <td>
-                                    <img class="w-10 h-10 rounded-full" :src="voucher_list.item.image" alt="" style="width:60px;"/>
-                                    <span class="badge bg-primary">{{ voucher_list.item.name }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2.</td>
-                                <td>စုစုပေါင်း</td>
-                                <td><span class="badge bg-warning">{{ numberWithCommas(voucher_list.before_total) }}</span></td>
-                            </tr>
-                            <tr>
-                                <td>3.</td>
-                                <td>လျော့ငွေ</td>
-                                <td><span class="badge bg-warning">{{ numberWithCommas(voucher_list.discount_amount) }}</span></td>
-                            </tr>
-                            <tr>
-                                <td>4.</td>
-                                <td>ကျသင့်ငွေ</td>
-                                <td><span class="badge bg-warning">{{ numberWithCommas(voucher_list.final_total) }}</span></td>
-                            </tr>
-                            <tr>
-                                <td>5.</td>
-                                <td>ပေးငွေ</td>
-                                <td><span class="badge bg-warning">{{ numberWithCommas(voucher_list.paid_money) }}</span></td>
-                            </tr>
-                            <tr>
-                                <td>5.</td>
-                                <td>ကျန်ငွေ</td>
-                                <td><span class="badge bg-warning">{{ numberWithCommas(voucher_list.credit_money) }}</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="card-footer">
-                    <h3 class="card-title">ဆပ်ပီးကျန်ငွေ  - 	&nbsp;</h3>
-                    <span class="badge bg-warning">{{ numberWithCommas(voucher_list.credit_money) }}</span>
-                </div>
-            </div>
-        </div> -->
         <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column" v-for="(voucher_list, index) in voucher_lists" :key="index">
               <div class="card bg-light d-flex flex-fill">
                 <div class="card-header text-muted border-bottom-0">
@@ -142,11 +74,10 @@
     import moment from 'moment';
 
     export default {
-        name: "ShowDebtVoucherComponent",
+        name: "CreditVoucherListsComponent",
         props: ["value","url"],
         data() {
             return {
-                // voucherLists:[],
                 checkBoxLists:[],
             };
         },

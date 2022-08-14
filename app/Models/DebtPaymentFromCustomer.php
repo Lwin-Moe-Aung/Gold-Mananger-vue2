@@ -18,8 +18,8 @@ class DebtPaymentFromCustomer extends Model
         // 'before_total',
         // 'discount_amount',
         // 'final_total',
-        'paid_money',
-        'credit_money',
+        'old_paid_money',
+        'old_credit_money',
         'debt_payment'
     ];
 

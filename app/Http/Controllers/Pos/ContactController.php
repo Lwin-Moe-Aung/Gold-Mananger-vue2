@@ -8,6 +8,7 @@ use App\Models\Contact;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use App\Http\Resources\ContactSearchResource;
 
 class ContactController extends Controller
 {
@@ -37,38 +38,29 @@ class ContactController extends Controller
     public function contactSearch(Request $request)
     {
 
-        $dataList =  Contact::where('business_id', Auth::user()->business_id)
-            ->where('type', $request->type)
-            // ->orWhere('type', 'both')
-            ->when($request->term, function ($query, $search_value) {
-                $query->orWhere('name','like','%'.$search_value.'%')
-                    ->orWhere('email','like','%'.$search_value.'%')
-                    ->orWhere('mobile1','like','%'.$search_value.'%')
-                    ->orWhere('mobile2','like','%'.$search_value.'%')
-                    ->orWhere('address','like','%'.$search_value.'%');
-            })
-            ->limit(15)
-            ->get()
-            ->toArray();
-        // $search_value = $request->term;
+        $dataList = Contact::searchQuery()->paginate(15);
+        return ContactSearchResource::collection($dataList);
+
         // $dataList =  Contact::where('business_id', Auth::user()->business_id)
         //     ->where('type', $request->type)
-        //     ->orWhere('type', 'both')
-        //     ->where(function($q) use ($search_value) {
-        //         $q->where('name','like','%'.$search_value.'%')
-        //             ->orWhere('email','like','%'.$search_value.'%')
-        //             ->orWhere('mobile1','like','%'.$search_value.'%')
-        //             ->orWhere('mobile2','like','%'.$search_value.'%')
-        //             ->orWhere('address','like','%'.$search_value.'%');
+        //     // ->orWhere('type', 'both')
+        //     ->when($request->term, function ($query, $search_value) {
+        //         $query->where(function ($query) use ($search_value) {
+        //             $query->where('name','like','%'.$search_value.'%')
+        //                 ->orWhere('email','like','%'.$search_value.'%')
+        //                 ->orWhere('mobile1','like','%'.$search_value.'%')
+        //                 ->orWhere('mobile2','like','%'.$search_value.'%')
+        //                 ->orWhere('address','like','%'.$search_value.'%')
         //         })
+        //     })
         //     ->limit(15)
         //     ->get()
         //     ->toArray();
-        // if(empty($dataList))
-        foreach($dataList as $key=>$value) {
-            $dataList[$key]["search_name"] = $value['name'].'( email -'.$value['email'].') (ph-'.$value['mobile1'].','.$value['mobile2'].') (address- '.$value['address'].' )';
-        }
-        return response()->json(['data'=>$dataList]);
+
+        // foreach($dataList as $key=>$value) {
+        //     $dataList[$key]["search_name"] = $value['name'].'( email -'.$value['email'].') (ph-'.$value['mobile1'].','.$value['mobile2'].') (address- '.$value['address'].' )';
+        // }
+        // return response()->json(['data'=>$dataList]);
     }
 
     public function saveCustomer(Request $request) {

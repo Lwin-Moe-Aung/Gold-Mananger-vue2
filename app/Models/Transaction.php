@@ -88,6 +88,11 @@ class Transaction extends Model
         return $this->hasMany(DebtPaymentFromCustomer::class, 'transaction_id');
     }
 
+    public function debtPaymentToSupplier()
+    {
+        return $this->hasMany(DebtPaymentToSupplier::class, 'transaction_id');
+    }
+
     public function scopeSearch($query, $term)
     {
         $term = "%$term%";

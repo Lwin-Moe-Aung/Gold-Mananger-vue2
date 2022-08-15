@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\DebtPaymentToSupplier;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Services\DebtPaymentService;
 use DB;
 
 class DebtPaymentToSupplierController extends Controller
@@ -87,7 +88,10 @@ class DebtPaymentToSupplierController extends Controller
      */
     public function show($id)
     {
-        //
+        $transaction = (new DebtPaymentService())->debtPaymentTransactionDetail($id, 'debt_payment_to_suppliers');
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Detail',[
+            'transaction' => $transaction
+        ]);
     }
 
     /**

@@ -19,4 +19,8 @@ class DebtPaymentToSupplier extends Model
         'old_credit_money',
         'debt_payment'
     ];
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'parent_id');
+    }
 }

@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use DB;
 use Facade\FlareClient\Http\Response;
 use App\Http\Resources\DebtPaymentListsResource;
+use App\Services\DebtPaymentService;
 
 class DebtPaymentFromCustomerController extends Controller
 {
@@ -50,11 +51,6 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function create()
     {
-
-        // $transactions = Transaction::where('business_id', auth()->user()->business_id)
-        //             ->where('type','sell')
-        //             ->where('credit_money','!=', 0)
-        //             ->get();
         return Inertia::render('AdminPanel/CashManagement/DebtPaymentFromCustomer/Create');
     }
 
@@ -154,11 +150,10 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function show($id)
     {
-        $transaction = Transaction::with(['contact', 'debtPaymentFromCustomer.transaction'])
-               ->where('id', $id)
-               ->first()
-               ->toArray();
-        dd($transaction);
+        $transaction = (new DebtPaymentService())->debtPaymentTransactionDetail($id, 'debt_payment_from_customers');
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentFromCustomer/Detail',[
+            'transaction' => $transaction
+        ]);
     }
 
     /**

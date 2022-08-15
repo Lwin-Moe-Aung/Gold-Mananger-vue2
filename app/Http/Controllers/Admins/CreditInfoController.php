@@ -4,6 +4,12 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use App\Models\Transaction;
+use App\Models\DebtPaymentToSupplier;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use DB;
 
 class CreditInfoController extends Controller
 {
@@ -14,7 +20,7 @@ class CreditInfoController extends Controller
      */
     public function getCustomersWhoHaveCredit()
     {
-        dd("getCustomersWhoHaveCredit");
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Create');
     }
 
 

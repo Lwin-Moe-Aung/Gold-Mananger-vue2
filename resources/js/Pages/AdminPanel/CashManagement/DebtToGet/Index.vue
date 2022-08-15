@@ -3,13 +3,8 @@
         <admin-layout>
             <div class="d-flex justify-content-between p-3">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                    DebtPaymentToSupplier
+                    Debt To Get From Customer
                 </h2>
-                <Link :href="route('admin.debt-payment-to-suppliers.create')">
-                    <button type="button" class="btn btn-info text-white text-uppercase" style="letter-spacing: 0.1em;">
-                        Create
-                    </button>
-                </Link>
             </div>
             <section class="content" data-app>
                 <div class="row">
@@ -33,31 +28,20 @@
                                 </div>
                                 <div class="ml-2 p-1">
                                     <v-combobox
-                                        v-model="supplier"
-                                        :items="suppliers"
-                                        @change="onChangeSupplier"
+                                        v-model="customer"
+                                        :items="customers"
+                                        @change="onChangeCustomer"
                                         item-text="name"
                                         item-value="id"
                                         return-object
-                                        label="Select Supplier"
+                                        label="Select Customer"
                                         clearable
                                         dense
                                         hide-selected
                                         solo
                                     ></v-combobox>
                                 </div>
-                                <div class="ml-2 p-2">
-                                    <Datepicker
-                                        v-model="dateRange"
-                                        lang="en"
-                                        range type="date"
-                                        @input="inputDatepicker"
-                                        format="YYYY-MM-DD"
-                                        width="350"
-                                        placeholder ="Select date"
-                                        confirm
-                                    ></Datepicker>
-                                </div>
+
                                 <div class="ml-auto p-2">
                                     <input
                                         v-model.lazy="search"
@@ -81,10 +65,43 @@
                                                 <a href="#" @click.prevent="change_sort('mobile')"
                                                     >Mobile</a
                                                 >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'mobile'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'mobile'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>
+                                                <a href="#" @click.prevent="change_sort('address')"
+                                                    >Address</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'address'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'address'
+                                                    "
+                                                    >&darr;</span
+                                                >
                                             </th>
                                             <th>
                                                 <a href="#" @click.prevent="change_sort('debt_paid_money')"
-                                                    >စုစုပေါင်းဆပ့်ငွေ</a
+                                                    >စုစုပေါင်းအကြွေး</a
                                                 >
                                                 <span
                                                     v-if="
@@ -97,46 +114,6 @@
                                                     v-if="
                                                         sort_direction == 'asc' &&
                                                             sort_field == 'debt_paid_money'
-                                                    "
-                                                    >&darr;</span
-                                                >
-                                            </th>
-                                            <th>
-                                                <a href="#" @click.prevent="change_sort('remaining_credit_money')"
-                                                    >ဆပ့်ရန်ကျန်ငွေ</a
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'desc' &&
-                                                            sort_field == 'remaining_credit_money'
-                                                    "
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'asc' &&
-                                                            sort_field == 'remaining_credit_money'
-                                                    "
-                                                    >&darr;</span
-                                                >
-                                            </th>
-                                            <th>
-                                                <a
-                                                    href="#"
-                                                    @click.prevent="change_sort('created_at')"
-                                                    >Created At</a
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'desc' &&
-                                                            sort_field == 'created_at'
-                                                    "
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'asc' &&
-                                                            sort_field == 'created_at'
                                                     "
                                                     >&darr;</span
                                                 >
@@ -151,7 +128,7 @@
                                             <td>{{ index + 1 }}</td>
                                             <td>{{ debtPaymentList.name }}</td>
                                             <td>{{ debtPaymentList.mobile }}</td>
-                                            <td>{{ debtPaymentList.debt_paid_money }}</td>
+                                            <td>{{ debtPaymentList.address }}</td>
                                             <td>{{ debtPaymentList.remaining_credit_money }}</td>
                                             <td>{{ debtPaymentList.created_at }}</td>
                                             <td>
@@ -169,7 +146,7 @@
                                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                                 </button>
 
-                                                <Link :href="route('admin.debt-payment-to-suppliers.show',debtPaymentList.id)">
+                                                <Link :href="route('admin.debt-payment-from-customers.show',debtPaymentList.id)">
                                                     <button class="btn btn-warrning btn-sm">
                                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                                     </button>
@@ -221,16 +198,14 @@
                 debtPaymentLists: {},
                 paginate: 10,
                 search: '',
-                supplier:null,
-                supplier_id:'',
-                suppliers: [],
+                customer:null,
+                customer_id:'',
+                customers: [],
                 sort_direction: "desc",
                 sort_field: "created_at",
-                dateRange:'',
-                startDate:'',
-                endDate:'',
             };
         },
+
         watch: {
             paginate: function(value) {
                 this.getData();
@@ -238,28 +213,13 @@
             search: function(value) {
                 this.getData();
             },
-            model (val) {
-                if (val.length > 5) {
-                this.$nextTick(() => this.model.pop())
-                }
-            },
         },
-        methods: {
-            onChangeSupplier() {
-                if(this.supplier != null)this.supplier_id = this.supplier.id;
-                else this.supplier_id = '';
-                this.getData();
-            },
-            inputDatepicker() {
-                if(this.dateRange[0] != null){
-                    this.startDate = moment(this.dateRange[0]).format('YYYY-MM-DD');
-                    this.endDate = moment(this.dateRange[1]).format('YYYY-MM-DD');
-                }else{
-                    this.startDate = '';
-                    this.endDate = '';
-                }
-                this.getData();
 
+        methods: {
+            onChangeCustomer() {
+                if(this.customer != null)this.customer_id = this.customer.id;
+                else this.customer_id = '';
+                this.getData();
             },
             change_sort(field) {
                 if (this.sort_field == field) {
@@ -271,7 +231,7 @@
                 this.getData();
             },
             getData(page = 1) {
-                const type = "debt_payment_to_supplier";
+                const type = "debt_payment_from_customer";
                 let getDataUrlWithoutPagination =
                     "/admin/get-debt-payment-lists?" +
                     "q=" +
@@ -281,7 +241,7 @@
                     "&sort_field=" +
                     this.sort_field +
                     "&selectedContact=" +
-                    this.supplier_id +
+                    this.customer_id +
                     "&startDate=" +
                     this.startDate +
                     "&endDate=" +
@@ -289,7 +249,7 @@
                     "&type=" +
                     type;
 
-                let getDataUrl = getDataUrlWithoutPagination.concat(
+                const getDataUrl = getDataUrlWithoutPagination.concat(
                     "&paginate=" + this.paginate + "&page=" + page
                 );
                 axios.get(getDataUrl).then(response => {
@@ -299,10 +259,11 @@
         },
 
         mounted() {
-            let type = "debt_payment_to_supplier";
+            let type = "debt_payment_from_customer";
             axios.get(this.route("admin.getCustomerLists"), { params: {type: type}})
                 .then((response) => {
-                    this.suppliers = response.data.data;
+                    console.log(response.data);
+                    this.customers = response.data.data;
             });
             this.getData();
         }

@@ -253,7 +253,7 @@
                                 </Link>
                             </li>
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.getCustomersWhoHaveCredit')" class="nav-link" :class="route().current('admin.getCustomersWhoHaveCredit') ? 'active' : ' '">
+                                <Link :href="route('admin.creditInfoCustomers')" class="nav-link" :class="route().current('admin.creditInfoCustomers') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         ရရန်စာရင်း
@@ -261,7 +261,7 @@
                                 </Link>
                             </li>
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.getCustomersWhoHaveCredit')" class="nav-link" :class="route().current('admin.getCustomersWhoHaveCredit') ? 'active' : ' '">
+                                <Link :href="route('admin.creditInfoSuppliers')" class="nav-link" :class="route().current('admin.creditInfoSuppliers') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
                                         ပေးရန်စာရင်း

@@ -3,7 +3,7 @@
         <admin-layout>
             <div class="d-flex justify-content-between p-3">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                    Debt To Get From Customer
+                    Debt To Pay To Supplier
                 </h2>
             </div>
             <section class="content" data-app>
@@ -28,13 +28,13 @@
                                 </div>
                                 <div class="ml-2 p-1">
                                     <v-combobox
-                                        v-model="customer"
-                                        :items="customers"
-                                        @change="onChangeCustomer"
+                                        v-model="supplier"
+                                        :items="suppliers"
+                                        @change="onChangeSupplier"
                                         item-text="name"
                                         item-value="id"
                                         return-object
-                                        label="Select Customer"
+                                        label="Select Supplier"
                                         clearable
                                         dense
                                         hide-selected
@@ -65,16 +65,16 @@
                                         </tr>
 
                                         <tr
-                                            v-for="(creditCustomerList, index) in creditCustomerLists.data"
+                                            v-for="(creditToSupplierList, index) in creditToSupplierLists.data"
                                             :key="index"
                                         >
                                             <td>{{ index + 1 }}</td>
-                                            <td>{{ creditCustomerList.name }}</td>
-                                            <td>{{ creditCustomerList.mobile1 }},{{ creditCustomerList.mobile2 }}</td>
-                                            <td>{{ creditCustomerList.address }}</td>
-                                            <td><span class="badge bg-warning">{{ numberWithCommas(creditCustomerList.total_credit_money) }}</span></td>
+                                            <td>{{ creditToSupplierList.name }}</td>
+                                            <td>{{ creditToSupplierList.mobile1 }},{{ creditToSupplierList.mobile2 }}</td>
+                                            <td>{{ creditToSupplierList.address }}</td>
+                                            <td><span class="badge bg-warning">{{ numberWithCommas(creditToSupplierList.total_credit_money) }}</span></td>
                                             <td>
-                                                <Link :href="route('admin.createDebtPaymentFromCustomerWithContactId', { contact_id: creditCustomerList.contact_id })">
+                                                <Link :href="route('admin.createDebtPaymentToSupplierWithContactId', { contact_id: creditToSupplierList.contact_id })">
                                                     <button class="btn btn-warrning btn-sm">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                     </button>
@@ -87,7 +87,7 @@
                             <div class="row mt-4">
                                 <div class="col-sm-6 offset-5 float-right">
                                     <pagination
-                                        :data="creditCustomerLists"
+                                        :data="creditToSupplierLists"
                                         @pagination-change-page="getData"
                                     ></pagination>
                                 </div>
@@ -123,12 +123,12 @@
         },
         data() {
             return {
-                creditCustomerLists: {},
+                creditToSupplierLists: {},
                 paginate: 10,
                 search: '',
-                customer:null,
-                customer_id:'',
-                customers: [],
+                supplier:null,
+                supplier_id:'',
+                suppliers: [],
                 sort_direction: "desc",
                 sort_field: "created_at",
             };
@@ -148,17 +148,17 @@
                 let v = parseInt(x);
                 return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             },
-            onChangeCustomer() {
-                if(this.customer != null)this.customer_id = this.customer.id;
-                else this.customer_id = '';
+            onChangeSupplier() {
+                if(this.supplier != null)this.supplier_id = this.supplier.id;
+                else this.supplier_id = '';
                 this.getData();
             },
             getData(page = 1) {
-                const type = "sell";
+                const type = "purchase";
                 let getDataUrlWithoutPagination =
-                    "/admin/get-customers-data-who-have-credits?" +
+                    "/admin/get-suppliers-data-who-have-credits?" +
                     "selectedContact=" +
-                    this.customer_id +
+                    this.supplier_id +
                     "&type=" +
                     type;
 
@@ -166,17 +166,16 @@
                     "&paginate=" + this.paginate + "&page=" + page
                 );
                 axios.get(getDataUrl).then(response => {
-                    this.creditCustomerLists = response.data;
+                    this.creditToSupplierLists = response.data;
                 });
             }
         },
 
         mounted() {
-            let type = "sell";
-            axios.get(this.route("admin.getRemainCreditCustomerLists"), { params: {type: type}})
+            let type = "purchase";
+            axios.get(this.route("admin.getRemainCreditToSupplierLists"), { params: {type: type}})
                 .then((response) => {
-                    console.log(response.data);
-                    this.customers = response.data.data;
+                    this.suppliers = response.data.data;
             });
             this.getData();
         }

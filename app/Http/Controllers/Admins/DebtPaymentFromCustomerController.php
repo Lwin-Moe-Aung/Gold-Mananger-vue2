@@ -14,6 +14,7 @@ use DB;
 use Facade\FlareClient\Http\Response;
 use App\Http\Resources\DebtPaymentListsResource;
 use App\Services\DebtPaymentService;
+use App\Services\ContactService;
 
 class DebtPaymentFromCustomerController extends Controller
 {
@@ -40,7 +41,6 @@ class DebtPaymentFromCustomerController extends Controller
         } else {
             $transactions = Transaction::transactionsQuery()->get();
         }
-        // dd($transactions);
         return DebtPaymentListsResource::collection($transactions);
     }
 
@@ -51,7 +51,9 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function create()
     {
-        return Inertia::render('AdminPanel/CashManagement/DebtPaymentFromCustomer/Create');
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentFromCustomer/Create',[
+            'contact' => null
+        ]);
     }
 
     /**
@@ -131,14 +133,8 @@ class DebtPaymentFromCustomerController extends Controller
      */
     public function getCustomerLists()
     {
-        $type = request('type');
-        $customers = Contact::whereIn('id', function($query) use($type){
-                $query->select('contact_id')
-                    ->from('transactions')
-                    ->where('type', $type)
-                    ->groupBy('contact_id')
-                    ->pluck('contact_id');
-                })->get();
+        $customers = (new ContactService())->getCustomerLists(request('type'));
+
         return response()->json(['data' => $customers]);
     }
 

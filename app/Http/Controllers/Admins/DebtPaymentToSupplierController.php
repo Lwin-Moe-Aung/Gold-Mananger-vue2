@@ -31,7 +31,9 @@ class DebtPaymentToSupplierController extends Controller
      */
     public function create()
     {
-        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Create');
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Create',[
+            'contact' => null
+        ]);
     }
 
     /**

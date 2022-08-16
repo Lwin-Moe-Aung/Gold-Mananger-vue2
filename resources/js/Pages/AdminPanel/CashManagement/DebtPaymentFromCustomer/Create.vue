@@ -135,7 +135,7 @@
 
     export default {
         props: [
-            'transactions',
+            'contact',
         ],
         components: {
             Datepicker,
@@ -156,6 +156,13 @@
                 additional_note:"",
                 remaining_credit_money:null,
                 isDisabled:true,
+            }
+        },
+        mounted() {
+            if(this.contact != null){
+                this.customer_id = this.contact.id;
+                this.customer = this.contact;
+                this.isDisabled = false;
             }
         },
         created() {

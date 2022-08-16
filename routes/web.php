@@ -190,6 +190,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::resource('debt-payment-to-suppliers', DebtPaymentToSupplierController::class);
     Route::get('supplier/get-credit-data-lists', [DebtPaymentToSupplierController::class, 'getSupplierCreditDataLists'])->name('getSupplierCreditDataLists');
 
-    Route::get('customers-who-have-credit', [CreditInfoController::class, 'getCustomersWhoHaveCredit'])->name('getCustomersWhoHaveCredit');
+    Route::get('credit-info-customers', [CreditInfoController::class, 'creditInfoCustomers'])->name('creditInfoCustomers');
+    Route::get('get-customers-data-who-have-credits', [CreditInfoController::class, 'getCustomersDataWhoHaveCredit'])->name('getCustomersDataWhoHaveCredit');
+    Route::get('credit/get-remain-credit-customer-lists', [CreditInfoController::class, 'getRemainCreditCustomerLists'])->name('getRemainCreditCustomerLists');
+
+    Route::get('credit-info-suppliers', [CreditInfoController::class, 'creditInfoSuppliers'])->name('creditInfoSuppliers');
+    Route::get('debt-payment-from-customer-with-contact-id', [CreditInfoController::class, 'createDebtPaymentFromCustomerWithContactId'])->name('createDebtPaymentFromCustomerWithContactId');
+    Route::get('credit/get-remain-credit-to-supplier-lists', [CreditInfoController::class, 'getRemainCreditToSupplierLists'])->name('getRemainCreditToSupplierLists');
+    Route::get('get-suppliers-data-who-have-credits', [CreditInfoController::class, 'getSuppliersDataWhoHaveCredit'])->name('getSuppliersDataWhoHaveCredit');
+
+    Route::get('debt-payment-to-supplier-with-contact-id', [CreditInfoController::class, 'createDebtPaymentToSupplierWithContactId'])->name('createDebtPaymentToSupplierWithContactId');
+
 
 });

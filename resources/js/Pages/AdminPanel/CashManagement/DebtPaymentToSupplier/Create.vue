@@ -17,7 +17,7 @@
                                     </button>
 
                                 </Link>
-                                <h3 class="card-title">Debt Payment From Customer</h3>
+                                <h3 class="card-title">Debt Payment From supplier</h3>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -135,7 +135,7 @@
 
     export default {
         props: [
-            'transactions',
+            'contact',
         ],
         components: {
             Datepicker,
@@ -156,6 +156,13 @@
                 additional_note:"",
                 remaining_credit_money:null,
                 isDisabled:true,
+            }
+        },
+        mounted() {
+            if(this.contact != null){
+                this.supplier_id = this.contact.id;
+                this.supplier = this.contact;
+                this.isDisabled = false;
             }
         },
         created() {

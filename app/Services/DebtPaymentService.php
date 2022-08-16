@@ -7,6 +7,7 @@ use App\Models\DebtPaymentFromCustomer;
 class DebtPaymentService {
 
     public function debtPaymentTransactionDetail($id, $type){
+
         $q = Transaction::where('id', $id);
         if($type == 'debt_payment_from_customers'){
             $transaction = $q->with(['contact', 'debtPaymentFromCustomer.transaction'])

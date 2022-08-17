@@ -132,6 +132,7 @@
     import CreditVoucherListsComponent from '../../../../Components/AdminPanel/CreditVoucherListsComponent';
     import axios from 'axios';
     import {mapGetters, mapActions} from "vuex";
+    import constant from "../../../../constant";
 
     export default {
         props: [
@@ -194,7 +195,7 @@
             total_payment:{required},
         },
         methods: {
-            ...mapActions(["setTotalDebtPaymentAmount","resetCartState"]),
+            ...mapActions(["setTotalDebtPaymentAmount","resetCartState","repairingCheckedVoucherListsForDatabase"]),
             numberWithCommas(x) {
                 let v = parseInt(x);
                 return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -226,23 +227,25 @@
                 }
                 this.setTotalDebtPaymentAmount(this.total_payment);
             },
-            createDebtPaymentFromCustomer() {
+            async createDebtPaymentFromCustomer() {
                 this.isDisabled = true;
                 this.$v.$touch();
                 if (this.$v.$pendding || this.$v.$error) return;
+                await this.repairingCheckedVoucherListsForDatabase();
                 let data = new FormData();
                 data.append('customer_id',this.customer_id);
                 data.append('total_payment',this.total_payment);
                 data.append('remaining_credit_money',this.remaining_credit_money);
                 data.append('additional_note',this.additional_note);
                 data.append('checked_voucher_lists',JSON.stringify(this.checked_voucher_lists));
-                axios.post(this.route('admin.debt-payment-from-customers.store'), data)
+                await axios.post(this.route('admin.debt-payment-from-customers.store'), data)
                     .then(res => {
                         if(res.data.status){
                             Toast.fire({
                                 icon: 'success',
                                 title: 'Payment Success'
                             })
+                            window.open( constant.ROUTE_URL_ADMIN+"customer-debt-payment-generate-invoice/"+res.data.transaction_id, "_blank");
                             this.resetCartState();
                             this.customer = [];
                             this.customer_id = null;

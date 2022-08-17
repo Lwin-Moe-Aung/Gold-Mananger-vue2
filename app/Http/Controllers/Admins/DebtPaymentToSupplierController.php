@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Services\DebtPaymentService;
 use DB;
+use App\Services\GenerateInvoiceService;
 
 class DebtPaymentToSupplierController extends Controller
 {
@@ -52,6 +53,7 @@ class DebtPaymentToSupplierController extends Controller
                 'type' => "debt_payment_to_supplier",
                 'status' => "received",
                 'payment_status' => "paid",
+                'invoice_no' => (new GenerateInvoiceService())->invoiceNumber('debt_payment_to_supplier'),
                 'contact_id' => $request->supplier_id,
                 'transaction_date' => Carbon::now()->format('Y-m-d'),
                 'additional_notes' =>  $request->additional_note != "" ? $request->additional_note : null,
@@ -75,7 +77,7 @@ class DebtPaymentToSupplierController extends Controller
                 ]);
             }
             DB::commit();
-            return response()->json(['status' => true]);
+            return response()->json(['status' => true, 'transaction_id' =>$transaction->id]);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('fail', 'Fail to Create New Debt pyment from customer');

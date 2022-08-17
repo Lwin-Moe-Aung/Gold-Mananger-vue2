@@ -66,6 +66,9 @@ const actions = {
                 commit("setTotalCredit", response.data.total_credits);
         });
     },
+    async repairingCheckedVoucherListsForDatabase({commit}, data){
+        await commit("repairingCheckedVoucherListsForDatabase");
+    },
     resetCartState ({ commit }) {
         commit('resetState')
     },
@@ -108,6 +111,25 @@ const mutations = {
                 Object.assign(state.checked_voucher_lists[index], checkData);
             }
         );
+    },
+    repairingCheckedVoucherListsForDatabase: (state) => {
+        let yFilter = state.checked_voucher_lists.map(itemY => { return itemY.parent_transaction_id; });
+
+        // Use filter and "not" includes to filter the full dataset by the filter dataset's val.
+        let filteredX = state.voucher_lists.filter(itemX => !yFilter.includes(itemX.id));
+
+        filteredX.forEach((element) => {
+                let checkData = {
+                    parent_transaction_id: element.id,
+                    debt_payment_amount: 0,
+                    remaining_credit: element.credit_money,
+                    old_paid_money: element.paid_money,
+                    old_credit_money: element.credit_money,
+                };
+                state.checked_voucher_lists.push(checkData)
+            }
+        );
+
     },
     setVoucherLists: (state, data) => ( state.voucher_lists = data ),
 };

@@ -26,4 +26,12 @@ class CreditInfoService {
         return $transactions;
     }
 
+    public function debtPaymentGenerateInvoice($transaction_id) {
+        $transaction = Transaction::with(['contact','business','businessLocation',
+                            'debtPaymentFromCustomer.transaction'])
+                            ->where('id',$transaction_id)
+                            ->first();
+
+        return $transaction;
+    }
 }

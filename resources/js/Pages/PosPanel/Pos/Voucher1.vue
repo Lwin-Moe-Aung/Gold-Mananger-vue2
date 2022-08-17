@@ -658,7 +658,7 @@
                             {
                                 this.removeItem(this.form.id);
                                 this.removeItemFromSearchList(this.form.id);
-                                window.open( constant.URL+"generate_invoice/"+res.data.transaction_id, "_blank");
+                                window.open( constant.ROUTE_URL_POS+"generate_invoice/"+res.data.transaction_id, "_blank");
                                 this.toastMessage('success', 'Order Success');
                                 this.clearFormData();
                                 this.selectItemReset();

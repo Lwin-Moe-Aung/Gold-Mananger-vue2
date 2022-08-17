@@ -85,7 +85,7 @@
                 <div class="col-12 col-md-12 col-lg-4 order-1 order-md-2">
                     <h3 class="text-primary"><i class="fas fa-paint-brush"></i> Voucher List</h3>
                     <div  class="card bg-light d-flex flex-fill" v-for="(value, key) in voucherLists" :key="key">
-                        <div class="card-header text-muted border-bottom-0">
+                        <div class="card-header text-muted border-bottom-0" v-if="value.debt_payment != 0">
                             Original Invoice Number-
                             <Link v-if="type == 'debt_payment_from_customer'"
                                 :href="route('admin.sells.show',value.parent_id)"
@@ -98,7 +98,7 @@
                                 {{ value.transaction.invoice_no }}
                             </Link>
                         </div>
-                        <div class="card-body pt-0">
+                        <div class="card-body pt-0" v-if="value.debt_payment != 0">
                             <div class="row">
                                 <div class="col-7">
                                     <h2 class="lead"><b>{{ value.item.name }}</b></h2>
@@ -136,7 +136,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer" v-if="value.debt_payment != 0">
                             <div class="text-right">
                                 <p class="text-muted text-sm">
                                     <b>အကြွေးဆပ်ငွေ : </b> <span class="badge bg-warning">{{ numberWithCommas(value.debt_payment) }}</span>

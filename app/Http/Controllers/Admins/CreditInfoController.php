@@ -110,6 +110,43 @@ class CreditInfoController extends Controller
             'contact' => $supplier
         ]);
     }
+
+    /**
+     * Generate invoice for debt payment customer and to supplier
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function customerDebtPaymentGenerateInvoice($transaction_id)
+    {
+        // $transaction = (new CreditInfoService())->debtPaymentGenerateInvoice($transaction_id,'debt_payment_from_customer');
+        $transaction = Transaction::with(['contact','business','businessLocation',
+                            'debtPaymentFromCustomer.transaction'])
+                            ->where('id',$transaction_id)
+                            ->first();
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentFromCustomer/Invoice',[
+            'transaction' => $transaction
+        ]);
+    }
+
+    /**
+     * Generate invoice for debt payment to supplier
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function supplierDebtPaymentGenerateInvoice($transaction_id)
+    {
+        // $transaction = (new CreditInfoService())->debtPaymentGenerateInvoice($transaction_id, 'debt_payment_to_supplier');
+        $transaction = Transaction::with(['contact','business','businessLocation',
+                        'debtPaymentToSupplier.transaction'])
+                        ->where('id',$transaction_id)
+                        ->first();
+        return Inertia::render('AdminPanel/CashManagement/DebtPaymentToSupplier/Invoice',[
+            'transaction' => $transaction
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

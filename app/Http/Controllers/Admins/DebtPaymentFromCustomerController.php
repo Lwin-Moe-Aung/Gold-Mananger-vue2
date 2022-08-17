@@ -15,6 +15,7 @@ use Facade\FlareClient\Http\Response;
 use App\Http\Resources\DebtPaymentListsResource;
 use App\Services\DebtPaymentService;
 use App\Services\ContactService;
+use App\Services\GenerateInvoiceService;
 
 class DebtPaymentFromCustomerController extends Controller
 {
@@ -96,6 +97,7 @@ class DebtPaymentFromCustomerController extends Controller
                 'type' => "debt_payment_from_customer",
                 'status' => "received",
                 'payment_status' => "paid",
+                'invoice_no' => (new GenerateInvoiceService())->invoiceNumber('debt_payment_from_customer'),
                 'contact_id' => $request->customer_id,
                 'transaction_date' => Carbon::now()->format('Y-m-d'),
                 'additional_notes' =>  $request->additional_note != "" ? $request->additional_note : null,
@@ -119,7 +121,7 @@ class DebtPaymentFromCustomerController extends Controller
                 ]);
             }
             DB::commit();
-            return response()->json(['status' => true]);
+            return response()->json(['status' => true,'transaction_id' =>$transaction->id]);
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('fail', 'Fail to Create New Debt pyment from customer');

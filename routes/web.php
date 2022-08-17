@@ -201,5 +201,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     Route::get('debt-payment-to-supplier-with-contact-id', [CreditInfoController::class, 'createDebtPaymentToSupplierWithContactId'])->name('createDebtPaymentToSupplierWithContactId');
 
+    //generate invoice for debt payment customer and to supplier
+    Route::get('customer-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'customerDebtPaymentGenerateInvoice'])->name('customerDebtPaymentGenerateInvoice');
+    Route::get('supplier-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'supplierDebtPaymentGenerateInvoice'])->name('supplierDebtPaymentGenerateInvoice');
+
 
 });

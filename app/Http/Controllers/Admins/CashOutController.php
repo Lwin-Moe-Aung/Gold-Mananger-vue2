@@ -6,44 +6,38 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Transaction;
+use App\Models\ViewCashOutData;
+use App\Http\Resources\ViewCashOutDataResource;
+
 
 class CashOutController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * Show the data from view_cashout_data table.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        request()->validate([
-            'direction' => ['in:asc,desc'],
-            'field' => ['in:name,city']
-        ]);
+        return Inertia::render('AdminPanel/CashManagement/CashOut/Index');
+    }
 
-        $business_id = auth()->user()->business_id;
+    /**
+     * Get data for showing in cashout Index page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCashOutDataLists()
+    {
+        $paginate = request('paginate');
 
-        $transactions = Transaction::query();
-        $transactions->where('business_id', $business_id)->where('type','purchase');
-
-        if (request('search')) {
-            $transactions->where('invoice_no', 'LIKE', '%' . request('search') . '%');
+        if (isset($paginate)) {
+            $view_cash_out_data = ViewCashOutData::ViewCashOutDataQuery()->paginate($paginate);
+        } else {
+            $view_cash_out_data = ViewCashOutData::ViewCashOutDataQuery()->get();
         }
-        if (request()->has(['field', 'direction'])) {
-            $transactions->orderBy(request('field'), request('direction'));
-        }else{
-            $transactions->orderBy('created_at', 'desc');
-        }
-        $transactions = $transactions->paginate(5)->withQueryString();
-        foreach ($transactions as $key=>$value) {
-            $transactions[$key]->purchase = $value->purchase;
-            $transactions[$key]->item = $value->purchase->item;
-            $transactions[$key]->product = $value->purchase->item->product;
-        }
-        return Inertia::render('AdminPanel/CashManagement/CashOut/Index', [
-            'transactions' => $transactions,
-            'filters' => request()->all(['search', 'field', 'direction'])
-        ]);
+        return ViewCashOutDataResource::collection($view_cash_out_data);
     }
 
     /**

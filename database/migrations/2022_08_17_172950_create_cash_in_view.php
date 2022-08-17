@@ -40,7 +40,7 @@ class CreateCashInView extends Migration
                                 c.name, c.mobile1 ,
                                 c.mobile2,c.address,
                                 t.invoice_no,t.additional_notes ,
-                                t.type,t.transaction_date,
+                                t.type,t.created_at,
                                 CASE
                                         WHEN t.type = 'sell' THEN t.final_total
                                         WHEN t.type = 'debt_payment_from_customer' THEN t.debt_paid_money

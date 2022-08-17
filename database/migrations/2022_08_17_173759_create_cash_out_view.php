@@ -40,7 +40,7 @@ class CreateCashOutView extends Migration
                     c.name, c.mobile1 ,
                     c.mobile2,c.address,
                     t.invoice_no,t.additional_notes ,
-                    t.type,t.transaction_date,
+                    t.type,t.created_at,
                     exp.name as expense_category_name,
                     CASE
                             WHEN t.type = 'purchase' THEN t.final_total

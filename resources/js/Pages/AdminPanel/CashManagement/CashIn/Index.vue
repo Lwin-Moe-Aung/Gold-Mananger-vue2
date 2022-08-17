@@ -1,198 +1,267 @@
 <template>
     <div>
         <admin-layout>
-            <template #header>
+            <div class="d-flex justify-content-between p-3">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                    Cash In List
+                    Cash In Data Lists
                 </h2>
-            </template>
-            <section class="content">
-                <div class="container-fluid">
-                    <div class="card card-primary card-outline" data-select2-id="32">
-                        <div class="card-header">
-                            <h3 class="card-title">Filter</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body" style="display: block;" data-select2-id="31">
-                            <div class="row">
-                                <div class="col-12 col-sm-3 border-right">
-                                    <div class="form-group">
-                                        <label>Date range button:</label>
-
-                                        <div class="input-group">
-                                            <button type="button" class="btn btn-default float-right" id="daterange-btn">
-                                            <i class="far fa-calendar-alt"></i> Date range picker
-                                            <i class="fas fa-caret-down"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-sm-3 border-right">
-                                    <div class="form-group">
-                                        <label>Cash In Types</label>
-                                        <select class="form-control">
-                                            <option>All</option>
-                                            <option>Sell</option>
-                                            <option>customer ဆပ်ငွေ</option>
-                                            <option>supplierကိုပေးရန်အကြွေး</option>
+                <Link :href="route('admin.debt-payment-from-customers.create')">
+                    <button type="button" class="btn btn-info text-white text-uppercase" style="letter-spacing: 0.1em;">
+                        Create
+                    </button>
+                </Link>
+            </div>
+            <section class="content" data-app>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="d-flex p-2">
+                                <div class="p-2">
+                                    <div class="d-flex align-items-center ml-1">
+                                        <label for="paginate" class="text-nowrap mb-0"
+                                            >Per Page</label
+                                        >
+                                        <select
+                                            v-model="paginate"
+                                            class="form-control form-control-sm"
+                                        >
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-12 col-sm-3 border-right">
+                                <div class="ml-2 p-1">
                                     <div class="form-group">
-                                        <label for="permissions">Customer</label>
-                                        <ContactAutoCompleteSearchComponent
-                                            @update:data="selectCustomer"
-                                            route_name = "pos.contact_search"
-                                            v-model = "customer"
-                                            label="search_name"
-                                            placeholder="Search Customer"
-                                            type="customer"
-                                            button="false"
-                                        />
+                                        <select class="form-control" v-model="selectedType">
+                                            <option value='all'>All</option>
+                                            <option value='sell'>Sell</option>
+                                            <option value='debt_payment_from_customer'>customer ဆပ်ငွေ</option>
+                                            <option value='purchase'>supplierကိုပေးရန်အကြွေး</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="col-12 col-sm-3 border-right">
-                                    <div class="form-group">
-                                        <label for="permissions">Supplier</label>
-                                        <ContactAutoCompleteSearchComponent
-                                            @update:data="selectSupplier"
-                                            route_name = "pos.contact_search"
-                                            v-model = "supplier"
-                                            label="search_name"
-                                            placeholder="Search Supplier"
-                                            type="supplier"
-                                            button="false"
-                                        />
-                                    </div>
+                                <div class="ml-2 p-1" v-if="selectedType == 'sell' || selectedType == 'debt_payment_from_customer'">
+                                    <multiselect
+                                        v-model="customer"
+                                        :options="customers"
+                                        @search-change="onSearchDataChange"
+                                        @input="onSelectedData"
+                                        label="search_name"
+                                        track-by="id"
+                                        id="id"
+                                        placeholder="Search Customer"
+                                    >
+                                    </multiselect>
+                                </div>
+                                <div class="ml-2 p-1" v-if="selectedType == 'purchase'">
+                                    <multiselect
+                                        v-model="supplier"
+                                        :options="suppliers"
+                                        @search-change="onSearchDataChange"
+                                        @input="onSelectedData"
+                                        label="search_name"
+                                        track-by="id"
+                                        id="id"
+                                        placeholder="Search Supplier"
+                                    >
+                                    </multiselect>
+                                </div>
+                                <div class="ml-2 p-2">
+                                    <Datepicker
+                                        v-model="dateRange"
+                                        lang="en"
+                                        range type="date"
+                                        @input="inputDatepicker"
+                                        format="YYYY-MM-DD"
+                                        width="350"
+                                        placeholder ="Select date"
+                                        confirm
+                                    ></Datepicker>
+                                </div>
+                                <div class="ml-auto p-2">
+                                    <input
+                                        v-model.lazy="search"
+                                        type="search"
+                                        class="form-control"
+                                        placeholder="Search by ..."
+                                    />
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <input type="search" v-model="params.search" aria-label="Search" placeholder="Search..." class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"/>
-                                    <!-- <div class="card-tools" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                        <Link :href="route('admin.sells.create')">
-                                            <button type="button" class="btn btn-info text-white text-uppercase" style="letter-spacing: 0.1em;">
-                                                Create
-                                            </button>
-                                        </Link>
-                                    </div> -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>
+                                                <a href="#" @click.prevent="change_sort('name')"
+                                                    >Name</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'name'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'name'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>
+                                                <a href="#" @click.prevent="change_sort('mobile1')"
+                                                    >Mobile</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'mobile1'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'mobile1'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>
+                                                <a href="#" @click.prevent="change_sort('address')"
+                                                    >Address</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'address'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'address'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>
+                                                <a href="#" @click.prevent="change_sort('invoice_no')"
+                                                    >Invoice No</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'invoice_no'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'invoice_no'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>
+                                                <a href="#" @click.prevent="change_sort('type')"
+                                                    >Type</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'type'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'type'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>
+                                                <a href="#" @click.prevent="change_sort('amount')"
+                                                    >Amount</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'amount'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'amount'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>
+                                                <a
+                                                    href="#"
+                                                    @click.prevent="change_sort('created_at')"
+                                                    >Date</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'created_at'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'created_at'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>Action</th>
+                                        </tr>
+
+                                        <tr
+                                            v-for="(cashInDataList, index) in cashInDataLists.data"
+                                            :key="index"
+                                        >
+                                            <td>{{ index + 1 }}</td>
+                                            <td>{{ cashInDataList.name }}</td>
+                                            <td>{{ cashInDataList.mobile }}</td>
+                                            <td>{{ cashInDataList.address }}</td>
+                                            <td>{{ cashInDataList.invoice_no}}</td>
+                                            <td>{{ cashInDataList.type }}</td>
+
+                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(cashInDataList.amount) }}</span></td>
+                                            <td>{{ cashInDataList.created_at }}</td>
+                                            <td>
+                                                <!-- <Link :href="route('admin.debt-payment-from-customers.show',cashInDataList.id)">
+                                                    <button class="btn btn-warrning btn-sm">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                                    </button>
+                                                </Link> -->
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-sm-6 offset-5 float-right">
+                                    <pagination
+                                        :data="cashInDataLists"
+                                        @pagination-change-page="getData"
+                                    ></pagination>
                                 </div>
-                                <div class="card-body table-responsive p-0">
-                                    <table class="table table-hover text-nowrap">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('name')">Image
-                                                        <svg v-if="params.field === 'name' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'name' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Item Sku
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Product Sku
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Invoce No
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Status
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Total
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th scope="col" class="w-3/12 text-xs font-semibold tracking-wider text-left uppercase">
-                                                    <span class="inline-flex py-3 px-6 w-full justify-between" @click="sort('created_at')">Date
-                                                        <svg v-if="params.field === 'date' && params.direction === 'asc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h5a1 1 0 000-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM13 16a1 1 0 102 0v-5.586l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 101.414 1.414L13 10.414V16z"/>
-                                                        </svg>
-                                                        <svg v-if="params.field === 'date' && params.direction === 'desc'" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" style="width: 15px;">
-                                                            <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"/>
-                                                        </svg>
-                                                    </span>
-                                                </th>
-                                                <th class="text-capitalize text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr v-for="(transaction, index) in transactions.data" :key="index">
-                                                <td>
-                                                    <img class="w-10 h-10 rounded-full" :src="transaction.item.image" alt="" style="width:60px;"/>
-                                                    {{ transaction.item.name }}
-                                                    <i class="fa fa-undo text-red" aria-hidden="true" v-if="transaction.sell.sell_return == '1'"></i>
-                                                </td>
-                                                <td>{{ transaction.item.item_sku }}</td>
-                                                <td>{{ transaction.product.product_sku }}</td>
-                                                <td>{{ transaction.invoice_no }}</td>
-                                                <td>{{ transaction.status }}</td>
-                                                <td>{{ transaction.sell.final_total }}</td>
-                                                <td>{{ dateTime(transaction.created_at) }}</td>
-                                                <td class="text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                                    <Link :href="route('admin.sells.show', transaction.id)">
-                                                        <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;">Detail</button>
-                                                    </Link>
-
-                                                    <!-- <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteTransaction(transaction.id)">Delete</button> -->
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="card-footer clearfix">
-                                    <pagination :links="transactions.links"></pagination>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -206,11 +275,12 @@
 <script>
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import moment from 'moment';
-    import Pagination from '../../../../Components/AdminPanel/Pagination';
-    import ContactAutoCompleteSearchComponent from '../../../../Components/AdminPanel/ContactAutoCompleteSearchComponent';
-    import { pickBy, throttle } from 'lodash';
     import { Link } from '@inertiajs/inertia-vue';
-    import Datepicker from 'vuejs-datepicker';
+    import 'vue2-datepicker/index.css';
+    import Datepicker from 'vue2-datepicker';
+    import axios from "axios";
+    import ContactAutoCompleteSearchComponent from '../../../../Components/AdminPanel/ContactAutoCompleteSearchComponent';
+    import {throttle} from "lodash";
 
     export default {
         props: [
@@ -219,82 +289,125 @@
             ],
         components: {
             AdminLayout,
-            Pagination,
             Link,
-            ContactAutoCompleteSearchComponent,
-            Datepicker
+            Datepicker,
+            ContactAutoCompleteSearchComponent
         },
         data() {
             return {
-                customer_id:null,
-                supplier_id:null,
-                date: null,
+                selectedType:'all',
+                cashInDataLists: {},
+                paginate: 10,
+                search: '',
+
+                contact_id:'',
                 customer:null,
+                customers:[],
+                suppliers:[],
                 supplier:null,
-                params: {
-                    search: this.filters.search,
-                    field: this.filters.field,
-                    direction: this.filters.direction,
-                },
+
+                sort_direction: "desc",
+                sort_field: "created_at",
+                dateRange:'',
+                startDate:'',
+                endDate:'',
+                route_name:'pos.contact_search',
+                type:null,
+            };
+        },
+
+        watch: {
+            paginate: function(value) {
+                this.getData();
+            },
+            search: function(value) {
+                this.getData();
+            },
+            selectedType(val) {
+                if(val == 'sell' || val == 'debt_payment_from_customer') this.type = 'customer';
+                else if(val == 'purchase') this.type = 'supplier';
+                this.contact_id = ''
+                this.customer = null
+                this.supplier = null
+                this.getData();
             }
         },
-        created(){
-        },
-        computed: {
-        },
-        watch: {
-            params: {
-                handler: throttle(function () {
-                    let params = pickBy(this.params);
-                    this.$inertia.get(this.route('admin.sells.index'), params, { replace: true, preserveState: true });
-                }, 150),
-                deep: true,
-            },
-        },
+
         methods: {
-            selectCustomer(value){
+            numberWithCommas(x) {
+                let v = parseInt(x);
+                return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            },
+            onSelectedData(value) {
+                if(value != null)this.contact_id = value.id;
+                else this.contact_id = '';
+
+                this.getData();
+            },
+            onSearchDataChange: throttle(function (term) {
+                axios.get(this.route(this.route_name), { params: { term: term ,type: this.type}})
+                            .then((response) => {
+                                this.data = response.data.data;
+                        });
+            }, 300),
+
+            inputDatepicker() {
+                if(this.dateRange[0] != null){
+                    this.startDate = moment(this.dateRange[0]).format('YYYY-MM-DD');
+                    this.endDate = moment(this.dateRange[1]).format('YYYY-MM-DD');
+                }else{
+                    this.startDate = '';
+                    this.endDate = '';
+                }
+                this.getData();
 
             },
-            selectSupplier(value){
+            change_sort(field) {
+                if (this.sort_field == field) {
+                    this.sort_direction =
+                        this.sort_direction == "asc" ? "desc" : "asc";
+                } else {
+                    this.sort_field = field;
+                }
+                this.getData();
+            },
+            getData(page = 1) {
+                let getDataUrlWithoutPagination =
+                    "/admin/get-cash-in-data-lists?" +
+                    "q=" +
+                    this.search +
+                    "&sort_direction=" +
+                    this.sort_direction +
+                    "&sort_field=" +
+                    this.sort_field +
+                    "&selectedType=" +
+                    this.selectedType +
+                    "&contact_id=" +
+                    this.contact_id +
+                    "&startDate=" +
+                    this.startDate +
+                    "&endDate=" +
+                    this.endDate;
 
-            },
-            selectDate(){
+                const getDataUrl = getDataUrlWithoutPagination.concat(
+                    "&paginate=" + this.paginate + "&page=" + page
+                );
+                axios.get(getDataUrl).then(response => {
+                    this.cashInDataLists = response.data;
+                });
+            }
+        },
 
-            },
-            selectImage(e){
-                this.form.image = e.target.files[0];
-            },
-            sort(field) {
-                this.params.field = field;
-                this.params.direction = this.params.direction === 'asc' ? 'desc' : 'asc';
-            },
-            dateTime(value) {
-                return moment(value).format('YYYY-MM-DD');
-            },
-            // deleteTransaction(id) {
-            //     Swal.fire({
-            //         title: 'Are you sure?',
-            //         text: "You won't be able to revert this!",
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         confirmButtonColor: '#3085d6',
-            //         cancelButtonColor: '#d33',
-            //         confirmButtonText: 'Yes, delete it!'
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //             this.form.delete(this.route('admin.sells.destroy', id), {
-            //                 preserveScroll: true,
-            //                 onSuccess: ()=> {
-            //                     Swal.fire(
-            //                         'Deleted!',
-            //                         'Sell has been deleted.',
-            //                         'success'
-            //                     )
-            //                 }
-            //             })
-            //         }
-            //     })
-            // }
+        mounted() {
+            axios.get(this.route(this.route_name), { params: {type: 'customer'}})
+                .then((response) => {
+                    this.customers = response.data.data;
+            });
+            axios.get(this.route(this.route_name), { params: {type: 'supplier'}})
+                .then((response) => {
+                    this.suppliers = response.data.data;
+            });
+            this.getData();
         }
-    }
+    };
 </script>

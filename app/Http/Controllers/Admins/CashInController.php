@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Transaction;
+use App\Models\ViewCashInData;
+use App\Http\Resources\ViewCashInDataResource;
 
 class CashInController extends Controller
 {
@@ -14,7 +16,7 @@ class CashInController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function indexOld()
     {
         request()->validate([
             'direction' => ['in:asc,desc'],
@@ -44,6 +46,33 @@ class CashInController extends Controller
             'transactions' => $transactions,
             'filters' => request()->all(['search', 'field', 'direction'])
         ]);
+    }
+
+    /**
+     * Show the data from view_cashin_data table.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return Inertia::render('AdminPanel/CashManagement/CashIn/Index');
+    }
+
+    /**
+     * Get data for showing in cashin Index page.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCashInDataLists()
+    {
+        $paginate = request('paginate');
+
+        if (isset($paginate)) {
+            $view_cash_in_data = ViewCashInData::ViewCashInDataQuery()->paginate($paginate);
+        } else {
+            $view_cash_in_data = ViewCashInData::ViewCashInDataQuery()->get();
+        }
+        return ViewCashInDataResource::collection($view_cash_in_data);
     }
 
     /**

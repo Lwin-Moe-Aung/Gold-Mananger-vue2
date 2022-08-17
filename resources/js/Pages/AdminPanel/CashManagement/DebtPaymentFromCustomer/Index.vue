@@ -151,8 +151,10 @@
                                             <td>{{ index + 1 }}</td>
                                             <td>{{ debtPaymentList.name }}</td>
                                             <td>{{ debtPaymentList.mobile }}</td>
-                                            <td>{{ debtPaymentList.debt_paid_money }}</td>
-                                            <td>{{ debtPaymentList.remaining_credit_money }}</td>
+                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(debtPaymentList.debt_paid_money) }}</span></td>
+                                            <!-- <td>{{ debtPaymentList.debt_paid_money }}</td> -->
+                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(debtPaymentList.remaining_credit_money) }}</span></td>
+                                            <!-- <td>{{ debtPaymentList.remaining_credit_money }}</td> -->
                                             <td>{{ debtPaymentList.created_at }}</td>
                                             <td>
                                                 <button
@@ -247,6 +249,10 @@
         },
 
         methods: {
+            numberWithCommas(x) {
+                let v = parseInt(x);
+                return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            },
             onChangeCustomer() {
                 if(this.customer != null)this.customer_id = this.customer.id;
                 else this.customer_id = '';

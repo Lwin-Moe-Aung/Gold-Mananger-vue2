@@ -257,7 +257,7 @@
                                             <td>{{ cashOutDataList.invoice_no}}</td>
                                             <td>{{ cashOutDataList.type }}</td>
                                             <td>{{ cashOutDataList.expense_category_name }}</td>
-                                            <span class="badge badge-pill bg-warning">{{ numberWithCommas(cashOutDataList.amount) }}</span>
+                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(cashOutDataList.amount) }}</span></td>
                                             <td>{{ cashOutDataList.created_at }}</td>
                                             <td>
                                                 <!-- <Link :href="route('admin.debt-payment-from-customers.show',cashInDataList.id)">

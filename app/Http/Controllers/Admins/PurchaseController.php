@@ -15,38 +15,40 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Facade\FlareClient\Http\Response;
 use App\Http\Requests\Admins\PurchaseRequest;
+use App\Http\Resources\ContactSearchResource;
 
 class PurchaseController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        request()->validate([
-            'direction' => ['in:asc,desc'],
-            'field' => ['in:name,city']
-        ]);
+        return Inertia::render('AdminPanel/PurchaseManagement/Purchases/Index');
+    }
 
-        $business_id = auth()->user()->business_id;
-
-        $transactions = Transaction::query();
-        $transactions->where('business_id', $business_id)->where('type','purchase');
-        if (request('search')) {
-            $transactions->where('name', 'LIKE', '%' . request('search') . '%');
-        }
-        if (request()->has(['field', 'direction'])) {
-            $transactions->orderBy(request('field'), request('direction'));
-        }else{
-            $transactions->orderBy('created_at', 'desc');
-        }
-        $transactions = $transactions->paginate(5)->withQueryString();
-        foreach ($transactions as $key=>$value) {
-            $transactions[$key]->purchase = $value->purchase;
-            $transactions[$key]->item = $value->purchase->item;
-            $transactions[$key]->product = $value->purchase->item->product;
-        }
-        return Inertia::render('AdminPanel/PurchaseManagement/Purchases/Index', [
-            'transactions' => $transactions,
-            'filters' => request()->all(['search', 'field', 'direction'])
-        ]);
+     /**
+     * Getting purchase transaction data for showing table.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getPurchaseDataLists()
+    {
+        $transaction = Transaction::transactionsForShowingQuery()->paginate(15);
+        dd($transaction);
+        return ContactSearchResource::collection($transaction);
+    }
+    /**
+     * getting supplier for purchase .
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSupplierLists()
+    {
+        $dataList = Contact::searchQuery()->paginate(15);
+        return ContactSearchResource::collection($dataList);
     }
 
     public function create()

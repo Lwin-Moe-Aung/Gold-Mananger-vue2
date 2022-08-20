@@ -347,7 +347,8 @@
             onSearchDataChange: throttle(function (term) {
                 axios.get(this.route(this.route_name), { params: { term: term ,type: this.type}})
                             .then((response) => {
-                                this.data = response.data.data;
+                                if(this.type == 'customer') this.customers = response.data.data;
+                                else this.suppliers = response.data.data;
                         });
             }, 300),
 

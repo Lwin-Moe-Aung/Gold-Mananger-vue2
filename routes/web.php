@@ -158,8 +158,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::post('/sells/itemname_form_save', [SellController::class, 'itemNameFormSave'])->name('sells.itemname_form_save');
 
     //Purchase management
+    Route::get('/purchases/get-supplier-lists', [PurchaseController::class, 'getSupplierLists'])->name('purchases.getSupplierLists');
+    Route::get('/get-purchase-data-lists', [PurchaseController::class, 'getPurchaseDataLists'])->name('purchases.getDataLists');
     Route::resource('purchases', PurchaseController::class);
     Route::post('/purchases/purchase_update', [PurchaseController::class, 'purchaseUpdate'])->name('purchases.purchase_update');
+
     //Purchase return
     Route::resource('purchase_returns', PurchaseReturnController::class);
 

@@ -70,20 +70,22 @@ class Contact extends Model
         return $this->hasMany(Sell::class, 'customer_id');
     }
 
+    public function scopeLike($query, $term)
+    {
+        $term = "%$term%";
+        $query->where(function ($query) use ($term) {
+            $query->where('name','like',$term)
+                ->orWhere('email','like',$term)
+                ->orWhere('mobile1','like',$term)
+                ->orWhere('mobile2','like',$term)
+                ->orWhere('address','like',$term);
+        });
+    }
     public function scopeSearchQuery($query)
     {
-        $search_value = request('term');
-        $search_value = "%$search_value%";
+        $search_value = request('term', '');
         $query->where('business_id', Auth::user()->business_id)
             ->where('type', request('type'))
-            ->when(request('term'), function ($query) use($search_value) {
-                $query->where(function ($query) use ($search_value) {
-                    $query->where('name','like',$search_value)
-                        ->orWhere('email','like',$search_value)
-                        ->orWhere('mobile1','like',$search_value)
-                        ->orWhere('mobile2','like',$search_value)
-                        ->orWhere('address','like',$search_value);
-                });
-            });
+            ->like(trim($search_value));
     }
 }

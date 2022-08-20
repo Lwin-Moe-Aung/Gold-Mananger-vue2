@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use DB;
+use App\Http\Requests\Admins\DailySetupRequest;
 
 class DailySetupController extends Controller
 {

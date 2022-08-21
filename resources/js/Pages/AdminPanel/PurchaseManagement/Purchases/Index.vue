@@ -12,6 +12,24 @@
                 </Link>
             </div>
             <section class="content" data-app>
+                <v-snackbar
+                    v-model="snackbar"
+                    color="success"
+                    timeout="6000"
+                    top="top"
+                    >
+                    Purchase Delete Successfully
+                    <template v-slot:action="{ attrs }">
+                        <v-btn
+                            dark
+                            text
+                            v-bind="attrs"
+                            @click="snackbar = false"
+                            >
+                            Close
+                        </v-btn>
+                    </template>
+                </v-snackbar>
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -73,44 +91,77 @@
                                         <tr>
                                             <th>#</th>
                                             <th>
-                                                <a href="#"
+                                                <a href="#" @click.prevent="change_sort('item_name')"
                                                     >Image</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'item_name'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'item_name'
+                                                    "
+                                                    >&darr;</span
                                                 >
                                             </th>
                                             <th>
-                                                <a href="#" @click.prevent="change_sort('debt_paid_money')"
+                                                <a href="#" @click.prevent="change_sort('contact_name')"
+                                                    >Supplier Name</a
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'desc' &&
+                                                            sort_field == 'contact_name'
+                                                    "
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    v-if="
+                                                        sort_direction == 'asc' &&
+                                                            sort_field == 'contact_name'
+                                                    "
+                                                    >&darr;</span
+                                                >
+                                            </th>
+                                            <th>
+                                                <a href="#" @click.prevent="change_sort('item_sku')"
                                                     >Item Sku</a
                                                 >
                                                 <span
                                                     v-if="
                                                         sort_direction == 'desc' &&
-                                                            sort_field == 'debt_paid_money'
+                                                            sort_field == 'item_sku'
                                                     "
                                                     >&uarr;</span
                                                 >
                                                 <span
                                                     v-if="
                                                         sort_direction == 'asc' &&
-                                                            sort_field == 'debt_paid_money'
+                                                            sort_field == 'item_sku'
                                                     "
                                                     >&darr;</span
                                                 >
                                             </th>
                                             <th>
-                                                <a href="#" @click.prevent="change_sort('remaining_credit_money')"
+                                                <a href="#" @click.prevent="change_sort('product_sku')"
                                                     >Product Sku</a
                                                 >
                                                 <span
                                                     v-if="
                                                         sort_direction == 'desc' &&
-                                                            sort_field == 'remaining_credit_money'
+                                                            sort_field == 'product_sku'
                                                     "
                                                     >&uarr;</span
                                                 >
                                                 <span
                                                     v-if="
                                                         sort_direction == 'asc' &&
-                                                            sort_field == 'remaining_credit_money'
+                                                            sort_field == 'product_sku'
                                                     "
                                                     >&darr;</span
                                                 >
@@ -118,20 +169,20 @@
                                             <th>
                                                 <a
                                                     href="#"
-                                                    @click.prevent="change_sort('created_at')"
+                                                    @click.prevent="change_sort('invoice_no')"
                                                     >Invoice No</a
                                                 >
                                                 <span
                                                     v-if="
                                                         sort_direction == 'desc' &&
-                                                            sort_field == 'created_at'
+                                                            sort_field == 'invoice_no'
                                                     "
                                                     >&uarr;</span
                                                 >
                                                 <span
                                                     v-if="
                                                         sort_direction == 'asc' &&
-                                                            sort_field == 'created_at'
+                                                            sort_field == 'invoice_no'
                                                     "
                                                     >&darr;</span
                                                 >
@@ -139,41 +190,20 @@
                                             <th>
                                                 <a
                                                     href="#"
-                                                    @click.prevent="change_sort('created_at')"
-                                                    >Status</a
+                                                    @click.prevent="change_sort('final_total')"
+                                                    >Amount</a
                                                 >
                                                 <span
                                                     v-if="
                                                         sort_direction == 'desc' &&
-                                                            sort_field == 'created_at'
+                                                            sort_field == 'final_total'
                                                     "
                                                     >&uarr;</span
                                                 >
                                                 <span
                                                     v-if="
                                                         sort_direction == 'asc' &&
-                                                            sort_field == 'created_at'
-                                                    "
-                                                    >&darr;</span
-                                                >
-                                            </th>
-                                            <th>
-                                                <a
-                                                    href="#"
-                                                    @click.prevent="change_sort('created_at')"
-                                                    >Total</a
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'desc' &&
-                                                            sort_field == 'created_at'
-                                                    "
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    v-if="
-                                                        sort_direction == 'asc' &&
-                                                            sort_field == 'created_at'
+                                                            sort_field == 'final_total'
                                                     "
                                                     >&darr;</span
                                                 >
@@ -201,38 +231,41 @@
                                             </th>
                                             <th>Action</th>
                                         </tr>
-                                        <!-- <tr
+                                        <tr
                                             v-for="(data, index) in dataLists.data"
                                             :key="index"
                                         >
                                             <td>{{ index + 1 }}</td>
-                                            <td>{{ data.name }}</td>
-                                            <td>{{ data.mobile }}</td>
-                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(data.debt_paid_money) }}</span></td>
-                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(data.remaining_credit_money) }}</span></td>
+                                            <td>
+                                                <img class="w-10 h-10 rounded-full" :src="data.image" alt="" style="width:60px;"/>
+                                                {{ data.item_name }}
+                                            </td>
+                                            <td style="font-size: 14px; width:250px;">{{ data.contact_name }}</td>
+                                            <td>{{ data.item_sku }}</td>
+                                            <td>{{ data.product_sku }}</td>
+                                            <td>{{ data.invoice_no }}</td>
+                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(data.final_total) }}</span></td>
                                             <td>{{ data.created_at }}</td>
                                             <td>
                                                 <button
                                                     onclick="confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
                                                     class="btn btn-sm"
-                                                    @click="deleteRecord(data.id)"
+                                                    @click="deleteRecord(data.transaction_id)"
                                                 >
                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                 </button>
-                                                <button
-                                                    class="btn btn-warrning btn-sm"
-                                                    @click="editRecord(debtPaymentList.id)"
-                                                >
-                                                    <i class="fa fa-edit" aria-hidden="true"></i>
-                                                </button>
-
-                                                <Link :href="route('admin.debt-payment-from-customers.show',debtPaymentList.id)">
+                                                <Link :href="route('admin.purchases.edit', data.transaction_id)">
+                                                    <button class="btn btn-warrning btn-sm">
+                                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                                    </button>
+                                                </Link>
+                                                <Link :href="route('admin.purchases.show',data.transaction_id)">
                                                     <button class="btn btn-warrning btn-sm">
                                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                                     </button>
                                                 </Link>
                                             </td>
-                                        </tr> -->
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -280,7 +313,7 @@
                 dateRange:'',
                 startDate:'',
                 endDate:'',
-                type:'purchase'
+                snackbar: false,
             };
         },
 
@@ -319,6 +352,16 @@
                 this.getData();
 
             },
+            deleteRecord(id) {
+                axios
+                    .delete(this.route("admin.purchases.deleteRecord",id))
+                    .then(response => {
+                        if (response.data.status) {
+                            this.snackbar = true;
+                            this.getData();
+                        }
+                    });
+            },
             change_sort(field) {
                 if (this.sort_field == field) {
                     this.sort_direction =
@@ -338,13 +381,11 @@
                     "&sort_field=" +
                     this.sort_field +
                     "&selectedContact=" +
-                    this.customer_id +
+                    this.supplier_id +
                     "&startDate=" +
                     this.startDate +
                     "&endDate=" +
-                    this.endDate +
-                    "&type=" +
-                    this.type;
+                    this.endDate;
 
                 const getDataUrl = getDataUrlWithoutPagination.concat(
                     "&paginate=" + this.paginate + "&page=" + page
@@ -356,7 +397,8 @@
         },
 
         mounted() {
-            axios.get(this.route("admin.purchases.getSupplierLists"), { params: {type: this.type}})
+            const type = 'supplier';
+            axios.get(this.route("admin.purchases.getSupplierLists"), { params: {type: type}})
                 .then((response) => {
                     console.log(response.data);
                     this.suppliers = response.data.data;

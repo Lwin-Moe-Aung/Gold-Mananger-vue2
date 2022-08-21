@@ -10,12 +10,14 @@ use App\Models\Contact;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Transaction;
+use App\Models\ViewPurchaseData;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Facade\FlareClient\Http\Response;
 use App\Http\Requests\Admins\PurchaseRequest;
 use App\Http\Resources\ContactSearchResource;
+use App\Http\Resources\PurchaseSellResource;
 
 class PurchaseController extends Controller
 {
@@ -36,9 +38,13 @@ class PurchaseController extends Controller
      */
     public function getPurchaseDataLists()
     {
-        $transaction = Transaction::transactionsForShowingQuery()->paginate(15);
-        dd($transaction);
-        return ContactSearchResource::collection($transaction);
+        $paginate = request('paginate');
+        if (isset($paginate)) {
+            $view_purchase_data = ViewPurchaseData::ViewPurchaseDataQuery()->paginate($paginate);
+        } else {
+            $view_purchase_data = ViewPurchaseData::ViewPurchaseDataQuery()->get();
+        }
+        return PurchaseSellResource::collection($view_purchase_data);
     }
     /**
      * getting supplier for purchase .
@@ -81,7 +87,7 @@ class PurchaseController extends Controller
                 $file->move(public_path($path), $image_name);
                 $image_name_path = $path . $image_name;
             } else {
-                $image_name_path = '/images/items/item_default.jifif';
+                $image_name_path = '/images/items/item_default.jfif';
             }
             $item = Item::create([
                 'name' => $request->name,
@@ -242,6 +248,17 @@ class PurchaseController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return back()->with('fail', 'Fail to Create New Product Type');
+        }
+    }
+
+    public function deleteRecord($id)
+    {
+        try{
+            $transaction = Transaction::find($id);
+            $transaction->delete();
+            return response()->json(['status' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false]);
         }
     }
 }

@@ -37,6 +37,7 @@ class CreatePurchaseView extends Migration
             CREATE VIEW view_purchase_data AS
                 SELECT
                         c.id as contact_id,
+                        c.email,
                         c.name as contact_name, c.mobile1 ,
                         c.mobile2,c.address,
                         t.invoice_no,t.additional_notes ,
@@ -50,7 +51,7 @@ class CreatePurchaseView extends Migration
                                 (
                                 SELECT purchass.*,
                                                 items.item_sku,
-                                                items.`name`,
+                                                items.`name` as item_name,
                                                 items.product_id,
                                                 items.image
                                         FROM (

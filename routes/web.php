@@ -160,6 +160,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     //Purchase management
     Route::get('/purchases/get-supplier-lists', [PurchaseController::class, 'getSupplierLists'])->name('purchases.getSupplierLists');
     Route::get('/get-purchase-data-lists', [PurchaseController::class, 'getPurchaseDataLists'])->name('purchases.getDataLists');
+    Route::delete('purchases/delete-record/{id}', [PurchaseController::class, 'deleteRecord'])->name('purchases.deleteRecord');
     Route::resource('purchases', PurchaseController::class);
     Route::post('/purchases/purchase_update', [PurchaseController::class, 'purchaseUpdate'])->name('purchases.purchase_update');
 

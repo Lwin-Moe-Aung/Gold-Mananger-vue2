@@ -115,9 +115,9 @@
                                                 <td>{{ transaction.purchase.final_total }}</td>
                                                 <td>{{ dateTime(transaction.created_at) }}</td>
                                                 <td class="text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                                    <Link href="">
+                                                    <!-- <Link href="">
                                                         <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;">Edit</button>
-                                                    </Link>
+                                                    </Link> -->
                                                     <!-- <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteTransaction(transaction.id)">Delete</button> -->
                                                 </td>
                                             </tr>

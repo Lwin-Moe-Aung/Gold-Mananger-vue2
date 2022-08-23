@@ -44,6 +44,7 @@ class Transaction extends Model
         'debt_paid_money',
         'remaining_credit_money',
         'created_by',
+        'exceed_money',
     ];
 
     /**

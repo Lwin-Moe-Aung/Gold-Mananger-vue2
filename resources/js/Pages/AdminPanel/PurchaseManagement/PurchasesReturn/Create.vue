@@ -93,7 +93,7 @@
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4 border-right">
-                                        <label>ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ numberWithCommas(showingDailySetup) }}.ကျပ်) </label>
+                                        <label>ယနေ့ နောက်ဆုံးပေါက်ဈေး({{ showingDailySetup | formatNumber }}.ကျပ်) </label>
                                         <DailySetupComponent
                                             @update:data="editDailySetup"
                                             v-model = "form.daily_setup"
@@ -233,6 +233,7 @@
                                                         <div v-if="!$v.form.gold_plus_gem_weight.kyat.required" class="invalid-feedback">required</div>
                                                         <div v-if="!$v.form.gold_plus_gem_weight.kyat.minValue" class="invalid-feedback">You must greater than {{ $v.form.gold_plus_gem_weight.kyat.$params.minValue.min }}.</div>
                                                         <div v-if="!$v.form.gold_plus_gem_weight.kyat.maxValue" class="invalid-feedback">You must less than {{ $v.form.gold_plus_gem_weight.kyat.$params.maxValue.max }}</div>
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.kyat.integer" class="invalid-feedback">ကိန်းပြည့်ဂဏာန်းရိုက်ထည့်ပါ။</div>
                                                     </td>
                                                     <td>
                                                         <input type="number"
@@ -242,9 +243,11 @@
                                                         <div v-if="!$v.form.gold_plus_gem_weight.pal.required" class="invalid-feedback">required</div>
                                                         <div v-if="!$v.form.gold_plus_gem_weight.pal.minValue" class="invalid-feedback">You must greater than {{ $v.form.gold_plus_gem_weight.pal.$params.minValue.min }}.</div>
                                                         <div v-if="!$v.form.gold_plus_gem_weight.pal.maxValue" class="invalid-feedback">You must less than {{ $v.form.gold_plus_gem_weight.pal.$params.maxValue.max }}</div>
+                                                        <div v-if="!$v.form.gold_plus_gem_weight.pal.integer" class="invalid-feedback">ကိန်းပြည့်ဂဏာန်းရိုက်ထည့်ပါ။</div>
                                                     </td>
                                                     <td>
                                                         <input type="number"
+                                                            step=".1"
                                                             v-model.trim="$v.form.gold_plus_gem_weight.yway.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.gold_plus_gem_weight.yway)}"
                                                             class="form-control" placeholder="ရွေး" style="min-width: 56px;">
@@ -253,7 +256,7 @@
                                                         <div v-if="!$v.form.gold_plus_gem_weight.yway.maxValue" class="invalid-feedback">You must less than {{ $v.form.gold_plus_gem_weight.yway.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="number" :value="goldPrice" class="form-control" placeholder="တန်ဖိုး" style="min-width: 120px;" disabled>
+                                                        <input type="text" :value="goldPrice | formatNumber" class="form-control" placeholder="တန်ဖိုး" style="min-width: 120px;" disabled>
                                                     </td>
                                                 </tr>
                                                  <tr>
@@ -268,6 +271,7 @@
                                                         <div v-if="!$v.form.gem_weight.kyat.required" class="invalid-feedback">required</div>
                                                         <div v-if="!$v.form.gem_weight.kyat.minValue" class="invalid-feedback">You must greater than {{ $v.form.gem_weight.kyat.$params.minValue.min }}.</div>
                                                         <div v-if="!$v.form.gem_weight.kyat.maxValue" class="invalid-feedback">You must less than {{ $v.form.gem_weight.kyat.$params.maxValue.max }}</div>
+                                                        <div v-if="!$v.form.gem_weight.kyat.integer" class="invalid-feedback">ကိန်းပြည့်ဂဏာန်းရိုက်ထည့်ပါ။</div>
                                                     </td>
                                                     <td>
                                                         <input type="number"
@@ -277,10 +281,11 @@
                                                         <div v-if="!$v.form.gem_weight.pal.required" class="invalid-feedback">required</div>
                                                         <div v-if="!$v.form.gem_weight.pal.minValue" class="invalid-feedback">You must greater than {{ $v.form.gem_weight.pal.$params.minValue.min }}.</div>
                                                         <div v-if="!$v.form.gem_weight.pal.maxValue" class="invalid-feedback">You must less than {{ $v.form.gem_weight.pal.$params.maxValue.max }}</div>
-
+                                                        <div v-if="!$v.form.gem_weight.pal.integer" class="invalid-feedback">ကိန်းပြည့်ဂဏာန်းရိုက်ထည့်ပါ။</div>
                                                     </td>
                                                     <td>
                                                         <input type="number"
+                                                            step=".1"
                                                             v-model.trim="$v.form.gem_weight.yway.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.gem_weight.yway)}"
                                                             class="form-control" placeholder="ရွေး" style="min-width: 56px;" :disabled="product.gem_weight == '0'">
@@ -290,8 +295,8 @@
 
                                                     </td>
                                                     <td>
-                                                        <input type="number"
-                                                            v-model.trim="$v.form.gem_price.$model"
+                                                        <input type="text"
+                                                            v-model.trim="$v.gem_price.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.gem_price)}"
                                                             class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;" :disabled="product.gem_weight == '0'">
                                                         <div v-if="!$v.form.gem_price.required" class="invalid-feedback">required</div>
@@ -310,6 +315,7 @@
                                                         <div v-if="!$v.form.fee.kyat.required" class="invalid-feedback">required</div>
                                                         <div v-if="!$v.form.fee.kyat.minValue" class="invalid-feedback">You must greater than {{ $v.form.fee.kyat.$params.minValue.min }}.</div>
                                                         <div v-if="!$v.form.fee.kyat.maxValue" class="invalid-feedback">You must less than {{ $v.form.fee.kyat.$params.maxValue.max }}</div>
+                                                        <div v-if="!$v.form.fee.kyat.integer" class="invalid-feedback">ကိန်းပြည့်ဂဏာန်းရိုက်ထည့်ပါ။</div>
                                                     </td>
                                                     <td>
                                                         <input type="number"
@@ -319,10 +325,11 @@
                                                         <div v-if="!$v.form.fee.pal.required" class="invalid-feedback">required</div>
                                                         <div v-if="!$v.form.fee.pal.minValue" class="invalid-feedback">You must greater than {{ $v.form.fee.pal.$params.minValue.min }}.</div>
                                                         <div v-if="!$v.form.fee.pal.maxValue" class="invalid-feedback">You must less than {{ $v.form.fee.pal.$params.maxValue.max }}</div>
+                                                        <div v-if="!$v.form.fee.pal.integer" class="invalid-feedback">ကိန်းပြည့်ဂဏာန်းရိုက်ထည့်ပါ။</div>
                                                     </td>
                                                     <td>
                                                         <input type="number"
-                                                            step=any
+                                                            step=".1"
                                                             v-model.trim="$v.form.fee.yway.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.fee.yway)}"
                                                             class="form-control" placeholder="ရွေး" style="min-width: 56px;">
@@ -331,65 +338,45 @@
                                                         <div v-if="!$v.form.fee.yway.maxValue" class="invalid-feedback">You must less than {{ $v.form.fee.yway.$params.maxValue.max }}</div>
                                                     </td>
                                                     <td>
-                                                        <input type="number" :value="feePrice" class="form-control" placeholder="တန်ဖိုး" disabled>
+                                                        <input type="text" :value="feePrice | formatNumber" class="form-control" placeholder="တန်ဖိုး" disabled>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <label>စုစုပေါင်းကျသင်ငွေ</label>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="text" :value="finalTotal | formatNumber" class="form-control" placeholder="တန်ဖိုး" disabled>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <label>လက်ခ</label>
+                                                        <label>ပေးငွေ</label>
                                                     </td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td>
-                                                        <input type="number"
-                                                            v-model.trim="$v.form.fee_for_making.$model"
-                                                            :class="{'is-invalid': validationStatus($v.form.fee_for_making)}"
+                                                        <input type="text"
+                                                            v-model.trim="$v.paid_money.$model"
+                                                            :class="{'is-invalid': validationStatus($v.form.paid_money)}"
                                                             class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;">
-                                                        <div v-if="!$v.form.fee_for_making.required" class="invalid-feedback">required</div>
-                                                        <div v-if="!$v.form.fee_for_making.minValue" class="invalid-feedback">You must greater than {{ $v.form.fee_for_making.$params.minValue.min }}.</div>
+                                                        <div v-if="!$v.form.paid_money.minValue" class="invalid-feedback">You must greater than {{ $v.form.paid_money.$params.minValue.min }}.</div>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <label>စုစုပေါင်း</label>
+                                                        <label>ပိုပေးငွေ</label>
                                                     </td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                     <td>
-                                                        <input type="number" :value="totalBefore" class="form-control" placeholder="တန်ဖိုး" disabled>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <label>လျော့ငွေ</label>
-                                                    </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>
-                                                        <input type="number"
-                                                            v-model.trim="$v.form.item_discount.$model"
-                                                            :class="{'is-invalid': validationStatus($v.form.item_discount)}"
-                                                            class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;">
-                                                        <div v-if="!$v.form.item_discount.minValue" class="invalid-feedback">You must greater than {{ $v.form.item_discount.$params.minValue.min }}.</div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <label>ကျသင့်ငွေ</label>
-                                                    </td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td>
-                                                        <input type="number" :value="finalTotal" class="form-control" placeholder="တန်ဖိုး" disabled>
-                                                        <!-- <input type="number"
-                                                            v-model.trim="$v.form.final_total.$model"
-                                                            :class="{'is-invalid': validationStatus($v.form.final_total)}"
-                                                            class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;" disabled> -->
-                                                        <!-- <div v-if="!$v.form.final_total.required" class="invalid-feedback">Voucher Form ဖြည့်ဖို့လိုအပ့်နေပါသည်။</div> -->
+                                                        <input type="text" :value="exceedMoney | formatNumber" class="form-control" placeholder="တန်ဖိုး" disabled>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -399,7 +386,12 @@
                                         <Link :href="route('admin.purchases.index')">
                                             <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
                                         </Link>
-                                        <button type="submit" class="btn btn-primary text-uppercase text-white" style="letter-spacing: 0.1em;" >Save</button>
+                                        <button
+                                            :disabled = disabled
+                                            type="submit"
+                                            class="btn btn-primary text-uppercase text-white"
+                                            style="letter-spacing: 0.1em;"
+                                        >Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -417,7 +409,7 @@
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
-    import { required, minValue, maxValue} from 'vuelidate/lib/validators';
+    import { required, minValue, maxValue,integer} from 'vuelidate/lib/validators';
     import AutoCompleteSearchComponent from '../../../../Components/AdminPanel/AutoCompleteSearchComponent';
     import ContactAutoCompleteSearchComponent from '../../../../Components/AdminPanel/ContactAutoCompleteSearchComponent';
     import ThreeMultiSelectComponent from '../../../../Components/AdminPanel/ThreeMultiSelectComponent';
@@ -428,14 +420,10 @@
 
     export default {
         props: [
-            // 'products',
             'suppliers',
-            // 'transaction',
             'purchase',
-            // 'item',
             'product_for_sku',
             'contact',
-            // 'daily_setup_list',
             'errors'
         ],
         components: {
@@ -459,20 +447,19 @@
                     customer_id: "",
                     sell_id: "",
                     daily_setup: { daily_setup_id: "", kyat: "", pal: "", yway: "" },
-                    gold_plus_gem_weight: { kyat: "0", pal: "0", yway: "0" },
+                    gold_plus_gem_weight: { kyat: 0, pal: 0, yway: 0 },
                     gold_price: 0,
-                    gem_weight: { kyat: "0", pal: "0", yway: "0" },
+                    gem_weight: { kyat: 0, pal: 0, yway: 0 },
                     gem_price: 0,
-                    fee: { kyat: "0", pal: "0", yway: "0" },
+                    fee: { kyat: 0, pal: 0, yway: 0 },
                     fee_price: 0,
-                    fee_for_making: 0,
-                    before_total: 0,
-                    discount_amount: 0,
                     final_total: "",
                     image: "",
                     item_description: "",
                     additional_note: "",
                     product_sku:"",
+                    exceed_money:0,
+                    paid_money:0
                 }),
                 supplier: '',
                 imageforui: undefined,
@@ -484,19 +471,32 @@
                 customer:[],
                 snackbar:false,
                 alertbox:false,
-                // daily_setup: { daily_setup_id: "", kyat: "", pal: "", yway: "" },
+                gem_price: 0,
+                paid_money:0,
+                disabled:false,
             }
         },
         created() {
             // console.log(this.form.errors);
             this.daily_setup_purchase_return = this.$page.props.daily_setup_purchase_return;
         },
-        methods: {
-            numberWithCommas(value) {
-                if(typeof value !== "undefined"){
-                    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                }
+        watch: {
+            paid_money: function(newValue) {
+                let displayValue = newValue || ""; //check if this.value is null
+                this.form.paid_money = String(displayValue).replace(/,/g, ""); //replace ,
+                const result = newValue.replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                this.paid_money = result;
             },
+            gem_price: function(newValue) {
+                let displayValue = newValue || ""; //check if this.value is null
+                this.form.gem_price = String(displayValue).replace(/,/g, ""); //replace ,
+                const result = newValue.replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                this.gem_price = result;
+            },
+        },
+        methods: {
             validationStatus: function(validation) {
                 return typeof validation != "undefined" ? validation.$error : false;
             },
@@ -536,7 +536,9 @@
                 this.form.gold_plus_gem_weight = this.item.gold_plus_gem_weight;
                 this.form.gem_weight = this.item.gem_weight;
                 this.form.fee = this.item.fee;
-                this.form.fee_for_making = data.sell.fee_for_making;
+                this.form.exceed_money = this.transaction.exceed_money;
+                this.form.paid_money = this.transaction.paid_money;
+
                 this.imageforui = this.item.image;
                 this.form.item_description = this.item.item_description;
                 this.form.additional_note = this.transaction.additional_note;
@@ -559,8 +561,6 @@
                 if(value == 'onChangeQ' || value == 'onChangeT') {
                     this.product = [];
                     this.form.reset('daily_setup');
-                    // this.form.daily_setup = { daily_setup_id: "", kyat: "", pal: "", yway: "" };
-                    // this.settingDailySetup();
                 }else{
                     this.product = value;
                     this.form.product_sku = value.product_sku;
@@ -571,9 +571,7 @@
                 if(value == null){
                     this.product = [];
                     this.form.reset('product_sku','product_id','daily_setup');
-                    // this.form.product_sku = "";
-                    // this.form.product_id = "";
-                    // this.form.daily_setup = { daily_setup_id: "", kyat: "", pal: "", yway: "" };
+
                 }else{
                     this.product = value;
                     this.form.product_sku = value.product_sku;
@@ -612,12 +610,16 @@
                 }
             },
             createPurchaseReturns(){
-                this.$v.$touch();
-                if (this.$v.$pendding || this.$v.$error) return;
                 if(this.form.final_total == ""){
                     this.snackbar = true;
                     return;
                 }
+                this.$v.$touch();
+                if (this.$v.$pendding || this.$v.$error) return;
+                this.disabled = true;
+
+
+                this.disabled = true;
                 this.form.post(this.route('admin.purchase_returns.store'), {
                     preserveScroll: true,
                     onSuccess:() => {
@@ -629,6 +631,12 @@
                     },
                 })
             },
+            setPaidMoney (newValue) {
+                this.form.paid_money = newValue;
+                const result = newValue.toString().replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                this.paid_money = result;
+            }
         },
         computed: {
             showingDailySetup (){
@@ -652,11 +660,11 @@
                 let kyat_p = kyat * parseInt(this.form.daily_setup.kyat);
                 let pal_p = pal * parseInt(this.form.daily_setup.pal);
                 let yway_p = yway * this.form.daily_setup.yway;
-                let gold_price = kyat_p + pal_p + yway_p;
 
+                let gold_price = kyat_p + pal_p + yway_p;
                 if (isNaN(gold_price)) gold_price = "";
                 this.form.gold_price = parseInt(gold_price);
-                return  parseInt(gold_price);
+                return gold_price;
             },
             feePrice() {
                 if(Object.keys(this.product).length == 0)return;
@@ -669,51 +677,51 @@
                 if (isNaN(fee_price)) fee_price = "";
                 this.form.fee_price = parseInt(fee_price);
 
-                return parseInt(fee_price);
-            },
-            totalBefore() {
-                if(Object.keys(this.product).length == 0)return;
-                let before_total =
-                    parseInt(this.form.gold_price) +
-                    parseInt(this.form.gem_price) +
-                    parseInt(this.form.fee_price) +
-                    parseInt(this.form.fee_for_making);
-                if (isNaN(before_total)) before_total = "";
-                this.form.before_total = before_total;
-
-                return before_total;
+                return fee_price;
             },
             finalTotal() {
                 if(Object.keys(this.product).length == 0)return;
-                let final_total = parseInt(this.form.before_total) - parseInt(this.form.discount_amount);
+                let final_total =
+                    parseInt(this.form.gold_price) +
+                    parseInt(this.form.gem_price) +
+                    parseInt(this.form.fee_price) ;
                 if (isNaN(final_total)) final_total = "";
                 this.form.final_total = final_total;
-                this.form.paid_money = final_total;
+                this.setPaidMoney(final_total);
                 return final_total;
+            },
+            exceedMoney() {
+                if(Object.keys(this.product).length == 0)return;
+                let exceed_money = this.form.paid_money - this.form.final_total;
+
+                if (isNaN(exceed_money)) exceed_money = "";
+                this.form.exceed_money = exceed_money;
+                return exceed_money;
             },
         },
         validations: {
             form: {
                 daily_setup: {required},
                 gold_plus_gem_weight:{
-                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
-                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100), integer},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15), integer},
                     yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
                 },
                 gem_weight:{
-                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
-                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100), integer},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15), integer},
                     yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
                 },
                 gem_price: {required, minValue: minValue(0)},
                 fee:{
-                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100)},
-                    pal: {required, minValue: minValue(0), maxValue: maxValue(15)},
+                    kyat: {required, minValue: minValue(0), maxValue: maxValue(100), integer},
+                    pal: {required, minValue: minValue(0), maxValue: maxValue(15), integer},
                     yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
                 },
-                fee_for_making:{required, minValue: minValue(0)},
-                item_discount:{minValue: minValue(0)}
+                paid_money:{required, minValue: minValue(0)}
             },
+            gem_price: {required},
+            paid_money:{required}
         },
     }
 </script>

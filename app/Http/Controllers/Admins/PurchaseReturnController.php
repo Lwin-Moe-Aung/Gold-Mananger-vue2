@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Facade\FlareClient\Http\Response;
 use App\Http\Requests\Admins\PurchaseReturnRequest;
+use App\Services\GenerateInvoiceService;
 
 class PurchaseReturnController extends Controller
 {
@@ -95,6 +96,7 @@ class PurchaseReturnController extends Controller
      */
     public function store(PurchaseReturnRequest $request)
     {
+        // dd("ssssggggg");
         try {
             DB::beginTransaction();
             $business_id = Auth::user()->business_id;
@@ -106,6 +108,8 @@ class PurchaseReturnController extends Controller
                 $path = '/images/items/';
                 $file->move(public_path($path), $image_name);
                 $image_name_path = $path . $image_name;
+            } else {
+                $image_name_path = '/images/items/item_default.jfif';
             }
 
             if($request->item_id == null ){
@@ -142,20 +146,15 @@ class PurchaseReturnController extends Controller
             $transaction->status = "received";
             $transaction->payment_status = "paid";
             $transaction->contact_id = $request->customer_id;
-            $transaction->invoice_no = $this->invoiceNumber();
+            $transaction->invoice_no = (new GenerateInvoiceService())->invoiceNumber('purchase_return');
             $transaction->transaction_date = Carbon::now()->format('Y-m-d');
             $transaction->additional_notes = $request->additional_note;
+            $transaction->before_total = $request->final_total;
+            $transaction->final_total = $request->final_total;
+            $transaction->paid_money = $request->paid_money;
+            $transaction->exceed_money = $request->exceed_money;
             $transaction->created_by = $created_by;
             $transaction->save();
-
-            // if($request->sell_id != null ){
-            //     Sell::where('id', $request->sell_id)
-            //         ->update([
-            //             'purchase_return' => '1'
-            //         ]);
-            // }
-
-
 
             if($request->daily_setup["daily_setup_id"] == null){
                 $daily = DailySetup::create([
@@ -180,10 +179,11 @@ class PurchaseReturnController extends Controller
             $purchase->fee = json_encode($request->fee);
             $purchase->fee_price = $request->fee_price;
             $purchase->fee_for_making = $request->fee_for_making;
-            $purchase->before_total = $request->before_total;
+            $purchase->before_total = $request->final_total;
             $purchase->final_total = $request->final_total;
-            $purchase->discount_amount = $request->discount_amount;
             $purchase->purchase_return = "1";
+            $purchase->exceed_money = $request->exceed_money;
+            $purchase->paid_money = $request->paid_money;
             $purchase->save();
 
             DB::commit();

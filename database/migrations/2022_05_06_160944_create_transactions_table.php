@@ -40,6 +40,7 @@ class CreateTransactionsTable extends Migration
 
             $table->decimal('debt_paid_money', 10, 2)->nullable();
             $table->decimal('remaining_credit_money', 10, 2)->nullable();
+            $table->decimal('exceed_money', 10, 2)->nullable();
 
             $table->unsignedBigInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');

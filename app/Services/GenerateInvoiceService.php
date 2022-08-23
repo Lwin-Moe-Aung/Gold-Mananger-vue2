@@ -25,6 +25,9 @@ class GenerateInvoiceService {
         elseif($type == 'purchase'){
             $title = 'pur';
         }
+        elseif($type == 'purchase_return'){
+            $title = 'pur';
+        }
         elseif($type == 'debt_payment_from_customer'){
             $title = 'debtc';
         }

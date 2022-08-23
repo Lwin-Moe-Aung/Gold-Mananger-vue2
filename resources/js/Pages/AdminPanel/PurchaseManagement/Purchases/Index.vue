@@ -111,7 +111,7 @@
                                             </th>
                                             <th>
                                                 <a href="#" @click.prevent="change_sort('contact_name')"
-                                                    >Customer Name</a
+                                                    >Supplier Name</a
                                                 >
                                                 <span
                                                     v-if="

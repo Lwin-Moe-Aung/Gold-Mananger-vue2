@@ -27,7 +27,9 @@ class Purchase extends Model
         'created_by',
         'supplier_id',
         'daily_setup_id',
+        'gold_plus_gem_weight',
         'gold_price',
+        'gem_weight',
         'gem_price',
         'fee',
         'fee_price',
@@ -39,6 +41,7 @@ class Purchase extends Model
         'discount_amount',
         'purchase_return',
         'additional_notes',
+        'exceed_money',
     ];
 
     /**

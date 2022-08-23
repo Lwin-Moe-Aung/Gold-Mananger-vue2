@@ -370,7 +370,12 @@
                                         <Link :href="route('admin.purchases.index')">
                                             <button type="button" class="btn btn-light text-uppercase" style="letter-spacing: 0.1em;">Cancel</button>
                                         </Link>
-                                        <button type="submit" class="btn btn-primary text-uppercase text-white" style="letter-spacing: 0.1em;" >{{ buttonTxt }}</button>
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary text-uppercase text-white"
+                                            style="letter-spacing: 0.1em;"
+                                            :disabled="disabled"
+                                            >{{ buttonTxt }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -468,6 +473,7 @@
                 fee_for_making:0,
                 discount_amount: 0,
                 paid: 0,
+                disabled:false,
             }
         },
         created() {
@@ -588,10 +594,12 @@
             createPurchases() {
                 this.$v.$touch();
                 if (this.$v.$pendding || this.$v.$error) return;
+                this.disabled = true;
                 this.form.daily_setup_id = this.daily_price.daily_setup_id;
                 this.form.post(this.route('admin.purchases.store'), {
                     preserveScroll: true,
                     onSuccess:() => {
+                        this.disabled = false;
                         Object.assign(this.$data, this.$options.data.call(this));
                         Toast.fire({
                             icon: 'success',
@@ -627,7 +635,8 @@
 
             },
             changeSupplier() {
-                this.form.supplier_id = this.supplier.id;
+                if(this.supplier == null) this.form.supplier_id = "";
+                else this.form.supplier_id = this.supplier.id;
             },
             numberWithCommas(value) {
                 if(typeof value !== "undefined"){
@@ -675,14 +684,6 @@
 
         },
         watch: {
-            form:{
-                paid_money: function(newValue) {
-                    alert("hello wrold");
-                    const result = newValue.replace(/\D/g, "")
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                    this.paid = result;
-                },
-            },
             gem_price: function(newValue) {
                 let displayValue = newValue || ""; //check if this.value is null
                 this.form.gem_price = String(displayValue).replace(/,/g, ""); //replace ,
@@ -711,7 +712,6 @@
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 this.paid = result;
             },
-
 
         },
         computed: {

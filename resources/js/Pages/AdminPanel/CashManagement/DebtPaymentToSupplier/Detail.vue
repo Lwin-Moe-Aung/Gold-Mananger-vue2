@@ -3,7 +3,7 @@
         <admin-layout>
             <template #header>
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                    Debt Payment From Supplier Detail
+                    Debt Payment To Supplier Detail
                 </h2>
             </template>
             <section class="content">

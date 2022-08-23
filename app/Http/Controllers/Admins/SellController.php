@@ -11,46 +11,59 @@ use App\Models\Product;
 use App\Models\DebtPaymentFromCustomer;
 use App\Models\Type;
 use App\Models\ItemName;
+use App\Models\ViewSellData;
+use App\Models\Contact;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Http\Resources\PurchaseSellResource;
+use App\Http\Resources\ContactSearchResource;
 
 class SellController extends Controller
 {
-    /**
+     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        request()->validate([
-            'direction' => ['in:asc,desc'],
-            'field' => ['in:name,city']
-        ]);
-
-        $business_id = auth()->user()->business_id;
-
-        $transactions = Transaction::query();
-        $transactions->where('business_id', $business_id)->where('type','sell');
-
-        if (request('search')) {
-            $transactions->where('invoice_no', 'LIKE', '%' . request('search') . '%');
+        return Inertia::render('AdminPanel/SellManagement/SellList/Index');
+    }
+     /**
+     * Getting purchase transaction data for showing table.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSellDataLists()
+    {
+        $paginate = request('paginate');
+        if (isset($paginate)) {
+            $view_sell_data = ViewSellData::viewSellDataQuery()->paginate($paginate);
+        } else {
+            $view_sell_data = ViewSellData::viewSellDataQuery()->get();
         }
-        if (request()->has(['field', 'direction'])) {
-            $transactions->orderBy(request('field'), request('direction'));
-        }else{
-            $transactions->orderBy('created_at', 'desc');
+        return PurchaseSellResource::collection($view_sell_data);
+    }
+    /**
+     * getting customer for sell .
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCustomerLists()
+    {
+        $dataList = Contact::searchQuery()->paginate(15);
+        return ContactSearchResource::collection($dataList);
+    }
+
+
+    public function deleteRecord($id)
+    {
+        try{
+            $transaction = Transaction::find($id);
+            $transaction->delete();
+            return response()->json(['status' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false]);
         }
-        $transactions = $transactions->paginate(5)->withQueryString();
-        foreach ($transactions as $key=>$value) {
-            $transactions[$key]->sell = $value->sell;
-            $transactions[$key]->item = $value->sell->item;
-            $transactions[$key]->product = $value->sell->item->product;
-        }
-        return Inertia::render('AdminPanel/SellManagement/SellList/Index', [
-            'transactions' => $transactions,
-            'filters' => request()->all(['search', 'field', 'direction'])
-        ]);
     }
     /**
      * Show the form for creating a new resource.
@@ -59,6 +72,7 @@ class SellController extends Controller
     */
     public function detail($id)
     {
+        dd("Comment Sell Detail");
         $order = Order::find($id);
         if($order == null) return false;
         $order->total_weight = json_decode($order->total_weight);
@@ -162,7 +176,7 @@ class SellController extends Controller
         $transaction->sell->item->gem_weight = json_decode($transaction->sell->item->gem_weight);
         $transaction->sell->item->fee = json_decode($transaction->sell->item->fee);
 
-        return Inertia::render('AdminPanel/SellManagement/SellDetail/Index', [
+        return Inertia::render('AdminPanel/SellManagement/SellList/Detail', [
             'transaction' => $transaction,
             'debt_payment_from_customer' => DebtPaymentFromCustomer::with('transactionT')->where('parent_id',$id)->get(),
         ]);

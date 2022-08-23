@@ -13,23 +13,23 @@ class ViewSellData extends Model
     {
         $term = "%$term%";
         $query->where(function ($query) use ($term) {
-            $query->where('name', 'like', $term)
+            $query->where('contact_name', 'like', $term)
                 ->orWhere('mobile1', 'like', $term)
                 ->orWhere('mobile2', 'like', $term)
                 ->orWhere('address', 'like', $term)
                 ->orWhere('invoice_no', 'like', $term)
-                ->orWhere('type', 'like', $term)
-                ->orWhere('amount', 'like', $term)
-                ->orWhere('expense_category_name', 'like', $term)
+                ->orWhere('final_total', 'like', $term)
+                ->orWhere('item_sku', 'like', $term)
+                ->orWhere('item_name', 'like', $term)
+                ->orWhere('product_sku', 'like', $term)
                 ->orWhere('created_at', 'like', $term);
         });
     }
 
-    public function scopeViewCashOutDataQuery($query)
+    public function scopeViewSellDataQuery($query)
     {
         $search_term = request('q', '');
-        $selectedType = request('selectedType');
-        $contact_id = request('contact_id');
+        $contact_id = request('selectedContact');
 
         $sort_direction = request('sort_direction', 'desc');
         $startDate = request('startDate');
@@ -39,12 +39,10 @@ class ViewSellData extends Model
             $sort_direction = 'desc';
         }
         $sort_field = request('sort_field', 'created_at');
-        if (!in_array($sort_field, ['name', 'mobile1','address','invoice_no','type','expense_category_name', 'amount', 'created_at'])) {
+        if (!in_array($sort_field, ['item_name', 'contact_name', 'item_sku', 'product_sku', 'invoice_no', 'final_total'])) {
             $sort_field = 'created_at';
         }
-        if ( $selectedType != 'all') {
-            $query->where('type','=', $selectedType);
-        }
+
         $query->when($contact_id, function ($query) use ($contact_id) {
                 $query->where('contact_id', $contact_id);
             })

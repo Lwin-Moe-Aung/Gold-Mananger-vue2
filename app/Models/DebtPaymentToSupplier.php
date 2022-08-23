@@ -23,4 +23,9 @@ class DebtPaymentToSupplier extends Model
     {
         return $this->belongsTo(Transaction::class, 'parent_id');
     }
+
+    public function transactionT()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
+    }
 }

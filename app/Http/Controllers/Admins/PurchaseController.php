@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Transaction;
 use App\Models\ViewPurchaseData;
+use App\Models\DebtPaymentToSupplier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -206,7 +207,6 @@ class PurchaseController extends Controller
 
     public function purchaseUpdate(PurchaseRequest $request)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
             $transaction = Transaction::find($request->id);
@@ -274,4 +274,28 @@ class PurchaseController extends Controller
             return response()->json(['status' => false]);
         }
     }
+
+
+    /**
+     * Display the specified resource of purchase detail.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $transaction = Transaction::with(['purchase.item.product','business','businessLocation','contact','debtPaymentToSupplier'])
+                            ->where('id',$id)
+                            ->first();
+        if(!$transaction) return false;
+        $transaction->purchase->item->gold_plus_gem_weight = json_decode($transaction->purchase->item->gold_plus_gem_weight);
+        $transaction->purchase->item->gem_weight = json_decode($transaction->purchase->item->gem_weight);
+        $transaction->purchase->item->fee = json_decode($transaction->purchase->item->fee);
+
+        return Inertia::render('AdminPanel/PurchaseManagement/Purchases/Detail', [
+            'transaction' => $transaction,
+            'debt_payment_to_supplier' => DebtPaymentToSupplier::with('transactionT')->where('parent_id',$id)->get(),
+        ]);
+    }
+
 }

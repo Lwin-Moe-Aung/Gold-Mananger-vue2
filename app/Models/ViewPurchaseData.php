@@ -39,7 +39,7 @@ class ViewPurchaseData extends Model
             $sort_direction = 'desc';
         }
         $sort_field = request('sort_field', 'created_at');
-        if (!in_array($sort_field, ['name', 'mobile1','address','invoice_no','type','expense_category_name', 'amount', 'created_at'])) {
+        if (!in_array($sort_field, ['item_name', 'contact_name', 'item_sku', 'product_sku', 'invoice_no', 'final_total'])) {
             $sort_field = 'created_at';
         }
         $query->when($contact_id, function ($query) use ($contact_id) {

@@ -93,7 +93,7 @@
                                 {{ value.transaction.invoice_no }}
                             </Link>
                             <Link v-else
-                                href="#"
+                                :href="route('admin.purchases.show',value.parent_id)"
                                 class="btn btn-sm btn-primary badge-pill badge-dark">
                                 {{ value.transaction.invoice_no }}
                             </Link>

@@ -149,8 +149,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
 
     // Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');
 
-    //Order Management
+    //Sell Management
+    Route::get('get-sell-data-lists', [SellController::class, 'getSellDataLists'])->name('sells.getDataLists');
+    Route::get('sells/get-customer-lists', [SellController::class, 'getCustomerLists'])->name('sells.getCustomerLists');
+    Route::delete('sells/delete-record/{id}', [SellController::class, 'deleteRecord'])->name('sells.deleteRecord');
     Route::resource('sells', SellController::class);
+
     // Route::get('/sells/detail/{id}', [SellController::class, 'detail'])->name('sells.detail');
     Route::post('/sells/product_form_save', [SellController::class, 'productFormSave'])->name('sells.product_form_save');
     Route::post('/sells/item_form_save', [SellController::class, 'itemFormSave'])->name('sells.item_form_save');

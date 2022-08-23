@@ -150,7 +150,7 @@
                         <a href="#" class="nav-link">
                             <i class="nav-icon fab fa-product-hunt"></i>
                             <p>
-                                Orders Management
+                                Sells Management
                                 <i class="fas fa-angle-left right"></i>
                             </p>
                         </a>
@@ -159,7 +159,7 @@
                                 <Link :href="route('admin.sells.index')" class="nav-link" :class="route().current('admin.sells.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
-                                        Order Lists
+                                        Sell Lists
                                     </p>
                                 </Link>
                             </li>

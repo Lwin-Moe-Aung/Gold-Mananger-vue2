@@ -188,6 +188,7 @@
                                                     </td>
                                                     <td>
                                                         <input type="number"
+                                                            step=".1"
                                                             v-model.trim="$v.form.gold_plus_gem_weight.yway.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.gold_plus_gem_weight.yway)}"
                                                             class="form-control" placeholder="ရွေး" style="min-width: 56px;">
@@ -226,6 +227,7 @@
                                                     </td>
                                                     <td>
                                                         <input type="number"
+                                                            step=".1"
                                                             v-model.trim="$v.form.gem_weight.yway.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.gem_weight.yway)}"
                                                             class="form-control" placeholder="ရွေး" style="min-width: 56px;" :disabled="product.gem_weight == '0'">
@@ -270,6 +272,7 @@
                                                     </td>
                                                     <td>
                                                         <input type="number"
+                                                            step=".1"
                                                             v-model.trim="$v.form.fee.yway.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.fee.yway)}"
                                                             class="form-control" placeholder="ရွေး" style="min-width: 56px;">
@@ -343,7 +346,7 @@
                                                     <td></td>
                                                     <td>
                                                         <input type="text"
-                                                            v-model.trim="$v.paid_money.$model"
+                                                            v-model.trim="$v.paid.$model"
                                                             :class="{'is-invalid': validationStatus($v.form.paid_money)}"
                                                             class="form-control" placeholder="တန်ဖိုး" style="min-width: 56px;">
                                                         <div v-if="!$v.form.paid_money.minValue" class="invalid-feedback">You must greater than {{ $v.form.paid_money.$params.minValue.min }}.</div>
@@ -464,7 +467,7 @@
                 gem_price:0,
                 fee_for_making:0,
                 discount_amount: 0,
-                paid_money: 0,
+                paid: 0,
             }
         },
         created() {
@@ -482,18 +485,22 @@
                 this.form.gold_plus_gem_weight = this.item.gold_plus_gem_weight;
                 this.form.gold_price = this.purchase.gold_price;
                 this.form.gem_weight = this.item.gem_weight;
-                this.form.gem_price = this.purchase.gem_price;
+                // this.form.gem_price = this.purchase.gem_price;
                 this.form.fee = this.purchase.fee;
                 this.form.fee_price = this.purchase.fee_price;
-                this.form.fee_for_making = this.purchase.fee_for_making;
+                // this.form.fee_for_making = this.purchase.fee_for_making;
 
                 this.form.before_total = this.purchase.before_total;
-                this.form.discount_amount = this.purchase.discount_amount;
+                // this.form.discount_amount = this.purchase.discount_amount;
                 this.form.final_total = this.purchase.final_total;
-                this.form.paid_money = this.purchase.paid_money;
+                // this.form.paid_money = this.purchase.paid_money;
                 this.form.credit_money = this.purchase.credit_money;
                 this.form.item_description = this.item.item_description;
                 this.form.tran_description = this.transactions.additional_notes;
+                this.setGenPrice(parseInt(this.purchase.gem_price));
+                this.setFeeForMaking(parseInt(this.purchase.fee_for_making));
+                this.setDiscount(parseInt(this.purchase.discount_amount));
+                this.setPaidMoney(parseInt(this.purchase.paid_money));
             }else{
                 this.daily_setup = this.$page.props.daily_setup;
                 // this.daily_price = this.daily_setup_list[this.product_for_sku.quality];
@@ -524,10 +531,10 @@
 
             },
             supplier: {required},
-            gem_price: {required, minValue: minValue(0)},
-            fee_for_making:{required, minValue: minValue(0)},
-            discount_amount:{minValue: minValue(0)},
-            paid_money:{minValue: minValue(0)}
+            gem_price: {required},
+            fee_for_making:{required},
+            discount_amount:{required},
+            paid:{required}
         },
         methods: {
             eventSupplierDialog(value) {
@@ -640,9 +647,42 @@
                 this.form.final_total = "0";
                 this.form.paid_money = "0";
                 this.form.credit_money = "0";
+            },
+            setGenPrice (newValue) {
+                this.form.gem_price = newValue;
+                const result = newValue.toString().replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                this.gem_price = result;
+            },
+            setFeeForMaking (newValue) {
+                this.form.fee_for_making = newValue;
+                const result = newValue.toString().replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                this.fee_for_making = result;
+            },
+            setDiscount (newValue) {
+                this.form.discount_amount = newValue;
+                const result = newValue.toString().replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                this.discount_amount = result;
+            },
+            setPaidMoney (newValue) {
+                this.form.paid_money = newValue;
+                const result = newValue.toString().replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                this.paid = result;
             }
+
         },
         watch: {
+            form:{
+                paid_money: function(newValue) {
+                    alert("hello wrold");
+                    const result = newValue.replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    this.paid = result;
+                },
+            },
             gem_price: function(newValue) {
                 let displayValue = newValue || ""; //check if this.value is null
                 this.form.gem_price = String(displayValue).replace(/,/g, ""); //replace ,
@@ -664,13 +704,14 @@
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 this.discount_amount = result;
             },
-            paid_money: function(newValue) {
+            paid: function(newValue) {
                 let displayValue = newValue || ""; //check if this.value is null
                 this.form.paid_money = String(displayValue).replace(/,/g, ""); //replace ,
                 const result = newValue.replace(/\D/g, "")
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                this.paid_money = result;
+                this.paid = result;
             },
+
 
         },
         computed: {
@@ -734,7 +775,7 @@
                     parseInt(this.form.discount_amount);
                 if (isNaN(final_total)) final_total = "";
                 this.form.final_total = final_total;
-                this.form.paid_money = final_total;
+                if(this.transactions == null) this.setPaidMoney(final_total);
                 return final_total;
             },
             creditMoney() {

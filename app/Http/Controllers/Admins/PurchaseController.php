@@ -126,7 +126,9 @@ class PurchaseController extends Controller
                 'created_by' => auth()->user()->id,
                 'supplier_id' => $request->supplier_id,
                 'daily_setup_id' => $request->daily_setup_id,
+                'gold_plus_gem_weight' =>  json_encode($request->gold_plus_gem_weight),
                 'gold_price' => $request->gold_price,
+                'gem_weight' =>  json_encode($request->gem_weight),
                 'gem_price' => $request->gem_price,
                 'fee' =>  json_encode($request->fee),
                 'fee_price' =>  $request->fee_price,
@@ -204,9 +206,16 @@ class PurchaseController extends Controller
 
     public function purchaseUpdate(PurchaseRequest $request)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
             $transaction = Transaction::find($request->id);
+            $transaction->contact_id = $request->supplier_id;
+            $transaction->before_total = $request->before_total;
+            $transaction->final_total = $request->final_total;
+            $transaction->paid_money = $request->paid_money;
+            $transaction->credit_money = $request->credit_money;
+            $transaction->discount_amount = $request->discount_amount;
             $transaction->transaction_date = Carbon::now()->format('Y-m-d');
             $transaction->additional_notes = $request->tran_description;
             $transaction->save();
@@ -215,14 +224,18 @@ class PurchaseController extends Controller
             $purchase->created_by =  auth()->user()->id;
             $purchase->supplier_id = $request->supplier_id;
             $purchase->daily_setup_id = $request->daily_setup_id;
+            $purchase->gold_plus_gem_weight = json_encode($request->gold_plus_gem_weight);
             $purchase->gold_price = $request->gold_price;
+            $purchase->gem_weight = json_encode($request->gem_weight);
             $purchase->gem_price = $request->gem_price;
             $purchase->fee = json_encode($request->fee);
             $purchase->fee_price = $request->fee_price;
             $purchase->fee_for_making = $request->fee_for_making;
-            $purchase->discount_amount = $request->item_discount;
+            $purchase->discount_amount = $request->discount_amount;
             $purchase->before_total = $request->before_total;
             $purchase->final_total = $request->final_total;
+            $purchase->paid_money = $request->paid_money;
+            $purchase->credit_money = $request->credit_money;
             $purchase->save();
 
 

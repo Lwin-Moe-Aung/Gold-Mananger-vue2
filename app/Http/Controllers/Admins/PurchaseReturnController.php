@@ -9,7 +9,7 @@ use App\Models\Sell;
 use Inertia\Inertia;
 use App\Models\Contact;
 use App\Models\Product;
-
+use App\Models\ViewPurchaseReturnData;
 use App\Models\Purchase;
 use App\Models\Transaction;
 use App\Models\PurchaseReturn;
@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Facade\FlareClient\Http\Response;
 use App\Http\Requests\Admins\PurchaseReturnRequest;
 use App\Services\GenerateInvoiceService;
+use App\Http\Resources\PurchaseSellResource;
 
 class PurchaseReturnController extends Controller
 {
@@ -28,39 +29,7 @@ class PurchaseReturnController extends Controller
      */
     public function index()
     {
-        request()->validate([
-            'direction' => ['in:asc,desc'],
-            'field' => ['in:name,city']
-        ]);
-
-        $business_id = auth()->user()->business_id;
-
-        $transactions = Transaction::query();
-        $transactions->where('business_id', $business_id)
-                    ->where('type','purchase_return')
-                    ->with('purchase')
-                    ->whereHas("purchase",function($q){
-                        $q->where("purchase_return",'1');
-                    });
-        if (request('search')) {
-            $transactions->where('invoice_no', 'LIKE', '%' . request('search') . '%');
-        }
-        if (request()->has(['field', 'direction'])) {
-            $transactions->orderBy(request('field'), request('direction'));
-        }else{
-            $transactions->orderBy('created_at', 'desc');
-        }
-        $transactions = $transactions->paginate(5)->withQueryString();
-        foreach ($transactions as $key=>$value) {
-            $transactions[$key]->purchase = $value->purchase;
-            $transactions[$key]->item = $value->purchase->item;
-            $transactions[$key]->product = $value->purchase->item->product;
-        }
-        // dd($transactions);
-        return Inertia::render('AdminPanel/PurchaseManagement/PurchasesReturn/Index', [
-            'transactions' => $transactions,
-            'filters' => request()->all(['search', 'field', 'direction'])
-        ]);
+        return Inertia::render('AdminPanel/PurchaseManagement/PurchasesReturn/Index');
     }
 
     /**
@@ -96,7 +65,6 @@ class PurchaseReturnController extends Controller
      */
     public function store(PurchaseReturnRequest $request)
     {
-        // dd("ssssggggg");
         try {
             DB::beginTransaction();
             $business_id = Auth::user()->business_id;
@@ -238,18 +206,60 @@ class PurchaseReturnController extends Controller
 
         ]);
     }
-
+    /**
+     * get data for purchase return index table list
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+    */
+    public function getPurchaseReturnDataLists()
+    {
+        $paginate = request('paginate');
+        if (isset($paginate)) {
+            $view_purchase_return_data = ViewPurchaseReturnData::viewPurchaseReturnDataQuery()->paginate($paginate);
+        } else {
+            $view_purchase_return_data = ViewPurchaseReturnData::viewPurchaseReturnDataQuery()->get();
+        }
+        return PurchaseSellResource::collection($view_purchase_return_data);
+    }
+     /**
+     * Delete record from transaction table type equal to purchase_return.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteRecord($id)
+    {
+        try{
+            $transaction = Transaction::find($id);
+            $transaction->delete();
+            return response()->json(['status' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false]);
+        }
+    }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource for purchase return.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        $transaction = Transaction::with(['purchase.item.product','business','businessLocation','contact','debtPaymentToSupplier'])
+                            ->where('id',$id)
+                            ->first();
+        if(!$transaction) return false;
+        $transaction->purchase->item->gold_plus_gem_weight = json_decode($transaction->purchase->item->gold_plus_gem_weight);
+        $transaction->purchase->item->gem_weight = json_decode($transaction->purchase->item->gem_weight);
+        $transaction->purchase->item->fee = json_decode($transaction->purchase->item->fee);
+
+        return Inertia::render('AdminPanel/PurchaseManagement/PurchasesReturn/Detail', [
+            'transaction' => $transaction
+        ]);
     }
+
 
     /**
      * Show the form for editing the specified resource.

@@ -169,6 +169,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::post('/purchases/purchase_update', [PurchaseController::class, 'purchaseUpdate'])->name('purchases.purchase_update');
 
     //Purchase return
+    Route::get('get-purchase-return-data-lists', [PurchaseReturnController::class, 'getPurchaseReturnDataLists'])->name('purchase_returns.getDataLists');
+    Route::delete('purchase_returns/delete-record/{id}', [PurchaseReturnController::class, 'deleteRecord'])->name('purchase_returns.deleteRecord');
     Route::resource('purchase_returns', PurchaseReturnController::class);
 
     Route::get('/item_sku_search', [ItemController::class, 'searchItemSku'])->name('item_sku_search');

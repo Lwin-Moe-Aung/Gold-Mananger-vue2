@@ -11,159 +11,10 @@
                     Invoice
                 </h2>
             </template>
-            <section class="invoice" style="background-color: #FEF2CB !important;">
-                <div class="container">
-                    <div class="container-fluid">
-                        <div class="row row-invoice-page">
-                            <div class="col-4">
-
-                            </div>
-                            <div class="col-4 text-center">
-                            <h5>
-                                <i class="fas fa-gold"></i> {{ transaction.business.name }} / {{ transaction.business_location.name }}
-                            </h5>
-                            <p> {{transaction.business_location.address}}</p>
-                            <p> {{transaction.business_location.mobile}}</p>
-                            <p> {{transaction.business_location.email}}</p>
-
-                            </div>
-                            <div class="col-4">
-                                <small class="float-right">Date: {{ dateTime(transaction.created_at)}}</small>
-
-                            </div>
-                        </div>
-                        <div class="row invoice-info row-invoice-page">
-                            <div class="col-sm-4 invoice-col">
-                            Supplier Info
-                            <address>
-                                <strong>{{transaction.contact.name}}</strong><br>
-                                {{transaction.contact.address}}<br>
-                                Phone: {{transaction.contact.mobile1}},{{transaction.contact.mobile2}}<br>
-                                Email: {{transaction.contact.email}}
-                            </address>
-                            </div>
-                            <div class="col-sm-4 invoice-col">
-
-                            </div>
-                            <div class="col-sm-4 invoice-col">
-                            <b>Invoice #{{transaction.invoice_no}}</b><br>
-                            <br>
-                            <b>Unit Id #{{transaction.purchase.item.item_sku}}</b><br>
-                            <br>
-                            <b>Payment Due:</b> {{ date(transaction.transaction_date)}}<br>
-                            </div>
-                        </div>
-
-                        <div class="row row-invoice-page">
-                            <div class="col-6 col-invoice-page">
-                                <div class="table-responsive">
-                                    <table class="table table-bselled text-center bg-white">
-                                        <tr>
-                                            <th style="width:50%">ရွှေရည်</th>
-                                            <td class="text-right">{{transaction.purchase.item.product.quality}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>ပစ္စည်းအမည်</th>
-                                            <td class="text-right">{{transaction.purchase.item.name}}</td>
-                                        </tr>
-
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="col-6 col-invoice-page">
-                            </div>
-                        </div>
-
-                        <div class="row row-invoice-page">
-                            <div class="col-12 table-responsive col-invoice-page">
-                                <table class="table table-bselled text-center bg-white">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th style="width: 100px">ကျပ်</th>
-                                            <th style="width: 100px">ပဲ</th>
-                                            <th style="width: 100px">ရွေး</th>
-                                            <th style="width: 160px">ကျသင့်ငွေ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-left">ရွှေချိန်</td>
-                                            <td>{{transaction.purchase.item.gold_plus_gem_weight.kyat}}</td>
-                                            <td>{{transaction.purchase.item.gold_plus_gem_weight.pal}}</td>
-                                            <td>{{transaction.purchase.item.gold_plus_gem_weight.yway}}</td>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.gold_price)}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-left">ကျောက်ချိန်</td>
-                                            <td>{{transaction.purchase.item.gem_weight.kyat}}</td>
-                                            <td>{{transaction.purchase.item.gem_weight.pal}}</td>
-                                            <td>{{transaction.purchase.item.gem_weight.yway}}</td>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.gem_price)}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-left">အလျော့တွက်</td>
-                                            <td>{{transaction.purchase.item.fee.kyat}}</td>
-                                            <td>{{transaction.purchase.item.fee.pal}}</td>
-                                            <td>{{transaction.purchase.item.fee.yway}}</td>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.fee_price)}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-left">လက်ခ</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.fee_for_making)}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-left">စုစုပေါင်း</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.before_total)}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-
-                        <div class="row row-invoice-page">
-                            <div class="col-6 col-invoice-page">
-
-                            </div>
-                            <div class="col-6 col-invoice-page">
-                                <div class="table-responsive">
-                                    <table class="table table-bselled text-center bg-white">
-                                        <tr>
-                                            <th style="width:50%">လျော့ငွေ:</th>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.discount_amount)}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>ကျသင့်ငွေ</th>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.final_total)}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>ပေးငွေ:</th>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.paid_money)}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>ကျန်ငွေ:</th>
-                                            <td class="text-right">{{numberWithCommas(transaction.purchase.credit_money)}}</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row no-print">
-                            <div class="col-12">
-                                <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </section>
+            <InvoiceComponent
+                :transaction = transaction
+                type = 'purchase'
+            />
             <div class="container card mt-3">
                 <div class="card-header">
                     <h3 class="card-title">Paid History</h3>
@@ -189,20 +40,20 @@
                                         <span class="time"><i class="fas fa-clock"></i> {{ time(value.created_at) }}</span>
                                         <h3 class="timeline-header">
                                             ဆပ်ငွေ -
-                                            <span class="badge badge-pill bg-warning">{{ numberWithCommas(value.debt_payment) }}</span>
+                                            <span class="badge badge-pill bg-warning">{{ value.debt_payment | formatNumber }}</span>
                                         </h3>
 
                                         <div class="timeline-body">
                                             <p>
                                                 စုစုပေါင်းပေးငွေ -
                                                 <span class="badge badge-pill bg-warning">
-                                                    {{ numberWithCommas(value.old_paid_money+value.debt_payment) }}
+                                                    {{ value.old_paid_money+value.debt_payment | formatNumber }}
                                                 </span>
                                             </p>
                                             <p>
                                                 စုစုပေါင်းကျန်ငွေ -
                                                 <span class="badge badge-pill bg-warning">
-                                                    {{ numberWithCommas(value.old_credit_money-value.debt_payment) }}
+                                                    {{ value.old_credit_money-value.debt_payment | formatNumber }}
                                                 </span>
                                             </p>
                                         </div>
@@ -230,21 +81,21 @@
 <script>
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import moment from 'moment';
-    import Pagination from '../../../../Components/AdminPanel/Pagination';
+    import InvoiceComponent from '../../../../Components/AdminPanel/InvoiceComponent';
     import { Link } from '@inertiajs/inertia-vue';
 
     export default {
         env: {
-                browser: true,
-                node: true,
-            },
+            browser: true,
+            node: true,
+        },
         props: [
             'transaction',
             'debt_payment_to_supplier'
         ],
         components: {
             AdminLayout,
-            Pagination,
+            InvoiceComponent,
             Link
         },
         created() {
@@ -257,10 +108,7 @@
             date(value) {
                 return moment(value).format('DD/MM/YYYY');
             },
-            numberWithCommas(x) {
-                const v = parseInt(x);
-                return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            },
+
             dateTime(value) {
                 return moment(value).format('DD/MM/YYYY hh:mm:s A');
             },

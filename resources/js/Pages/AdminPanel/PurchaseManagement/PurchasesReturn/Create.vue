@@ -610,26 +610,34 @@
                 }
             },
             createPurchaseReturns(){
+
                 if(this.form.final_total == ""){
                     this.snackbar = true;
                     return;
                 }
                 this.$v.$touch();
-                if (this.$v.$pendding || this.$v.$error) return;
-                this.disabled = true;
-
-
+                if (this.$v.$pendding || this.$v.$error)return;
                 this.disabled = true;
                 this.form.post(this.route('admin.purchase_returns.store'), {
-                    preserveScroll: true,
+                    preserveScroll: false,
                     onSuccess:() => {
+                        this.disabled = false;
                         Object.assign(this.$data, this.$options.data.call(this));
                         Toast.fire({
                             icon: 'success',
                             title: 'New Purchase return created!'
                         })
                     },
+                    onError: (p) => {
+                        this.disabled = false;
+                        // Swal.fire(
+                        //     'Validation',
+                        //     'Validation Error',
+                        //     'error'
+                        // )
+                    },
                 })
+
             },
             setPaidMoney (newValue) {
                 this.form.paid_money = newValue;
@@ -718,7 +726,7 @@
                     pal: {required, minValue: minValue(0), maxValue: maxValue(15), integer},
                     yway: {required, minValue: minValue(0), maxValue: maxValue(7.9)},
                 },
-                paid_money:{required, minValue: minValue(0)}
+                paid_money:{required, minValue: minValue(0)},
             },
             gem_price: {required},
             paid_money:{required}

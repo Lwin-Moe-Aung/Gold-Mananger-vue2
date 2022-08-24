@@ -11,7 +11,11 @@
                     Invoice
                 </h2>
             </template>
-            <section class="invoice" style="background-color: #FEF2CB !important;">
+            <InvoiceComponent
+                :transaction = transaction
+                type = 'sell'
+            />
+            <!-- <section class="invoice" style="background-color: #FEF2CB !important;">
                 <div class="container">
                     <div class="container-fluid">
                         <div class="row row-invoice-page">
@@ -163,7 +167,7 @@
                     </div>
                 </div>
 
-            </section>
+            </section> -->
             <div class="container card mt-3">
                 <div class="card-header">
                     <h3 class="card-title">Paid History</h3>
@@ -189,20 +193,20 @@
                                         <span class="time"><i class="fas fa-clock"></i> {{ time(value.created_at) }}</span>
                                         <h3 class="timeline-header">
                                             ဆပ်ငွေ -
-                                            <span class="badge badge-pill bg-warning">{{ numberWithCommas(value.debt_payment) }}</span>
+                                            <span class="badge badge-pill bg-warning">{{ value.debt_payment | formatNumber }}</span>
                                         </h3>
 
                                         <div class="timeline-body">
                                             <p>
                                                 စုစုပေါင်းပေးငွေ -
                                                 <span class="badge badge-pill bg-warning">
-                                                    {{ numberWithCommas(value.old_paid_money+value.debt_payment) }}
+                                                    {{ parseInt(value.old_paid_money) + parseInt(value.debt_payment) | formatNumber}}
                                                 </span>
                                             </p>
                                             <p>
                                                 စုစုပေါင်းကျန်ငွေ -
                                                 <span class="badge badge-pill bg-warning">
-                                                    {{ numberWithCommas(value.old_credit_money-value.debt_payment) }}
+                                                    {{ (value.old_credit_money-value.debt_payment) | formatNumber }}
                                                 </span>
                                             </p>
                                         </div>
@@ -230,7 +234,7 @@
 <script>
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import moment from 'moment';
-    import Pagination from '../../../../Components/AdminPanel/Pagination';
+    import InvoiceComponent from '../../../../Components/AdminPanel/InvoiceComponent';
     import { Link } from '@inertiajs/inertia-vue';
 
     export default {
@@ -244,7 +248,7 @@
         ],
         components: {
             AdminLayout,
-            Pagination,
+            InvoiceComponent,
             Link
         },
         created() {
@@ -257,10 +261,7 @@
             date(value) {
                 return moment(value).format('DD/MM/YYYY');
             },
-            numberWithCommas(x) {
-                const v = parseInt(x);
-                return v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            },
+
             dateTime(value) {
                 return moment(value).format('DD/MM/YYYY hh:mm:s A');
             },

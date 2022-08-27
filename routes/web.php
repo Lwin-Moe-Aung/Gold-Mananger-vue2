@@ -162,6 +162,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::post('/sells/itemname_form_save', [SellController::class, 'itemNameFormSave'])->name('sells.itemname_form_save');
 
     //Purchase management
+    Route::get('purchase-invoice/{transaction_id}', [PurchaseController::class, 'purchaseInvoice'])->name('purchases.invoice');
     Route::get('/purchases/get-supplier-lists', [PurchaseController::class, 'getSupplierLists'])->name('purchases.getSupplierLists');
     Route::get('/get-purchase-data-lists', [PurchaseController::class, 'getPurchaseDataLists'])->name('purchases.getDataLists');
     Route::delete('purchases/delete-record/{id}', [PurchaseController::class, 'deleteRecord'])->name('purchases.deleteRecord');
@@ -169,6 +170,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::post('/purchases/purchase_update', [PurchaseController::class, 'purchaseUpdate'])->name('purchases.purchase_update');
 
     //Purchase return
+    Route::get('purchase-return-invoice/{transaction_id}', [PurchaseReturnController::class, 'purchaseReturnInvoice'])->name('purchase_returns.invoice');
     Route::get('get-purchase-return-data-lists', [PurchaseReturnController::class, 'getPurchaseReturnDataLists'])->name('purchase_returns.getDataLists');
     Route::delete('purchase_returns/delete-record/{id}', [PurchaseReturnController::class, 'deleteRecord'])->name('purchase_returns.deleteRecord');
     Route::resource('purchase_returns', PurchaseReturnController::class);

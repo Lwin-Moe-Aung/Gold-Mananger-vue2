@@ -40,4 +40,36 @@ class GenerateInvoiceService {
         $string = preg_replace("/[^0-9\.]/", '', $transactionLatest->invoice_no);
         return $title . sprintf('%04d', $string+1);
     }
+
+    /**
+     * getting data for printing invoice
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+    */
+    public function gererateInvoice($transaction_id, $type)
+    {
+        $query = Transaction::with(['business','businessLocation','contact','debtPaymentToSupplier']);
+
+        if($type == 'purchase' || $type == 'purchase_return'){
+            $query->with('purchase.item.product');
+        }else if($type == 'sell'){
+            $query->with('sell.item.product');
+        }
+        $transaction = $query->where('id',$transaction_id)
+                            ->first();
+
+        if($type == 'purchase' || $type == 'purchase_return'){
+            $transaction->purchase->item->gold_plus_gem_weight = json_decode($transaction->purchase->item->gold_plus_gem_weight);
+            $transaction->purchase->item->gem_weight = json_decode($transaction->purchase->item->gem_weight);
+            $transaction->purchase->item->fee = json_decode($transaction->purchase->item->fee);
+        }else if($type == 'sell'){
+            $transaction->sell->item->gold_plus_gem_weight = json_decode($transaction->sell->item->gold_plus_gem_weight);
+            $transaction->sell->item->gem_weight = json_decode($transaction->sell->item->gem_weight);
+            $transaction->sell->item->fee = json_decode($transaction->sell->item->fee);
+        }
+
+        return $transaction;
+
+    }
 }

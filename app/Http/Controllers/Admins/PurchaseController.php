@@ -19,9 +19,27 @@ use Facade\FlareClient\Http\Response;
 use App\Http\Requests\Admins\PurchaseRequest;
 use App\Http\Resources\ContactSearchResource;
 use App\Http\Resources\PurchaseSellResource;
+use App\Services\GenerateInvoiceService;
 
 class PurchaseController extends Controller
 {
+    /**
+     * GenerateInvoice service
+     *
+     * @var GenerateInvoiceService
+     */
+    protected $generateInvoiceService;
+
+    /**
+     * Create a new controller instance for dependency injection
+     *
+     * @param  GenerateInvoiceService  $generateInvoiceService
+     * @return void
+     */
+    public function __construct(GenerateInvoiceService  $generateInvoiceService)
+    {
+        $this->generateInvoiceService = $generateInvoiceService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -111,7 +129,7 @@ class PurchaseController extends Controller
                 'status' => "received",
                 'payment_status' => "paid",
                 'contact_id' => $request->supplier_id,
-                'invoice_no' => $this->invoiceNumber(),
+                'invoice_no' => $this->generateInvoiceService->invoiceNumber(),
                 'transaction_date' => Carbon::now()->format('Y-m-d'),
                 'additional_notes' =>  $request->tran_description,
                 'created_by' =>  auth()->user()->id,
@@ -147,19 +165,6 @@ class PurchaseController extends Controller
             return back()->with('fail', 'Fail to Create New Product Type');
         }
 
-    }
-
-    public function invoiceNumber()
-    {
-        $transactionLatest = Transaction::where('business_id',Auth::user()->business_id)
-                            ->where('type','purchase')
-                            ->latest()
-                            ->first();
-        if (! $transactionLatest) {
-            return 'arm00001';
-        }
-        $string = preg_replace("/[^0-9\.]/", '', $transactionLatest->invoice_no);
-        return 'arm' . sprintf('%04d', $string+1);
     }
 
     public function edit($id)
@@ -284,18 +289,22 @@ class PurchaseController extends Controller
      */
     public function show($id)
     {
-        $transaction = Transaction::with(['purchase.item.product','business','businessLocation','contact','debtPaymentToSupplier'])
-                            ->where('id',$id)
-                            ->first();
-        if(!$transaction) return false;
-        $transaction->purchase->item->gold_plus_gem_weight = json_decode($transaction->purchase->item->gold_plus_gem_weight);
-        $transaction->purchase->item->gem_weight = json_decode($transaction->purchase->item->gem_weight);
-        $transaction->purchase->item->fee = json_decode($transaction->purchase->item->fee);
-
         return Inertia::render('AdminPanel/PurchaseManagement/Purchases/Detail', [
-            'transaction' => $transaction,
+            'transaction' => $this->generateInvoiceService->gererateInvoice($id, 'purchase'),
             'debt_payment_to_supplier' => DebtPaymentToSupplier::with('transactionT')->where('parent_id',$id)->get(),
         ]);
     }
 
+    /**
+     * Generating Invoice for purchase by transaction id.
+     *
+     * @param  int  $transaction_id
+     * @return \Illuminate\Http\Response
+     */
+    public function purchaseInvoice($transaction_id)
+    {
+        return Inertia::render('AdminPanel/PurchaseManagement/Purchases/Invoice', [
+            'transaction' => $this->generateInvoiceService->gererateInvoice($transaction_id, 'purchase')
+        ]);
+    }
 }

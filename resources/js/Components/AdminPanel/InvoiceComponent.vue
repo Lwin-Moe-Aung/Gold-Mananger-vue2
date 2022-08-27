@@ -145,7 +145,7 @@
                     </div>
                     <div class="row no-print">
                         <div class="col-12">
-                            <a href="#" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
+                            <a rel="noopener" @click="print()" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
                         </div>
                     </div>
                 </div>
@@ -156,6 +156,7 @@
 <script>
     import { Link } from '@inertiajs/inertia-vue';
     import moment from 'moment';
+    import constant from "../../constant";
 
     export default {
         name: 'InvoiceComponent',
@@ -164,18 +165,30 @@
             Link,
         },
         created() {
-            if(this.type == 'purchase' || this.type == 'purchase_return') this.data = this.transaction.purchase;
-            if(this.type == 'sell') this.data = this.transaction.sell;
+            if(this.type == 'purchase' ){
+                this.data = this.transaction.purchase;
+                this.invoice_link = 'purchase-invoice'
+            }else if(this.type == 'purchase_return'){
+                this.data = this.transaction.purchase;
+                this.invoice_link = 'purchase-return-invoice';
+            }else if(this.type == 'sell'){
+                this.data = this.transaction.sell;
+                this.invoice_link = 'sell-invoice';
+            }
         },
         data() {
             return {
                 data:[],
+                invoice_link:null,
             }
         },
         watch: {
 
         },
         methods: {
+            print(){
+                window.open( constant.ROUTE_URL_ADMIN+this.invoice_link+"/"+this.transaction.id, "_blank");
+            },
             formatDateTime(value) {
                 return moment(String(value)).format('YYYY-MM-DD hh:mm')
             }

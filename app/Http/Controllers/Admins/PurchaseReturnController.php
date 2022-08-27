@@ -23,6 +23,23 @@ use App\Http\Resources\PurchaseSellResource;
 class PurchaseReturnController extends Controller
 {
     /**
+     * GenerateInvoice service
+     *
+     * @var GenerateInvoiceService
+     */
+    protected $generateInvoiceService;
+
+    /**
+     * Create a new controller instance for dependency injection
+     *
+     * @param  GenerateInvoiceService  $generateInvoiceService
+     * @return void
+     */
+    public function __construct(GenerateInvoiceService  $generateInvoiceService)
+    {
+        $this->generateInvoiceService = $generateInvoiceService;
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -114,7 +131,7 @@ class PurchaseReturnController extends Controller
             $transaction->status = "received";
             $transaction->payment_status = "paid";
             $transaction->contact_id = $request->customer_id;
-            $transaction->invoice_no = (new GenerateInvoiceService())->invoiceNumber('purchase_return');
+            $transaction->invoice_no = $this->generateInvoiceService->invoiceNumber('purchase_return');
             $transaction->transaction_date = Carbon::now()->format('Y-m-d');
             $transaction->additional_notes = $request->additional_note;
             $transaction->before_total = $request->final_total;
@@ -247,19 +264,23 @@ class PurchaseReturnController extends Controller
      */
     public function show($id)
     {
-        $transaction = Transaction::with(['purchase.item.product','business','businessLocation','contact','debtPaymentToSupplier'])
-                            ->where('id',$id)
-                            ->first();
-        if(!$transaction) return false;
-        $transaction->purchase->item->gold_plus_gem_weight = json_decode($transaction->purchase->item->gold_plus_gem_weight);
-        $transaction->purchase->item->gem_weight = json_decode($transaction->purchase->item->gem_weight);
-        $transaction->purchase->item->fee = json_decode($transaction->purchase->item->fee);
-
         return Inertia::render('AdminPanel/PurchaseManagement/PurchasesReturn/Detail', [
-            'transaction' => $transaction
+            'transaction' => $this->generateInvoiceService->gererateInvoice($id, 'purchase_return')
         ]);
     }
 
+    /**
+     * Generating Invoice for purchase Return by transaction id.
+     *
+     * @param  int  $transaction_id
+     * @return \Illuminate\Http\Response
+     */
+    public function purchaseReturnInvoice($transaction_id)
+    {
+        return Inertia::render('AdminPanel/PurchaseManagement/PurchasesReturn/Invoice', [
+            'transaction' => $this->generateInvoiceService->gererateInvoice($transaction_id, 'purchase_return')
+        ]);
+    }
 
     /**
      * Show the form for editing the specified resource.

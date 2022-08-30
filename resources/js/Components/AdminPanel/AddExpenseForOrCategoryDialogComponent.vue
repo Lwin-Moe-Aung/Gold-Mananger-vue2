@@ -7,7 +7,7 @@
         <v-card>
             <v-form ref="form" lazy-validation>
                 <v-card-title>
-                    <span class="text-h5">Add Expense Category</span>
+                    <span class="text-h5"></span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
@@ -48,8 +48,8 @@
     import axios from "axios";
 
     export default {
-        name: "AddExpenseCategoryDialogComponent",
-        props: ["value",'route_name'],
+        name: "AddExpenseForOrCategoryDialogComponent",
+        props: ["value",'route_name', 'type'],
         data: () => ({
             name:'',
             dialog: false,
@@ -80,6 +80,11 @@
                         });
                 }
             }
-        }
+        },
+        computed: {
+            formTitle() {
+                return this.type == 'ExpenseCategory' ? 'Add New Expense Category' : 'Add New Expense For';
+            }
+        },
     }
 </script>

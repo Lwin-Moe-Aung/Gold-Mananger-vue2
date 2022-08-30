@@ -65,10 +65,24 @@
                                                 <td>{{ transaction.expense_category.name }}</td>
                                                 <td>{{ dateTime(transaction.created_at) }}</td>
                                                 <td class="text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
+
+                                                    <button
+                                                        onclick="confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
+                                                        class="btn btn-sm"
+                                                        @click="deleteRecord(transaction.id)"
+                                                    >
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button>
+
                                                     <Link :href="route('admin.expenses.edit', transaction.id)">
-                                                        <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;">Edit</button>
+                                                        <i class="fa fa-edit" aria-hidden="true"></i>
                                                     </Link>
-                                                    <!-- <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteTransaction(transaction.id)">Delete</button> -->
+
+                                                    <!-- <Link :href="route('admin.expenses.show',transaction.id)">
+                                                        <button class="btn btn-warrning btn-sm">
+                                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                                        </button>
+                                                    </Link> -->
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -94,6 +108,7 @@
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { pickBy, throttle } from 'lodash';
     import { Link } from '@inertiajs/inertia-vue';
+    import axios from "axios";
 
     export default {
         props: [
@@ -136,6 +151,32 @@
             dateTime(value) {
                 return moment(value).format('YYYY-MM-DD');
             },
+            deleteRecord(transaction_id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        axios
+                            .delete(this.route("admin.expenses.deleteRecord",transaction_id))
+                            .then(response => {
+                                if (response.data.status) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'Expense For has been deleted.',
+                                        'success'
+                                    )
+                                    this.transactions.data = this.transactions.data.filter(val => val.id != transaction_id);
+                                }
+                            });
+                    }
+                })
+            }
         }
     }
 </script>

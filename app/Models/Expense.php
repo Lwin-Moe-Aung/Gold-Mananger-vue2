@@ -13,7 +13,7 @@ class Expense extends Model
     protected $fillable = [
         'transaction_id',
         'expense_category_id',
-        'expense_for',
+        'expense_for_id',
         'amount',
         'additional_notes',
         'image',
@@ -26,7 +26,7 @@ class Expense extends Model
 
     public function expense_for()
     {
-        return $this->belongsTo(ExpenseFor::class, 'expense_for');
+        return $this->belongsTo(ExpenseFor::class, 'expense_for_id');
     }
 
     public function user()

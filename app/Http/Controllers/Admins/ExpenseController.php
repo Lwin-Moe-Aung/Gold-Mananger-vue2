@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\Models\ExpenseCategory;
 use App\Models\Expense;
 use App\Models\User;
+use App\Models\ExpenseFor;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Admins\ExpenseRequest;
 use Carbon\Carbon;
@@ -64,7 +65,7 @@ class ExpenseController extends Controller
         return Inertia::render('AdminPanel/ExpenseManagement/Expense/Create', [
             'transaction' => null,
             'expense_categories' => ExpenseCategory::where('business_id',auth()->user()->business_id)->get(),
-            'expense_users' => User::where('business_id',auth()->user()->business_id)->get()
+            'expense_fors' => ExpenseFor::where('business_id',auth()->user()->business_id)->get()
         ]);
     }
 
@@ -99,7 +100,7 @@ class ExpenseController extends Controller
             Expense::create([
                 'transaction_id' => $transaction->id,
                 'expense_category_id' => $request->expense_category_id,
-                'expense_for' => $request->expense_for,
+                'expense_for_id' => $request->expense_for_id,
                 'amount' =>  $request->total_amount,
                 'additional_notes' =>  $request->additional_notes,
                 'image' => $image_name_path,
@@ -134,12 +135,12 @@ class ExpenseController extends Controller
         $transaction = Transaction::find($id);
         $transaction->expense = $transaction->expense;
         $transaction->expense_category = $transaction->expense->expense_category;
-        $transaction->expense_user = $transaction->expense->user;
+        $transaction->expense_for = $transaction->expense->expense_for;
 
         return Inertia::render('AdminPanel/ExpenseManagement/Expense/Create', [
             'transaction' => $transaction,
             'expense_categories' => ExpenseCategory::where('business_id',auth()->user()->business_id)->get(),
-            'expense_users' => User::where('business_id',auth()->user()->business_id)->get()
+            'expense_fors' => ExpenseFor::where('business_id',auth()->user()->business_id)->get()
         ]);
     }
 
@@ -164,7 +165,7 @@ class ExpenseController extends Controller
 
             $expense = Expense::where('transaction_id', $request->id)->first();
             $expense->expense_category_id = $request->expense_category_id;
-            $expense->expense_for = $request->expense_for;
+            $expense->expense_for_id = $request->expense_for_id;
             $expense->amount = $request->total_amount;
             $expense->additional_notes = $request->additional_notes;
 
@@ -192,8 +193,12 @@ class ExpenseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function deleteRecord($id)
     {
-        //
+        $transaction = Transaction::find($id);
+        $transaction->delete();
+        return response()->json([
+            'status' => true,
+        ]);
     }
 }

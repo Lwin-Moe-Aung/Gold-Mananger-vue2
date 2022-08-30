@@ -53,33 +53,28 @@
                                         <div class="form-group">
                                             <label for="name">Reference No: </label>
                                             <!-- <input type="text" class="form-control" placeholder="Name" v-model="form.name" :class="{ 'is-invalid' : form.errors.name }" autofocus="autofocus" autocomplete="off"> -->
-                                            <input type="text" v-model.trim="$v.form.ref_no.$model" :class="{'is-invalid': validationStatus($v.form.ref_no)}" class="form-control form-control" autofocus="autofocus" autocomplete="off">
-                                            <div v-if="!$v.form.ref_no.required" class="invalid-feedback">The Reference No field is required.</div>
-                                        </div>
-                                        <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
-                                            {{ form.errors.ref_no }}
+                                            <input type="text" v-model="form.ref_no" :class="{'is-invalid': validationStatus($v.form.ref_no)}" class="form-control form-control" autofocus="autofocus" autocomplete="off">
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group">
                                             <label for="permissions">Expense For</label>
-                                                <multiselect
-                                                    v-model.trim="$v.expense_user.$model"
-                                                    :options="expense_users"
-                                                    :multiple="false"
-                                                    :taggable="true"
-                                                    placeholder="Expense For"
-                                                    label="name"
-                                                    track-by="id"
-                                                    @input="changeExpenseUser"
-                                                    :class="{'is-invalid': validationStatus($v.expense_user)}"
-                                                ></multiselect>
-                                                <div v-if="!$v.expense_user.required" class="invalid-feedback">The Expense For is required.</div>
-                                                <!-- <div class="col-sm-2 col-xs-2">
-                                                    <button type="button" class="btn btn-success btn-flat text-white float-right" @click="addSupplierDialog = true"><i class="fas fa-plus"></i></button>
-                                                </div> -->
-                                            <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.expense_for}">
-                                                {{ form.errors.expense_for }}
+                                            <div class="row">
+                                                <div class="col-sm-10 col-xs-10">
+                                                    <multiselect
+                                                        v-model="expense_for"
+                                                        :options="expense_fors"
+                                                        :multiple="false"
+                                                        :taggable="true"
+                                                        placeholder="Expense For"
+                                                        label="name"
+                                                        track-by="id"
+                                                        @input="changeExpenseFor"
+                                                    ></multiselect>
+                                                </div>
+                                                <div class="col-sm-2 col-xs-2">
+                                                    <button type="button" class="btn btn-success btn-flat text-white float-right" @click="addExpenseForDialog = true"><i class="fas fa-plus"></i></button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -162,10 +157,17 @@
                 </div>
             </section>
         </admin-layout>
-        <AddExpenseCategoryDialogComponent
+        <AddExpenseForOrCategoryDialogComponent
             @update:data="eventExpenseCategoryDialog"
             v-model = "addExpenseCategoryDialog"
             route_name="admin.expense_categories.storeDialog"
+            type="ExpenseCategory"
+        />
+        <AddExpenseForOrCategoryDialogComponent
+            @update:data="eventExpenseForDialog"
+            v-model = "addExpenseForDialog"
+            route_name="admin.expense-fors.storeDialog"
+            type="ExpenseFor"
         />
     </div>
 </template>
@@ -174,7 +176,7 @@
     import Pagination from '../../../../Components/AdminPanel/Pagination';
     import { Link } from '@inertiajs/inertia-vue';
     import { required, minValue, maxValue} from 'vuelidate/lib/validators'
-    import AddExpenseCategoryDialogComponent from '../../../../Components/AdminPanel/AddExpenseCategoryDialogComponent';
+    import AddExpenseForOrCategoryDialogComponent from '../../../../Components/AdminPanel/AddExpenseForOrCategoryDialogComponent';
     import Datepicker from 'vuejs-datepicker';
     import moment from 'moment';
 
@@ -182,14 +184,14 @@
         props: [
             'transaction',
             'expense_categories',
-            'expense_users',
+            'expense_fors',
         ],
         components: {
             Datepicker,
             AdminLayout,
             Pagination,
             Link,
-            AddExpenseCategoryDialogComponent,
+            AddExpenseForOrCategoryDialogComponent,
         },
         data() {
             return {
@@ -197,7 +199,7 @@
                     id: null,
                     expense_category_id: null,
                     ref_no: "",
-                    expense_for: null,
+                    expense_for_id: null,
                     total_amount: "",
                     date: "",
                     image: undefined,
@@ -205,8 +207,10 @@
                 }),
                 imageforui: undefined,
                 expense_category: null,
-                expense_user: null,
+                expense_for: null,
                 addExpenseCategoryDialog: false,
+                addExpenseForDialog: false,
+
             }
         },
         created() {
@@ -219,19 +223,23 @@
         validations: {
             form: {
                 date: {required},
-                ref_no:{required},
                 total_amount:{required},
             },
             expense_category:{required},
-            expense_user:{required},
         },
         methods: {
+
             eventExpenseCategoryDialog(value) {
                 this.addExpenseCategoryDialog = false;
                 this.form.expense_category_id = value.id;
                 this.expense_category = value;
                 this.expense_categories.push(value);
-
+            },
+            eventExpenseForDialog( value) {
+                this.addExpenseForDialog = false;
+                this.form.expense_for_id = value.id;
+                this.expense_for = value;
+                this.expense_fors.push(value);
             },
             selectDate(date) {
                 this.form.date = moment(date).format('YYYY-MM-DD');
@@ -240,19 +248,19 @@
                 this.form.id = this.transaction.id;
                 this.form.expense_category_id = this.transaction.expense.expense_category_id;
                 this.form.ref_no = this.transaction.ref_no;
-                this.form.expense_for = this.transaction.expense.expense_for;
+                this.form.expense_for_id = this.transaction.expense.expense_for_id;
                 this.form.total_amount = this.transaction.expense.amount;
                 this.form.date = this.transaction.transaction_date;
                 this.imageforui = this.transaction.expense.image;
                 this.form.additional_notes = this.transaction.expense.additional_notes;
                 this.expense_category = this.transaction.expense.expense_category;
-                this.expense_user = this.transaction.expense.user;
+                this.expense_for = this.transaction.expense_for;
             },
             changeExpenseCategory() {
                 this.form.expense_category_id = this.expense_category != null ? this.expense_category.id : null;
             },
-            changeExpenseUser() {
-                this.form.expense_for = this.expense_user != null ? this.expense_user.id : null;
+            changeExpenseFor() {
+                this.form.expense_for_id = this.expense_for != null ? this.expense_for.id : null;
             },
             validationStatus: function(validation) {
                 return typeof validation != "undefined" ? validation.$error : false;

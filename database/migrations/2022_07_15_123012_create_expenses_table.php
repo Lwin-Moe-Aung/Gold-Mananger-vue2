@@ -19,7 +19,7 @@ class CreateExpensesTable extends Migration
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             $table->unsignedBigInteger('expense_category_id');
             $table->foreign('expense_category_id')->references('id')->on('expense_categories')->onDelete('cascade');
-            $table->unsignedBigInteger('expense_for')->nullable();
+            $table->unsignedBigInteger('expense_for_id')->nullable();
             $table->decimal('amount', 10, 2)->nullable();
             $table->text('additional_notes')->nullable();
             $table->string('image')->nullable();

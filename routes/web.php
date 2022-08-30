@@ -187,7 +187,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     //limitation Price
     Route::resource('limitation_prices', LimitationPriceController::class);
 
+    //expense
     Route::resource('expenses', ExpenseController::class);
+    Route::delete('expenses/delete-record/{id}', [ExpenseController::class, 'deleteRecord'])->name('expenses.deleteRecord');
     Route::post('/expenses/expenses_update', [ExpenseController::class, 'expensesUpdate'])->name('expenses.expenses_update');
 
     //expense category

@@ -17,9 +17,27 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\Http\Resources\PurchaseSellResource;
 use App\Http\Resources\ContactSearchResource;
+use App\Services\GenerateInvoiceService;
 
 class SellController extends Controller
 {
+    /**
+     * GenerateInvoice service
+     *
+     * @var GenerateInvoiceService
+     */
+    protected $generateInvoiceService;
+
+    /**
+     * Create a new controller instance for dependency injection
+     *
+     * @param  GenerateInvoiceService  $generateInvoiceService
+     * @return void
+     */
+    public function __construct(GenerateInvoiceService  $generateInvoiceService)
+    {
+        $this->generateInvoiceService = $generateInvoiceService;
+    }
      /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Response
@@ -161,23 +179,15 @@ class SellController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource of sell by transactionId.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $transaction = Transaction::with(['sell.item.product','business','businessLocation','contact','debtPaymentFromCustomer'])
-                            ->where('id',$id)
-                            ->first();
-        if(!$transaction) return false;
-        $transaction->sell->item->gold_plus_gem_weight = json_decode($transaction->sell->item->gold_plus_gem_weight);
-        $transaction->sell->item->gem_weight = json_decode($transaction->sell->item->gem_weight);
-        $transaction->sell->item->fee = json_decode($transaction->sell->item->fee);
-
         return Inertia::render('AdminPanel/SellManagement/SellList/Detail', [
-            'transaction' => $transaction,
+            'transaction' => $this->generateInvoiceService->gererateInvoice($id, 'sell'),
             'debt_payment_from_customer' => DebtPaymentFromCustomer::with('transactionT')->where('parent_id',$id)->get(),
         ]);
     }

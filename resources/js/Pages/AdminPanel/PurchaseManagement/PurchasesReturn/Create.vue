@@ -49,7 +49,15 @@
 
                                     <div class="col-12 col-sm-4 border-right">
                                         <div class="form-group">
-                                            <label for="permissions">Invoice No</label>
+                                            <label for="permissions">
+                                                Invoice No
+                                                <a rel="noopener"
+                                                    v-if="form.transaction_id != null"
+                                                    @click="sellDetail()"
+                                                    class="btn btn-default">
+                                                    {{ form.invoice_no }}
+                                                </a>
+                                            </label>
                                             <AutoCompleteSearchComponent
                                                 @update:data="selectInvoiceNo"
                                                 route_name = "admin.invoice_no_search"
@@ -62,10 +70,7 @@
                                 </div>
                             </div>
                         </div>
-                        <ThreeMultiSelectComponent
-                            @update:data="changeProductSku"
-                            v-model = "form.product_sku"
-                        />
+
                         <div class="card card-primary card-outline" data-select2-id="32">
                             <div class="card-header">
                                 <h3 class="card-title">Product/ပေါက်ဈေး/Customer</h3>
@@ -125,6 +130,11 @@
                                 </div>
                             </div>
                         </div>
+
+                        <ThreeMultiSelectComponent
+                            @update:data="changeProductSku"
+                            v-model = "form.product_sku"
+                        />
 
                         <div class="card card-primary card-outline" data-select2-id="32">
                             <div class="card-header">
@@ -416,6 +426,7 @@
     import DailySetupComponent from '../../../../Components/AdminPanel/DailySetupComponent';
     import InfoForm from './InfoForm';
     import axios from "axios";
+    import constant from "../../../../constant";
 
 
     export default {
@@ -439,6 +450,7 @@
         data() {
             return {
                 form: this.$inertia.form({
+                    transaction_id:null,
                     item_sku:"",
                     invoice_no:"",
                     item_id: "",
@@ -497,6 +509,9 @@
             },
         },
         methods: {
+            sellDetail(){
+                window.open( constant.ROUTE_URL_ADMIN+"sells/"+this.form.transaction_id, "_blank");
+            },
             validationStatus: function(validation) {
                 return typeof validation != "undefined" ? validation.$error : false;
             },
@@ -521,6 +536,7 @@
                 });
             },
             fillData(data) {
+                this.form.transaction_id = data.transaction.id;
                 this.item = data.item;
                 this.transaction = data.transaction;
                 this.product = data.product;

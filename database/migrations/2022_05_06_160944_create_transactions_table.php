@@ -42,6 +42,7 @@ class CreateTransactionsTable extends Migration
             $table->decimal('remaining_credit_money', 10, 2)->nullable();
             $table->decimal('exceed_money', 10, 2)->nullable();
 
+            $table->string('purchase_return', 100)->nullable();
             $table->unsignedBigInteger('created_by');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

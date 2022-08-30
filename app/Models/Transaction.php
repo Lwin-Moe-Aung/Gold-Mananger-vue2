@@ -42,6 +42,7 @@ class Transaction extends Model
         'paid_money',
         'credit_money',
         'debt_paid_money',
+        'purchase_return',
         'remaining_credit_money',
         'created_by',
         'exceed_money',
@@ -60,7 +61,7 @@ class Transaction extends Model
      */
     public function sell()
     {
-        return $this->hasOne(Sell::class);
+        return $this->hasOne(Sell::class, 'transaction_id');
     }
     public function purchase()
     {
@@ -83,6 +84,11 @@ class Transaction extends Model
     public function contact()
     {
         return $this->belongsTo(Contact::class, 'contact_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function debtPaymentFromCustomer()

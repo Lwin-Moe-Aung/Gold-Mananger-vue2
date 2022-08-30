@@ -29,6 +29,7 @@ use App\Http\Controllers\Admins\CashOutController;
 use App\Http\Controllers\Admins\DebtPaymentFromCustomerController;
 use App\Http\Controllers\Admins\DebtPaymentToSupplierController;
 use App\Http\Controllers\Admins\CreditInfoController;
+use App\Http\Controllers\Admins\ExpenseForController;
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -189,8 +190,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::resource('expenses', ExpenseController::class);
     Route::post('/expenses/expenses_update', [ExpenseController::class, 'expensesUpdate'])->name('expenses.expenses_update');
 
+    //expense category
     Route::resource('expense_categories', ExpenseCategoryController::class);
     Route::post('expense_categories/storeDialog', [ExpenseCategoryController::class, 'storeDialog'])->name('expense_categories.storeDialog');
+
+    //Expense For
+    Route::resource('expense-fors', ExpenseForController::class);
+    Route::post('expense-fors/storeDialog', [ExpenseForController::class, 'storeDialog'])->name('expense-fors.storeDialog');
 
     Route::resource('cash_ins', CashInController::class);
     Route::resource('cash_outs', CashOutController::class);
@@ -219,6 +225,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     //generate invoice for debt payment customer and to supplier
     Route::get('customer-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'customerDebtPaymentGenerateInvoice'])->name('customerDebtPaymentGenerateInvoice');
     Route::get('supplier-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'supplierDebtPaymentGenerateInvoice'])->name('supplierDebtPaymentGenerateInvoice');
+
 
 
 });

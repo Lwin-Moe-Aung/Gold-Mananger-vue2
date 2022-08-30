@@ -150,7 +150,7 @@
                                     <i class="fas fa-eye"></i> View Voucher
                                 </Link>
                                 <Link v-else
-                                    href="#"
+                                    :href="route('admin.purchases.show',value.parent_id)"
                                     class="btn btn-sm btn-primary">
                                     <i class="fas fa-eye"></i> View Voucher
                                 </Link>

@@ -2,11 +2,16 @@
     <div>
         <admin-layout>
             <template #header>
-                <Link :href="route('admin.sells.index')">
+                 <a  href="javascript: history.go(-1)">
                     <button class="btn btn-primary float-left mr-3" style="h">
                         <i class="fas fa-long-arrow-alt-left" aria-hidden="true" ></i>
                     </button>
-                </Link>
+                </a>
+                <!-- <Link :href="route('admin.sells.index')">
+                    <button class="btn btn-primary float-left mr-3" style="h">
+                        <i class="fas fa-long-arrow-alt-left" aria-hidden="true" ></i>
+                    </button>
+                </Link> -->
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
                     Invoice
                 </h2>

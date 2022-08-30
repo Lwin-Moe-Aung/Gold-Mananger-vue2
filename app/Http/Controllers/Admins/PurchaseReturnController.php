@@ -13,6 +13,7 @@ use App\Models\ViewPurchaseReturnData;
 use App\Models\Purchase;
 use App\Models\Transaction;
 use App\Models\PurchaseReturn;
+use App\Models\DailySetup;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Facade\FlareClient\Http\Response;
@@ -112,6 +113,7 @@ class PurchaseReturnController extends Controller
                     'image' => $image_name_path,
                     'item_description' =>  $request->item_description,
                 ]);
+
             }else{
                 $item = Item::find($request->item_id);
                 $item->gold_plus_gem_weight = json_encode($request->gold_plus_gem_weight);
@@ -122,6 +124,10 @@ class PurchaseReturnController extends Controller
                 $item->item_description = $request->item_description;
                 $item->image = $request->file('image') ? $image_name_path : $item->image;
                 $item->save();
+
+                $t = Transaction::find($request->transaction_id);
+                $t->purchase_return =  '1';
+                $t->save();
             }
 
             $transaction = new Transaction;

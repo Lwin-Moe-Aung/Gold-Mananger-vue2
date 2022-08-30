@@ -3,7 +3,7 @@
         <admin-layout>
             <div class="d-flex justify-content-between p-3">
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                    Expense Category
+                    Expense For
                 </h2>
             </div>
             <section class="content">
@@ -47,21 +47,21 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(expense_category, index) in expense_categorys.data" :key="index">
+                                            <tr v-for="(expense_for, index) in expense_fors.data" :key="index">
                                                 <td>
                                                     {{ index+1 }}
                                                 </td>
-                                                <td>{{ expense_category.name }}</td>
+                                                <td>{{ expense_for.name }}</td>
                                                 <td class="text-right" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin">
-                                                    <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;" @click="editModal(expense_category)">Edit</button>
-                                                    <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteProductType(expense_category.id)">Delete</button>
+                                                    <button class="btn btn-success text-uppercase" style="letter-spacing: 0.1em;" @click="editModal(expense_for)">Edit</button>
+                                                    <button class="btn btn-danger text-uppercase ml-1" style="letter-spacing: 0.1em;" @click="deleteProductType(expense_for.id)">Delete</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="card-footer clearfix">
-                                    <pagination :links="expense_categorys.links"></pagination>
+                                    <pagination :links="expense_fors.links"></pagination>
                                 </div>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
 
 
                                         <div class="form-group">
-                                            <label for="name" class="h4">Expense Category Name</label>
+                                            <label for="name" class="h4">Expense For Name</label>
                                             <input type="text" class="form-control" placeholder="Expense Category Name" v-model="form.name" :class="{ 'is-invalid' : form.errors.name }" autofocus="autofocus" autocomplete="off">
                                         </div>
                                         <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.name}">
@@ -115,7 +115,7 @@
     import { pickBy, throttle } from 'lodash';
 
     export default {
-        props: ['expense_categorys','filters'],
+        props: ['expense_fors','filters'],
         components: {
             AdminLayout,
             Pagination,
@@ -137,20 +137,20 @@
         },
         computed: {
             formTitle() {
-                return this.editedIndex === -1 ? 'Create New Expense Category' : 'Edit Current Expense Category';
+                return this.editedIndex === -1 ? 'Create New Expense For' : 'Edit Current Expense For';
             },
             buttonTxt() {
                 return this.editedIndex === -1 ? 'Create' : 'Edit';
             },
             checkMode() {
-                return this.editMode === false ? this.createExpenseCategory : this.editExpenseCategory
+                return this.editMode === false ? this.createExpenseFor : this.editExpenseFor
             }
         },
         watch: {
             params: {
                 handler: throttle(function () {
                     let params = pickBy(this.params);
-                    this.$inertia.get(this.route('admin.expense_categories.index'), params, { replace: true, preserveState: true });
+                    this.$inertia.get(this.route('admin.expense-fors.index'), params, { replace: true, preserveState: true });
                 }, 150),
                 deep: true,
             },
@@ -165,12 +165,12 @@
                 return moment(value).format('YYYY-MM-DD');
             },
 
-            editModal(expense_category) {
+            editModal(expense_for) {
                 this.editMode = true
                 $('#modal-lg').modal('show')
-                this.editedIndex = this.expense_categorys.data.indexOf(expense_category)
-                this.form.id = expense_category.id
-                this.form.name = expense_category.name
+                this.editedIndex = this.expense_fors.data.indexOf(expense_for)
+                this.form.id = expense_for.id
+                this.form.name = expense_for.name
             },
             openModal() {
                 this.editedIndex = -1
@@ -182,25 +182,25 @@
                 this.form.reset()
                 $('#modal-lg').modal('hide')
             },
-            createExpenseCategory() {
-                this.form.post(this.route('admin.expense_categories.store'), {
+            createExpenseFor() {
+                this.form.post(this.route('admin.expense-fors.store'), {
                     preserveScroll: true,
                     onSuccess:() => {
                         this.closeModal()
                         Toast.fire({
                             icon: 'success',
-                            title: 'Expense Category name created!'
+                            title: 'Expense For name created!'
                         })
                     }
                 })
             },
-            editExpenseCategory() {
-                this.form.patch(this.route('admin.expense_categories.update', this.form.id, this.form), {
+            editExpenseFor() {
+                this.form.patch(this.route('admin.expense-fors.update', this.form.id, this.form), {
                     preserveScroll: true,
                     onSuccess:() => {
                         Toast.fire({
                             icon: 'success',
-                            title: 'Expense Category has been updated!'
+                            title: 'Expense For has been updated!'
                         })
                         this.closeModal()
                     }
@@ -217,12 +217,12 @@
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        this.form.delete(this.route('admin.expense_categories.destroy', id), {
+                        this.form.delete(this.route('admin.expense-fors.destroy', id), {
                             preserveScroll: true,
                             onSuccess: ()=> {
                                 Swal.fire(
                                     'Deleted!',
-                                    'Expense Category has been deleted.',
+                                    'Expense For has been deleted.',
                                     'success'
                                 )
                             }

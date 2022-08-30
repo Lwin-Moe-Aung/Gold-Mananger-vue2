@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
+     /**
+     * Searching Item sku for creating purchase return.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function searchItemSku(Request $request){
 
         $item_skus =  Item::where('sold_out', '1')

@@ -94,7 +94,6 @@ class HomeController extends Controller
                 ->get();
 
         if($items_data->isEmpty()) return response()->json(['items'=>[], 'message'=>'newItem']);
-
         $items = [];
         foreach ($items_data as $key => $item) {
             $gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);

@@ -19,7 +19,6 @@
                                 <v-img :src="form.image"></v-img>
                             </v-list-item-avatar>
                             <!-- image upload -->
-
                             <v-card v-else rounded="lg" class="overflow-hidden mr-3" width="130" height="130" @click.stop="selectImage" >
                                 <input id="fileInput" class="d-none" type="file" accept="image/*" @input="updateValue">
                                 <v-fade-transition mode="out-in">
@@ -61,21 +60,8 @@
                                 v-text="'fas fa-shopping-cart'"
                             ></v-icon>
                         </v-flex>
-
-
-
                     </v-list-item>
-                    <!-- <v-list-item>
-                        <v-row>
-                            <v-icon
-                                color="info"
-                                @click="addToCart()"
-                                v-text="'fas fa-shopping-cart'"
-                            ></v-icon>
-                        </v-row>
-                    </v-list-item> -->
                     <v-card-actions>
-                    <!--new-->
                         <v-container fluid>
                             <v-row>
                                 <v-col cols="12" lg="9" sm="9" md="9" xs="12" >
@@ -129,6 +115,7 @@
                                                         type="number"
                                                         min="0"
                                                         max="7.9"
+                                                        step=".1"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
                                                 </v-flex>
@@ -190,6 +177,7 @@
                                                         type="number"
                                                         min="0"
                                                         max="7.9"
+                                                        step=".1"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
                                                 </v-flex>
@@ -260,6 +248,7 @@
                                                         type="number"
                                                         min="0"
                                                         max="7.9"
+                                                        step=".1"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
                                                     ></v-text-field>
                                                 </v-flex>
@@ -509,7 +498,7 @@
                 loading: false,
                 validationRules:[
                     v => !!v || 'Required',
-                    // v => /^\d+$/.test(v) || 'limitation error',
+                    v => Number.isInteger(Number(v)) || "Must be integer!"
                 ],
                 yway_validationRules:[
                     v => !!v || 'Required',

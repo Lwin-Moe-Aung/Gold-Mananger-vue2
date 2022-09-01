@@ -32,11 +32,13 @@
                             <v-list-item-content>
                             <div align="center" justify="center">
 
-                                <v-img  src="images/pos/block.jpg" max-height="90" max-width="90" contain></v-img>
+                                <v-img  src="images/pos/block.jpg" max-height="900" max-width="90" contain></v-img>
 
                             </div>
-                            <v-list-item-subtitle
-                        :class="active ? 'brown--text' : 'black--text'" class=" caption mt-1">Gold necklace</v-list-item-subtitle>
+                                <v-list-item-subtitle
+                                            :class="active ? 'brown--text' : 'black--text'" class=" caption mt-1">
+                                        Gold necklace
+                                </v-list-item-subtitle>
 
                             </v-list-item-content>
                         </v-list-item>

@@ -112,6 +112,7 @@ class HomeController extends Controller
             $items[$key]['gem_weight'] = json_decode($item->gem_weight);
             $items[$key]['gem_price'] = $item->purchase->gem_price;
             $items[$key]['fee'] = json_decode($item->fee);
+            $items[$key]['gem_weight_status'] = $item->product->gem_weight == '0' ? false: true;
         }
         return response()->json(['items'=>$items, 'message'=> $request->product_sku."အောက်မှာရှိတဲ့ random ပစ္စည်းများ."]);
     }

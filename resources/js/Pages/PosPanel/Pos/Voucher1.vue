@@ -130,7 +130,15 @@
                                         <v-divider></v-divider>
                                         <v-layout row wrap class="pl-4 textfield one">
                                             <v-flex xs3 md3 sm3 class="mt-5 text-left">
-                                                <div>ကျောက်ချိန်</div>
+                                                <div>
+                                                    <div class="mb-2">
+                                                        ကျောက်ချိန်
+                                                    </div>
+
+                                                    <div class="red--text font-weight-medium " v-if="!gem_weight_status && gem_weight_status !== ''">
+                                                        Disable
+                                                    </div>
+                                                </div>
                                             </v-flex>
                                             <v-flex xs2 sm2 md2>
                                                 <v-flex xs6 sm6 md6>
@@ -145,6 +153,7 @@
                                                         min="0"
                                                         max="16"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
+                                                        :disabled="!gem_weight_status"
                                                     >
                                                     </v-text-field>
                                                 </v-flex>
@@ -162,6 +171,7 @@
                                                         min="0"
                                                         max="15"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
+                                                        :disabled="!gem_weight_status"
                                                     ></v-text-field>
                                                 </v-flex>
                                             </v-flex>
@@ -179,6 +189,7 @@
                                                         max="7.9"
                                                         step=".1"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
+                                                        :disabled="!gem_weight_status"
                                                     ></v-text-field>
                                                 </v-flex>
 
@@ -193,6 +204,7 @@
                                                             :rules="validationRules"
                                                             required
                                                             type="number"
+                                                            :disabled="!gem_weight_status"
                                                         ></v-text-field>
                                                     </v-flex>
                                                 </div>
@@ -463,35 +475,36 @@
         validations: {
             quality: { required, maxLength: maxLength(10) },
         },
-        name: "ItemList",
+        name: "Voucher1",
 
         data() {
             return {
                 form: {
-                    id: "",
-                    name: "",
-                    product_sku: "",
+                    id: null,
+                    name: null,
+                    product_sku: null,
                     image: undefined,
                     imageFile: undefined,
-                    item_sku: "",
-                    gold_plus_gem_weight: { kyat: "", pal: "", yway: "" },
-                    gold_price: "",
-                    gem_weight: { kyat: "", pal: "", yway: "" },
-                    gem_price: "",
-                    fee: { kyat: "", pal: "", yway: "" },
-                    fee_price: "",
-                    fee_for_making: "",
-                    discount_amount: "",
-                    tax: "",
-                    item_sku: "",
-                    item_description: "",
-                    before_total: "",
-                    final_total: "",
-                    paid_money: "",
-                    credit_money: "",
-                    note: "",
-                    daily_Setup: { daily_setup_id: "", quality_16_pal: "", kyat: "", pal: "", yway: "" },
+                    item_sku: null,
+                    gold_plus_gem_weight: { kyat: null, pal: null, yway: null },
+                    gold_price: null,
+                    gem_weight: { kyat: null, pal: null, yway: null },
+                    gem_price: null,
+                    fee: { kyat: null, pal: null, yway: null },
+                    fee_price: null,
+                    fee_for_making: null,
+                    discount_amount: null,
+                    tax: null,
+                    item_sku: null,
+                    item_description: null,
+                    before_total: null,
+                    final_total: null,
+                    paid_money: null,
+                    credit_money: null,
+                    note: null,
+                    daily_Setup: { daily_setup_id: null, quality_16_pal: null, kyat: null, pal: null, yway: null },
                 },
+                gem_weight_status:'',
                 quality: '',
                 name: '',
                 email: '',
@@ -723,7 +736,7 @@
                 this.form.gem_weight.kyat = String(value.gem_weight.kyat);
                 this.form.gem_weight.pal = String(value.gem_weight.pal);
                 this.form.gem_weight.yway = String(value.gem_weight.yway);
-                this.form.gem_price = String(value.gem_price);
+                this.form.gem_price = value.gem_weight_status ? parseInt(value.gem_price):'0';
                 this.form.fee.kyat = String(value.fee.kyat);
                 this.form.fee.pal = String(value.fee.pal);
                 this.form.fee.yway = String(value.fee.yway);
@@ -734,6 +747,7 @@
                 this.form.discount_amount = value.discount_amount;
                 this.form.before_total = value.before_total;
                 this.form.final_total = value.final_total;
+                this.gem_weight_status = value.gem_weight_status;
 
                 this.form.paid_money = value.paid_money;
                 this.form.credit_money = value.credit_money;
@@ -763,12 +777,12 @@
                 let price = this.form.daily_Setup;
                 let kyat = parseInt(this.form.gold_plus_gem_weight.kyat) -  parseInt(this.form.gem_weight.kyat);
                 let pal = parseInt(this.form.gold_plus_gem_weight.pal) -  parseInt(this.form.gem_weight.pal);
-                let yway = parseInt(this.form.gold_plus_gem_weight.yway) -  parseInt(this.form.gem_weight.yway);
+                let yway = this.form.gold_plus_gem_weight.yway - this.form.gem_weight.yway;
 
                 let kyat_p = kyat * parseInt(price.kyat);
                 let pal_p = pal * parseInt(price.pal);
-                let yway_p = yway * parseInt(price.yway);
-                let gold_price = kyat_p + pal_p + yway_p;
+                let yway_p = yway * price.yway;
+                let gold_price = kyat_p + pal_p + parseInt(yway_p);
 
                 if (isNaN(gold_price)) gold_price = "";
                 this.form.gold_price = gold_price;
@@ -780,8 +794,8 @@
                 let price = this.form.daily_Setup;
                 let kyat_p = parseInt(this.form.fee.kyat) * parseInt(price.kyat);
                 let pal_p = parseInt(this.form.fee.pal) * parseInt(price.pal);
-                let yway_p = parseInt(this.form.fee.yway) * parseInt(price.yway);
-                let fee_price = kyat_p + pal_p + yway_p;
+                let yway_p = this.form.fee.yway * price.yway;
+                let fee_price = kyat_p + pal_p + parseInt(yway_p);
 
                 if (isNaN(fee_price)) fee_price = "";
                 this.form.fee_price = fee_price;

@@ -270,11 +270,16 @@
                 }
             },
             onSelectedCustomer(customer) {
-                console.log("hello");
-                console.log(customer);
-                this.selectedCustomer = customer;
-                this.selectedCustomer.search_name = customer.name;
-                this.setCustomer(customer);
+
+                if(customer != null ){
+                    this.selectedCustomer = customer;
+                    this.selectedCustomer.search_name = customer.name;
+                    this.setCustomer(customer);
+                }else{
+                    this.selectedCustomer = undefined;
+                    this.setCustomer("");
+                }
+
             },
             saveCustomer() {
                 if(this.$refs.form.validate()){

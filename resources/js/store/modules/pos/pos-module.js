@@ -96,6 +96,18 @@ const actions = {
         await commit("setItemSpe", data)
         if (state.searched_Items_data.length === 0) {
             //do something
+            Swal.fire({
+                title: 'သေချာပါသလား?',
+                text: "သင်ရှာဖွေနေသောပစ္စည်းမရှိပါ။ အသစ် ဖန်တီးနိုင်ပါသည်။",
+                confirmButtonColor: "#DD6B55",
+                showDenyButton: true,
+                confirmButtonText: `ဖန်တီးမယ်`,
+                denyButtonText: `မဖန်တီးတော့ပါ`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    commit("createNewItem")
+                }
+            });
         }else{
             const result = state.searched_Items_data.filter(val => val.item_spe == data);
             if(result.length != 0){
@@ -182,9 +194,14 @@ const mutations = {
         state.item_from_cart = false
     ),
     createNewItem: (state, data) => {
-        let kyat = parseInt(String(state.item_spe.charAt(0))+String(state.item_spe.charAt(1)));
-        let pal = parseInt(String(state.item_spe.charAt(2))+String(state.item_spe.charAt(3)));
-        let yway = parseInt(state.item_spe.charAt(4));
+        let kyat = 0;
+        let pal = 0;
+        let yway = 0;
+        if(state.item_spe != ""){
+            kyat = parseInt(String(state.item_spe.charAt(0))+String(state.item_spe.charAt(1)));
+            pal = parseInt(String(state.item_spe.charAt(2))+String(state.item_spe.charAt(3)));
+            yway = parseInt(state.item_spe.charAt(4));
+        }
 
         let item = {
             id: "",

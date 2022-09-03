@@ -76,10 +76,6 @@
             this.unwatch1 = this.$store.watch(
                 (state, getters) => getters.product_sku,
                 (newValue, oldValue) => {
-                    // alert("hello changin product_sku"+newValue);
-                    // if(this.productsku.length == 0){
-                    //     this.querySelections(newValue);
-                    // }
                     this.querySelections(newValue);
                     this.searchProductSku = newValue;
                     this.selectProductSku = newValue;

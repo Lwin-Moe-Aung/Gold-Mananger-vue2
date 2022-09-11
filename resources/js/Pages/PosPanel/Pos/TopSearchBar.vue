@@ -113,7 +113,7 @@
             },
         },
         methods: {
-            ...mapActions([ "searchItem", "searchItemByItemSpe","resetVoucherForm","renewItemsArray", "changeDrawerSideBar"]),
+            ...mapActions([ "searchItem", "searchItemByItemSpe","resetVoucherForm","renewItemsArray", "changeDrawerSideBar", "setProduct"]),
             querySelections (v) {
                 this.loading = true
                 // Simulated ajax query
@@ -149,8 +149,10 @@
 
             },
             onChange() {
+                if(this.selectProductSku == null) return;
                 let data = { product_sku: this.selectProductSku.product_sku}
                 this.searchItem(data);
+                this.setProduct(this.selectProductSku);
                 // this.resetVoucherForm();
                 this.searchValue = "";
             },

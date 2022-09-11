@@ -8,7 +8,7 @@ const state = {
     reset_voucher_form: false,
     searched_Items_data: [],
     items: [],
-    product: [],
+    product: null,
     product_sku: "",
     item_spe: "",
     toast_message: "",
@@ -44,7 +44,6 @@ const actions = {
                     commit("setItemToSearchedItemsData", response.data.items);
                     commit("setToastMessage", response.data.message);
                     commit("setToastIcon", "success");
-
                 }else{
                     Swal.fire({
                         title: 'သေချာပါသလား?',
@@ -178,6 +177,9 @@ const actions = {
     async dailySetup({commit},data){
         await commit("dailySetup",data)
     },
+    async setProduct({commit}, data){
+        await commit("setProduct", data)
+    },
 
 };
 const mutations = {
@@ -291,6 +293,9 @@ const mutations = {
     },
     setCustomer: (state, data) => (
         state.customer = data
+    ),
+    setProduct: (state, data) => (
+        state.product = data
     ),
     resetCustomer: (state, data) => (
         state.customer = ""

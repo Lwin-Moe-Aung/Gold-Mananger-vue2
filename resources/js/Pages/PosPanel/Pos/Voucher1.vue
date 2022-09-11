@@ -135,7 +135,7 @@
                                                         ကျောက်ချိန်
                                                     </div>
 
-                                                    <div class="red--text font-weight-medium " v-if="!gem_weight_status && gem_weight_status !== ''">
+                                                    <div class="red--text font-weight-medium " v-if="product != null && product.gem_weight == '0'">
                                                         Disable
                                                     </div>
                                                 </div>
@@ -153,7 +153,7 @@
                                                         min="0"
                                                         max="16"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
-                                                        :disabled="!gem_weight_status"
+                                                        :disabled="product != null && product.gem_weight == '0'"
                                                     >
                                                     </v-text-field>
                                                 </v-flex>
@@ -171,7 +171,7 @@
                                                         min="0"
                                                         max="15"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
-                                                        :disabled="!gem_weight_status"
+                                                        :disabled="product != null && product.gem_weight == '0'"
                                                     ></v-text-field>
                                                 </v-flex>
                                             </v-flex>
@@ -189,7 +189,7 @@
                                                         max="7.9"
                                                         step=".1"
                                                         oninput="if(Number(this.value) > Number(this.max)) this.value = this.max;"
-                                                        :disabled="!gem_weight_status"
+                                                        :disabled="product != null && product.gem_weight == '0'"
                                                     ></v-text-field>
                                                 </v-flex>
 
@@ -204,7 +204,7 @@
                                                             :rules="validationRules"
                                                             required
                                                             type="number"
-                                                            :disabled="!gem_weight_status"
+                                                            :disabled="product != null && product.gem_weight == '0'"
                                                         ></v-text-field>
                                                     </v-flex>
                                                 </div>
@@ -747,7 +747,6 @@
                 this.form.discount_amount = value.discount_amount;
                 this.form.before_total = value.before_total;
                 this.form.final_total = value.final_total;
-                this.gem_weight_status = value.gem_weight_status;
 
                 this.form.paid_money = value.paid_money;
                 this.form.credit_money = value.credit_money;
@@ -771,7 +770,7 @@
             }
         },
         computed: {
-            ...mapGetters(['selectedItem', 'item_from_cart', 'carts','customer', 'reset_voucher_form','daily_setup']),
+            ...mapGetters(['selectedItem', 'item_from_cart', 'carts','customer', 'reset_voucher_form','daily_setup', 'product']),
             goldPrice() {
                 if(this.form.product_sku == "")return;
                 let price = this.form.daily_Setup;

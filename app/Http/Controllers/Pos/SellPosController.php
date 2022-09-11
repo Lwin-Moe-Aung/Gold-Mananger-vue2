@@ -29,11 +29,11 @@ class SellPosController extends Controller
     {
         if($request->id != null){
             $transaction_id = $this->sellingItem($request);
-            return response()->json(['status'=>true, 'transaction_id'=>$transaction_id]);
         }else{
             $transaction_id = $this->sellingNewItem($request);
-            return response()->json(['status'=>true, 'transaction_id'=>$transaction_id]);
         }
+        return response()->json(['status'=>true, 'transaction_id'=>$transaction_id]);
+
     }
     /**
      * Selling item that don't exist in system and saving new item and then sell
@@ -42,6 +42,7 @@ class SellPosController extends Controller
      */
     public function sellingNewItem(Request $request)
     {
+        // dd($request->all());
         //check id
         //id is equal null , assume it is new
         //id not equql null, assume that it is the old one and update this.
@@ -94,16 +95,12 @@ class SellPosController extends Controller
             $nitem->business_location_id = $business_location_id;
             $nitem->created_by = $created_by;
             $nitem->item_sku = rand(10000,100000);
-            $nitem->gold_price = $request->gold_price;
             $nitem->gold_plus_gem_weight = $request->gold_plus_gem_weight;
-            $nitem->gem_price = $request->gem_price;
             $nitem->gem_weight = $request->gem_weight;
-            $nitem->fee_price = $request->fee_price;
             $nitem->fee = $request->fee;
             $nitem->fee_for_making = $request->fee_for_making;
 
-            $nitem->item_discount = $request->item_discount;
-            $nitem->image1 = $image_name_path;
+            $nitem->image = $image_name_path;
             $nitem->draft = '1';
             $nitem->sold_out = '1';
             $nitem->save();
@@ -117,31 +114,43 @@ class SellPosController extends Controller
             $transaction->contact_id = $request->customer_id;
             $transaction->invoice_no = $this->invoiceNumber();
             $transaction->transaction_date = Carbon::now()->format('Y-m-d');
-            $transaction->total_before = $request->total_before;
-            $transaction->discount_type = 'fixed';
-            $transaction->discount_amount = $request->item_discount;
-            // $transaction->shipping_details = $request->total_before;
-            // $transaction->shipping_charges = $request->total_after;
-            $transaction->additional_notes = $request->note;
-            // $transaction->staff_note = $request->credit_money;
+            $transaction->before_total = $request->before_total;
             $transaction->final_total = $request->final_total;
+            $transaction->paid_money = $request->paid_money;
+            $transaction->credit_money = $request->credit_money;
+            $transaction->discount_amount = $request->discount_amount;
             $transaction->created_by = $created_by;
             $transaction->save();
 
-            $order = new Order;
-            $order->item_id = $nitem->id;
-            $order->transaction_id = $transaction->id;
-            $order->created_by = $created_by;
-            $order->business_id = $business_id;
-            $order->business_location_id = $business_location_id;
+            //daily setup id
+            $daily_setup = json_decode($request->daily_Setup);
+            if($daily_setup->daily_setup_id == ""){
+                $daily = DailySetup::create([
+                    'type ' => 'gold',
+                    'daily_price' => $daily_setup->quality_16_pal,
+                    'business_id' => $business_id,
+                    'customize' => '1'
+                ]);
+                $daily_setup_id = $daily->id;
+            }else $daily_setup_id =  $daily_setup->daily_setup_id;
 
-            $order->total_weight = json_encode(array("kyat"=>(string)$request->total_kyat, "pal"=>(string)$request->total_pal, "yway"=>(string)$request->total_yway));
-            $order->total_before = $request->total_before;
-            $order->final_total = $request->final_total;
-            $order->paid_money = $request->paid_money;
-            $order->credit_money = $request->credit_money;
-            $order->note = $request->note;
-            $order->save();
+            $sell = new Sell;
+            $sell->item_id = $nitem->id;
+            $sell->transaction_id = $transaction->id;
+            $sell->created_by = $created_by;
+            $sell->daily_setup_id = $daily_setup_id;
+            $sell->customer_id = $request->customer_id;
+            $sell->gold_price = $request->gold_price;
+            $sell->gem_price = $request->gem_price;
+            $sell->fee = $request->fee;
+            $sell->fee_price = $request->fee_price;
+            $sell->fee_for_making = $request->fee_for_making;
+            $sell->before_total = $request->before_total;
+            $sell->final_total = $request->final_total;
+            $sell->paid_money = $request->paid_money;
+            $sell->credit_money = $request->credit_money;
+            $sell->discount_amount = $request->discount_amount;
+            $sell->save();
 
             DB::commit();
             return $transaction->id;

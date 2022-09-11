@@ -16,7 +16,7 @@
         <v-spacer class="d-lg-none d-xl-flex black--text"></v-spacer>
 
         <v-flex xs4 md2 sm2 lg2 class="ml-8 text-left">
-            <v-autocomplete
+            <!-- <v-autocomplete
                 v-model="selectProductSku"
                 :loading="loading"
                 :items="productsku"
@@ -29,7 +29,26 @@
                 hide-details
                 label="sku?"
                 solo-inverted
-                ></v-autocomplete>
+                ></v-autocomplete> -->
+
+            <v-combobox
+                v-model="selectProductSku"
+                :loading="loading"
+                :items="productsku"
+                :search-input.sync="searchProductSku"
+                @change="onChange()"
+                item-text="product_sku"
+                item-value="id"
+                return-object
+                label="sku?"
+                clearable
+                dense
+                hide-selected
+                flat
+                hide-no-data
+                hide-details
+                solo
+            ></v-combobox>
         </v-flex>
         <v-flex xs3 md3 sm3 lg2 class="mt-4">
 
@@ -130,7 +149,7 @@
 
             },
             onChange() {
-                let data = { product_sku: this.selectProductSku}
+                let data = { product_sku: this.selectProductSku.product_sku}
                 this.searchItem(data);
                 // this.resetVoucherForm();
                 this.searchValue = "";

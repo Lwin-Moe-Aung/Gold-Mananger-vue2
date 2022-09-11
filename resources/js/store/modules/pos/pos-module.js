@@ -3,22 +3,24 @@ import constant from "../../../constant";
 
 const state = {
     selectedItem: "",
-    carts:[],
-    item_from_cart:false,
-    reset_voucher_form:false,
-    searched_Items_data:[],
-    items:[],
+    carts: [],
+    item_from_cart: false,
+    reset_voucher_form: false,
+    searched_Items_data: [],
+    items: [],
+    product: [],
     product_sku: "",
     item_spe: "",
     toast_message: "",
-    toast_icon:"",
-    customer: "",
-    drawer_side_bar:false,
+    toast_icon: "",
+    customer:  "",
+    drawer_side_bar: false,
     daily_setup: {},
 };
 const getters = {
     items: state => state.items,
     selectedItem: state => state.selectedItem,
+    product: state => state.product,
     product_sku: state => state.product_sku,
     item_spe: state => state.item_spe,
     item_from_cart: state => state.item_from_cart,
@@ -58,7 +60,6 @@ const actions = {
                         }
                     });
                 }
-
             });
         commit("setProductSku", data.product_sku);
         commit("resetItemSpe");

@@ -121,7 +121,8 @@ class HomeController extends Controller
     {
         $product_sku_list =  Product::where('business_id', Auth::user()->business_id)
                     ->where('product_sku', 'LIKE', '%'.$sku.'%')
-                    ->pluck('product_sku');
+                    // ->pluck('product_sku');
+                    ->get();
 
         return response()->json(['productsku'=>$product_sku_list]);
 

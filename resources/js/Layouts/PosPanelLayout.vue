@@ -27,7 +27,7 @@
 
             <SideBar/>
             <v-col
-                lg="9"
+                lg="11"
                 md="12"
                 xs="12"
                 sm="12"
@@ -35,27 +35,27 @@
             >
                 <slot></slot>
             </v-col>
-            <FAB class="d-lg-none d-sm-flex"/>
+            <!-- <FAB class="d-lg-none d-sm-flex"/>
             <v-col
                 lg="2"
                 class="d-none d-lg-flex d-md-none"
             >
                 <RightSideBar />
-            </v-col>
+            </v-col> -->
         </v-row>
     </v-app>
 </template>
 
 <script>
     import SideBar from '../Components/PosPanel/SideBar'
-    import FAB from '../Components/PosPanel/FAB'
-    import RightSideBar from '../Components/PosPanel/RightSideBar'
+    // import FAB from '../Components/PosPanel/FAB'
+    // import RightSideBar from '../Components/PosPanel/RightSideBar'
 
     export default {
         components: {
             SideBar,
-            RightSideBar,
-            FAB
+            // RightSideBar,
+            // FAB
         },
         data: () => ({
 

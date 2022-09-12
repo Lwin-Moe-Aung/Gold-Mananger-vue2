@@ -1,5 +1,13 @@
 <template>
     <pos-panel-layout>
+        <FAB class="d-lg-none d-sm-flex"/>
+        <v-col
+            lg="2"
+            class="d-none d-lg-flex d-md-none"
+        >
+            <RightSideBar />
+        </v-col>
+
         <TopSearchBar/>
         <v-item-group mandatory class="mt-n1">
             <v-content class="pa-3">
@@ -29,6 +37,7 @@
                 </v-col>
             </v-row>
         </v-content>
+
     </pos-panel-layout>
 </template>
 
@@ -41,6 +50,9 @@
     import TopSearchBar from "./TopSearchBar";
     import ShowItemsList from "./ShowItemsList";
 
+    import FAB from '../../../Components/PosPanel/FAB';
+    import RightSideBar from '../../../Components/PosPanel/RightSideBar';
+
     export default {
         components: {
             PosPanelLayout,
@@ -49,7 +61,9 @@
             Search,
             Voucher1,
             TopSearchBar,
-            ShowItemsList
+            ShowItemsList,
+            RightSideBar,
+            FAB
         },
         data() {
             return {

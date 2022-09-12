@@ -10,7 +10,7 @@
             <v-icon color="#704232">far fa-gem</v-icon>
         </v-avatar>
         <v-list flat class="mt-4">
-            <v-list-item-group v-model="selected">
+            <v-list-item-group :value="selected">
                 <v-list-item v-for="(item, i) in items" :key="i" active-class="border" :ripple="false">
 
                         <Link :href="item.link">
@@ -36,7 +36,7 @@ export default {
         Link,
     },
     data: () => ({
-        selected: 0,
+        side_bar_selected: undefined,
         drawer: null,
         items: [
             {icon: 'fas fa-home', text:'Home',link:route('pos.index')},
@@ -48,7 +48,7 @@ export default {
         ],
     }),
     computed: {
-        ...mapGetters(['drawer_side_bar']),
+        ...mapGetters(['drawer_side_bar', 'selected']),
     },
     watch: {
         drawer_side_bar (value) {
@@ -56,21 +56,13 @@ export default {
         },
     },
     created() {
-        // this.unwatch1 = this.$store.watch(
-        //     (state, getters) => getters.drawer_side_bar,
-        //     (newValue, oldValue) => {
-        //         this.drawer = newValue;
-        //         // this.changeDrawerSideBar();
-        //     },
-        // );
+
     },
-    // beforeDestroy() {
-    //     this.unwatch1();
-    // },
+
     methods: {
-        ...mapActions(["changeDrawerSideBar"]),
+        ...mapActions(["setSelected"]),
         click(i){
-            // this.selected = integer(i);
+            this.setSelected(i);
         }
 
     }

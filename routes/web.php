@@ -35,8 +35,7 @@ use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
 use App\Http\Controllers\Pos\ContactController;
 use App\Http\Controllers\Pos\DailySetupPosController;
-
-
+use App\Http\Controllers\Pos\CustomerDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +56,8 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+
 //pos
 Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier'])->group(function () {
     Route::get('/pos', [HomeController::class, 'index'])->name('pos.index');
@@ -92,6 +93,8 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::post('/pos/daily_setups/store', [DailySetupPosController::class, 'store'])->name('pos.daily_setups.store');
     Route::post('/pos/daily_setups/update', [DailySetupPosController::class, 'update'])->name('pos.daily_setups.update');
     Route::post('/pos/daily_setups/delete', [DailySetupPosController::class, 'delete'])->name('pos.daily_setups.delete');
+
+    Route::get('customer-details', [CustomerDetailController::class, 'index'])->name('pos.customer-details.index');
 
 });
 

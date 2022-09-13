@@ -1,43 +1,50 @@
 <template>
     <pos-panel-layout>
-        <FAB class="d-lg-none d-sm-flex"/>
-        <v-col
-            lg="2"
-            class="d-none d-lg-flex d-md-none"
-        >
-            <RightSideBar />
-        </v-col>
+        <v-row no-gutters>
 
-        <TopSearchBar/>
-        <v-item-group mandatory class="mt-n1">
-            <v-content class="pa-3">
-                <!-- item list showing -->
-                <ShowItemsList/>
-            </v-content>
-        </v-item-group>
-        <v-content class="pa-3">
-            <v-row >
-                <v-col
-                    cols="12"
-                    xs="12"
-                    sm="12"
-                    md="12"
-                    lg="3"
-                >
-                    <Customer />
-                </v-col>
-                <v-col
-                    cols="12"
-                    xs="12"
-                    sm="12"
-                    md="12"
-                    lg="9"
-                >
-                    <Voucher1 />
-                </v-col>
-            </v-row>
-        </v-content>
-
+            <v-col
+                cols="12"
+                sm="12"
+                md="10"
+            >
+                <TopSearchBar/>
+                <v-item-group mandatory class="mt-n1">
+                    <v-content class="pa-3">
+                        <ShowItemsList/>
+                    </v-content>
+                </v-item-group>
+                <v-content class="pa-3">
+                    <v-row >
+                        <v-col
+                            cols="12"
+                            xs="12"
+                            sm="12"
+                            md="12"
+                            lg="3"
+                        >
+                            <Customer />
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            xs="12"
+                            sm="12"
+                            md="12"
+                            lg="9"
+                        >
+                            <Voucher1 />
+                        </v-col>
+                    </v-row>
+                </v-content>
+            </v-col>
+            <v-col
+                cols="12"
+                md="2"
+                class="d-none d-lg-flex d-md-none"
+            >
+                <RightSideBar />
+            </v-col>
+            <FAB class="d-lg-none d-sm-flex"/>
+        </v-row>
     </pos-panel-layout>
 </template>
 

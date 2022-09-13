@@ -39,12 +39,12 @@ export default {
         side_bar_selected: undefined,
         drawer: null,
         items: [
-            {icon: 'fas fa-home', text:'Home',link:route('pos.index')},
-            {icon: 'fas fa-save', text:'DailySetup',link:route('pos.daily_setups.index')},
-            {icon: 'fas fa-history', text:'History',link:''},
-            {icon: 'fas fa-wallet', text:'Wallet',link:''},
-            {icon: 'fas fa-list', text:'List',link:''},
-            {icon: 'fas fa-cog', text:'Setting',link:''},
+            {icon: 'fas fa-home', text:'Home', link:route('pos.index')},
+            {icon: 'fas fa-save', text:'DailySetup', link:route('pos.daily_setups.index')},
+            {icon: 'fas fa-user', text:'Customers', link:route('pos.customer-details.index')},
+            {icon: 'fas fa-wallet', text:'Wallet', link:''},
+            {icon: 'fas fa-list', text:'List', link:''},
+            {icon: 'fas fa-cog', text:'Setting', link:''},
         ],
     }),
     computed: {

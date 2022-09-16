@@ -95,6 +95,8 @@ Route::middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier
     Route::post('/pos/daily_setups/delete', [DailySetupPosController::class, 'delete'])->name('pos.daily_setups.delete');
 
     Route::get('customer-details', [CustomerDetailController::class, 'index'])->name('pos.customer-details.index');
+    Route::get('/pos/pos-get-customers-data-who-have-credits',[CustomerDetailController::class,'getCustomersDataWhoHaveCredit'])->name('pos.getCustomersDataWhoHaveCredit');
+
 
 });
 

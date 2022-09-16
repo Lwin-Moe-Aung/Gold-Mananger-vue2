@@ -17,8 +17,7 @@ class CustomerDataWhoHaveCreditResource extends JsonResource
         return [
             'contact_id' => $this->contact_id,
             'name' => $this->name,
-            'mobile1' => $this->mobile1,
-            'mobile2' => $this->mobile2,
+            'mobile' => $this->mobile2 != null ? $this->mobile1 .','. $this->mobile2 : $this->mobile1,
             'address' => $this->address,
             'total_credit_money' => $this->total_credit_money,
         ];

@@ -70,7 +70,7 @@
                                         >
                                             <td>{{ index + 1 }}</td>
                                             <td>{{ creditCustomerList.name }}</td>
-                                            <td>{{ creditCustomerList.mobile1 }},{{ creditCustomerList.mobile2 }}</td>
+                                            <td>{{ creditCustomerList.mobile }}</td>
                                             <td>{{ creditCustomerList.address }}</td>
                                             <td><span class="badge bg-warning">{{ numberWithCommas(creditCustomerList.total_credit_money) }}</span></td>
                                             <td>

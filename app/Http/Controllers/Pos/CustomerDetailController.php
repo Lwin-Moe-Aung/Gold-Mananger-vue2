@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Carbon\Carbon;
 use DB;
+use App\Services\CreditInfoService;
+use App\Http\Resources\CustomerDataWhoHaveCreditResource;
 
 class CustomerDetailController extends Controller
 {
@@ -20,14 +22,17 @@ class CustomerDetailController extends Controller
      */
     public function index()
     {
-        return Inertia::render('PosPanel/Pos/CustomerDetail/Index',[
-            'daily_setups' => DailySetup::where('business_id',Auth::user()->business_id)
-                            ->where('customize','0')
-                            ->orderBy('created_at', 'desc')
-                            ->paginate(50),
-        ]);
+        return Inertia::render('PosPanel/Pos/CustomerDetail/Index');
     }
 
+    /**
+     *
+     */
+    public function getCustomersDataWhoHaveCredit()
+    {
+        $transactions = (new CreditInfoService())->getDataWhoHaveCredit(request('type'), request('selectedContact'), request('paginate'));
+        return CustomerDataWhoHaveCreditResource::collection($transactions);
+    }
     /**
      * Show the form for creating a new resource.
      *

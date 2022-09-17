@@ -40,16 +40,24 @@
                     </v-chip>
                 </template>
                 <template v-slot:item.actions="{ item }">
-                    <v-icon
-                        small
-                        class="mr-2"
-                        @click="editItem(item)"
+                    <v-btn
+                        color="primary"
+                        depressed
+                        @click="clickDetail(item.contact_id)"
                     >
-                        fas fa-eye
-                    </v-icon>
+                        <v-icon left>
+                            fas fa-eye
+                        </v-icon>
+                        Detail
+                    </v-btn>
                 </template>
             </v-data-table>
         </v-card>
+        <ShowDetailDialog
+            v-model="dialog"
+            :customerDetailId = this.customerDetailId
+            @update:data="changeDialogStatus"
+        />
     </pos-panel-layout>
 </template>
 
@@ -57,17 +65,19 @@
     import {mapGetters, mapActions} from "vuex";
     import PosPanelLayout from "../../../../Layouts/PosPanelLayout";
     import axios from 'axios';
+    import ShowDetailDialog from "./ShowDetailDialog";
 
     export default {
         components: {
             PosPanelLayout,
+            ShowDetailDialog
         },
         props: [
             'daily_setups',
         ],
         data: () => ({
             dialog: false,
-            dialogDelete: false,
+            customerDetailId:null,
             search: "",
             headers: [
                 { text: 'Name', value: 'name', sortable: true},
@@ -79,7 +89,7 @@
             ],
             creditCustomerLists:[],
             customer_id:'',
-            paginate:10,
+            paginate:100,
         }),
 
         computed: {
@@ -93,6 +103,13 @@
         },
         methods: {
             ...mapActions(["changeDrawerSideBar"]),
+            changeDialogStatus(value) {
+                this.dialog = value;
+            },
+            clickDetail(contact_id) {
+                this.customerDetailId = contact_id;
+                this.dialog = true;
+            },
             getData(page = 1) {
                 const type = "sell";
                 let getDataUrlWithoutPagination =

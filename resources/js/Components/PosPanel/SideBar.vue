@@ -12,13 +12,12 @@
         <v-list flat class="mt-4">
             <v-list-item-group :value="selected">
                 <v-list-item v-for="(item, i) in items" :key="i" active-class="border" :ripple="false">
-
-                        <Link :href="item.link">
-                            <v-list-item-content @click="click(i)">
-                                <v-icon v-text="item.icon"></v-icon>
-                                <v-list-item-subtitle align="center" v-text="item.text" class="mt-3 caption"></v-list-item-subtitle>
-                            </v-list-item-content>
-                        </Link>
+                    <Link :href="item.link">
+                        <v-list-item-content @click="click(i)">
+                            <v-icon v-text="item.icon"></v-icon>
+                            <v-list-item-subtitle align="center" v-text="item.text" class="mt-3 caption"></v-list-item-subtitle>
+                        </v-list-item-content>
+                    </Link>
                 </v-list-item>
             </v-list-item-group>
         </v-list>
@@ -41,7 +40,7 @@ export default {
         items: [
             {icon: 'fas fa-home', text:'Home', link:route('pos.index')},
             {icon: 'fas fa-save', text:'DailySetup', link:route('pos.daily_setups.index')},
-            {icon: 'fas fa-user', text:'Customers', link:route('pos.customer-details.index')},
+            {icon: 'fas fa-user', text:'Customers', link:route('pos.customer-lists.index')},
             {icon: 'fas fa-wallet', text:'Wallet', link:''},
             {icon: 'fas fa-list', text:'List', link:''},
             {icon: 'fas fa-cog', text:'Setting', link:''},

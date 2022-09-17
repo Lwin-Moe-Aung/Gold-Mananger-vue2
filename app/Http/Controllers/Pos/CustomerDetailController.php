@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\DailySetup;
+use App\Models\Contact;
+use App\Models\Transaction;
+use App\Models\ViewSellData;
+
 use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -26,12 +30,28 @@ class CustomerDetailController extends Controller
     }
 
     /**
-     *
+     * get customer list who have credits
      */
     public function getCustomersDataWhoHaveCredit()
     {
         $transactions = (new CreditInfoService())->getDataWhoHaveCredit(request('type'), request('selectedContact'), request('paginate'));
         return CustomerDataWhoHaveCreditResource::collection($transactions);
+    }
+
+    /**
+     *  show customer detail for pos page
+     */
+    public function detail()
+    {
+        $customer_id = request('customer_id');
+        $customerInfo = Contact::find($customer_id);
+        $sellTransactions = Transaction::where('type' , 'debt_payment_from_customer')
+                            ->where('contact_id', $customer_id)
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+        $debtPaymentHistories = ViewSellData::where('contact_id', $customer_id)
+                            ->get();
+
     }
     /**
      * Show the form for creating a new resource.

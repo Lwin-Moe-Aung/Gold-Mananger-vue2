@@ -45,12 +45,23 @@ class CustomerDetailController extends Controller
     {
         $customer_id = request('customer_id');
         $customerInfo = Contact::find($customer_id);
-        $sellTransactions = Transaction::where('type' , 'debt_payment_from_customer')
-                            ->where('contact_id', $customer_id)
+
+        $sellTransactions = ViewSellData::where('contact_id', $customer_id)
+                            ->with('sell.item.product')
                             ->orderBy('created_at', 'desc')
                             ->get();
-        $debtPaymentHistories = ViewSellData::where('contact_id', $customer_id)
+
+        $debtPaymentHistories = Transaction::where('type' , 'debt_payment_from_customer')
+                            ->where('contact_id', $customer_id)
+                            ->with(['contact', 'debtPaymentFromCustomer.transaction.sell.item'])
+                            ->orderBy('created_at', 'desc')
                             ->get();
+
+        return response()->json([
+                'customerInfo' => $customerInfo,
+                'sellTransactions' => $sellTransactions,
+                'debtPaymentHistories' => $debtPaymentHistories
+            ]);
 
     }
     /**

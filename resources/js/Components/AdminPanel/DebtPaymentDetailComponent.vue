@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <!-- <div class="card">
         <div class="card-header">
             <Link :href="urlLink">
                 <button class="btn btn-primary float-left mr-3" style="h">
@@ -16,7 +16,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-        </div>
+        </div> -->
         <div class="card-body" style="display: block;">
             <div class="row">
                 <div class="col-12 col-md-12 col-lg-8 order-2 order-md-1">
@@ -101,7 +101,12 @@
                         <div class="card-body pt-0" v-if="value.debt_payment != 0">
                             <div class="row">
                                 <div class="col-7">
-                                    <h2 class="lead"><b>{{ value.item.name }}</b></h2>
+                                    <h2 class="lead" v-if="type == 'debt_payment_from_customer'">
+                                        <b>{{ value.transaction.sell.item.name }}</b>
+                                    </h2>
+                                    <h2 class="lead" v-else>
+                                        <b>{{ value.transaction.purchase.item.name }}</b>
+                                    </h2>
                                     <p class="text-muted text-sm">
                                         <b>Date: </b> {{ formatDateTime(value.created_at) }}
                                     </p>
@@ -132,7 +137,18 @@
                                     <h2>
                                         <span class="badge badge-pill badge-dark"></span>
                                     </h2>
-                                    <img :src="value.item.image" alt="user-avatar" class="img-circle img-fluid">
+                                    <img
+                                        v-if="type == 'debt_payment_from_customer'"
+                                        :src="value.transaction.sell.item.image"
+                                        alt="user-avatar"
+                                        class="img-circle img-fluid"
+                                    >
+                                    <img
+                                        v-else
+                                        :src="value.transaction.purchase.item.image"
+                                        alt="user-avatar"
+                                        class="img-circle img-fluid"
+                                    >
                                 </div>
                             </div>
                         </div>
@@ -161,7 +177,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
 </template>
 
 <script>
@@ -205,9 +221,9 @@
             titleTxt() {
                 return this.type == "debt_payment_from_customer" ? 'Customer Information' : 'Supplier Information';
             },
-            urlLink() {
-                return this.type == "debt_payment_from_customer" ? route('admin.debt-payment-from-customers.index') : route('admin.debt-payment-to-suppliers.index');
-            }
+            // urlLink() {
+            //     return this.type == "debt_payment_from_customer" ? route('admin.debt-payment-from-customers.index') : route('admin.debt-payment-to-suppliers.index');
+            // }
         }
     }
 </script>

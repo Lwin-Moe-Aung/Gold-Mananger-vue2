@@ -59,15 +59,15 @@ class GenerateInvoiceService {
         $transaction = $query->where('id',$transaction_id)
                             ->first();
 
-        if($type == 'purchase' || $type == 'purchase_return'){
-            $transaction->purchase->item->gold_plus_gem_weight = json_decode($transaction->purchase->item->gold_plus_gem_weight);
-            $transaction->purchase->item->gem_weight = json_decode($transaction->purchase->item->gem_weight);
-            $transaction->purchase->item->fee = json_decode($transaction->purchase->item->fee);
-        }else if($type == 'sell'){
-            $transaction->sell->item->gold_plus_gem_weight = json_decode($transaction->sell->item->gold_plus_gem_weight);
-            $transaction->sell->item->gem_weight = json_decode($transaction->sell->item->gem_weight);
-            $transaction->sell->item->fee = json_decode($transaction->sell->item->fee);
-        }
+        // if($type == 'purchase' || $type == 'purchase_return'){
+        //     $transaction->purchase->item->gold_plus_gem_weight = json_decode($transaction->purchase->item->gold_plus_gem_weight);
+        //     $transaction->purchase->item->gem_weight = json_decode($transaction->purchase->item->gem_weight);
+        //     $transaction->purchase->item->fee = json_decode($transaction->purchase->item->fee);
+        // }else if($type == 'sell'){
+        //     $transaction->sell->item->gold_plus_gem_weight = json_decode($transaction->sell->item->gold_plus_gem_weight);
+        //     $transaction->sell->item->gem_weight = json_decode($transaction->sell->item->gem_weight);
+        //     $transaction->sell->item->fee = json_decode($transaction->sell->item->fee);
+        // }
 
         return $transaction;
 

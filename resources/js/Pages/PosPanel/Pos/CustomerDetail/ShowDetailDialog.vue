@@ -76,7 +76,6 @@
     import SellTransactions from "./SellTransactions";
     import DebtPaymentFromCustomer from "./DebtPaymentFromCustomer";
     import axios from 'axios';
-import route from "../../../../../../vendor/tightenco/ziggy/src/js";
 
     export default {
         name: "ShowDetailDialog",
@@ -93,7 +92,7 @@ import route from "../../../../../../vendor/tightenco/ziggy/src/js";
             return {
                dialog:false,
                customerId:null,
-               showDataStatus:'',
+               showDataStatus:'CustomerInformation',
                customerInfo:null,
                sellTransactions:null,
                debtPaymentHistories:null
@@ -119,10 +118,9 @@ import route from "../../../../../../vendor/tightenco/ziggy/src/js";
             {
                 axios.get(this.route("pos.customer-lists.detail"), { params: {customer_id: this.customerId}})
                     .then((response) => {
-                        console.log(response.data);
-                        this.customerInfo = response.data.data.customerInfo;
-                        this.sellTransactions = response.data.data.sellTransactions;
-                        this.debtPaymentHistories = response.data.data.debtPaymentHistories;
+                        this.customerInfo = response.data.customerInfo;
+                        this.sellTransactions = response.data.sellTransactions;
+                        this.debtPaymentHistories = response.data.debtPaymentHistories;
                     });
             }
         }

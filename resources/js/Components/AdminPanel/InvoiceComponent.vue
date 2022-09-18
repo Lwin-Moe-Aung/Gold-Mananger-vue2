@@ -2,7 +2,7 @@
         <section class="invoice" style="background-color: #FEF2CB !important;">
             <div class="container">
                 <div class="container-fluid">
-                    <div class="row row-invoice-page">
+                    <div class="row row-invoice-page" v-if="transaction.business != undefined">
                         <div class="col-4">
 
                         </div>
@@ -20,7 +20,7 @@
 
                         </div>
                     </div>
-                    <div class="row invoice-info row-invoice-page">
+                    <div class="row invoice-info row-invoice-page" v-if="transaction.contact != undefined">
                         <div class="col-sm-4 invoice-col">
                         {{ contactInfoTxt }}
                         <address>
@@ -143,7 +143,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row no-print">
+                    <div class="row no-print" v-if="transaction.business != undefined">
                         <div class="col-12">
                             <a rel="noopener" @click="print()" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
                         </div>

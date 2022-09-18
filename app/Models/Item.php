@@ -66,4 +66,37 @@ class Item extends Model
     {
         return $this->hasOne(Purchase::class, 'item_id');
     }
+
+    /**
+     * Accessor for gold_plus_gem_weight
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getGoldPlusGemWeightAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+     /**
+     * Accessor for gem weight
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getGemWeightAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+     /**
+     * Accessor for fee
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getFeeAttribute($value)
+    {
+        return json_decode($value);
+    }
 }

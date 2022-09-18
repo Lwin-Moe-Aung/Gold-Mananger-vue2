@@ -9,6 +9,12 @@ class ViewSellData extends Model
 {
     use HasFactory;
     public $table = "view_sell_data";
+
+    public function sell()
+    {
+        return $this->hasOne(Sell::class, 'transaction_id', 'transaction_id');
+    }
+
     public function scopeSearch($query, $term)
     {
         $term = "%$term%";

@@ -58,6 +58,12 @@ class Sell extends Model
         return $this->belongsTo(Transaction::class,'transaction_id');
     }
 
+    public function viewselldata()
+    {
+        return $this->belongsTo(ViewSellData::class,'transaction_id');
+    }
+
+
     /**
      * @return BelongsTo
      * @description Get the item that owns the order

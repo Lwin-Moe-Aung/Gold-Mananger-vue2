@@ -15,6 +15,8 @@ class CreateLimitationPricesTable extends Migration
     {
         Schema::create('limitation_prices', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('open_close_day_id');
+            $table->foreign('open_close_day_id')->references('id')->on('open_close_days')->onDelete('cascade');
             $table->decimal('price', 20, 2);
             $table->unsignedBigInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');

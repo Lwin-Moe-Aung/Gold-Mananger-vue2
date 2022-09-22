@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDailySetupsTable extends Migration
+class CreateDailySetupForPurchaseReturnsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,17 @@ class CreateDailySetupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('daily_setups', function (Blueprint $table) {
+        Schema::create('daily_setup_for_purchase_returns', function (Blueprint $table) {
             $table->id();
             $table->enum('type', ['gold', 'other'])->default('gold');
-            $table->decimal('daily_price', 20, 2);
-            $table->unsignedBigInteger('business_id');
+            $table->integer('key')->nullable();
+            $table->unsignedBigInteger('open_close_day_id');
+            $table->foreign('open_close_day_id')->references('id')->on('open_close_days')->onDelete('cascade');
+            $table->decimal('kyat', 20, 2);
+            $table->decimal('pal', 20, 2);
+            $table->decimal('yway', 20, 2);
             $table->enum('customize', ['0', '1'])->default('0');
+            $table->unsignedBigInteger('business_id');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
             $table->timestamps();
         });
@@ -31,6 +36,6 @@ class CreateDailySetupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('daily_setups');
+        Schema::dropIfExists('daily_setup_for_purchase_returns');
     }
 }

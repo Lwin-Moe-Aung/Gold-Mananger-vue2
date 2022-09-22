@@ -294,6 +294,33 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fab fa-product-hunt"></i>
+                            <p>
+                                Setups
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.opening-days.index')" class="nav-link" :class="route().current('admin.opening-days.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Opening day
+                                    </p>
+                                </Link>
+                            </li>
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.closing-days.index')" class="nav-link" :class="route().current('admin.closing-days.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Closing day
+                                    </p>
+                                </Link>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="nav-header">MISCELLANEOUS</li>
                     <li class="nav-item">
                         <Link :href="route('dashboard')" class="nav-link">

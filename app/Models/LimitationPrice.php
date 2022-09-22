@@ -12,6 +12,7 @@ class LimitationPrice extends Model
 
     protected $fillable = [
         'price',
+        'open_close_day_id',
         'business_id',
         'customize',
     ];

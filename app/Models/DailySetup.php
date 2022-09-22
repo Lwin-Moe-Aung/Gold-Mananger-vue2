@@ -24,13 +24,20 @@ class DailySetup extends Model
 
     protected $fillable = [
         'type',
-        'daily_price',
-        'business_id',
+        'key',
+        'open_close_day_id',
+        'kyat',
+        'pal',
+        'yway',
         'customize',
+        'business_id',
     ];
 
     public const VALIDATION_RULES = [
-        'daily_price' => ['required'],
+        'open_close_day_id' => ['required'],
+        'kyat' => ['required'],
+        'pal' => ['required'],
+        'yway' => ['required']
     ];
 
     /**
@@ -39,11 +46,6 @@ class DailySetup extends Model
      * @var array
      */
     protected $hidden = [];
-
-    public function dailySetupDetail()
-    {
-        return $this->hasMany(DailySetupDetail::class, 'daily_setup_id');
-    }
 
     public function purchase()
     {

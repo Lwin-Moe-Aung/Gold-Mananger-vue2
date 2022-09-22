@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admins;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\OpenCloseDay;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -24,7 +25,10 @@ class AuthController extends Controller
         ]);
         $credential = $request->only('email', 'password');
         if (Auth::attempt($credential)) {
-            return redirect()->route('admin.dashboard.index');
+            $open_close_day = OpenCloseDay::whereDate('created_at', Carbon::today())->first();
+            //check opening and closing status
+            if($open_close_day != null) return redirect()->route('admin.dashboard.index');
+            else return redirect()->route('admin.opening-days.index');
         }
     }
 

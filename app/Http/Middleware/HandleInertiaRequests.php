@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use App\Models\DailySetup;
 use App\Models\LimitationPrice;
 use App\Models\Product;
+use App\Models\OpenCloseDay;
+use App\Models\DailySetupForPurchaseReturn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -58,52 +60,43 @@ class HandleInertiaRequests extends Middleware
             ],
             'user' => Auth::user(),
             'daily_setup' => function () {
-                $daily_setup =  DailySetup::where('type', 'gold')
+                $open_close_day = OpenCloseDay::whereDate('created_at', Carbon::today())->first();
+                if($open_close_day == null) return;
+                $daily_setups =  DailySetup::where('open_close_day_id', $open_close_day->id)
+                    ->where('type', 'gold')
                     // ->where('business_id', Auth::user()->business_id)
                     ->where('business_id',1)
                     ->where('customize','0')
-                    ->latest('created_at')
-                    ->first();
-                $daily_price = $daily_setup->daily_price;
-                $daily_kyat =  $daily_price / 16;
+                    ->get();
+                // $daily_price = $daily_setup->daily_price;
+                // $daily_kyat =  $daily_price / 16;
                 $data = [];
-                for ($x = 1; $x <= 16; $x++) {
-                    $kyat = $daily_price - ($daily_kyat * (16 - $x));
-                    $pal = $kyat / 16;
-                    $yway = $pal / 8;
-                    $data [$x] = [
+                foreach ($daily_setups as $daily_setup){
+                    $data [$daily_setup->key] = [
                         'daily_setup_id' => $daily_setup->id,
-                        'kyat' => $kyat,
-                        'pal' => $pal,
-                        'yway' => $yway,
+                        'kyat' => $daily_setup->kyat,
+                        'pal' => $daily_setup->pal,
+                        'yway' => $daily_setup->yway,
                     ];
                 }
                 return $data;
             },
             'daily_setup_purchase_return' => function () {
-                $daily_setup =  DailySetup::where('type', 'gold')
+                $open_close_day = OpenCloseDay::whereDate('created_at', Carbon::today())->first();
+                if($open_close_day == null) return;
+                $daily_setups =  DailySetupForPurchaseReturn::where('open_close_day_id', $open_close_day->id)
+                    ->where('type', 'gold')
                     // ->where('business_id', Auth::user()->business_id)
                     ->where('business_id',1)
                     ->where('customize','0')
-                    ->latest('created_at')
-                    ->first();
-                $limitation_price = LimitationPrice::where('customize','0')
-                    // ->where('business_id', Auth::user()->business_id)
-                    ->where('business_id',1)
-                    ->orderBy('created_at', 'DESC')
-                    ->first();
-                $daily_price = $daily_setup->daily_price - $limitation_price->price;
-                $daily_kyat =  $daily_price / 16;
+                    ->get();
                 $data = [];
-                for ($x = 1; $x <= 16; $x++) {
-                    $kyat = $daily_price - ($daily_kyat * (16 - $x));
-                    $pal = $kyat / 16;
-                    $yway = $pal / 8;
-                    $data [$x] = [
+                foreach ($daily_setups as $daily_setup){
+                    $data [$daily_setup->key] = [
                         'daily_setup_id' => $daily_setup->id,
-                        'kyat' => $kyat,
-                        'pal' => $pal,
-                        'yway' => $yway,
+                        'kyat' => $daily_setup->kyat,
+                        'pal' => $daily_setup->pal,
+                        'yway' => $daily_setup->yway,
                     ];
                 }
                 return $data;
@@ -114,8 +107,10 @@ class HandleInertiaRequests extends Middleware
                             ->where('business_id',1)
                             ->orderBy('created_at', 'DESC')
                             ->first();
+            },
+            'open_close_day' => function() {
+                return OpenCloseDay::whereDate('created_at', Carbon::today())->first();
             }
-
             // 'success' => session()->has('success') ? session()->get('success') : "",
             // 'fail' => session()->has('fail') ? session()->get('fail') : "",
         ]);

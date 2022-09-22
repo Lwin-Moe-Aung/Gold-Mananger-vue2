@@ -30,6 +30,7 @@ use App\Http\Controllers\Admins\DebtPaymentFromCustomerController;
 use App\Http\Controllers\Admins\DebtPaymentToSupplierController;
 use App\Http\Controllers\Admins\CreditInfoController;
 use App\Http\Controllers\Admins\ExpenseForController;
+use App\Http\Controllers\Admins\OpeningClosingDayController;
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -234,6 +235,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::get('customer-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'customerDebtPaymentGenerateInvoice'])->name('customerDebtPaymentGenerateInvoice');
     Route::get('supplier-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'supplierDebtPaymentGenerateInvoice'])->name('supplierDebtPaymentGenerateInvoice');
 
-
+    // opening and closing day
+    Route::resource('opening-closing-days', OpeningClosingDayController::class);
 
 });

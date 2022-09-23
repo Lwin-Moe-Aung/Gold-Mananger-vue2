@@ -236,6 +236,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::get('supplier-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'supplierDebtPaymentGenerateInvoice'])->name('supplierDebtPaymentGenerateInvoice');
 
     // opening and closing day
+    Route::get('get-opening-closing-data-lists', [OpeningClosingDayController::class, 'getOpeningClosingDataLists'])->name('getOpeningClosingDataLists');
     Route::resource('opening-closing-days', OpeningClosingDayController::class);
 
 });

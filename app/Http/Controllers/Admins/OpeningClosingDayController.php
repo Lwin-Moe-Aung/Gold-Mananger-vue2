@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\LimitationPrice;
+use App\Models\OpenCloseDay;
 use Inertia\Inertia;
+use App\Http\Resources\OpeningClosingDayResource;
 
 class OpeningClosingDayController extends Controller
 {
@@ -19,6 +20,19 @@ class OpeningClosingDayController extends Controller
         return Inertia::render('AdminPanel/SetupManagement/OpeningClosing/Index');
     }
 
+    /**
+     * get data for opening and closing day table
+     */
+    public function getOpeningClosingDataLists()
+    {
+        $paginate = request('paginate');
+        if (isset($paginate)) {
+            $openCloseDayData = OpenCloseDay::openCloseDaysQuery()->paginate($paginate);
+        } else {
+            $openCloseDayData = OpenCloseDay::openCloseDaysQuery()->get();
+        }
+        return OpeningClosingDayResource::collection($openCloseDayData);
+    }
     /**
      * Show the form for creating a new resource.
      *

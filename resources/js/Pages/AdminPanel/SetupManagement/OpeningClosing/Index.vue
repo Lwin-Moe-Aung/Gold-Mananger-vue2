@@ -153,33 +153,33 @@
                                         </tr>
 
                                         <tr
-                                            v-for="(debtPaymentList, index) in dataLists.data"
+                                            v-for="(data, index) in dataLists.data"
                                             :key="index"
                                         >
                                             <td>{{ index + 1 }}</td>
-                                            <td>{{ debtPaymentList.name }}</td>
-                                            <td>{{ debtPaymentList.mobile }}</td>
-                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(debtPaymentList.debt_paid_money) }}</span></td>
-                                            <!-- <td>{{ debtPaymentList.debt_paid_money }}</td> -->
-                                            <td><span class="badge badge-pill bg-warning">{{ numberWithCommas(debtPaymentList.remaining_credit_money) }}</span></td>
-                                            <!-- <td>{{ debtPaymentList.remaining_credit_money }}</td> -->
-                                            <td>{{ debtPaymentList.created_at }}</td>
+                                            <td>{{ data.created_at }}</td>
+                                            <td><span class="badge badge-pill bg-success" v-if="data.opened == '1'">Opened</span></td>
+                                            <td><span class="badge badge-pill bg-warning">{{ data.opening_balance | formatNumber }}</span></td>
+                                            <td>{{ data.opening_date_time }}</td>
+                                            <td><span class="badge badge-pill bg-success" v-if="data.closed == '1'">Closed</span></td>
+                                            <td><span class="badge badge-pill bg-warning">{{ data.closing_balance | formatNumber }}</span></td>
+                                            <td>{{ data.closing_date_time }}</td>
                                             <td>
-                                                <button
+                                                <!-- <button
                                                     onclick="confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
                                                     class="btn btn-sm"
                                                     @click="deleteRecord(debtPaymentList.id)"
                                                 >
                                                     <i class="fa fa-trash" aria-hidden="true"></i>
-                                                </button>
+                                                </button> -->
                                                 <button
                                                     class="btn btn-warrning btn-sm"
-                                                    @click="editRecord(debtPaymentList.id)"
+                                                    @click="editRecord(data.id)"
                                                 >
                                                     <i class="fa fa-edit" aria-hidden="true"></i>
                                                 </button>
 
-                                                <Link :href="route('admin.debt-payment-from-customers.show',debtPaymentList.id)">
+                                                <Link :href="route('admin.opening-closing-days.show',data.id)">
                                                     <button class="btn btn-warrning btn-sm">
                                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                                     </button>
@@ -279,21 +279,17 @@
             getData(page = 1) {
                 const type = "debt_payment_from_customer";
                 let getDataUrlWithoutPagination =
-                    "/admin/get-debt-payment-lists?" +
+                    "/admin/get-opening-closing-data-lists?" +
                     "q=" +
                     this.search +
                     "&sort_direction=" +
                     this.sort_direction +
                     "&sort_field=" +
                     this.sort_field +
-                    "&selectedContact=" +
-                    this.customer_id +
                     "&startDate=" +
                     this.startDate +
                     "&endDate=" +
-                    this.endDate +
-                    "&type=" +
-                    type;
+                    this.endDate ;
 
                 const getDataUrl = getDataUrlWithoutPagination.concat(
                     "&paginate=" + this.paginate + "&page=" + page

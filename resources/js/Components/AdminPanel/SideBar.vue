@@ -304,18 +304,10 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.opening-days.index')" class="nav-link" :class="route().current('admin.opening-days.*') ? 'active' : ' '">
+                                <Link :href="route('admin.opening-closing-days.index')" class="nav-link" :class="route().current('admin.opening-closing-days.*') ? 'active' : ' '">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>
-                                        Opening day
-                                    </p>
-                                </Link>
-                            </li>
-                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
-                                <Link :href="route('admin.closing-days.index')" class="nav-link" :class="route().current('admin.closing-days.*') ? 'active' : ' '">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>
-                                        Closing day
+                                        Opening Closing day
                                     </p>
                                 </Link>
                             </li>

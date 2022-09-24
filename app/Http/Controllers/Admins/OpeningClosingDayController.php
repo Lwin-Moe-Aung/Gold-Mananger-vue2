@@ -40,7 +40,7 @@ class OpeningClosingDayController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('AdminPanel/SetupManagement/OpeningClosing/Create');
     }
 
     /**

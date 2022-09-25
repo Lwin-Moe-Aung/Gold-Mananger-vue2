@@ -4,6 +4,7 @@ import PosModule from '../store/modules/pos/pos-module'
 import PurchaseReturn from '../store/modules/admin/purchase-return'
 import DebtPayment from './modules/admin/debt-payment'
 import SideBar from './modules/pos/side-bar'
+import OpeningClosingDay from './modules/admin/opening-closing-day'
 
 Vue.use(Vuex);
 
@@ -19,7 +20,8 @@ export const store = new Vuex.Store({
         PosModule,
         PurchaseReturn,
         DebtPayment,
-        SideBar
+        SideBar,
+        OpeningClosingDay
     }
 });
 

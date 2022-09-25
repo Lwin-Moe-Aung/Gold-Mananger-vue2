@@ -108,10 +108,10 @@
 </template>
 
 <script>
-    import DailySetupForm from './DailySetupForm';
-    import DailySetupPurchaseReturnForm from './DailySetupPurchaseReturnForm';
-    import OpeningBalance from './OpeningBalance';
-    import {mapGetters, mapActions} from "vuex";
+    // import DailySetupForm from './DailySetupForm';
+    // import DailySetupPurchaseReturnForm from './DailySetupPurchaseReturnForm';
+    // import OpeningBalance from './OpeningBalance';
+    // import {mapGetters, mapActions} from "vuex";
 
     export default {
         components: {

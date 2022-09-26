@@ -9,6 +9,13 @@
             class="mx-auto"
             style="margin-top:70px; border-radius: 25px;"
         >
+            <v-toolbar
+                color="cyan"
+                dark
+                class="justify-content-center"
+            >
+                <v-toolbar-title>Opening Day</v-toolbar-title>
+            </v-toolbar>
             <div class="wrapper-stepper">
                 <div class="stepper">
                     <div class="stepper-progress">
@@ -23,7 +30,7 @@
                             </span>
                         </div>
                         <span class="stepper-item-title">
-                            Paso {{ item }}
+                            Step {{ item }}
                         </span>
                     </div>
                 </div>
@@ -39,16 +46,24 @@
                         <StepperOpeningBalanceComponent/>
                     </div>
                     <div class="stepper-pane" v-if="step == 4">
-                        hello world success!!
+                        <div class="congratulations ">
+                            <img src="/images/stepperImages/congrat.svg" alt="success" id="congrat">
+                            <div class="text">
+                                <h1>Congratulation!</h1>
+                                <p>You have successfully open a day</p>
+                                <p class="muted">- Have a good</p>
+                            </div>
+                            <div class="space"></div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="controls">
-                    <button class="btn" @click="step--" :disabled="step == 1">
-                        Anterior
+                    <button class="btn btn-dark" @click="step--" :disabled="step == 1">
+                        Back
                     </button>
                     <button class="btn btn--green-1" @click="step++" :disabled="step == 4">
-                        Siguiente
+                        Continue
                     </button>
                 </div>
             </div>

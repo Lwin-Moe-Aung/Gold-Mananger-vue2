@@ -1,3 +1,3 @@
 <template>
-    <h1>Stepper Opening Balance</h1>
+    <h5 class="form-title">Add Opening Balance</h5>
 </template>

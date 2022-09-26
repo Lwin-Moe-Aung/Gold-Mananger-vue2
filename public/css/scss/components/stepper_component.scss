@@ -134,7 +134,7 @@ body{
     // padding: 120px 60px;
     box-shadow: 0 8px 12px rgba($color: #000000, $alpha: 0.09);
     margin: 40px 0;
-    height: 500px;
+    height: 550px;
 }
 
 .controls{
@@ -170,4 +170,81 @@ body{
         color: #fff;
         margin-left: auto;
     }
+}
+
+.form-title {
+    width: 300px;
+    border-bottom: 3px solid blue;
+    text-align: center;
+    // font-weight: 200;
+    margin: 0 auto 50px;
+    position: relative;
+    padding: 10px 0;
+    text-transform: uppercase;
+}
+
+.form-title::after {
+    display: inline-block;
+    content: "";
+    height: 15px;
+    width: 15px;
+    background-color:blue;
+    position: absolute;
+    border: 3px solid rgb(230, 218, 62);
+    left: calc(50% - 10px);
+    top: 62%;
+    transform: rotate(45deg) translate(50%, 50%);
+}
+
+// .congratulations {
+//     background: #fdfdfd;
+//     border-radius: 4px;
+//     height: 85vh;
+//     width: 80vw;
+//     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+//     text-align: center;
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     padding: 1em;
+//     overflow: hidden;
+// }
+
+// @media only screen and (min-width: 1000px) {
+//     .congratulations {
+//       flex-direction: row-reverse;
+//     }
+//     .congratulations img#congrat {
+//       width: 100%;
+//       max-width: 50vw;
+//       max-height: unset;
+//     }
+// }
+
+// @media only screen and (max-height: 640px) {
+//     .congratulations {
+//       flex-direction: row-reverse;
+//     }
+//     .congratulations img#congrat {
+//       width: 100%;
+//       max-width: 50vw;
+//       max-height: unset;
+//     }
+// }
+
+img#congrat {
+    max-height: 25vh;
+}
+
+.text {
+    padding: 1em;
+}
+
+.muted {
+    opacity: 0.8;
+}
+
+.space {
+    height: 100px;
 }

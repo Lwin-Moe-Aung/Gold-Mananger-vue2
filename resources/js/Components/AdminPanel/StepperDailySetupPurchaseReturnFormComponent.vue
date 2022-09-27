@@ -1,7 +1,6 @@
 <template>
     <v-container>
-        <h5 class="form-title">Add Limitation Price</h5>
-        <v-layout row wrap>
+        <v-layout row wrap class="mt-1">
             <v-flex xs3 md3 sm3 class="mt-2 text-center">
                 <span class="badge badge-pill bg-primary">Limitaion Price</span>
             </v-flex>

@@ -22,15 +22,16 @@
                         <div class="stepper-progress-bar" :style="'width:' + stepperProgress "></div>
                     </div>
 
-                    <div class="stepper-item" :class="{ 'current': step == item, 'success': step > item }" v-for="item in 4" :key="item">
+                    <div class="stepper-item" :class="{ 'current': step == item.index, 'success': step > item.index }" v-for="item in items" :key="item.index">
                         <div class="stepper-item-counter">
                             <img class="icon-success" src="https://www.seekpng.com/png/full/1-10353_check-mark-green-png-green-check-mark-svg.png" alt="">
                             <span class="number">
-                                {{ item }}
+                                {{ item.index }}
                             </span>
                         </div>
+
                         <span class="stepper-item-title">
-                            Step {{ item }}
+                            {{ item.title }}
                         </span>
                     </div>
                 </div>
@@ -46,26 +47,25 @@
                         <StepperOpeningBalanceComponent/>
                     </div>
                     <div class="stepper-pane" v-if="step == 4">
-                        <div class="congratulations ">
-                            <img src="/images/stepperImages/congrat.svg" alt="success" id="congrat">
-                            <div class="text">
-                                <h1>Congratulation!</h1>
-                                <p>You have successfully open a day</p>
-                                <p class="muted">- Have a good</p>
-                            </div>
-                            <div class="space"></div>
-                        </div>
+                        <CongratulationComponent/>
                     </div>
                 </div>
-
-                <div class="controls">
-                    <button class="btn btn-dark" @click="step--" :disabled="step == 1">
+                <v-card-actions>
+                    <v-btn
+                        color="#F0F0F0"
+                        @click="step--" :disabled="step == 1"
+                    >
                         Back
-                    </button>
-                    <button class="btn btn--green-1" @click="step++" :disabled="step == 4">
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="#4D25B9"
+                        dark
+                        @click="step++" :disabled="step == 4"
+                    >
                         Continue
-                    </button>
-                </div>
+                    </v-btn>
+                </v-card-actions>
             </div>
         </v-card>
     </v-hover>
@@ -74,15 +74,23 @@
     import StepperDailySetupFormComponent from './StepperDailySetupFormComponent';
     import StepperDailySetupPurchaseReturnFormComponent from './StepperDailySetupPurchaseReturnFormComponent';
     import StepperOpeningBalanceComponent from './StepperOpeningBalanceComponent';
+    import CongratulationComponent from './CongratulationComponent';
+
 
     export default {
         components: {
             StepperDailySetupFormComponent,
             StepperDailySetupPurchaseReturnFormComponent,
-            StepperOpeningBalanceComponent
+            StepperOpeningBalanceComponent,
+            CongratulationComponent
         },
         data: () => ({
-            step: 1
+            step: 1,
+            items: [
+                { index: 1, title:'Daily Setup Form' },
+                { index: 2, title:'Daily Setup For Purchase Return Form' },
+                { index:3, title:'Opening Balance Form' },
+            ],
         }),
         computed: {
             stepperProgress() {

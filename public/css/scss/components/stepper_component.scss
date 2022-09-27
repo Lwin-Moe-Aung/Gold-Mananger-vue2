@@ -128,12 +128,13 @@ body{
 }
 
 .stepper-pane{
+    position: relative;
     color: #333;
     text-align: center;
     // padding: 120px 60px;
     box-shadow: 0 8px 12px rgba($color: #000000, $alpha: 0.09);
     margin: 40px 0;
-    height: 550px;
+    height: 573px;
 }
 
 .controls{
@@ -246,4 +247,10 @@ img#congrat {
 
 .space {
     height: 100px;
+}
+
+.card-actions {
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }

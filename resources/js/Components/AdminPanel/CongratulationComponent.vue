@@ -4,7 +4,7 @@
         <div class="text">
             <h1>Congratulation!</h1>
             <p>You have successfully open a day</p>
-            <p class="muted">- Have a good</p>
+            <p class="muted">- Have a good day!</p>
         </div>
         <div class="space"></div>
     </div>

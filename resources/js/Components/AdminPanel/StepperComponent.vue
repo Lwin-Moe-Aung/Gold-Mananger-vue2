@@ -7,7 +7,7 @@
             :elevation="hover ? 16 : 2"
             :class="{ 'on-hover': hover }"
             class="mx-auto"
-            style="margin-top:70px; border-radius: 25px;"
+            style="margin-top:70px; border-radius: 25px;width: 750px;"
         >
             <v-toolbar
                 color="cyan"
@@ -50,22 +50,6 @@
                         <CongratulationComponent/>
                     </div>
                 </div>
-                <v-card-actions>
-                    <v-btn
-                        color="#F0F0F0"
-                        @click="step--" :disabled="step == 1"
-                    >
-                        Back
-                    </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                        color="#4D25B9"
-                        dark
-                        @click="step++" :disabled="step == 4"
-                    >
-                        Continue
-                    </v-btn>
-                </v-card-actions>
             </div>
         </v-card>
     </v-hover>
@@ -75,7 +59,7 @@
     import StepperDailySetupPurchaseReturnFormComponent from './StepperDailySetupPurchaseReturnFormComponent';
     import StepperOpeningBalanceComponent from './StepperOpeningBalanceComponent';
     import CongratulationComponent from './CongratulationComponent';
-
+    import {mapGetters, mapActions} from "vuex";
 
     export default {
         components: {
@@ -93,10 +77,19 @@
             ],
         }),
         computed: {
+            ...mapGetters(['global_step']),
             stepperProgress() {
                 return ( 100 / 3 ) * ( this.step - 1 ) + '%'
             }
         },
+        watch: {
+            global_step(value) {
+                this.step = value;
+            }
+        },
+        methods: {
+            ...mapActions([""]),
+        }
     }
 </script>
 <style lang="scss">

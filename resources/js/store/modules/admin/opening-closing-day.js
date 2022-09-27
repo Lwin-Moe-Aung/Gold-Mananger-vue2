@@ -1,24 +1,26 @@
 const state = {
-    // selectedItem4: "",
-    // carts6:[],
-    // h:false,
+    global_step: 1,
 };
 const getters = {
-    // selectedItem4: state => state.selectedItem4,
-
+    global_step: state => state.global_step,
 };
 const actions = {
-    // async addItem({commit}, data){
-    //     await commit("setItemToCart", data)
-    // },
+    async setGlobalStep({commit}, data){
+        await commit("setGlobalStep", data)
+    },
+
+    async reduceGlobalStep({commit}, data){
+        await commit("reduceGlobalStep", data)
+    },
 };
 const mutations = {
+    setGlobalStep: (state, data) => {
+        state.global_step += 1;
+    },
 
-    // setItem: (state, data) => {
-    //     state.selectedItem = ""
-    //     state.items = []
-    //     state.items = data
-    // },
+    reduceGlobalStep: (state, data) => {
+        state.global_step -= 1;
+    },
 };
 export default {
     state,

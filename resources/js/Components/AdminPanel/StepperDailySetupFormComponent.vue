@@ -290,12 +290,25 @@
                     </v-flex>
                 </v-flex>
             </v-layout>
+            <v-card-actions class="card-actions">
+                <v-btn
+                    color="#4D25B9"
+                    outlined
+                    rounded
+                    text
+                    @click="submit()"
+                >
+                    Continue
+                </v-btn>
+            </v-card-actions>
         </v-form>
     </v-container>
 </template>
 <script>
+    import {mapGetters, mapActions} from "vuex";
     export default {
         data: () => ({
+            valid: true,
             requireRule: [
                 v => !!v || 'This field is required',
             ],
@@ -304,7 +317,11 @@
 
         },
         methods: {
-
+            ...mapActions(["setGlobalStep"]),
+            submit () {
+                // this.$refs.form.validate();
+                this.setGlobalStep();
+            },
         }
     }
 </script>

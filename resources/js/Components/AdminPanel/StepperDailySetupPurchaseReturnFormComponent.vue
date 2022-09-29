@@ -7,16 +7,21 @@
         >
             <v-layout row wrap class="mt-1">
                 <v-flex xs3 md3 sm3 class="mt-2 text-center">
-                    <span class="badge badge-pill bg-primary">Limitation Price</span>
+                    <span class="badge badge-pill bg-primary">limitation Price</span>
                 </v-flex>
                 <v-flex xs5 sm5 md5>
-                    <v-text-field
-                        outlined
-                        dense
-                        required
-                        :rules="requireRule"
-                    >
-                    </v-text-field>
+                        <v-text-field
+                            v-model = "form.limitaion_price"
+                            @change="onChange"
+                            type="number"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
+                            outlined
+                            dense
+                            required
+                            :rules="requireRule"
+                        >
+                        </v-text-field>
                 </v-flex>
             </v-layout>
             <v-layout row wrap>
@@ -26,10 +31,13 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_16_pal.kyat"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
+                            type="number"
                             label="ကျပ်"
                             placeholder="ကျပ်"
                             required
-                            type="number"
                             solo-inverted
                             dense
                             :rules="requireRule"
@@ -40,6 +48,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_16_pal.pal"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ပဲ"
                             placeholder="ပဲ"
                             required
@@ -53,6 +64,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_16_pal.yway"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ရွေး"
                             placeholder="ရွေး"
                             required
@@ -71,6 +85,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_15_pal.kyat"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ကျပ်"
                             placeholder="ကျပ်"
                             required
@@ -85,6 +102,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_15_pal.pal"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ပဲ"
                             placeholder="ပဲ"
                             required
@@ -98,6 +118,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_15_pal.yway"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ရွေး"
                             placeholder="ရွေး"
                             required
@@ -117,6 +140,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_14_pal.kyat"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ကျပ်"
                             placeholder="ကျပ်"
                             required
@@ -131,6 +157,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_14_pal.pal"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ပဲ"
                             placeholder="ပဲ"
                             required
@@ -144,6 +173,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_14_pal.yway"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ရွေး"
                             placeholder="ရွေး"
                             required
@@ -162,6 +194,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_144_pal.kyat"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ကျပ်"
                             placeholder="ကျပ်"
                             required
@@ -176,6 +211,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_144_pal.pal"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ပဲ"
                             placeholder="ပဲ"
                             required
@@ -189,6 +227,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_144_pal.yway"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ရွေး"
                             placeholder="ရွေး"
                             required
@@ -207,6 +248,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_13_pal.kyat"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ကျပ်"
                             placeholder="ကျပ်"
                             required
@@ -221,6 +265,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_13_pal.pal"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ပဲ"
                             placeholder="ပဲ"
                             required
@@ -234,6 +281,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_13_pal.yway"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ရွေး"
                             placeholder="ရွေး"
                             required
@@ -252,6 +302,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_12_pal.kyat"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ကျပ်"
                             placeholder="ကျပ်"
                             required
@@ -266,6 +319,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_12_pal.pal"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ပဲ"
                             placeholder="ပဲ"
                             required
@@ -279,6 +335,9 @@
                 <v-flex xs3 sm3 md3>
                     <v-flex xs6 sm10 md10>
                         <v-text-field
+                            v-model = "form.quality_12_pal.yway"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
                             label="ရွေး"
                             placeholder="ရွေး"
                             required
@@ -304,13 +363,14 @@
                 <v-spacer></v-spacer>
                 <v-btn
                     color="#4D25B9"
-                    @click="submit()"
                     outlined
                     rounded
                     text
+                    @click="submit()"
                 >
                     Continue
                 </v-btn>
+
             </v-card-actions>
         </v-form>
     </v-container>
@@ -318,21 +378,76 @@
 <script>
     import {mapGetters, mapActions} from "vuex";
     export default {
+        props: ['value', 'daily_setup_amount'],
         data: () => ({
+            form:{
+                limitaion_price: null,
+                quality_16_pal: { kyat: null, pal: null, yway: null },
+                quality_15_pal: { kyat: null, pal: null, yway: null },
+                quality_14_pal: { kyat: null, pal: null, yway: null },
+                quality_144_pal: { kyat: null, pal: null, yway: null },
+                quality_13_pal: { kyat: null, pal: null, yway: null },
+                quality_12_pal: { kyat: null, pal: null, yway: null },
+            },
             valid: true,
             requireRule: [
                 v => !!v || 'This field is required',
             ],
         }),
-        computed: {
+        created() {
 
+            if(this.value == null) return;
+            this.form.limitaion_price = val.limitaion_price;
+            this.form.quality_16_pal.kyat = this.value.quality_16_pal.kyat;
+            this.form.quality_16_pal.pal = this.value.quality_16_pal.pal;
+            this.form.quality_16_pal.yway = this.value.quality_16_pal.yway;
+            this.form.quality_15_pal.kyat = this.value.quality_15_pal.kyat;
+            this.form.quality_15_pal.pal = this.value.quality_15_pal.pal;
+            this.form.quality_15_pal.yway = this.value.quality_15_pal.yway;
+            this.form.quality_14_pal.kyat = this.value.quality_14_pal.kyat;
+            this.form.quality_14_pal.pal = this.value.quality_14_pal.pal;
+            this.form.quality_14_pal.yway = this.value.quality_14_pal.yway;
+            this.form.quality_144_pal.kyat = this.value.quality_144_pal.kyat;
+            this.form.quality_144_pal.pal = this.value.quality_144_pal.pal;
+            this.form.quality_144_pal.yway = this.value.quality_144_pal.yway;
+            this.form.quality_13_pal.kyat = this.value.quality_13_pal.kyat;
+            this.form.quality_13_pal.pal = this.value.quality_13_pal.pal;
+            this.form.quality_13_pal.yway = this.value.quality_13_pal.yway;
+            this.form.quality_12_pal.kyat = this.value.quality_12_pal.kyat;
+            this.form.quality_12_pal.pal = this.value.quality_12_pal.pal;
+            this.form.quality_12_pal.yway = this.value.quality_12_pal.yway;
         },
+
         methods: {
-            ...mapActions(["setGlobalStep", "reduceGlobalStep"]),
+            ...mapActions(["setGlobalStep", "setDailySetupPurchaseReturnForm", "reduceGlobalStep"]),
             submit () {
-                // this.$refs.form.validate();
+                if(!this.$refs.form.validate()) return;
                 this.setGlobalStep();
+                this.setDailySetupPurchaseReturnForm(this.form);
             },
+
+            onChange() {
+                if(this.daily_setup_amount == null) return;
+                let amount = Number(this.daily_setup_amount) - Number(this.form.limitaion_price);
+                this.form.quality_16_pal.kyat = Number(amount);
+                this.form.quality_16_pal.pal = this.form.quality_16_pal.kyat / 16;
+                this.form.quality_16_pal.yway = this.form.quality_16_pal.pal / 8;
+                this.form.quality_15_pal.kyat = amount - this.form.quality_16_pal.pal;
+                this.form.quality_15_pal.pal = this.form.quality_15_pal.kyat / 16;
+                this.form.quality_15_pal.yway = this.form.quality_15_pal.pal / 8;
+                this.form.quality_14_pal.kyat = amount - (this.form.quality_16_pal.pal * 2);
+                this.form.quality_14_pal.pal = this.form.quality_14_pal.kyat / 16;
+                this.form.quality_14_pal.yway = this.form.quality_14_pal.pal / 8;
+                this.form.quality_144_pal.kyat = amount - (this.form.quality_16_pal.pal * 2);
+                this.form.quality_144_pal.pal = this.form.quality_144_pal.kyat / 16;
+                this.form.quality_144_pal.yway = this.form.quality_144_pal.pal / 8;
+                this.form.quality_13_pal.kyat = amount - (this.form.quality_16_pal.pal * 3);
+                this.form.quality_13_pal.pal = this.form.quality_13_pal.kyat / 16;
+                this.form.quality_13_pal.yway = this.form.quality_13_pal.pal / 8;
+                this.form.quality_12_pal.kyat = amount - (this.form.quality_16_pal.pal * 4);
+                this.form.quality_12_pal.pal = this.form.quality_12_pal.kyat / 16;
+                this.form.quality_12_pal.yway = this.form.quality_12_pal.pal / 8;
+            }
         }
     }
 </script>

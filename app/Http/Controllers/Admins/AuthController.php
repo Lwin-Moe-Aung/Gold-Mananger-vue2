@@ -28,7 +28,7 @@ class AuthController extends Controller
             $open_close_day = OpenCloseDay::whereDate('created_at', Carbon::today())->first();
             //check opening and closing status
             if($open_close_day != null) return redirect()->route('admin.dashboard.index');
-            else return redirect()->route('admin.opening-closing-days.create');
+            else return redirect()->route('admin.opening-days.create');
         }
     }
 

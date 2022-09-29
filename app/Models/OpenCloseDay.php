@@ -11,8 +11,8 @@ class OpenCloseDay extends Model
     protected $table = 'open_close_days';
 
     protected $fillable = [
-        'open',
-        'close',
+        'opened',
+        'closed',
         'opening_balance',
         'closing_balance',
         'opening_date_time',

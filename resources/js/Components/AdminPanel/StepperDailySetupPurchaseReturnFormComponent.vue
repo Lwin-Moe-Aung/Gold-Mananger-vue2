@@ -11,7 +11,7 @@
                 </v-flex>
                 <v-flex xs5 sm5 md5>
                         <v-text-field
-                            v-model = "form.limitaion_price"
+                            v-model = "limitation_price"
                             @change="onChange"
                             type="number"
                             min="0"
@@ -378,26 +378,26 @@
 <script>
     import {mapGetters, mapActions} from "vuex";
     export default {
-        props: ['value', 'daily_setup_amount'],
+        props: ['value', 'daily_setup_amount', 'limitation'],
         data: () => ({
             form:{
-                limitaion_price: null,
-                quality_16_pal: { kyat: null, pal: null, yway: null },
-                quality_15_pal: { kyat: null, pal: null, yway: null },
-                quality_14_pal: { kyat: null, pal: null, yway: null },
-                quality_144_pal: { kyat: null, pal: null, yway: null },
-                quality_13_pal: { kyat: null, pal: null, yway: null },
-                quality_12_pal: { kyat: null, pal: null, yway: null },
+                quality_16_pal: { key:16, kyat: null, pal: null, yway: null },
+                quality_15_pal: { key:15, kyat: null, pal: null, yway: null },
+                quality_14_pal: { key:14, kyat: null, pal: null, yway: null },
+                quality_144_pal: { key:144, kyat: null, pal: null, yway: null },
+                quality_13_pal: { key:13, kyat: null, pal: null, yway: null },
+                quality_12_pal: { key:12, kyat: null, pal: null, yway: null },
             },
+            limitation_price: null,
             valid: true,
             requireRule: [
                 v => !!v || 'This field is required',
             ],
         }),
-        created() {
 
+        created() {
             if(this.value == null) return;
-            this.form.limitaion_price = val.limitaion_price;
+            this.limitation_price = this.limitation;
             this.form.quality_16_pal.kyat = this.value.quality_16_pal.kyat;
             this.form.quality_16_pal.pal = this.value.quality_16_pal.pal;
             this.form.quality_16_pal.yway = this.value.quality_16_pal.yway;
@@ -419,16 +419,17 @@
         },
 
         methods: {
-            ...mapActions(["setGlobalStep", "setDailySetupPurchaseReturnForm", "reduceGlobalStep"]),
+            ...mapActions(["setGlobalStep", "setDailySetupPurchaseReturnForm", "reduceGlobalStep", "setLimitationPrice"]),
             submit () {
                 if(!this.$refs.form.validate()) return;
                 this.setGlobalStep();
                 this.setDailySetupPurchaseReturnForm(this.form);
+
             },
 
             onChange() {
                 if(this.daily_setup_amount == null) return;
-                let amount = Number(this.daily_setup_amount) - Number(this.form.limitaion_price);
+                let amount = Number(this.daily_setup_amount) - Number(this.limitation_price);
                 this.form.quality_16_pal.kyat = Number(amount);
                 this.form.quality_16_pal.pal = this.form.quality_16_pal.kyat / 16;
                 this.form.quality_16_pal.yway = this.form.quality_16_pal.pal / 8;
@@ -447,6 +448,9 @@
                 this.form.quality_12_pal.kyat = amount - (this.form.quality_16_pal.pal * 4);
                 this.form.quality_12_pal.pal = this.form.quality_12_pal.kyat / 16;
                 this.form.quality_12_pal.yway = this.form.quality_12_pal.pal / 8;
+
+                this.setDailySetupPurchaseReturnForm(this.form);
+                this.setLimitationPrice(this.limitation_price)
             }
         }
     }

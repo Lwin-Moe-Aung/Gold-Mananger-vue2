@@ -11,6 +11,11 @@
                 </v-flex>
                 <v-flex xs6 sm6 md6>
                         <v-text-field
+                            v-model = "opening_balance"
+                            min="0"
+                            oninput="if(this.value < 0) this.value = 0;"
+                            @change="onChange"
+                            placeholder="opening balance"
                             outlined
                             dense
                             required
@@ -39,30 +44,37 @@
                     rounded
                     text
                 >
-                    Continue
+                    Finished
                 </v-btn>
             </v-card-actions>
         </v-form>
     </v-container>
 </template>
 <script>
-    import {mapGetters, mapActions} from "vuex";
+    import { mapActions} from "vuex";
     export default {
+        props: ['value'],
         data: () => ({
+            opening_balance: null,
             valid: true,
             requireRule: [
                 v => !!v || 'This field is required',
             ],
         }),
-        computed: {
-
+        created() {
+            if(this.value == null) return;
+            this.opening_balance = this.value;
         },
         methods: {
-            ...mapActions(["setGlobalStep", "reduceGlobalStep"]),
+            ...mapActions(["setGlobalStep", "reduceGlobalStep", "setOpeningBalance", "saveData"]),
             submit () {
-                // this.$refs.form.validate();
+                if(!this.$refs.form.validate()) return;
                 this.setGlobalStep();
+                this.saveData();
             },
+            onChange () {
+                this.setOpeningBalance(this.opening_balance);
+            }
         }
     }
 </script>

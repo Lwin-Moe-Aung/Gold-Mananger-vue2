@@ -31,6 +31,9 @@ use App\Http\Controllers\Admins\DebtPaymentToSupplierController;
 use App\Http\Controllers\Admins\CreditInfoController;
 use App\Http\Controllers\Admins\ExpenseForController;
 use App\Http\Controllers\Admins\OpeningClosingDayController;
+use App\Http\Controllers\Admins\OpeningDayController;
+use App\Http\Controllers\Admins\ClosingDayController;
+
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -238,5 +241,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     // opening and closing day
     Route::get('get-opening-closing-data-lists', [OpeningClosingDayController::class, 'getOpeningClosingDataLists'])->name('getOpeningClosingDataLists');
     Route::resource('opening-closing-days', OpeningClosingDayController::class);
-
+    Route::post('opening-days/save-data', [OpeningDayController::class, 'saveData'])->name('opening-days.saveData');
+    Route::resource('opening-days', OpeningDayController::class);
+    Route::resource('closing-days', ClosingDayController::class);
 });

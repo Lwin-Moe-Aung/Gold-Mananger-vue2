@@ -11,7 +11,7 @@
                 </v-flex>
                 <v-flex xs5 sm5 md5>
                         <v-text-field
-                            v-model = "form.daily_setup_amount"
+                            v-model = "daily_setup_amount"
                             @change="onChange"
                             type="number"
                             min="0"
@@ -367,17 +367,17 @@
 <script>
     import {mapGetters, mapActions} from "vuex";
     export default {
-        props: ['value'],
+        props: ['value', 'daily_setup'],
         data: () => ({
             form:{
-                daily_setup_amount: null,
-                quality_16_pal: { kyat: null, pal: null, yway: null },
-                quality_15_pal: { kyat: null, pal: null, yway: null },
-                quality_14_pal: { kyat: null, pal: null, yway: null },
-                quality_144_pal: { kyat: null, pal: null, yway: null },
-                quality_13_pal: { kyat: null, pal: null, yway: null },
-                quality_12_pal: { kyat: null, pal: null, yway: null },
+                quality_16_pal: { key:16, kyat: null, pal: null, yway: null },
+                quality_15_pal: { key:15, kyat: null, pal: null, yway: null },
+                quality_14_pal: { key:14, kyat: null, pal: null, yway: null },
+                quality_144_pal: { key:144, kyat: null, pal: null, yway: null },
+                quality_13_pal: { key:13, kyat: null, pal: null, yway: null },
+                quality_12_pal: { key:12, kyat: null, pal: null, yway: null },
             },
+            daily_setup_amount: null,
             valid: true,
             requireRule: [
                 v => !!v || 'This field is required',
@@ -386,7 +386,7 @@
 
         created() {
             if(this.value == null) return;
-            this.form.daily_setup_amount = this.value.daily_setup_amount;
+            this.daily_setup_amount = this.daily_setup;
             this.form.quality_16_pal.kyat = this.value.quality_16_pal.kyat;
             this.form.quality_16_pal.pal = this.value.quality_16_pal.pal;
             this.form.quality_16_pal.yway = this.value.quality_16_pal.yway;
@@ -408,30 +408,31 @@
         },
 
         methods: {
-            ...mapActions(["setGlobalStep", "setDailySetupForm"]),
+            ...mapActions(["setGlobalStep", "setDailySetupForm", "setDailySetupAmount"]),
             submit () {
                 if(!this.$refs.form.validate()) return;
                 this.setGlobalStep();
                 this.setDailySetupForm(this.form);
+                this.setDailySetupAmount(this.daily_setup_amount);
             },
 
             onChange() {
-                this.form.quality_16_pal.kyat = Number(this.form.daily_setup_amount);
-                this.form.quality_16_pal.pal = this.form.daily_setup_amount / 16;
+                this.form.quality_16_pal.kyat = Number(this.daily_setup_amount);
+                this.form.quality_16_pal.pal = this.form.quality_16_pal.kyat / 16;
                 this.form.quality_16_pal.yway = this.form.quality_16_pal.pal / 8;
-                this.form.quality_15_pal.kyat = this.form.daily_setup_amount - this.form.quality_16_pal.pal;
+                this.form.quality_15_pal.kyat = this.form.quality_16_pal.kyat - this.form.quality_16_pal.pal;
                 this.form.quality_15_pal.pal = this.form.quality_15_pal.kyat / 16;
                 this.form.quality_15_pal.yway = this.form.quality_15_pal.pal / 8;
-                this.form.quality_14_pal.kyat = this.form.daily_setup_amount - (this.form.quality_16_pal.pal * 2);
+                this.form.quality_14_pal.kyat = this.form.quality_16_pal.kyat - (this.form.quality_16_pal.pal * 2);
                 this.form.quality_14_pal.pal = this.form.quality_14_pal.kyat / 16;
                 this.form.quality_14_pal.yway = this.form.quality_14_pal.pal / 8;
-                this.form.quality_144_pal.kyat = this.form.daily_setup_amount - (this.form.quality_16_pal.pal * 2);
+                this.form.quality_144_pal.kyat = this.form.quality_16_pal.kyat - (this.form.quality_16_pal.pal * 2);
                 this.form.quality_144_pal.pal = this.form.quality_144_pal.kyat / 16;
                 this.form.quality_144_pal.yway = this.form.quality_144_pal.pal / 8;
-                this.form.quality_13_pal.kyat = this.form.daily_setup_amount - (this.form.quality_16_pal.pal * 3);
+                this.form.quality_13_pal.kyat = this.form.quality_16_pal.kyat - (this.form.quality_16_pal.pal * 3);
                 this.form.quality_13_pal.pal = this.form.quality_13_pal.kyat / 16;
                 this.form.quality_13_pal.yway = this.form.quality_13_pal.pal / 8;
-                this.form.quality_12_pal.kyat = this.form.daily_setup_amount - (this.form.quality_16_pal.pal * 4);
+                this.form.quality_12_pal.kyat = this.form.quality_16_pal.kyat - (this.form.quality_16_pal.pal * 4);
                 this.form.quality_12_pal.pal = this.form.quality_12_pal.kyat / 16;
                 this.form.quality_12_pal.yway = this.form.quality_12_pal.pal / 8;
             }

@@ -40,16 +40,20 @@
                     <div class="stepper-pane" v-if="step == 1">
                         <StepperDailySetupFormComponent
                             v-model="form1"
+                            :daily_setup = daily_setup
                         />
                     </div>
                     <div class="stepper-pane" v-if="step == 2">
                         <StepperDailySetupPurchaseReturnFormComponent
                             v-model = "form2"
-                            :daily_setup_amount = daily_setup_amount
+                            :daily_setup_amount = daily_setup
+                            :limitation = limitation
                         />
                     </div>
                     <div class="stepper-pane" v-if="step == 3">
-                        <StepperOpeningBalanceComponent/>
+                        <StepperOpeningBalanceComponent
+                            v-model="opening_balance_props"
+                        />
                     </div>
                     <div class="stepper-pane" v-if="step == 4">
                         <CongratulationComponent/>
@@ -76,7 +80,9 @@
         data: () => ({
             form1: null,
             form2: null,
-            daily_setup_amount: null,
+            daily_setup: null,
+            opening_balance_props: null,
+            limitation: null,
             step: 1,
             items: [
                 { index: 1, title:'Daily Setup Form' },
@@ -85,7 +91,7 @@
             ],
         }),
         computed: {
-            ...mapGetters(['global_step', 'daily_setup_form', 'daily_setup_for_purchase_return_form']),
+            ...mapGetters(['global_step', 'daily_setup_form', 'daily_setup_for_purchase_return_form', 'opening_balance', 'daily_setup_amount', 'limitation_price']),
             stepperProgress() {
                 return ( 100 / 3 ) * ( this.step - 1 ) + '%'
             }
@@ -94,17 +100,25 @@
             global_step(value) {
                 this.step = value;
             },
-
             daily_setup_form(value) {
                 if(value == null) return;
                 this.form1 = value;
-                this.daily_setup_amount = value.daily_setup_amount;
             },
-
+            daily_setup_amount(value) {
+                this.daily_setup = value;
+            },
+            limitation_price(value) {
+                this.limitation = value;
+            },
             daily_setup_for_purchase_return_form(value) {
                 if(value == null) return;
                 this.form2 = value;
+            },
+            opening_balance(value) {
+                if(value == null) return;
+                this.opening_balance_props = value;
             }
+
         },
         methods: {
             ...mapActions([""]),

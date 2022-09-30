@@ -1,6 +1,7 @@
 <template>
-
-    <StepperComponent/>
+    <v-app>
+        <StepperComponent/>
+    </v-app>
 
 </template>
 

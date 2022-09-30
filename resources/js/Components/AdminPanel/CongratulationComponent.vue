@@ -7,5 +7,34 @@
             <p class="muted">- Have a good day!</p>
         </div>
         <div class="space"></div>
+        <v-card-actions class="card-actions">
+            <Link :href="route('admin.dashboard.index')">
+                <v-btn
+                    color="#ECBD00"
+                    outlined
+                    rounded
+                    text
+                >
+                    Go to Dashboard
+                </v-btn>
+            </Link>
+        </v-card-actions>
     </div>
 </template>
+<script>
+    import { Link } from '@inertiajs/inertia-vue';
+    export default {
+        components: {
+            Link,
+        },
+        data: () => ({
+
+        }),
+        created() {
+
+        },
+        methods: {
+
+        }
+    }
+    </script>

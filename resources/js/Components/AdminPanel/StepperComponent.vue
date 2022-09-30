@@ -10,7 +10,7 @@
             style="margin-top:70px; border-radius: 25px;width: 750px;"
         >
             <v-toolbar
-                color="cyan"
+                color="#4D25B9"
                 dark
                 class="justify-content-center"
             >

@@ -2,6 +2,10 @@ $default    :   #C5C5C5;
 $green-1    :   #4d25b9;
 $transiton  :   all 500ms ease;
 
+v-app {
+    background-color: red;
+}
+
 body{
     background-image: linear-gradient(60deg, #ebf7f3 0%, #cbcad3 100%);
     color: #ffffff;

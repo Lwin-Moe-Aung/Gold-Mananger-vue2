@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ClosingDayController extends Controller
 {
@@ -14,7 +15,7 @@ class ClosingDayController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('AdminPanel/SetupManagement/ClosingDay/Index');
     }
 
     /**

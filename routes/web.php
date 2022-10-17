@@ -33,7 +33,7 @@ use App\Http\Controllers\Admins\ExpenseForController;
 use App\Http\Controllers\Admins\OpeningClosingDayController;
 use App\Http\Controllers\Admins\OpeningDayController;
 use App\Http\Controllers\Admins\ClosingDayController;
-
+use App\Http\Controllers\Admins\CashInHandController;
 
 use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Pos\SellPosController;
@@ -244,4 +244,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     Route::post('opening-days/save-data', [OpeningDayController::class, 'saveData'])->name('opening-days.saveData');
     Route::resource('opening-days', OpeningDayController::class);
     Route::resource('closing-days', ClosingDayController::class);
+
+    //cash in hand
+    Route::resource('cash-in-hands', CashInHandController::class);
+    Route::get('get-cash-in-hand-by-date', [CashInHandController::class, 'getCashInHandByDate'])->name('cash-in-hands.getCashInHandByDate');
+
 });

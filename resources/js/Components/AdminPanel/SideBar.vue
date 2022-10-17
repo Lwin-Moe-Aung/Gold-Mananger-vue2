@@ -312,6 +312,26 @@
                                 </Link>
                             </li>
                         </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.cash-in-hands.index')" class="nav-link" :class="route().current('admin.cash-in-hands.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Cash In Hand
+                                    </p>
+                                </Link>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item" v-if="$page.props.auth.hasRole.superAdmin || $page.props.auth.hasRole.admin || $page.props.auth.hasRole.cashier">
+                                <Link :href="route('admin.closing-days.index')" class="nav-link" :class="route().current('admin.closing-days.*') ? 'active' : ' '">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>
+                                        Close a Day
+                                    </p>
+                                </Link>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-header">MISCELLANEOUS</li>
                     <li class="nav-item">

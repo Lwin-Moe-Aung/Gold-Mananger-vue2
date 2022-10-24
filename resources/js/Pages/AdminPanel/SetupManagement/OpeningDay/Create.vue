@@ -1,16 +1,18 @@
 <template>
-    <!-- <v-app> -->
-        <StepperComponent/>
-    <!-- </v-app> -->
+    <v-app>
+        <v-container>
+            <StepperOpeningDayComponent/>
+        </v-container>
+    </v-app>
 
 </template>
 
 <script>
-    import StepperComponent from '../../../../Components/AdminPanel/StepperComponent';
+    import StepperOpeningDayComponent from '../../../../Components/AdminPanel/StepperOpeningDayComponent';
 
     export default {
         components: {
-            StepperComponent,
+            StepperOpeningDayComponent,
         },
         data () {
             return {

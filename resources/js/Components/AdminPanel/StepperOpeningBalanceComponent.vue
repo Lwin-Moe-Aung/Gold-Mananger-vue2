@@ -14,7 +14,6 @@
                             v-model = "opening_balance"
                             min="0"
                             oninput="if(this.value < 0) this.value = 0;"
-                            @change="onChange"
                             placeholder="opening balance"
                             outlined
                             dense
@@ -53,7 +52,7 @@
 <script>
     import { mapActions} from "vuex";
     export default {
-        props: ['value'],
+        name:"StepperOpeningBalanceComponent",
         data: () => ({
             opening_balance: null,
             valid: true,
@@ -61,19 +60,13 @@
                 v => !!v || 'This field is required',
             ],
         }),
-        created() {
-            if(this.value == null) return;
-            this.opening_balance = this.value;
-        },
         methods: {
             ...mapActions(["setGlobalStep", "reduceGlobalStep", "setOpeningBalance", "saveData"]),
             submit () {
                 if(!this.$refs.form.validate()) return;
+                this.setOpeningBalance(this.opening_balance);
                 this.setGlobalStep();
                 this.saveData();
-            },
-            onChange () {
-                this.setOpeningBalance(this.opening_balance);
             }
         }
     }

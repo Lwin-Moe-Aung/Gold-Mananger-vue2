@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 
     <StepperComponent/>
 
@@ -18,4 +18,4 @@
         },
     }
 </script>
-
+ -->

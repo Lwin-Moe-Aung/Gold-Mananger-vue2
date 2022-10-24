@@ -96,7 +96,9 @@ class HomeController extends Controller
         if($items_data->isEmpty()) return response()->json(['items'=>[], 'message'=>'newItem']);
         $items = [];
         foreach ($items_data as $key => $item) {
-            $gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);
+            // $gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);
+            $gold_plus_gem_weight = $item->gold_plus_gem_weight;
+
             $kyat = strlen((string)$gold_plus_gem_weight->kyat) < 2 ? "0".$gold_plus_gem_weight->kyat : $gold_plus_gem_weight->kyat;
             $pal = strlen((string)$gold_plus_gem_weight->pal) < 2 ? "0".$gold_plus_gem_weight->pal : $gold_plus_gem_weight->pal;
             $items[$key]['item_spe'] = $kyat.$pal.$gold_plus_gem_weight->yway;
@@ -109,9 +111,13 @@ class HomeController extends Controller
             $items[$key]['item_sku'] = $item->item_sku;
             $items[$key]['fee_for_making'] = $item->fee_for_making;
             $items[$key]['gold_plus_gem_weight'] = $gold_plus_gem_weight;
-            $items[$key]['gem_weight'] = json_decode($item->gem_weight);
+            // $items[$key]['gem_weight'] = json_decode($item->gem_weight);
+            $items[$key]['gem_weight'] = $item->gem_weight;
+
             $items[$key]['gem_price'] = $item->purchase->gem_price;
-            $items[$key]['fee'] = json_decode($item->fee);
+            // $items[$key]['fee'] = json_decode($item->fee);
+            $items[$key]['fee'] = $item->fee;
+
             $items[$key]['gem_weight_status'] = $item->product->gem_weight == '0' ? false: true;
         }
         return response()->json(['items'=>$items, 'message'=> $request->product_sku."အောက်မှာရှိတဲ့ random ပစ္စည်းများ."]);

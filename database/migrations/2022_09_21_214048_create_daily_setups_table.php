@@ -19,6 +19,7 @@ class CreateDailySetupsTable extends Migration
             $table->integer('key')->nullable();
             $table->unsignedBigInteger('open_close_day_id');
             $table->foreign('open_close_day_id')->references('id')->on('open_close_days')->onDelete('cascade');
+            $table->decimal('market_price', 20, 2);
             $table->decimal('kyat', 20, 2);
             $table->decimal('pal', 20, 2);
             $table->decimal('yway', 20, 2);

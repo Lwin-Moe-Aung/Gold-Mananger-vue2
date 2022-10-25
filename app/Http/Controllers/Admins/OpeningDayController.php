@@ -42,6 +42,7 @@ class OpeningDayController extends Controller
      */
     public function saveData(Request $request)
     {
+        // dd($request->all());
         try {
             $open_close_days = OpenCloseDay::create([
                 'opened' => '1',
@@ -51,12 +52,12 @@ class OpeningDayController extends Controller
 
             $daily_setup = new DailySetup;
             foreach ($request->daily_setup_form as $value) {
-                $this->savingForm($daily_setup, $value, $open_close_days->id);
+                $this->savingFormForDailySetup($daily_setup, $value, $open_close_days->id);
             }
 
             $daily_setup_for_purchase_return = new DailySetupForPurchaseReturn;
             foreach ($request->daily_setup_form as $value) {
-                $this->savingForm($daily_setup_for_purchase_return, $value, $open_close_days->id);
+                $this->savingFormForDailySetupPurchaseReturn($daily_setup_for_purchase_return, $value, $open_close_days->id);
             }
             LimitationPrice::create([
                 'open_close_day_id' => $open_close_days->id,
@@ -74,14 +75,30 @@ class OpeningDayController extends Controller
     }
 
     /**
-     * saving data
+     * saving data for Daily Setup Purchase Return
      */
-    public function savingForm($model, $item, $open_close_day_id)
+    public function savingFormForDailySetupPurchaseReturn($model, $item, $open_close_day_id)
     {
         $model::create([
             'type' => 'gold',
             'key' => $item['key'],
             'open_close_day_id' => $open_close_day_id,
+            'kyat' => $item['kyat'],
+            'pal' => $item['pal'],
+            'yway' => $item['yway'],
+            'business_id' => auth()->user()->business_id,
+        ]);
+    }
+    /**
+     * saving data for Daily Setup
+     */
+    public function savingFormForDailySetup($model, $item, $open_close_day_id)
+    {
+        $model::create([
+            'type' => 'gold',
+            'key' => $item['key'],
+            'open_close_day_id' => $open_close_day_id,
+            'market_price' => $item['market_price'],
             'kyat' => $item['kyat'],
             'pal' => $item['pal'],
             'yway' => $item['yway'],

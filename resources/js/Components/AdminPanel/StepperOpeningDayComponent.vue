@@ -19,8 +19,17 @@
 
             <v-divider></v-divider>
 
-            <v-stepper-step step="3">
+            <v-stepper-step
+                :complete="step > 3"
+                step="3"
+            >
                 Opening Balance Form
+            </v-stepper-step>
+
+            <v-divider></v-divider>
+
+            <v-stepper-step step="4">
+                Success
             </v-stepper-step>
         </v-stepper-header>
 
@@ -35,6 +44,10 @@
 
             <v-stepper-content step="3">
                 <StepperOpeningBalanceComponent/>
+            </v-stepper-content>
+
+            <v-stepper-content step="4">
+                <CongratulationComponent/>
             </v-stepper-content>
         </v-stepper-items>
     </v-stepper>
@@ -60,7 +73,8 @@
             items: [
                 { index: 1, title:'Daily Setup Form' },
                 { index: 2, title:'Daily Setup For Purchase Return Form' },
-                { index:3, title:'Opening Balance Form' },
+                { index: 3, title:'Opening Balance Form' },
+                { index: 4, title:'Success' },
             ],
         }),
         computed: mapGetters(['global_step', 'opening_balance', 'daily_setup_amount']),

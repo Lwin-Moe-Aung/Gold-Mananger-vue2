@@ -26,6 +26,7 @@ class DailySetup extends Model
         'type',
         'key',
         'open_close_day_id',
+        'market_price',
         'kyat',
         'pal',
         'yway',

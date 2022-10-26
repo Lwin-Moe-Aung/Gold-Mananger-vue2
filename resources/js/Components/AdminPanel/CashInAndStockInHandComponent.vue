@@ -57,8 +57,10 @@
                     md="6"
                 >
                     <TotalCashInAmountComponent
+                        @update:data="checkBoxActionCashIn"
                         v-model="cash_in_data"
                         v-if="cash_in_data !=null "
+                        :checkBoxShowStatus="checkBoxShowStatus"
                     />
                 </v-col>
                 <v-col
@@ -67,8 +69,10 @@
                     md="6"
                 >
                     <TotalCashOutAmountComponent
+                        @update:data="checkBoxActionCashOut"
                         v-model="cash_out_data"
                         v-if="cash_out_data !=null "
+                        :checkBoxShowStatus="checkBoxShowStatus"
                     />
                 </v-col>
             </v-row>
@@ -94,8 +98,17 @@
 
                                 <v-spacer></v-spacer>
                                 <v-list-item-content v-if="cash_in_data != null">
-                                        {{ cash_in_data.total_cash_in_amount -  cash_out_data.total_cash_out_amount | formatNumber}}
+                                        {{ cashInHand | formatNumber}}
                                 </v-list-item-content>
+
+                                <v-spacer></v-spacer>
+                                <v-checkbox
+                                    v-model="checkbox_status_for_cash_in_hand"
+                                    label="Verify"
+                                    color="success"
+                                    hide-details
+                                    v-if="status == '2'"
+                                ></v-checkbox>
                             </v-list-item>
                         </v-card-actions>
                     </v-card>
@@ -124,7 +137,13 @@
                                 </v-list-item-content>
 
                                 <v-spacer></v-spacer>
-
+                                <v-checkbox
+                                    v-model="checkbox_status_for_stock_in_hand"
+                                    label="Verify"
+                                    color="success"
+                                    hide-details
+                                    v-if="status == '2'"
+                                ></v-checkbox>
                             </v-list-item>
                             <v-list-item>
                                 <v-list-item-icon>
@@ -208,6 +227,19 @@
                     </v-card>
                 </v-col>
             </v-row>
+            <v-row
+                class="float-right"
+                v-if="closeDay"
+            >
+                <v-btn
+                    depressed
+                    color="primary"
+                    @click="submit"
+                >
+                    Close Day
+                </v-btn>
+
+            </v-row>
         </v-container>
     </v-app>
 </template>
@@ -216,10 +248,9 @@
     import TotalCashInAmountComponent from './TotalCashInAmountComponent';
     import TotalCashOutAmountComponent from './TotalCashOutAmountComponent';
     import axios from "axios";
-
     export default {
         name: "CashInAndStockInHandComponent",
-        props: ["title"],
+        props: ["status"],
         components: {
             TotalCashInAmountComponent,
             TotalCashOutAmountComponent
@@ -230,9 +261,32 @@
             cash_out_data:null,
             cash_in_data:null,
             stock_in_hand:null,
+            checkbox_status_for_cash_in:false,
+            checkbox_status_for_cash_out:false,
+            checkbox_status_for_cash_in_hand:false,
+            checkbox_status_for_stock_in_hand:false,
         }),
         mounted() {
             this.getData();
+        },
+        computed:{
+            closeDay(){
+                if(this.checkbox_status_for_cash_in && this.checkbox_status_for_cash_out && this.checkbox_status_for_cash_in_hand && this.checkbox_status_for_stock_in_hand)
+                return true;
+                else
+                return false;
+            },
+            title() {
+                if(this.status == "1") return "View Cash In Hand!";
+                else return "Let Close Day!"
+            },
+            checkBoxShowStatus() {
+                return this.status == '2'? true: false;
+            },
+            cashInHand() {
+                return this.cash_in_data.total_cash_in_amount -  this.cash_out_data.total_cash_out_amount
+            }
+
         },
         methods: {
             getData() {
@@ -243,7 +297,20 @@
                     this.cash_out_data = response.data.cash_out_data;
                     this.stock_in_hand = response.data.stock_in_hand;
                 });
+            },
+            checkBoxActionCashIn(value) {
+               this.checkbox_status_for_cash_in = value;
+            },
+            checkBoxActionCashOut(value) {
+                this.checkbox_status_for_cash_out = value;
+            },
+            submit() {
+                axios.post(this.route('admin.closing-days.store'), {id:this.cash_in_data.open_close_day_id, cashInHand:this.cashInHand})
+                        .then((response) => {
+                            if(response.data.status)alert("success");
+                    });
             }
+
         }
     }
 </script>

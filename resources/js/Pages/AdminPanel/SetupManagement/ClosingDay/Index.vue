@@ -1,6 +1,6 @@
 <template>
     <admin-layout>
-        <CashInAndStockInHandComponent title="Let Close A Day!"/>
+        <CashInAndStockInHandComponent status="2"/>
     </admin-layout>
 </template>
 

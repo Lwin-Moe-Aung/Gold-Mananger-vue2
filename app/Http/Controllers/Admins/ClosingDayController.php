@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admins;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\OpenCloseDay;
+use Carbon\Carbon;
 
 class ClosingDayController extends Controller
 {
@@ -25,7 +27,7 @@ class ClosingDayController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -36,7 +38,19 @@ class ClosingDayController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $open_close_day = OpenCloseDay::find($request->id);
+            $open_close_day->closing_balance = $request->cashInHand;
+            $open_close_day->closing_date_time =  Carbon::now();
+            $open_close_day->save();
+
+            return response()->json([
+                'status' => true,
+            ]);
+
+        } catch (\Exception $e) {
+            return back()->with('fail', 'Fail to A Day');
+        }
     }
 
     /**

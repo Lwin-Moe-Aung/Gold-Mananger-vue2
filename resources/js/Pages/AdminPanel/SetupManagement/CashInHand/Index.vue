@@ -1,6 +1,6 @@
 <template>
     <admin-layout>
-        <CashInAndStockInHandComponent title="View Cash In Hand!"/>
+        <CashInAndStockInHandComponent status="1"/>
     </admin-layout>
 </template>
 

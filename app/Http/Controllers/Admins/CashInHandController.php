@@ -99,10 +99,9 @@ class CashInHandController extends Controller
      */
     public function getCashInData($date)
     {
-        $opening_balance = OpenCloseDay::select('opening_balance')
-                ->whereDate('created_at', '=', $date)
+        $open_close_day = OpenCloseDay::whereDate('created_at', '=', $date)
                 ->first();
-        $opening_balance = $opening_balance != null ? $opening_balance->opening_balance : 0;
+        $opening_balance = $open_close_day != null ? $open_close_day->opening_balance : 0;
 
         $sells = ViewSellData::whereDate('created_at', '=', $date)
                 ->get();
@@ -117,8 +116,8 @@ class CashInHandController extends Controller
         $total_debt_from_customers = $debt_from_customers->sum(function ($option) {
                     return $option->amount;
                 });
-
         return [
+            "open_close_day_id" => $open_close_day != null ? $open_close_day->id : null,
             "opening_balance" => $opening_balance,
             "sells" =>
                 [

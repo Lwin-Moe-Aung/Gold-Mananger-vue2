@@ -6,6 +6,14 @@
         >
             <v-toolbar-title>Cash Out</v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-checkbox
+                v-model="checkStatus"
+                @change="checkAction"
+                label="Verify"
+                color="success"
+                hide-details
+                v-if="checkBoxShowStatus"
+            ></v-checkbox>
         </v-toolbar>
         <v-list>
             <v-list-item>
@@ -87,7 +95,15 @@
 <script>
     export default {
         name: "TotalCashOutAmountComponent",
-        props: ["value"],
+        props: ["value", "checkBoxShowStatus"],
+        data: () => ({
+            checkStatus: false,
+        }),
+        methods: {
+            checkAction(){
+                this.$emit('update:data', this.checkStatus);
+            }
+        }
 
     }
 </script>

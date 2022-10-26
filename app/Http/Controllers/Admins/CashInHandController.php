@@ -47,19 +47,48 @@ class CashInHandController extends Controller
      */
     public function getCashOutData($date)
     {
-        $total_purchase_amount = ViewPurchaseData::whereDate('created_at', '=', $date)
-                ->sum('final_total');
-        $total_expense_amount = ViewCashOutData::whereDate('created_at', '=', $date)
+        $purchases = ViewPurchaseData::whereDate('created_at', '=', $date)
+                ->get();
+        $total_purchase_amount = $purchases->sum(function ($option) {
+                    return $option->final_total;
+                });
+
+        $expenses = ViewCashOutData::whereDate('created_at', '=', $date)
                 ->where('type', 'expense')
-                ->sum('amount');
-        $total_debt_payment_to_supplier = ViewCashOutData::whereDate('created_at', '=', $date)
+                ->get();
+
+        $total_expense_amount = $expenses->sum(function ($option) {
+                    return $option->amount;
+                });
+
+        $debt_payment_to_suppliers = ViewCashOutData::whereDate('created_at', '=', $date)
                 ->where('type', 'debt_payment_to_supplier')
-                ->sum('amount');
+                ->get();
+
+        $total_debt_payment_to_suppliers = $debt_payment_to_suppliers->sum(function ($option) {
+                    return $option->amount;
+                });
+
         return [
-            "total_purchase_amount" => $total_purchase_amount,
-            "total_expense_amount" => $total_expense_amount,
-            "total_debt_payment_to_supplier" => $total_debt_payment_to_supplier,
-            "total_cash_out_amount" =>  (int) $total_purchase_amount +  (int) $total_expense_amount +  (int) $total_debt_payment_to_supplier
+            "purchases" =>
+                [
+                    "total_purchase_amount" => $total_purchase_amount,
+                    "count" => $purchases->count(),
+                    "purchases" => $purchases,
+                ],
+            "expenses" =>
+                [
+                    "total_expense_amount" => $total_expense_amount,
+                    "count" => $expenses->count(),
+                    "expenses" => $expenses,
+                ],
+            "debt_payment_to_suppliers" =>
+                [
+                    "total_debt_payment_to_suppliers" => $total_debt_payment_to_suppliers,
+                    "count" => $debt_payment_to_suppliers->count(),
+                    "debt_payment_to_suppliers" => $debt_payment_to_suppliers,
+                ],
+            "total_cash_out_amount" =>  (int) $total_purchase_amount +  (int) $total_expense_amount +  (int) $total_debt_payment_to_suppliers
         ];
     }
 
@@ -74,16 +103,36 @@ class CashInHandController extends Controller
                 ->whereDate('created_at', '=', $date)
                 ->first();
         $opening_balance = $opening_balance != null ? $opening_balance->opening_balance : 0;
-        $total_sell_amount = ViewSellData::whereDate('created_at', '=', $date)
-                ->sum('final_total');
-        $total_debt_from_customer = ViewCashInData::whereDate('created_at', '=', $date)
+
+        $sells = ViewSellData::whereDate('created_at', '=', $date)
+                ->get();
+
+        $total_sell_amount = $sells->sum(function ($option) {
+                        return $option->final_total;
+                    });
+
+        $debt_from_customers = ViewCashInData::whereDate('created_at', '=', $date)
                 ->where('type', 'debt_payment_from_customer')
-                ->sum('amount');
+                ->get();
+        $total_debt_from_customers = $debt_from_customers->sum(function ($option) {
+                    return $option->amount;
+                });
+
         return [
             "opening_balance" => $opening_balance,
-            "total_sell_amount" => $total_sell_amount,
-            "total_debt_from_customer" => $total_debt_from_customer,
-            "total_cash_in_amount" =>  (int) $opening_balance +  (int) $total_sell_amount +  (int) $total_debt_from_customer
+            "sells" =>
+                [
+                    "total_sell_amount" => $total_sell_amount,
+                    "count" => $sells->count(),
+                    "sells" => $sells
+                ],
+            "debt_from_customers" =>
+                [
+                    "total_debt_from_customers" =>  $total_debt_from_customers,
+                    "count" => $debt_from_customers->count(),
+                    "debt_from_customers" => $debt_from_customers
+                ],
+            "total_cash_in_amount" =>  (int) $opening_balance +  (int) $total_sell_amount +  (int) $total_debt_from_customers
         ];
     }
 }

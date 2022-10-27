@@ -34,7 +34,7 @@
                             <div class="info-box-content">
                                 <span class="info-box-text text-center text-muted">ဆပ်ငွေ</span>
                                 <span class="info-box-number text-center text-muted mb-0 badge badge-pill bg-warning">
-                                    {{ numberWithCommas(transaction.debt_paid_money) }}
+                                    {{ transaction.debt_paid_money | formatNumber }}
                                 </span>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                             <div class="info-box-content">
                                 <span class="info-box-text text-center text-muted">လက်ကျန် အကြွေး</span>
                                 <span class="info-box-number text-center text-muted mb-0 badge badge-pill bg-warning">
-                                    {{ numberWithCommas(transaction.remaining_credit_money) }}
+                                    {{ transaction.remaining_credit_money | formatNumber }}
                                 </span>
                             </div>
                         </div>
@@ -72,8 +72,8 @@
                         <div class="post clearfix">
                             <p>Invoice_no - {{ transaction.invoice_no }}</p>
                             <p>Date - {{ formatDateTime(transaction.created_at) }}</p>
-                            <p>ဆပ်ငွေ - <span class="badge-pill bg-warning">{{ numberWithCommas(transaction.debt_paid_money) }}</span></p>
-                            <p>လက်ကျန်အကြွေး - <span class="badge-pill bg-warning">{{ numberWithCommas(transaction.remaining_credit_money) }}</span></p>
+                            <p>ဆပ်ငွေ - <span class="badge-pill bg-warning">{{ transaction.debt_paid_money | formatNumber }}</span></p>
+                            <p>လက်ကျန်အကြွေး - <span class="badge-pill bg-warning">{{ transaction.remaining_credit_money | formatNumber }}</span></p>
                             <p>Note - {{ transaction.additional_notes }}</p>
                             <p>
                                 <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Detail</a>
@@ -113,23 +113,23 @@
                                     <ul class="ml-4 mb-0 fa-ul text-muted">
                                         <li class="small">
                                             <b>စုစုပေါင်း : </b>
-                                            <span class="badge badge-pill bg-warning">{{ numberWithCommas(value.transaction.before_total) }}</span>
+                                            <span class="badge badge-pill bg-warning">{{ value.transaction.before_total | formatNumber }}</span>
                                         </li>
                                         <li class="small">
                                             <b>လျော့ငွေ : </b>
-                                            <span class="badge badge-pill bg-warning">{{ numberWithCommas(value.transaction.discount_amount) }}</span>
+                                            <span class="badge badge-pill bg-warning">{{ value.transaction.discount_amount | formatNumber }}</span>
                                         </li>
                                         <li class="small">
                                             <b>ကျသင့်ငွေ : </b>
-                                            <span class="badge badge-pill bg-warning">{{ numberWithCommas(value.transaction.final_total) }}</span>
+                                            <span class="badge badge-pill bg-warning">{{ value.transaction.final_total | formatNumber }}</span>
                                         </li>
                                         <li class="small">
                                             <b>ပေးငွေ : </b>
-                                            <span class="badge badge-pill bg-warning">{{ numberWithCommas(value.old_paid_money) }}</span>
+                                            <span class="badge badge-pill bg-warning">{{ value.old_paid_money | formatNumber }}</span>
                                         </li>
                                         <li class="small">
                                             <b>ကျန်ငွေ : </b>
-                                            <span class="badge badge-pill bg-warning">{{ numberWithCommas(value.old_credit_money) }}</span>
+                                            <span class="badge badge-pill bg-warning">{{ value.old_credit_money | formatNumber }}</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -155,10 +155,10 @@
                         <div class="card-footer" v-if="value.debt_payment != 0">
                             <div class="text-right">
                                 <p class="text-muted text-sm">
-                                    <b>အကြွေးဆပ်ငွေ : </b> <span class="badge bg-warning">{{ numberWithCommas(value.debt_payment) }}</span>
+                                    <b>အကြွေးဆပ်ငွေ : </b> <span class="badge bg-warning">{{ value.debt_payment | formatNumber }}</span>
                                 </p>
                                 <p class="text-muted text-sm">
-                                    <b>ဆပ်ပီးကျန်ငွေ : </b> <span class="badge bg-warning">{{ numberWithCommas(value.old_credit_money-value.debt_payment) }}</span>
+                                    <b>ဆပ်ပီးကျန်ငွေ : </b> <span class="badge bg-warning">{{ value.old_credit_money-value.debt_payment | formatNumber }}</span>
                                 </p>
                                 <Link v-if="type == 'debt_payment_from_customer'"
                                     :href="route('admin.sells.show',value.parent_id)"

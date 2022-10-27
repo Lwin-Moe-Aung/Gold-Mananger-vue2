@@ -78,11 +78,11 @@
                                                         <i class="fa fa-edit" aria-hidden="true"></i>
                                                     </Link>
 
-                                                    <!-- <Link :href="route('admin.expenses.show',transaction.id)">
+                                                    <Link :href="route('admin.expenses.show',transaction.id)">
                                                         <button class="btn btn-warrning btn-sm">
                                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                                         </button>
-                                                    </Link> -->
+                                                    </Link>
                                                 </td>
                                             </tr>
                                         </tbody>

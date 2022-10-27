@@ -7,41 +7,40 @@
             <thead>
                 <tr>
                     <th class="text-left">
-                        Invoice No
+                        #
                     </th>
                     <th class="text-left">
-                        Customer
+                        Expense For
                     </th>
                     <th class="text-left">
                         Amount
-                    </th>
-                    <th class="text-left">
-                        Product SKU
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <tr
-                    v-for="item in value"
-                    :key="item.transaction_id"
+                    v-for="(item, index) in value"
+                    :key="index"
                 >
-                    <td>{{ item.invoice_no }}</td>
-                    <td>{{ item.contact_name }}</td>
-                    <td>{{ item.final_total }}</td>
-                    <td>{{ item.product_sku }}</td>
+                    <td>{{ index+1 }}</td>
+                    <td>
+                        <Link :href="route('admin.expenses.show', item.transaction_id)">
+                            {{ item.expense_category_name }}
+                        </Link>
+                    </td>
+                    <td>{{ item.amount }}</td>
                 </tr>
             </tbody>
         </template>
     </v-simple-table>
 </template>
 <script>
+    import { Link } from '@inertiajs/inertia-vue'
     export default {
-        name: "ShowSellTransactionListsComponent",
+        name: "ShowExpenseListsComponent",
         props: ["value"],
-        data: () => ({
-
-        }),
-
-
+        components: {
+            Link,
+        },
     }
 </script>

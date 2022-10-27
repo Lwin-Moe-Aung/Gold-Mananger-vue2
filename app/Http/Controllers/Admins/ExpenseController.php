@@ -121,7 +121,11 @@ class ExpenseController extends Controller
      */
     public function show($id)
     {
-        //
+        $expense = Expense::with(['expense_category', 'expense_for'])->where('transaction_id', $id)->first();
+
+        return Inertia::render('AdminPanel/ExpenseManagement/Expense/Detail', [
+            'expense' =>  $expense,
+        ]);
     }
 
     /**

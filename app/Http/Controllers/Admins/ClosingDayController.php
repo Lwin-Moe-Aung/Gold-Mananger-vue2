@@ -38,8 +38,9 @@ class ClosingDayController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        // try{
             $open_close_day = OpenCloseDay::find($request->id);
+            dd($request->all());
             $open_close_day->closing_balance = $request->cashInHand;
             $open_close_day->closing_date_time =  Carbon::now();
             $open_close_day->save();
@@ -48,9 +49,9 @@ class ClosingDayController extends Controller
                 'status' => true,
             ]);
 
-        } catch (\Exception $e) {
-            return back()->with('fail', 'Fail to A Day');
-        }
+        // } catch (\Exception $e) {
+        //     return back()->with('fail', 'Fail to A Day');
+        // }
     }
 
     /**

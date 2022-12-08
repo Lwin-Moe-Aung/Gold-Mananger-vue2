@@ -65,5 +65,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'check_closed_day' => \App\Http\Middleware\CheckClosedDay::class,
+        'check_opened_day' => \App\Http\Middleware\CheckOpenedDay::class,
     ];
 }

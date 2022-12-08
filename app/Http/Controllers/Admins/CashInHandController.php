@@ -40,6 +40,30 @@ class CashInHandController extends Controller
         ]);
     }
 
+    /**
+     * Get cash In hand data for Close Day.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCashInHandForCloseDay()
+    {
+        $open_close_day = OpenCloseDay::latest()->first();
+        if($open_close_day != null && $open_close_day->closed == 0){
+            $date = $open_close_day->opening_date_time;
+            return response()->json([
+                'cash_in_data' => $this->getCashInData($date),
+                'cash_out_data' => $this->getCashOutData($date),
+                'stock_in_hand' => (new StockService())->getStockInHandData(),
+            ]);
+        }
+
+        return response()->json([
+            'cash_in_data' => null,
+            'cash_out_data' => null,
+            'stock_in_hand' => null,
+        ]);
+    }
+
      /**
      *  return cash out data by date.
      *

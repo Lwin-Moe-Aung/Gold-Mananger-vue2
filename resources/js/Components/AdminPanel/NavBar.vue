@@ -123,7 +123,7 @@
                 </a>
             </li>
         </ul>
-    </nav>  
+    </nav>
 </template>
 <script>
     export default {}

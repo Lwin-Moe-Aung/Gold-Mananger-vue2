@@ -3,43 +3,44 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
-use App\Http\Controllers\Admins\RoleController;
-use App\Http\Controllers\Admins\UserController;
-use App\Http\Controllers\Admins\AdminController;
-use App\Http\Controllers\Admins\PermissionController;
-use App\Http\Controllers\Admins\AdminDashboardController;
+use App\Http\Controllers\Pos\HomeController;
 use App\Http\Controllers\Admins\AuthController;
-use App\Http\Controllers\Admins\CustomerController;
-use App\Http\Controllers\Admins\SupplierController;
-use App\Http\Controllers\Admins\GoldQualityController;
-use App\Http\Controllers\Admins\ProductTypeController;
-use App\Http\Controllers\Admins\ItemNameController;
-use App\Http\Controllers\Admins\DailySetupController;
-use App\Http\Controllers\Admins\ProductController;
-use App\Http\Controllers\Admins\SellController;
-use App\Http\Controllers\Admins\PurchaseController;
-use App\Http\Controllers\Admins\PurchaseReturnController;
 use App\Http\Controllers\Admins\ItemController;
-use App\Http\Controllers\Admins\TransactionController;
-use App\Http\Controllers\Admins\LimitationPriceController;
-use App\Http\Controllers\Admins\ExpenseController;
-use App\Http\Controllers\Admins\ExpenseCategoryController;
+use App\Http\Controllers\Admins\RoleController;
+use App\Http\Controllers\Admins\SellController;
+use App\Http\Controllers\Admins\UserController;
+use App\Http\Controllers\Pos\ContactController;
+use App\Http\Controllers\Pos\SellPosController;
+use App\Http\Controllers\Admins\AdminController;
+use App\Http\Controllers\Admins\AlertController;
 use App\Http\Controllers\Admins\CashInController;
 use App\Http\Controllers\Admins\CashOutController;
-use App\Http\Controllers\Admins\DebtPaymentFromCustomerController;
-use App\Http\Controllers\Admins\DebtPaymentToSupplierController;
-use App\Http\Controllers\Admins\CreditInfoController;
-use App\Http\Controllers\Admins\ExpenseForController;
-use App\Http\Controllers\Admins\OpeningClosingDayController;
-use App\Http\Controllers\Admins\OpeningDayController;
-use App\Http\Controllers\Admins\ClosingDayController;
+use App\Http\Controllers\Admins\ExpenseController;
+use App\Http\Controllers\Admins\ProductController;
+use App\Http\Controllers\Admins\CustomerController;
+use App\Http\Controllers\Admins\ItemNameController;
+use App\Http\Controllers\Admins\PurchaseController;
+use App\Http\Controllers\Admins\SupplierController;
 use App\Http\Controllers\Admins\CashInHandController;
-
-use App\Http\Controllers\Pos\HomeController;
-use App\Http\Controllers\Pos\SellPosController;
-use App\Http\Controllers\Pos\ContactController;
+use App\Http\Controllers\Admins\ClosingDayController;
+use App\Http\Controllers\Admins\CreditInfoController;
+use App\Http\Controllers\Admins\DailySetupController;
+use App\Http\Controllers\Admins\ExpenseForController;
+use App\Http\Controllers\Admins\OpeningDayController;
+use App\Http\Controllers\Admins\PermissionController;
 use App\Http\Controllers\Pos\DailySetupPosController;
+use App\Http\Controllers\Admins\GoldQualityController;
+use App\Http\Controllers\Admins\ProductTypeController;
+use App\Http\Controllers\Admins\TransactionController;
 use App\Http\Controllers\Pos\CustomerDetailController;
+use App\Http\Controllers\Admins\AdminDashboardController;
+
+use App\Http\Controllers\Admins\PurchaseReturnController;
+use App\Http\Controllers\Admins\ExpenseCategoryController;
+use App\Http\Controllers\Admins\LimitationPriceController;
+use App\Http\Controllers\Admins\OpeningClosingDayController;
+use App\Http\Controllers\Admins\DebtPaymentToSupplierController;
+use App\Http\Controllers\Admins\DebtPaymentFromCustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,134 +120,194 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 
-
-//dashboard
 Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier'])->group(function () {
+    Route::middleware(['check_closed_day', 'check_opened_day'])->group(function() {
+
+        Route::delete('sells/delete-record/{id}', [SellController::class, 'deleteRecord'])->name('sells.deleteRecord');
+        Route::resource('purchases', PurchaseController::class)->only(['create', 'edit', 'delete']);
+
+        //user management
+        Route::resource('admins', AdminController::class)->parameters(['admins' => 'user'])->only(['update']);
+        Route::resource('users', UserController::class)->only(['create','edit', 'delete']);
+        Route::resource('permissions', PermissionController::class)->only(['create','edit', 'delete']);
+        Route::resource('roles', RoleController::class)->only(['create', 'edit', 'delete']);
+
+        //contact management
+        Route::resource('customers', CustomerController::class)->only(['create', 'edit', 'delete']);
+        Route::resource('suppliers', SupplierController::class)->only(['create', 'edit', 'delete']);
+
+        //product management
+        Route::resource('products', ProductController::class)->only(['create', 'edit', 'delete']);
+        Route::post('products/storeDialog', [ProductController::class, 'storeDialog'])->name('products.storeDialog');
+        Route::post('/products/product_update', [ProductController::class, 'ProductUpdate'])->name('products.product_update');
+        Route::resource('gold_qualities', GoldQualityController::class)->only(['create', 'edit', 'delete']);
+        Route::resource('product_types', ProductTypeController::class)->only(['create', 'edit', 'delete']);
+        Route::post('product_types/storeDialog', [ProductTypeController::class, 'storeDialog'])->name('product_types.storeDialog');
+        Route::post('item_names/storeDialog', [ItemNameController::class, 'storeDialog'])->name('item_names.storeDialog');
+        Route::resource('item_names', ItemNameController::class)->only(['create', 'edit', 'delete']);
+        Route::resource('daily_setups', DailySetupController::class)->only(['create', 'edit', 'delete']);
+        Route::post('daily_setups/storeDialog', [DailySetupController::class, 'storeDialog'])->name('daily_setups.storeDialog');
+        // Route::get('/sells/detail/{id}', [SellController::class, 'detail'])->name('sells.detail');
+        // SellController
+        Route::resource('sells', SellController::class)->only(['create', 'edit', 'delete']);
+        Route::post('/sells/product_form_save', [SellController::class, 'productFormSave'])->name('sells.product_form_save');
+        Route::post('/sells/item_form_save', [SellController::class, 'itemFormSave'])->name('sells.item_form_save');
+        Route::post('/sells/type_form_save', [SellController::class, 'typeFormSave'])->name('sells.type_form_save');
+        Route::post('/sells/itemname_form_save', [SellController::class, 'itemNameFormSave'])->name('sells.itemname_form_save');
+        // purchase
+        Route::delete('purchases/delete-record/{id}', [PurchaseController::class, 'deleteRecord'])->name('purchases.deleteRecord');
+        Route::resource('purchases', PurchaseController::class)->only(['create', 'edit', 'delete']);
+        Route::post('/purchases/purchase_update', [PurchaseController::class, 'purchaseUpdate'])->name('purchases.purchase_update');
+        // PurchaseReturnController
+        Route::delete('purchase_returns/delete-record/{id}', [PurchaseReturnController::class, 'deleteRecord'])->name('purchase_returns.deleteRecord');
+        Route::resource('purchase_returns', PurchaseReturnController::class)->only(['create', 'edit', 'delete']);
+        //limitation Price
+        Route::resource('limitation_prices', LimitationPriceController::class)->only(['create', 'edit', 'delete']);
+        //expense
+        Route::resource('expenses', ExpenseController::class)->only(['create', 'edit', 'delete']);
+        Route::delete('expenses/delete-record/{id}', [ExpenseController::class, 'deleteRecord'])->name('expenses.deleteRecord');
+        Route::post('/expenses/expenses_update', [ExpenseController::class, 'expensesUpdate'])->name('expenses.expenses_update');
+        //expense category
+        Route::resource('expense_categories', ExpenseCategoryController::class)->only(['create', 'edit', 'delete']);
+        Route::post('expense_categories/storeDialog', [ExpenseCategoryController::class, 'storeDialog'])->name('expense_categories.storeDialog');
+        //Expense For
+        Route::resource('expense-fors', ExpenseForController::class)->only(['create', 'edit', 'delete']);
+        Route::post('expense-fors/storeDialog', [ExpenseForController::class, 'storeDialog'])->name('expense-fors.storeDialog');
+        // CashInController
+        Route::resource('cash_ins', CashInController::class)->only(['create', 'edit', 'delete']);
+        // CashOutController
+        Route::resource('cash_outs', CashOutController::class)->only(['create', 'edit', 'delete']);
+        // DebtPaymentFromCustomerController
+        Route::resource('debt-payment-from-customers', DebtPaymentFromCustomerController::class)->only(['create', 'edit', 'delete']);
+        // DebtPaymentToSupplierController
+        Route::resource('debt-payment-to-suppliers', DebtPaymentToSupplierController::class)->only(['create', 'edit', 'delete']);
+        // opening and closing day
+        Route::resource('opening-closing-days', OpeningClosingDayController::class)->only(['create', 'edit', 'delete']);
+        // ClosingDayController
+        Route::resource('closing-days', ClosingDayController::class)->only(['create', 'edit', 'delete']);
+        //cash in hand
+        Route::resource('cash-in-hands', CashInHandController::class)->only(['create', 'edit', 'delete']);
+    });
+
+    Route::middleware(['check_closed_day'])->group(function() {
+        // OpeningDayController
+        Route::post('opening-days/save-data', [OpeningDayController::class, 'saveData'])->name('opening-days.saveData');
+        Route::resource('opening-days', OpeningDayController::class)->only(['create', 'edit', 'delete']);
+    });
+
+    // dashboard
     Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.index');
-});
 
-Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 'role: |super-admin|admin|cashier'])->group(function () {
+    // Alert
+    Route::get('require-close-day-alert', [AlertController::class, 'requireCloseDayAlert'])->name('alert.requireCloseDayAlert');
+    Route::get('require-open-day-alert', [AlertController::class, 'requireOpenDayAlert'])->name('alert.requireOpenDayAlert');
+
     //user management
-    Route::resource('admins', AdminController::class)->parameters(['admins' => 'user'])->only(['index', 'update']);
-    Route::resource('users', UserController::class)->except(['create', 'show', 'edit']);
-    Route::resource('permissions', PermissionController::class)->except(['create', 'show', 'edit']);
-    Route::resource('roles', RoleController::class)->except(['create', 'show', 'edit']);
+    Route::resource('admins', AdminController::class)->only('index');
+    Route::resource('users', UserController::class)->only(['index','show']);
+    Route::resource('permissions', PermissionController::class)->only(['index', 'show']);
+    Route::resource('roles', RoleController::class)->only(['index', 'show']);
 
     //contact management
-    Route::resource('customers', CustomerController::class)->except(['create', 'show', 'edit']);
-    Route::resource('suppliers', SupplierController::class)->except(['create', 'show', 'edit']);
+    Route::resource('customers', CustomerController::class)->only(['index', 'show']);
+    Route::resource('suppliers', SupplierController::class)->only(['index', 'show']);
 
     //product management
-    Route::resource('products', ProductController::class);
-    Route::post('products/storeDialog', [ProductController::class, 'storeDialog'])->name('products.storeDialog');
-
-    Route::post('/products/product_update', [ProductController::class, 'ProductUpdate'])->name('products.product_update');
-
+    Route::resource('products', ProductController::class)->only(['index', 'show']);
     Route::get('gold_qualities/get_list', [GoldQualityController::class, 'getList'])->name('gold_qualities.get_list');
-    Route::resource('gold_qualities', GoldQualityController::class);
+    Route::resource('gold_qualities', GoldQualityController::class)->only(['index', 'show']);
+    Route::get('/product_sku_search', [ProductController::class, 'productSkuSearch'])->name('product_sku_search');
 
     Route::get('product_types/get_list', [ProductTypeController::class, 'getList'])->name('product_types.get_list');
-    Route::resource('product_types', ProductTypeController::class)->except(['create', 'show', 'edit']);
-
-    Route::post('product_types/storeDialog', [ProductTypeController::class, 'storeDialog'])->name('product_types.storeDialog');
-
+    Route::resource('product_types', ProductTypeController::class)->only(['index', 'show']);
     Route::get('item_names/get_list', [ItemNameController::class, 'getList'])->name('item_names.get_list');
-    Route::post('item_names/storeDialog', [ItemNameController::class, 'storeDialog'])->name('item_names.storeDialog');
-    Route::resource('item_names', ItemNameController::class);
-
-
-    Route::resource('daily_setups', DailySetupController::class)->except(['create', 'show', 'edit']);
-    Route::post('daily_setups/storeDialog', [DailySetupController::class, 'storeDialog'])->name('daily_setups.storeDialog');
+    Route::resource('item_names', ItemNameController::class)->only(['index', 'show']);
+    Route::resource('daily_setups', DailySetupController::class)->only(['index', 'show']);
 
     // Route::post('edit_daily_setup', [DailySetupController::class, 'editDailySetup'])->name('daily_setups.edit_daily_setup');
-
     //Sell Management
     Route::get('get-sell-data-lists', [SellController::class, 'getSellDataLists'])->name('sells.getDataLists');
     Route::get('sells/get-customer-lists', [SellController::class, 'getCustomerLists'])->name('sells.getCustomerLists');
-    Route::delete('sells/delete-record/{id}', [SellController::class, 'deleteRecord'])->name('sells.deleteRecord');
-    Route::resource('sells', SellController::class);
-
-    // Route::get('/sells/detail/{id}', [SellController::class, 'detail'])->name('sells.detail');
-    Route::post('/sells/product_form_save', [SellController::class, 'productFormSave'])->name('sells.product_form_save');
-    Route::post('/sells/item_form_save', [SellController::class, 'itemFormSave'])->name('sells.item_form_save');
-    Route::post('/sells/type_form_save', [SellController::class, 'typeFormSave'])->name('sells.type_form_save');
-    Route::post('/sells/itemname_form_save', [SellController::class, 'itemNameFormSave'])->name('sells.itemname_form_save');
+    Route::resource('sells', SellController::class)->only(['index', 'show']);
 
     //Purchase management
     Route::get('purchase-invoice/{transaction_id}', [PurchaseController::class, 'purchaseInvoice'])->name('purchases.invoice');
     Route::get('/purchases/get-supplier-lists', [PurchaseController::class, 'getSupplierLists'])->name('purchases.getSupplierLists');
     Route::get('/get-purchase-data-lists', [PurchaseController::class, 'getPurchaseDataLists'])->name('purchases.getDataLists');
-    Route::delete('purchases/delete-record/{id}', [PurchaseController::class, 'deleteRecord'])->name('purchases.deleteRecord');
-    Route::resource('purchases', PurchaseController::class);
-    Route::post('/purchases/purchase_update', [PurchaseController::class, 'purchaseUpdate'])->name('purchases.purchase_update');
+    Route::resource('purchases', PurchaseController::class)->only(['index', 'show']);
 
     //Purchase return
     Route::get('purchase-return-invoice/{transaction_id}', [PurchaseReturnController::class, 'purchaseReturnInvoice'])->name('purchase_returns.invoice');
     Route::get('get-purchase-return-data-lists', [PurchaseReturnController::class, 'getPurchaseReturnDataLists'])->name('purchase_returns.getDataLists');
-    Route::delete('purchase_returns/delete-record/{id}', [PurchaseReturnController::class, 'deleteRecord'])->name('purchase_returns.deleteRecord');
-    Route::resource('purchase_returns', PurchaseReturnController::class);
+    Route::resource('purchase_returns', PurchaseReturnController::class)->only(['index', 'show']);
 
+    // ItemController
     Route::get('/item_sku_search', [ItemController::class, 'searchItemSku'])->name('item_sku_search');
     Route::get('/search_by_item_sku/{item_sku}', [ItemController::class, 'searchByItemSku'])->name('search_by_item_sku');
 
+    // TransactionController
     Route::get('/invoice_no_search', [TransactionController::class, 'invoiceNoSearch'])->name('invoice_no_search');
     Route::get('/search_by_invoice_no/{invoice_no}', [TransactionController::class, 'searchByInvoiceNo'])->name('search_by_invoice_no');
 
-    Route::get('/product_sku_search', [ProductController::class, 'productSkuSearch'])->name('product_sku_search');
-
     //limitation Price
-    Route::resource('limitation_prices', LimitationPriceController::class);
+    Route::resource('limitation_prices', LimitationPriceController::class)->only(['index', 'show']);
 
     //expense
-    Route::resource('expenses', ExpenseController::class);
-    Route::delete('expenses/delete-record/{id}', [ExpenseController::class, 'deleteRecord'])->name('expenses.deleteRecord');
-    Route::post('/expenses/expenses_update', [ExpenseController::class, 'expensesUpdate'])->name('expenses.expenses_update');
+    Route::resource('expenses', ExpenseController::class)->only(['index', 'show']);
 
     //expense category
-    Route::resource('expense_categories', ExpenseCategoryController::class);
-    Route::post('expense_categories/storeDialog', [ExpenseCategoryController::class, 'storeDialog'])->name('expense_categories.storeDialog');
+    Route::resource('expense_categories', ExpenseCategoryController::class)->only(['index', 'show']);
 
     //Expense For
-    Route::resource('expense-fors', ExpenseForController::class);
-    Route::post('expense-fors/storeDialog', [ExpenseForController::class, 'storeDialog'])->name('expense-fors.storeDialog');
+    Route::resource('expense-fors', ExpenseForController::class)->only(['index', 'show']);
 
-    Route::resource('cash_ins', CashInController::class);
-    Route::resource('cash_outs', CashOutController::class);
+    // CashInController
+    Route::resource('cash_ins', CashInController::class)->only(['index', 'show']);
     Route::get('get-cash-in-data-lists', [CashInController::class, 'getCashInDataLists'])->name('getCashInDataLists');
+
+    // CashOutController
+    Route::resource('cash_outs', CashOutController::class)->only(['index', 'show']);
     Route::get('get-cash-out-data-lists', [CashOutController::class, 'getCashOutDataLists'])->name('getCashOutDataLists');
 
-    Route::resource('debt-payment-from-customers', DebtPaymentFromCustomerController::class);
+    // DebtPaymentFromCustomerController
+    Route::resource('debt-payment-from-customers', DebtPaymentFromCustomerController::class)->only(['index', 'show']);
     Route::get('get-debt-payment-lists', [DebtPaymentFromCustomerController::class, 'getDebtPaymentLists'])->name('getDebtPaymentLists');
     Route::get('customer/get-credit-data-lists', [DebtPaymentFromCustomerController::class, 'getCustomerCreditDataLists'])->name('getCustomerCreditDataLists');
     Route::get('credit/get-customer-lists', [DebtPaymentFromCustomerController::class, 'getCustomerLists'])->name('getCustomerLists');
 
-    Route::resource('debt-payment-to-suppliers', DebtPaymentToSupplierController::class);
+    // DebtPaymentToSupplierController
+    Route::resource('debt-payment-to-suppliers', DebtPaymentToSupplierController::class)->only(['index', 'show']);
     Route::get('supplier/get-credit-data-lists', [DebtPaymentToSupplierController::class, 'getSupplierCreditDataLists'])->name('getSupplierCreditDataLists');
 
+    // CreditInfoController
     Route::get('credit-info-customers', [CreditInfoController::class, 'creditInfoCustomers'])->name('creditInfoCustomers');
     Route::get('get-customers-data-who-have-credits', [CreditInfoController::class, 'getCustomersDataWhoHaveCredit'])->name('getCustomersDataWhoHaveCredit');
     Route::get('credit/get-remain-credit-customer-lists', [CreditInfoController::class, 'getRemainCreditCustomerLists'])->name('getRemainCreditCustomerLists');
-
     Route::get('credit-info-suppliers', [CreditInfoController::class, 'creditInfoSuppliers'])->name('creditInfoSuppliers');
     Route::get('debt-payment-from-customer-with-contact-id', [CreditInfoController::class, 'createDebtPaymentFromCustomerWithContactId'])->name('createDebtPaymentFromCustomerWithContactId');
     Route::get('credit/get-remain-credit-to-supplier-lists', [CreditInfoController::class, 'getRemainCreditToSupplierLists'])->name('getRemainCreditToSupplierLists');
     Route::get('get-suppliers-data-who-have-credits', [CreditInfoController::class, 'getSuppliersDataWhoHaveCredit'])->name('getSuppliersDataWhoHaveCredit');
-
     Route::get('debt-payment-to-supplier-with-contact-id', [CreditInfoController::class, 'createDebtPaymentToSupplierWithContactId'])->name('createDebtPaymentToSupplierWithContactId');
-
     //generate invoice for debt payment customer and to supplier
     Route::get('customer-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'customerDebtPaymentGenerateInvoice'])->name('customerDebtPaymentGenerateInvoice');
     Route::get('supplier-debt-payment-generate-invoice/{transaction_id}', [CreditInfoController::class, 'supplierDebtPaymentGenerateInvoice'])->name('supplierDebtPaymentGenerateInvoice');
 
     // opening and closing day
     Route::get('get-opening-closing-data-lists', [OpeningClosingDayController::class, 'getOpeningClosingDataLists'])->name('getOpeningClosingDataLists');
-    Route::resource('opening-closing-days', OpeningClosingDayController::class);
-    Route::post('opening-days/save-data', [OpeningDayController::class, 'saveData'])->name('opening-days.saveData');
-    Route::resource('opening-days', OpeningDayController::class);
-    Route::resource('closing-days', ClosingDayController::class);
+    Route::resource('opening-closing-days', OpeningClosingDayController::class)->only(['index', 'show']);
+
+    // OpeningDayController
+    Route::resource('opening-days', OpeningDayController::class)->only(['index', 'show']);
+
+    // ClosingDayController
+    // Route::get('closing-days', [ClosingDayController::class, 'index'])->name('closing-days.index');
+    Route::resource('closing-days', ClosingDayController::class)->only(['index', 'show', 'store']);
 
     //cash in hand
-    Route::resource('cash-in-hands', CashInHandController::class);
+    Route::resource('cash-in-hands', CashInHandController::class)->only(['index', 'show']);
     Route::get('get-cash-in-hand-by-date', [CashInHandController::class, 'getCashInHandByDate'])->name('cash-in-hands.getCashInHandByDate');
+
+    // cash in hand for Close Day
+    Route::get('get-cash-in-hand', [CashInHandController::class, 'getCashInHandForCloseDay'])->name('cash-in-hands.getCashInHandForCloseDay');
 
 });

@@ -51,8 +51,10 @@ const actions = {
             opening_balance: state.opening_balance,
             limitation_price: state.limitation_price,
         }
+
         await axios.post(constant.ROUTE_URL_ADMIN+"opening-days/save-data", formData)
             .then((response) => {
+                console.log(response);
                 // if(response.status)commit('resetState');
             });
     },

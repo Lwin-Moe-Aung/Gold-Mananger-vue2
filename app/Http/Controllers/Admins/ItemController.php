@@ -19,22 +19,22 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function searchItemSku(Request $request){
-
+        // \DB::enableQueryLog();
         $item_skus =  Item::where('sold_out', '1')
                     ->where('purchase_return', '0')
                     ->when($request->term, function ($query, $term) {
                         $query->where('item_sku', 'like', "%$term%");
                     })->limit(10)->get();
-
+        // dd(\DB::getQueryLog());
         return response()->json(['data' => $item_skus]);
     }
 
     public function searchByItemSku($item_sku){
 
         $item =  Item::where('item_sku', $item_sku)->first();
-        $item->gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);
-        $item->gem_weight = json_decode($item->gem_weight);
-        $item->fee = json_decode($item->fee);
+        // $item->gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);
+        // $item->gem_weight = json_decode($item->gem_weight);
+        // $item->fee = json_decode($item->fee);
 
         $product = $item->product;
         $sell = $item->sell;
@@ -48,7 +48,9 @@ class ItemController extends Controller
                         ->orderBy('created_at', 'DESC')
                         ->first();
         $daily_setup = $sell->dailysetup;
-        $kyat =  ($daily_setup->daily_price - $limitation_price->price)/16 * $product->quality;
+
+        $kyat =  ($daily_setup->market_price - $limitation_price->price)/16 * $product->quality;
+
         $pal = $kyat / 16;
         $yway = $pal / 8;
         $daily_setup_data  = [

@@ -246,9 +246,12 @@ class SellPosController extends Controller
         $transaction = Transaction::find($transaction_id);
         if(!$transaction) return false;
         $item = $transaction->sell->item;
-        $item->gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);
-        $item->gem_weight = json_decode($item->gem_weight);
-        $item->fee = json_decode($item->fee);
+
+        // $item->gold_plus_gem_weight = json_decode($item->gold_plus_gem_weight);
+        // $item->gem_weight = json_decode($item->gem_weight);
+        // $item->fee = json_decode($item->fee);
+
+
 
         $product = Product::find($item->product_id);
         return Inertia::render('PosPanel/Pos/Invoice', [

@@ -83,7 +83,7 @@ class DailySetupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(DailySetupRequest $request)
+    public function store(Request $request)
     {
         if (auth()->user()->hasAnyRole(['super-admin', 'admin'])) {
 

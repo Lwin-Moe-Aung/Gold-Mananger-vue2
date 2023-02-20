@@ -42,7 +42,6 @@ class OpeningDayController extends Controller
      */
     public function saveData(Request $request)
     {
-        // dd($request->all());
         try {
             $open_close_days = OpenCloseDay::create([
                 'opened' => '1',

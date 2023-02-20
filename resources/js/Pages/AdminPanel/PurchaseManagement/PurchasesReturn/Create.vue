@@ -536,6 +536,7 @@
                 });
             },
             fillData(data) {
+                console.log(data);
                 this.form.transaction_id = data.transaction.id;
                 this.item = data.item;
                 this.transaction = data.transaction;

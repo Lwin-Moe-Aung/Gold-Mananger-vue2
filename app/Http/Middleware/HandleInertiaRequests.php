@@ -65,7 +65,7 @@ class HandleInertiaRequests extends Middleware
                 $daily_setups =  DailySetup::where('open_close_day_id', $open_close_day->id)
                     ->where('type', 'gold')
                     // ->where('business_id', Auth::user()->business_id)
-                    ->where('business_id',2)
+                    ->where('business_id',1)
                     ->where('customize','0')
                     ->get();
                 // $daily_price = $daily_setup->daily_price;
@@ -87,7 +87,7 @@ class HandleInertiaRequests extends Middleware
                 $daily_setups =  DailySetupForPurchaseReturn::where('open_close_day_id', $open_close_day->id)
                     ->where('type', 'gold')
                     // ->where('business_id', Auth::user()->business_id)
-                    ->where('business_id',2)
+                    ->where('business_id',1)
                     ->where('customize','0')
                     ->get();
                 $data = [];

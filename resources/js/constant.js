@@ -1,7 +1,7 @@
-const ROUTE_URL_POS = "http://13.213.35.251/pos/";
-const ROUTE_URL_ADMIN = "http://13.213.35.251/admin/";
-const IMAGE_URL = "http://13.213.35.251/";
-const DOMAIN = "http://13.213.35.251/";
+const ROUTE_URL_POS = "https://shwemanager.com/pos/";
+const ROUTE_URL_ADMIN = "https://shwemanager.com/admin/";
+const IMAGE_URL = "https://shwemanager.com/";
+const DOMAIN = "https://shwemanager.com/";
 
 
 // const ROUTE_URL_POS = "http://localhost:8000/pos/";

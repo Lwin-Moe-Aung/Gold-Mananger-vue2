@@ -5,6 +5,7 @@
                 <div class="card-header">Login</div>
                 <div class="card-body">
                     <form @submit.prevent="login">
+                        @csrf
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" name="email" :class="['form-control',errors.email?'border-danger':'']" v-model="form.email">

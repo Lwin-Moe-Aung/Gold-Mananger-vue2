@@ -9,7 +9,7 @@
                             <label for="email">Email</label>
                             <input type="email" name="email" :class="['form-control',errors.email?'border-danger':'']" v-model="form.email">
                             <small v-if="errors.email" class="text text-danger"> {{ errors.email }}</small>
-                           
+
                         </div>
                          <div class="form-group">
                             <label for="password">Password</label>
@@ -44,14 +44,17 @@
         },
         methods: {
             login() {
-               
+
                 // var data = new FormData();
                 // data.append("email", this.email);
                 // data.append("password", this.password);
                 // this.$inertia.post("/login", data);
-
+                var headers = {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
                 this.form.post(this.route('post.login'), {
                     preserveScroll: true,
+                    headers: headers,
                     onSuccess:() => {
                         this.loading = true;
                         Toast.fire({

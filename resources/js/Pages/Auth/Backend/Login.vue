@@ -5,7 +5,6 @@
                 <div class="card-header">Login</div>
                 <div class="card-body">
                     <form @submit.prevent="login">
-                        @csrf
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" name="email" :class="['form-control',errors.email?'border-danger':'']" v-model="form.email">
@@ -40,6 +39,7 @@
                 form: this.$inertia.form({
                     email:"",
                     password: "",
+                    _token: this.$page.props.csrf_token,
                 }),
             }
         },
@@ -50,12 +50,9 @@
                 // data.append("email", this.email);
                 // data.append("password", this.password);
                 // this.$inertia.post("/login", data);
-                var headers = {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
+
                 this.form.post(this.route('post.login'), {
                     preserveScroll: true,
-                    headers: headers,
                     onSuccess:() => {
                         this.loading = true;
                         Toast.fire({

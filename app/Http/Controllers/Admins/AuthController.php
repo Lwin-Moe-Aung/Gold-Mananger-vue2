@@ -27,8 +27,17 @@ class AuthController extends Controller
         if (Auth::attempt($credential)) {
             $open_close_day = OpenCloseDay::whereDate('created_at', Carbon::today())->first();
             //check opening and closing status
-            if($open_close_day != null) return redirect()->route('admin.dashboard.index');
-            else return redirect()->route('admin.opening-days.create');
+            if($open_close_day != null){
+                $now = Carbon::now();
+                $ago = $now->subDays(1);
+                return Inertia::render('AdminPanel/Dashboard/Dashboard', [
+                    'users' => User::whereDate('created_at', '>', $ago)->count()
+                ]);
+                // return redirect()->route('admin.dashboard.index');
+            }else {
+                return Inertia::render('AdminPanel/SetupManagement/OpeningDay/Create');
+                // return redirect()->route('admin.opening-days.create');
+            }
         }
     }
 

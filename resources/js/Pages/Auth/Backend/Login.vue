@@ -39,7 +39,7 @@
                 form: this.$inertia.form({
                     email:"",
                     password: "",
-                    _token: this.$page.props.csrf_token,
+                    _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 }),
             }
         },

@@ -111,8 +111,7 @@ class HandleInertiaRequests extends Middleware
             'open_close_day' => function() {
                 return OpenCloseDay::whereDate('created_at', Carbon::today())->first();
             }
-            // 'success' => session()->has('success') ? session()->get('success') : "",
-            // 'fail' => session()->has('fail') ? session()->get('fail') : "",
+
         ]);
     }
 }

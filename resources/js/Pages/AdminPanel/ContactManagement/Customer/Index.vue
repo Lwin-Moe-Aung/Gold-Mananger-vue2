@@ -108,7 +108,7 @@
                                         <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.mobile2}">
                                             {{ form.errors.mobile2 }}
                                         </div>
-                                       
+
                                     </div>
 
                                     <div class="modal-footer justify-content-between">
@@ -148,7 +148,8 @@
                     email: '',
                     address: '',
                     mobile1: '',
-                    mobile2: '' 
+                    mobile2: '',
+                    _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 }),
             }
         },
@@ -246,4 +247,4 @@
         }
     }
 </script>
-            
+

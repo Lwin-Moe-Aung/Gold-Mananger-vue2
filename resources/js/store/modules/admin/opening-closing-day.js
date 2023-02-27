@@ -50,7 +50,6 @@ const actions = {
             daily_setup_for_purchase_return_form: state.daily_setup_for_purchase_return_form,
             opening_balance: state.opening_balance,
             limitation_price: state.limitation_price,
-            _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
 
         await axios.post(constant.ROUTE_URL_ADMIN+"opening-days/save-data", formData)

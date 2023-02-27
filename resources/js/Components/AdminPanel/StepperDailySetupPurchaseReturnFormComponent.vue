@@ -323,6 +323,8 @@
 </template>
 <script>
     import {mapGetters, mapActions} from "vuex";
+    import constant from '../../constant';
+
     export default {
         name:"StepperDailySetupPurchaseReturnFormComponent",
         data: () => ({
@@ -333,6 +335,7 @@
                 quality_144_pal: { key:144, kyat: null, pal: null, yway: null },
                 quality_13_pal: { key:13, kyat: null, pal: null, yway: null },
                 quality_12_pal: { key:12, kyat: null, pal: null, yway: null },
+                _token: constant.CSRF
             },
             limitation_price: null,
             valid: true,

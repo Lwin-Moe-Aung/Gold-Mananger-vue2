@@ -116,7 +116,7 @@
                                         <div class="invalid-feedback mb-3" :class="{ 'd-block' : form.errors.mobile2}">
                                             {{ form.errors.mobile2 }}
                                         </div>
-                                       
+
                                     </div>
 
                                     <div class="modal-footer justify-content-between">
@@ -139,7 +139,7 @@
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import moment from 'moment';
     import Pagination from '../../../../Components/AdminPanel/Pagination'
-
+    import constant from '../../../../constant';
     export default {
         props: ['suppliers'],
         components: {
@@ -157,7 +157,8 @@
                     supplier_business_name: '',
                     address: '',
                     mobile1: '',
-                    mobile2: '' 
+                    mobile2: '',
+                    _token: constant.CSRF
                 }),
             }
         },
@@ -176,7 +177,7 @@
             dateTime(value) {
                 return moment(value).format('YYYY-MM-DD');
             },
-           
+
             editModal(supplier) {
                 this.editMode = true
                 $('#modal-lg').modal('show')
@@ -250,4 +251,4 @@
         }
     }
 </script>
-            
+

@@ -131,6 +131,7 @@
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
     import moment from 'moment';
     import Pagination from '../../../../Components/AdminPanel/Pagination';
+    import constant from '../../../../constant';
 
     export default {
         props: ['customers'],
@@ -149,7 +150,7 @@
                     address: '',
                     mobile1: '',
                     mobile2: '',
-                    _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    _token: constant.CSRF
                 }),
             }
         },

@@ -30,6 +30,8 @@
     </div>
 </template>
 <script>
+    import constant from '../../../constant';
+
     export default{
         name:"Login",
         props:{errors:Object},
@@ -39,7 +41,7 @@
                 form: this.$inertia.form({
                     email:"",
                     password: "",
-                    _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    _token: constant.CSRF
                 }),
             }
         },

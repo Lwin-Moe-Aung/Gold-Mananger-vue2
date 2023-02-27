@@ -390,6 +390,8 @@
 </template>
 <script>
     import {mapGetters, mapActions} from "vuex";
+    import constant from '../../constant';
+
     export default {
         name:"StepperDailySetupFormComponent",
         data: () => ({
@@ -400,6 +402,7 @@
                 quality_144_pal: { key:144, market_price:null, kyat: null, pal: null, yway: null },
                 quality_13_pal: { key:13, market_price:null, kyat: null, pal: null, yway: null },
                 quality_12_pal: { key:12, market_price:null, kyat: null, pal: null, yway: null },
+                _token: constant.CSRF
             },
             daily_setup_amount: null,
             valid: true,

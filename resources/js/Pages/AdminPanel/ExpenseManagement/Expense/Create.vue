@@ -204,6 +204,7 @@
                     date: "",
                     image: undefined,
                     additional_notes: "",
+                    _token: constant.CSRF
                 }),
                 imageforui: undefined,
                 expense_category: null,

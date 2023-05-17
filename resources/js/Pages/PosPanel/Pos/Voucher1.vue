@@ -503,6 +503,7 @@
                     credit_money: null,
                     note: null,
                     daily_Setup: { daily_setup_id: null, quality_16_pal: null, kyat: null, pal: null, yway: null },
+                    _token: constant.CSRF
                 },
                 gem_weight_status:'',
                 quality: '',

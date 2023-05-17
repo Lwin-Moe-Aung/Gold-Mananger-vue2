@@ -73,7 +73,7 @@
                                                 label="name"
                                                 track-by="id"
                                             ></multiselect>
-                                           
+
                                         </div>
                                         <div class="invalid-feedback" :class="{ 'd-block' : form.errors.roles}">
                                             {{ form.errors.roles }}
@@ -97,7 +97,7 @@
 
 <script>
     import AdminLayout from '../../../../Layouts/AdminPanelLayout';
-    
+
     export default {
         props: ['roles', 'admins'],
         components: {
@@ -110,7 +110,8 @@
                     id: '',
                     name: '',
                     email: '',
-                    roles: []
+                    roles: [],
+                    _token: constant.CSRF
                 }),
                 roleOptions: this.roles,
             }
@@ -124,7 +125,7 @@
                 this.form.roles.push(tag)
             },
             editModal(admin) {
-                
+
                 $('#modal-lg').modal('show')
                 this.editedIndex = this.admins.indexOf(admin)
                 this.form.name = admin.name

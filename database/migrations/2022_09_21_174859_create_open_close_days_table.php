@@ -17,6 +17,7 @@ class CreateOpenCloseDaysTable extends Migration
             $table->id();
             $table->enum('opened', ['0', '1'])->default('0');
             $table->enum('closed', ['0', '1'])->default('0');
+            $table->enum('auto_closed', ['0', '1'])->default('0');
             $table->decimal('opening_balance', 20, 2)->nullable();
             $table->decimal('closing_balance', 20, 2)->nullable();
             $table->dateTime('opening_date_time')->nullable();

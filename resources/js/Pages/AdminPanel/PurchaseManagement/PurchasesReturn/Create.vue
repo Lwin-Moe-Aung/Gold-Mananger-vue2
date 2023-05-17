@@ -471,7 +471,8 @@
                     additional_note: "",
                     product_sku:"",
                     exceed_money:0,
-                    paid_money:0
+                    paid_money:0,
+                    _token: constant.CSRF
                 }),
                 supplier: '',
                 imageforui: undefined,

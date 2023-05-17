@@ -41,9 +41,9 @@ class AutoCloseDay extends Command
         info("Auto Close Command Running at daily 12pm");
         $open_close_day = OpenCloseDay::latest()->first();
         if($open_close_day != null && $open_close_day->closed == 0){
-            $open_close_day->auto_close = '1';
+            $open_close_day->auto_closed = '1';
             $open_close_day->save();
-            info("Auto Closing is done at daily 12pm");
+            info("Auto closed at daily 12pm");
         }
         return 0;
     }

@@ -147,7 +147,8 @@
                     description: '',
                     tax: '',
                     alert_quantity: '',
-                    image: ''
+                    image: '',
+                    _token: constant.CSRF
                 }),
                 params: {
                     search: this.filters.search,

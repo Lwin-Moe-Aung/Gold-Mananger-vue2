@@ -146,6 +146,7 @@
                 form: this.$inertia.form({
                     name: '',
                     key: '',
+                    _token: constant.CSRF
                 }),
                 params: {
                     search: this.filters.search,

@@ -126,7 +126,8 @@
                 form: this.$inertia.form({
                     id: '',
                     name: '',
-                    permissions: []
+                    permissions: [],
+                    _token: constant.CSRF
                 }),
                 permissionOptions: this.permissions,
             }

@@ -459,6 +459,7 @@
                     image: "",
                     item_description: "",
                     tran_description: "",
+                    _token: constant.CSRF
                 }),
                 supplier: '',
                 product: '',

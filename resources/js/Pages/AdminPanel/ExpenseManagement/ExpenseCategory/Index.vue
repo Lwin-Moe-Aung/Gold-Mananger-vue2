@@ -126,6 +126,7 @@
                 editMode: false,
                 form: this.$inertia.form({
                     name: '',
+                    _token: constant.CSRF
                 }),
                 params: {
                     search: this.filters.search,

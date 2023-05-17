@@ -217,7 +217,8 @@
                     alert_quantity: '',
                     image: '',
                     gold_and_gem_weight: true,
-                    gem_weight: false
+                    gem_weight: false,
+                    _token: constant.CSRF
                 }),
                 imageforui: undefined,
                 addQualityDialog: false,

@@ -17,7 +17,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('auto-close-day')
                 ->timezone('Asia/Yangon')
-                ->dailyAt('12:00');
+                ->dailyAt('0:45');
     }
 
     /**

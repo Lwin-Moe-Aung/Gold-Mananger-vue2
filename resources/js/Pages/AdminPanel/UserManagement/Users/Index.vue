@@ -131,7 +131,8 @@
                     id: '',
                     name: '',
                     email: '',
-                    roles: []
+                    roles: [],
+                    _token: constant.CSRF
                 }),
                 roleOptions: this.roles,
             }

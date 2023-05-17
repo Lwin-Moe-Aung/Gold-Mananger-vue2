@@ -116,7 +116,8 @@
                 form: this.$inertia.form({
                     id: '',
                     name: '',
-                    description: ''
+                    description: '',
+                    _token: constant.CSRF
                 }),
             }
         },

@@ -133,6 +133,7 @@
                 editMode: false,
                 form: this.$inertia.form({
                     price: '',
+                    _token: constant.CSRF
                 }),
                 params: {
                     search: this.filters.search,

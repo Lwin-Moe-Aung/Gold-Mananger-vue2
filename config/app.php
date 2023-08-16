@@ -52,9 +52,13 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://shwemanager.com'),
+    // 'url' => env('APP_URL', 'https://shwemanager.com'),
 
-    'asset_url' => env('ASSET_URL', 'https://shwemanager.com'),
+    // 'asset_url' => env('ASSET_URL', 'https://shwemanager.com'),
+
+    'url' => env('APP_URL', 'http://localhost'),
+
+    'asset_url' => env('ASSET_URL', null),
 
     /*
     |--------------------------------------------------------------------------

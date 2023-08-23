@@ -52,7 +52,7 @@ const actions = {
             limitation_price: state.limitation_price,
         }
 
-        await axios.post(constant.ROUTE_URL_ADMIN+"opening-days/save-data", formData)
+        await axios.post("/api/opening-days/save-data", formData)
             .then((response) => {
                 console.log(response);
                 // if(response.status)commit('resetState');

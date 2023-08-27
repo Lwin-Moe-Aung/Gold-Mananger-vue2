@@ -18,6 +18,8 @@ class OpenCloseDay extends Model
         'closing_balance',
         'opening_date_time',
         'closing_date_time',
+        'created_at',
+        'updated_at'
     ];
 
     public function scopeSearch($query, $term)

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\OpenCloseDay;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -90,4 +92,16 @@ class AdminDashboardController extends Controller
     {
         //
     }
+    /**
+     * System asked user to continue to other process or Close the day
+     *
+     * @param
+     * @return \Illuminate\Http\Response
+     */
+    // public function continueOrClose()
+    // {
+    //     $openingData = OpenCloseDay::where('closed', '=', '0')->first();
+
+    //     return view('asking.continue_or_close')->with('openingData', $openingData);
+    // }
 }

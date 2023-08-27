@@ -50,7 +50,7 @@ class CustomerController extends Controller
      */
     public function store(ContactRequest $request)
     {
-        try {
+        // try {
             Contact::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -63,10 +63,11 @@ class CustomerController extends Controller
                 'business_location_id' => auth()->user()->business_location_id,
             ]);
 
-            return back();
-        } catch (\Exception $e) {
-            return back()->with('fail', 'Fail to Create Customer');
-        }
+            // return back();
+            return redirect()->route('admin.customers.index');
+        // } catch (\Exception $e) {
+        //     return back()->with('fail', 'Fail to Create Customer');
+        // }
     }
 
     /**

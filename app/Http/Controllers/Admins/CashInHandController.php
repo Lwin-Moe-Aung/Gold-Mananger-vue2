@@ -48,6 +48,7 @@ class CashInHandController extends Controller
     public function getCashInHandForCloseDay()
     {
         $open_close_day = OpenCloseDay::latest()->first();
+        // dd($open_close_day);
         if($open_close_day != null && $open_close_day->closed == 0){
             $date = $open_close_day->opening_date_time;
             return response()->json([
@@ -123,18 +124,19 @@ class CashInHandController extends Controller
      */
     public function getCashInData($date)
     {
-        $open_close_day = OpenCloseDay::whereDate('created_at', '=', $date)
+        $open_close_day = OpenCloseDay::where('created_at', '=', $date)
                 ->first();
+                // dd($open_close_day);
         $opening_balance = $open_close_day != null ? $open_close_day->opening_balance : 0;
 
-        $sells = ViewSellData::whereDate('created_at', '=', $date)
+        $sells = ViewSellData::where('created_at', '=', $date)
                 ->get();
 
         $total_sell_amount = $sells->sum(function ($option) {
                         return $option->final_total;
                     });
 
-        $debt_from_customers = ViewCashInData::whereDate('created_at', '=', $date)
+        $debt_from_customers = ViewCashInData::where('created_at', '=', $date)
                 ->where('type', 'debt_payment_from_customer')
                 ->get();
         $total_debt_from_customers = $debt_from_customers->sum(function ($option) {

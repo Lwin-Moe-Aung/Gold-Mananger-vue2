@@ -27,23 +27,28 @@ class AuthController extends Controller
         ]);
         $credential = $request->only('email', 'password');
         if (Auth::attempt($credential)) {
-            $open_close_day = OpenCloseDay::whereDate('created_at', Carbon::today())->first();
+            // $open_close_day = OpenCloseDay::whereDate('created_at', Carbon::today())->first();
+            $open_close_day = OpenCloseDay::where('closed', '=', '0')->first();
             //check opening and closing status
             if($open_close_day != null){
-                $now = Carbon::now();
-                $ago = $now->subDays(1);
+                // $now = Carbon::now();
+                // $ago = $now->subDays(1);
                 // return Inertia::render('AdminPanel/Dashboard/Dashboard', [
                 //     'users' => User::whereDate('created_at', '>', $ago)->count()
                 // ]);
 
-                return Inertia::visit(route('admin.dashboard.index', [
-                    'users' => User::whereDate('created_at', '>', $ago)->count(),
-                ]));
-                // return redirect()->route('admin.dashboard.index');
+                // return Inertia::visit(route('admin.dashboard.index', [
+                //     'users' => User::whereDate('created_at', '>', $ago)->count(),
+                // ]));
+                // dd($open_close_day);
+                // return redirect()->route('admin.dashboard.continueOrClose');
+                return Inertia::render('AdminPanel/SetupManagement/ClosingDay/Close');
+
             }else {
-                return Inertia::location(route('admin.opening-days.create'));
+                // return redirect()->route('admin.opening-days.create');
+                // return Inertia::location(route('admin.opening-days.create'));
                 //return Inertia::visit(route('admin.opening-days.create'));
-                // return Inertia::render('AdminPanel/SetupManagement/OpeningDay/Create');
+                return Inertia::render('AdminPanel/SetupManagement/OpeningDay/Create');
                 // return redirect()->route('admin.opening-days.create');
             }
         }

@@ -23,7 +23,7 @@ class CheckClosedDay
         $today = Carbon::now()->format('Y-m-d');
 
 
-        if( Carbon::parse($openCloseDayData->opening_date_time)->format('Y-m-d') < $today && $openCloseDayData->closed == 0 ){
+        if( Carbon::parse($openCloseDayData->opening_date_time)->format('Y-m-d') < $today || $openCloseDayData->closed == 0 ){
             // return redirect()->route('admin.alert.requireCloseDayAlert');
             // dd($openCloseDayData);
             return Inertia::render('AdminPanel/Errors/RequireCloseDayAlert');

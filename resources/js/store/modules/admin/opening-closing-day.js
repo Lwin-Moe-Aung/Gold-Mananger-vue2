@@ -57,6 +57,7 @@ const actions = {
                 console.log(response);
                 // if(response.status)commit('resetState');
             });
+
     },
 };
 const mutations = {

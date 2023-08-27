@@ -190,13 +190,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:sanctum', 'verified', 
     });
 
     Route::middleware(['check_closed_day'])->group(function() {
+         // dashboard
+        Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.index');
+
         // OpeningDayController
         Route::post('opening-days/save-data', [OpeningDayController::class, 'saveData'])->name('opening-days.saveData');
         Route::resource('opening-days', OpeningDayController::class);
     });
 
-    // dashboard
-    Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.index');
+    // // dashboard
+    // Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard.index');
 
     // Alert
     Route::get('require-close-day-alert', [AlertController::class, 'requireCloseDayAlert'])->name('alert.requireCloseDayAlert');

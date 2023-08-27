@@ -317,10 +317,16 @@
         methods: {
             getData() {
                 let getDataUrl = "";
-                if(this.status == 1){
-                    getDataUrl = "/admin/get-cash-in-hand-by-date?" + "&date=" + this.date ;
-                }else {
-                    getDataUrl = "/admin/get-cash-in-hand";
+                // if (this.status == 1) {
+                //     getDataUrl = this.route('admin.cash-in-hands.getCashInHandByDate') + "&date=" + this.date;
+                // } else {
+                //     getDataUrl = this.route('admin.cash-in-hands.getCashInHandForCloseDay');
+                // }
+
+                if (this.status === 1) {
+                    getDataUrl = `/admin/get-cash-in-hand-by-date?date=${this.selectedDate}`;
+                } else {
+                    getDataUrl = '/admin/get-cash-in-hand';
                 }
 
                 axios.get(getDataUrl).then(response => {
